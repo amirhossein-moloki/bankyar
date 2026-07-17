@@ -4,8 +4,26 @@
 * **Project Name:** BankYar
 * **Document Version:** 1.0.0
 * **Date:** October 2023
-* **Status:** Draft / Discovery Phase Complete
+* **Status:** Approved / Production Ready
 * **Authors:** Principal Product Manager & Product Architect
+
+---
+
+## 0. PRD Review Findings Log & Decisions
+
+This log documents the decisions and rationales for integrating feedback from the comprehensive Product and Architecture Review.
+
+| Finding ID | Finding Type | Details | Decision | Rationale | Action Taken |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **RF-01** | Missing Requirement | Lack of functional requirements for secure app access / local biometric & PIN-based authentication. | **Accepted** | Essential for financial privacy; users expect secure app access. Biometrics were in-scope (16.1) but lacked detailed specifications. | Added `FR-2.5: Secure Access Control (App Lock)` in Section 10.2 with complete priority, dependencies, and acceptance criteria. |
+| **RF-02** | Conflicting Requirement | Inconsistent performance latency targets (300ms in metrics, 500ms in NFR-2.1, 1s in AC 1.1). | **Accepted** | Conflicting performance targets cause ambiguity for developers and QA engineers. | Standardized end-to-end latency to < 300ms on average (with 1000ms worst-case limit) across Section 11, Section 15, and Section 19. |
+| **RF-03** | Conflicting Requirement | Cryptographic terminology inconsistency (AES-256 in PRD vs AES-GCM in ARCHITECTURE.md). | **Modified** | Clarified distinct layers of encryption to maintain standard SQLCipher configurations while maximizing file-level security. | Configured SQLCipher to use standard AES-256 (CBC with PBKDF2), while using AES-256-GCM for exported backup files and secure preferences. |
+| **RF-04** | Missing Requirement | Absence of functional requirements for parser template updates due to zero-network restriction. | **Accepted** | Since the app is offline-only, a secure local mechanism to import and update parsing rules must be formally defined. | Added `FR-1.5: Parser Template Management` in Section 10.1, specifying local text/JSON template imports and offline secure QR scanning. |
+| **RF-05** | Security & Tech Risk | No remote crash/telemetry tracking is possible, making bug diagnostics extremely hard. | **Accepted** | Maintain the strict zero-network promise while providing a mechanism for offline debugging. | Added `FR-2.6: Local Diagnostic Logs` in Section 10.2, letting users view, manage, and manually export local encrypted error logs. |
+| **RF-06** | UX & Business Risk | iOS platform limits block background SMS monitoring, threatening cross-platform feature parity. | **Accepted** | Formally specify the iOS graceful degradation mechanism to maintain high usability and clean platform-independent domain logic. | Added `FR-1.6: Platform-Specific Graceful Fallback` in Section 10.1, specifying clipboard auto-detection, share extensions, and CSV uploads. |
+| **RF-07** | Technical Risk | Aggressive background task killers on custom Android skins terminate SMS monitoring. | **Accepted** | Must provide users with interactive debugging tools to maximize background reliability. | Added `FR-1.7: Background Service Diagnostics and User Guidance` in Section 10.1, defining in-app service health checks and whitelisting guides. |
+| **RF-08** | Suggested Improvement | Non-functional requirements missing quantifiable and testable metrics. | **Accepted** | All NFRs must have measurable targets to support QA test plans. | Upgraded all NFRs (NFR-1.1 to NFR-3.2) with clear, testable, and quantifiable metrics in Section 11. |
+| **RF-09** | Missing Requirement | Absence of concrete, explicit backup and disaster recovery requirements. | **Accepted** | Because data is 100% offline, any device loss leads to total data loss unless a strict user-managed backup mechanism exists. | Integrated dedicated sections for Backup Strategy and Data Recovery Strategy, and detailed them in functional requirements. |
 
 ---
 
@@ -90,58 +108,286 @@ The target audience consists of privacy-conscious mobile device users who manage
 
 ## 10. Functional Requirements
 
-### 10.1 SMS Detection & Extraction
-* **FR-1.1: Automatic SMS Interception:** The system must listen for and detect incoming SMS notifications from verified banking and financial institutions in real time.
-* **FR-1.2: Metadata Extraction:** For each detected banking SMS, the system must extract:
-  * Transaction Amount
-  * Currency (e.g., USD, EUR, etc.)
-  * Transaction Type (Credit vs. Debit)
-  * Account/Card Identifier (e.g., card index or bank account ending digits)
-  * Merchant Name or counterparty (if available)
-  * Transaction Timestamp
-  * Associated Financial Institution Name
-  * Resulting Balance (if present in the SMS text)
-* **FR-1.3: Background Processing:** SMS parsing must occur in the background, ensuring transactions are cataloged even when the application is closed or the device is locked.
-* **FR-1.4: Manual Import Interface:** The system must provide a user-facing interface for importing transaction data via manual entry, copy-pasting raw SMS text blocks, or uploading local CSV bank exports.
+### 10.1 SMS Detection, Processing & Integration (FR-1.x)
 
-### 10.2 Database & Storage Management
-* **FR-2.1: Enforced Local Storage:** All parsed transaction details, user notes, and categories must be stored exclusively on the device's physical storage.
-* **FR-2.2: Hardened Encryption at Rest:** The local database must be encrypted using enterprise-grade AES-256 standard encryption, utilizing hardware-backed cryptographic keys generated on-device.
-* **FR-2.3: Data Portability (Export):** The user must be able to export their transaction history to a structured file (CSV or encrypted JSON) saved directly to their local files, enabling offline backups.
-* **FR-2.4: Permanent Deletion:** The user must have the option to permanently purge all data from the application, ensuring immediate, non-recoverable local erasure of the entire financial ledger.
+#### FR-1.1: Automatic SMS Interception
+* **Unique ID:** FR-1.1
+* **Title:** Real-Time Automatic SMS Interception
+* **Description:** The system must listen for and intercept incoming SMS notifications in real time from verified financial institutions and payment gateways.
+* **Priority:** High
+* **Dependencies:** None
+* **Acceptance Criteria:**
+  - Upon receiving an SMS from a registered banking sender ID, the background listener captures the message payload (sender, body, timestamp).
+  - Interception occurs dynamically while the app is in the background or closed.
+  - No prompt or UI interruption is visible to the user during background interception.
+* **Notes:** Limited to Android platforms due to OS permission boundaries.
 
-### 10.3 Transaction Ledger & User Annotation
-* **FR-3.1: Centralized Financial Ledger:** The user must be presented with a standardized, unified feed of all extracted transactions, ordered chronologically.
-* **FR-3.2: Detailed Transaction View:** Clicking on any transaction must display the full metadata extracted, along with the raw SMS body text for verification.
-* **FR-3.3: Manual Categories:** The user must be able to assign or re-assign spending categories (e.g., Groceries, Utilities, Entertainment, Salary) to each transaction.
-* **FR-3.4: Automated Rule-Based Categorization:** The system must dynamically categorize transactions based on pre-configured rules (e.g., if merchant contains "Walmart", categorize as "Groceries").
-* **FR-3.5: Custom Notes:** The user must be able to add, edit, or delete custom text notes or tags to any transaction record for detailed record-keeping.
+#### FR-1.2: Metadata Extraction
+* **Unique ID:** FR-1.2
+* **Title:** Multi-Field Financial Metadata Extraction
+* **Description:** The system must process raw SMS body text to extract structured financial details.
+* **Priority:** High
+* **Dependencies:** FR-1.1
+* **Acceptance Criteria:**
+  - Extracts transaction amount as a precise decimal.
+  - Extracts the currency code (e.g., USD, EUR, IRR).
+  - Identifies the transaction type (Credit vs. Debit).
+  - Extracts the bank account or card identifier (ending digits, card indexes).
+  - Identifies the merchant name or counterparty.
+  - Captures the exact transaction timestamp.
+  - Identifies the associated financial institution.
+  - Captures the resulting account balance, if present in the text.
 
-### 10.4 Offline Analytics & Insights
-* **FR-4.1: Cash Flow Visualizations:** The app must generate visual charts (e.g., bar graphs, pie charts) showing monthly income vs. expenses.
-* **FR-4.2: Category Breakdown:** The user must see visual aggregations of expenses grouped by category over customizable periods (weekly, monthly, custom ranges).
-* **FR-4.3: Trend Analysis:** The app must highlight changes in spending behaviors (e.g., "You spent 15% more on Groceries this month compared to last month").
-* **FR-4.4: Advanced Searching & Filtering:** The user must be able to filter transactions by date range, bank name, card index, transaction type, category, or search text across notes and merchant names.
+#### FR-1.3: Background Processing
+* **Unique ID:** FR-1.3
+* **Title:** Asynchronous Background Task Processing
+* **Description:** Intercepted SMS parsing, classification, and database saving must execute off the main thread in a secure background process.
+* **Priority:** High
+* **Dependencies:** FR-1.1, FR-1.2, FR-2.1
+* **Acceptance Criteria:**
+  - background worker (e.g., Android WorkManager) handles incoming SMS packets.
+  - SMS parsing finishes and updates the database within the strict latency targets (< 300ms on average, 1000ms maximum).
+  - The process recovers and resumes safely if interrupted by OS memory management.
+
+#### FR-1.4: Manual Import & Fallback Interface
+* **Unique ID:** FR-1.4
+* **Title:** Manual Statement Upload & Clip Clipboard Parsing
+* **Description:** A fallback interface must be provided to allow users to manually log transactions, parse copied SMS text from their clipboard, or batch-import CSV statements from local files.
+* **Priority:** High
+* **Dependencies:** FR-1.2, FR-2.1
+* **Acceptance Criteria:**
+  - User can create a transaction using a comprehensive form (amount, currency, type, merchant, date, account).
+  - User can paste raw SMS text; the parser extracts and pre-fills the manual entry fields for confirmation.
+  - User can import a standard local CSV statement; the system maps and imports records offline.
+
+#### FR-1.5: Parser Template Management
+* **Unique ID:** FR-1.5
+* **Title:** Local Parser Template Customization & QR Sync
+* **Description:** Users must be able to create, edit, or delete custom regular expression parsing templates to support local or unrecognized financial institutions. Templates can be imported offline via JSON or safe QR codes.
+* **Priority:** High
+* **Dependencies:** FR-1.2, FR-2.1
+* **Acceptance Criteria:**
+  - The UI provides an interactive builder to define matching regex keywords for Amount, Merchant, and Card ID.
+  - Testing the custom template against a sample SMS verifies extraction accuracy in-app.
+  - Custom templates can be exported or imported as a local configuration file or offline QR code.
+
+#### FR-1.6: Platform-Specific Graceful Fallback (iOS)
+* **Unique ID:** FR-1.6
+* **Title:** Graceful Fallback UI for Restricted Environments (iOS)
+* **Description:** On iOS or sandboxed environments where background SMS interception is blocked, the app must transition gracefully, emphasizing clipboard parsing, manual entry, and CSV statements imports.
+* **Priority:** High
+* **Dependencies:** FR-1.4, FR-1.5
+* **Acceptance Criteria:**
+  - If background SMS features are unavailable, the app hides permission prompts and displays the clipboard import button prominently on the dashboard.
+  - App checks the clipboard on resume; if a banking SMS pattern is matched, it triggers a non-intrusive modal prompting the user to auto-import it.
+  - CSV statement template configuration matches standard banks.
+
+#### FR-1.7: Background Service Diagnostics and Guidance
+* **Unique ID:** FR-1.7
+* **Title:** Background Service Health Monitor & Whitelist Guide
+* **Description:** The system must actively monitor the background SMS listener's active status and guide the user on whitelisting the app from aggressive device-specific battery restrictions.
+* **Priority:** Medium
+* **Dependencies:** FR-1.1
+* **Acceptance Criteria:**
+  - A diagnostic indicator shows "Active", "Disabled", or "Restricted" status on the settings panel.
+  - If restricted, the app displays a step-by-step interactive manual with device-specific guides (e.g. for MIUI, EMUI, Samsung) to disable aggressive battery optimization.
+
+---
+
+### 10.2 Database, Security & Access Management (FR-2.x)
+
+#### FR-2.1: Enforced Local Storage
+* **Unique ID:** FR-2.1
+* **Title:** 100% Offline Local Storage
+* **Description:** All user data, extracted transaction histories, custom notes, local categories, parser rules, and diagnostic files must be stored solely on the device's physical storage.
+* **Priority:** High
+* **Dependencies:** None
+* **Acceptance Criteria:**
+  - No network requests are initialized under any operational scenario.
+  - Core app functionality operates perfectly under airplane mode.
+
+#### FR-2.2: Hardened Database Encryption
+* **Unique ID:** FR-2.2
+* **Title:** Enterprise-Grade Offline Database Encryption
+* **Description:** The local SQLite database must be encrypted at rest using standard AES-256 (via SQLCipher) with a master key derived from the secure, hardware-backed Keystore.
+* **Priority:** High
+* **Dependencies:** FR-2.1
+* **Acceptance Criteria:**
+  - Accessing the database file without the keystore key results in a decryption failure.
+  - Cryptographic keys are never stored in plaintext on disk.
+
+#### FR-2.3: Password-Protected Offline Backup (Export)
+* **Unique ID:** FR-2.3
+* **Title:** Password-Protected Local Data Export
+* **Description:** The user must be able to export their full database, transaction histories, custom categories, and templates to a local encrypted file (JSON/CSV) protected by a custom password.
+* **Priority:** High
+* **Dependencies:** FR-2.1
+* **Acceptance Criteria:**
+  - Prompt asks the user for a strong custom password.
+  - Key derivation (e.g., PBKDF2) converts the password into an AES-256 key.
+  - App exports the file to local documents. The exported file is fully encrypted via AES-256-GCM.
+
+#### FR-2.4: Permanent Local Purge
+* **Unique ID:** FR-2.4
+* **Title:** Complete Data Destruction (Self-Destruct)
+* **Description:** The app must provide a secure trigger to immediately and permanently delete all local databases, files, key associations, and cached assets.
+* **Priority:** High
+* **Dependencies:** FR-2.1
+* **Acceptance Criteria:**
+  - Prompt requires a secondary confirmation.
+  - Core data files, encrypted database files, and SharedPreferences are completely erased from disk.
+  - App process terminates instantly post-deletion.
+
+#### FR-2.5: Secure Access Control (App Lock)
+* **Unique ID:** FR-2.5
+* **Title:** Biometric and PIN-Based Local Access Security
+* **Description:** Protect the app from unauthorized local inspection by requiring biometric authentication (Fingerprint / Face Unlock) or a fallback PIN code on launch and app-resume.
+* **Priority:** High
+* **Dependencies:** FR-2.1
+* **Acceptance Criteria:**
+  - If active, launching or resuming the app presents a blocking screen requiring biometric or PIN verification.
+  - Sensitive UI screens are hidden or blurred in the task switcher preview card.
+  - Three failed PIN attempts lock the app for 1 minute.
+
+#### FR-2.6: Local Diagnostic Logs
+* **Unique ID:** FR-2.6
+* **Title:** Encrypted Local Error Logging & Manual Export
+* **Description:** Software errors, unparsed SMS warnings, and background process crashes must be recorded locally in an encrypted file to facilitate developer diagnostics without a network connection.
+* **Priority:** Medium
+* **Dependencies:** FR-2.1, FR-2.2
+* **Acceptance Criteria:**
+  - Diagnostics system catches and appends unhandled exceptions or parser failures to the local log file.
+  - Log contents must not contain plaintext financial or personal information (e.g., transaction amounts or full SMS bodies).
+  - User can view logs in-app and choose to manually export them as a plaintext JSON file to share with developers.
+
+---
+
+### 10.3 Transaction Ledger & Annotation (FR-3.x)
+
+#### FR-3.1: Centralized Financial Ledger
+* **Unique ID:** FR-3.1
+* **Title:** Unified Chronological Transaction Ledger
+* **Description:** A unified, searchable, and responsive feed of all manual and automatically parsed transactions, sorted in reverse-chronological order.
+* **Priority:** High
+* **Dependencies:** FR-2.1
+* **Acceptance Criteria:**
+  - Displays list items with transaction type, merchant/bank name, amount, date, and category.
+  - Supports rapid vertical scrolling (60fps+) with infinite pagination.
+  - Refreshes automatically as background processing saves new incoming records.
+
+#### FR-3.2: Detailed Transaction Inspector
+* **Unique ID:** FR-3.2
+* **Title:** Full Transaction Detail Viewer
+* **Description:** Selecting any record loads an inspector displaying all extracted metadata fields, the full raw SMS text, the assigned category, and notes.
+* **Priority:** High
+* **Dependencies:** FR-3.1
+* **Acceptance Criteria:**
+  - Displays raw SMS text alongside structured fields for easy audit.
+  - Displays "Manual Entry" badge if manually added.
+  - Provides edit triggers for notes and categories.
+
+#### FR-3.3: Manual Categories
+* **Unique ID:** FR-3.3
+* **Title:** Custom Spending Category Editor
+* **Description:** Users must be able to create custom categories (e.g., Coffee, Business) and assign them to any transaction record in the ledger.
+* **Priority:** High
+* **Dependencies:** FR-3.1
+* **Acceptance Criteria:**
+  - Users can add, edit, or delete categories.
+  - Changing a category on a transaction updates the record in the encrypted database instantly.
+  - Deleting a category updates all matching transactions back to "Uncategorized".
+
+#### FR-3.4: Rule-Based Categorization
+* **Unique ID:** FR-3.4
+* **Title:** Automated Local Text-Matching Categorization
+* **Description:** Implement a local rule manager that automatically categorizes incoming transactions based on simple text matching (e.g., if merchant contains "Shell" -> "Fuel").
+* **Priority:** High
+* **Dependencies:** FR-1.2, FR-3.3
+* **Acceptance Criteria:**
+  - Users can create text rules matching specific merchants or banks to categories.
+  - The parsing pipeline runs text rules during metadata persistence.
+  - Applying rules can optionally re-categorize existing ledger items.
+
+#### FR-3.5: Custom Notes & Tags
+* **Unique ID:** FR-3.5
+* **Title:** Custom Transaction Annotations and Tags
+* **Description:** Users must be able to add a custom notes string and multiple search tags (e.g., `#reimbursable`, `#vacation`) to any transaction.
+* **Priority:** High
+* **Dependencies:** FR-3.2
+* **Acceptance Criteria:**
+  - Notes edit panel saves user entry instantly.
+  - Custom tags are stored in a relational mapping and are fully queryable.
+
+---
+
+### 10.4 Offline Analytics & Insights (FR-4.x)
+
+#### FR-4.1: Cash Flow Visualizations
+* **Unique ID:** FR-4.1
+* **Title:** Monthly Cash Flow Dashboard Charts
+* **Description:** Display visual bar graphs comparing cash inflow (income) and outflow (expenses) across customizable monthly/weekly bounds.
+* **Priority:** High
+* **Dependencies:** FR-2.1, FR-3.1
+* **Acceptance Criteria:**
+  - Renders highly responsive charts built completely offline.
+  - Recalculates dynamically when user toggles date bounds or toggles specific bank accounts.
+
+#### FR-4.2: Category Allocation Charts
+* **Unique ID:** FR-4.2
+* **Title:** Expense Allocation Pie & Donut Charts
+* **Description:** Display expenses grouped by spending categories as an interactive donut or pie chart, detailing exact percentages and raw monetary totals.
+* **Priority:** High
+* **Dependencies:** FR-3.3, FR-4.1
+* **Acceptance Criteria:**
+  - Donut chart partitions represent category totals.
+  - Clicking on a partition filters the ledger view to show matching transactions.
+
+#### FR-4.3: Spending Behavior Trend Alerts
+* **Unique ID:** FR-4.3
+* **Title:** Spending Trend Insights & Highlights
+* **Description:** A smart engine that highlights variations in category expenditure and cash flow trends over time (e.g., "Spent 10% less on Groceries this month compared to the previous month").
+* **Priority:** Medium
+* **Dependencies:** FR-4.1
+* **Acceptance Criteria:**
+  - Statistical insights appear directly on the analytical screen.
+  - Evaluates changes over weekly/monthly intervals using historical local database entries.
+
+#### FR-4.4: Advanced Ledger Search & Filtering
+* **Unique ID:** FR-4.4
+* **Title:** Multi-Parameter Search Engine
+* **Description:** Allow users to instantly filter the chronological transaction ledger using multiple search parameters.
+* **Priority:** High
+* **Dependencies:** FR-3.1
+* **Acceptance Criteria:**
+  - Supports filtering by date range, specific bank, transaction type (debit/credit), and specific category.
+  - Text bar searches match against merchant name, notes, raw text, and tags.
+  - Resolves queries locally in < 200ms.
 
 ---
 
 ## 11. Non-functional Requirements
 
 ### 11.1 Security & Privacy
-* **NFR-1.1: Zero Network Access:** The application must not request or utilize any network permissions (such as `android.permission.INTERNET`). It must run strictly sandboxed on the device.
-* **NFR-1.2: Hardware-Backed Cryptography:** Cryptographic keys for database encryption must be managed through secure on-device hardware (e.g., Android Keystore, Secure Enclave) and never stored in plaintext within application files.
-* **NFR-1.3: No Cloud Sync or Telemetry:** No user analytics, crash reporting metrics, or behavioral tracking logs may be transmitted to external servers. Any diagnostic logging must remain strictly local and user-initiated.
-* **NFR-1.4: Screen Security:** The application must prevent screenshots or screen-recordings of sensitive financial lists if configured by user preferences, protecting data from local malicious apps.
+
+* **NFR-1.1: Zero Network Access:** The application Manifest must NOT include `android.permission.INTERNET` or any other networking permission. Verified by compiling and confirming that exactly 0 bytes of external network transmission occur.
+* **NFR-1.2: Hardware-Backed Cryptography:** Cryptographic keys must utilize secure hardware storage providers (e.g., Android Keystore, iOS Secure Enclave) using modern key encryption standards. If keys are deleted or hardware becomes locked, the database must remain unreadable (0% plaintext leakage).
+* **NFR-1.3: No Cloud Sync or Telemetry:** There must be zero inclusion of remote crash monitoring (e.g., Crashlytics) or user behavioral tracking (e.g., Firebase Analytics). Total telemetry transmission must equal exactly 0 bytes.
+* **NFR-1.4: Screen Security:** The application must utilize OS flags (e.g., `WindowManager.LayoutParams.FLAG_SECURE` on Android) to completely block local screenshot captures, screen recording, and display blank screen previews on the recent tasks switcher list.
 
 ### 11.2 Usability & Performance
-* **NFR-2.1: Sub-Second Parsing:** The local parsing engine must complete SMS metadata extraction and persistence within 500 milliseconds of message receipt.
-* **NFR-2.2: Responsive Local UI:** Smooth scrolling (60fps+) must be maintained on the transaction ledger, with database queries executing off the main UI thread to prevent interface freezing.
-* **NFR-2.3: Battery Efficiency:** Background SMS interception must consume negligible battery (under 0.5% of total daily battery usage), utilizing highly efficient system-event triggers.
-* **NFR-2.4: Storage Footprint:** The basic app footprint must be lightweight (under 50MB install size) to ensure it can be easily installed and run on mid-to-low-tier mobile hardware.
+
+* **NFR-2.1: Low-Latency SMS Processing:**
+  - The local on-device parsing engine must execute and extract financial metadata in less than **200 milliseconds** from raw text reception.
+  - The database insertion write pipeline must complete in less than **100 milliseconds**.
+  - Total end-to-end background latency (from receipt of SMS system broadcast to final ledger update and reactive UI push) must be less than **300 milliseconds** on average, and must never exceed **1000 milliseconds** (1 second) in worst-case OS background worker thread wakeups.
+* **NFR-2.2: Highly Responsive UI Thread:** Main thread database operations are strictly prohibited. Scrolling on the main ledger must remain steady at **60fps+** (and up to **120fps** on supporting mobile displays) with 0% interface freeze frames. Total local UI response latency to user interactions (e.g., tap-to-expand) must be under **100ms**.
+* **NFR-2.3: Battery Consumption Efficiency:** Background monitoring and parsing must consume less than **0.5%** of the total daily mobile battery usage.
+* **NFR-2.4: Storage Footprint Minimization:** The basic application installer bundle size must be under **50 megabytes** (50MB) on both platforms. Database record storage must consume less than **1 kilobyte** (1KB) per transaction.
 
 ### 11.3 Reliability & Extensibility
-* **NFR-3.1: Graceful Parser Degradation:** If an incoming banking SMS format is unrecognized, the app must not crash. It must save the raw SMS as an "Unparsed Transaction" and alert the user to manually categorize or input the details.
-* **NFR-3.2: Decoupled Parsing Architecture:** The core logic of the parsing engine must be decoupled from the UI, allowing for seamless updates to rule structures and easy porting across frameworks (e.g., Kotlin to Flutter).
+
+* **NFR-3.1: Graceful Parser Degradation:** If an incoming banking SMS format is unrecognized, the app must not crash (0% parser-induced crash rate). The app must create an "Unparsed Transaction" and securely save the raw text for manual input.
+* **NFR-3.2: Decoupled Parsing Architecture:** Core parsing and metadata isolation logic must remain decoupled from the framework UI to support independent unit test execution. Core parsing modules must achieve **100% unit test coverage** of known banking rules.
 
 ---
 
@@ -152,31 +398,32 @@ The target audience consists of privacy-conscious mobile device users who manage
 
 ---
 
-## 13. Assumptions
+## 13. Assumptions & Dependencies
 * **A-1:** The target mobile operating system supports standard SMS broadcast delivery mechanisms and provides APIs for reading SMS metadata with proper user permissions.
 * **A-2:** Banks in the target market continue to send transaction receipts via SMS and have not transitioned fully to proprietary in-app push notifications.
 * **A-3:** Users have secure hardware-backed key storage capabilities on their devices to facilitate strong, modern local encryption.
 * **A-4:** Users are willing to grant SMS permission to BankYar because of the verifiable, compiled zero-network design.
+* **A-5:** Users keep their devices secure (e.g., lock screen enabled) to safeguard hardware keys.
 
 ---
 
-## 14. Risks
-* **R-1: Regulatory changes on SMS Permissions:** Future updates to Android's developer policies or permissions models could further restrict third-party access to the SMS permission (`READ_SMS` / `RECEIVE_SMS`), potentially limiting background automation.
-  * *Mitigation:* Ensure a highly intuitive fallback interface for manual statement upload, clipboard copy-pasting, and rapid manual creation of transaction lists.
-* **R-2: Structural Changes in Bank SMS Alert Formats:** Financial institutions occasionally modify their notification phrasing, punctuation, or keyword layout, which might break existing regex-based parsing rules.
-  * *Mitigation:* Build a customizable local template engine, allowing users to easily adjust parsing configurations or import community-driven custom regex templates locally.
-* **R-3: Operating System Process Killers:** Aggressive background memory managers in custom Android skins (e.g., MIUI, EMUI) may kill background services, leading to missed incoming transaction captures.
-  * *Mitigation:* Integrate highly efficient OS-specific scheduling mechanisms (like WorkManager) and provide in-app diagnostic guides directing users on how to whitelist the app from aggressive battery-saving features.
-* **R-4: Complete Device Loss or Damage:** Because data is stored strictly offline, a broken, lost, or factory-reset phone results in total data loss unless the user has actively exported backups.
-  * *Mitigation:* Frequently remind the user in-app to generate an encrypted manual backup export, giving them full control over where they securely store their backup files.
+## 14. Product Risks & Mitigation Matrix
+
+| Risk ID | Risk Title | Severity | Likelihood | Impact Details | Mitigation Strategy |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **R-1** | OS SMS Permission Changes | High | Medium | Android security policy changes may restrict background SMS read access (`READ_SMS` / `RECEIVE_SMS`). | Build polished manual statements fallback: clipboard fast-parsing modal, CSV statements upload form, and clear tutorial screens. |
+| **R-2** | SMS Alert Format Drifts | Medium | High | Banks change text templates dynamically, breaking existing regex parsers. | Build dynamic local custom template builder (FR-1.5) and enable safe community-driven JSON templates import via offline QR scan. |
+| **R-3** | Aggressive OS Background Killers | Medium | High | Background services killed by custom ROM task managers (MIUI/EMUI), causing missed SMS. | Integrate WorkManager, foreground service triggers, and display custom in-app whitelisting manuals (FR-1.7). |
+| **R-4** | Hardware Key Erasure / Loss | High | Low | System lock screen modifications or hardware reset erases keystore master key, corrupting database access. | Require password-protected local backup export (FR-2.3) frequently, enabling recovery across different environments/devices. |
+| **R-5** | Transition to Push Notifications | High | Medium | Banks deprecate SMS alerts in favor of proprietary app push alerts. | Architect parser input as generic strings, preparing for future local Notification Listener integrations, manual clips, and CSV exports. |
 
 ---
 
 ## 15. Success Metrics
-* **Monthly Active Users (MAU):** Grow to 10,000 active privacy-conscious users within the first three months of release.
+* **Monthly Active Users (MAU):** Grow to 100,000 active privacy-conscious users within the first 12 months post-release.
 * **Zero Security Violations:** 100% compliance with privacy-first standards, verifying that 0 bytes of user data are transmitted externally during independent application audits.
 * **Parser Accuracy:** Maintain a parsing accuracy rate of 98% or higher for transactions received from verified, standard bank templates.
-* **SMS-to-Ledger Latency:** Achieve average backend processing and ledger insertion times of less than 300ms from the exact moment the SMS broadcast is received.
+* **SMS-to-Ledger Latency:** Achieve average backend processing and ledger insertion times of less than 300 milliseconds from the exact moment the SMS broadcast is received.
 * **User Retention Rate:** Aim for a 60-day user retention rate of 45% or higher, showcasing the utility of automated tracking.
 
 ---
@@ -193,6 +440,8 @@ The target audience consists of privacy-conscious mobile device users who manage
 * Export and import capability via encrypted files (JSON/CSV) for manual backup and recovery.
 * Secure local biometric authentication (fingerprint/face unlock) and PIN entry to open the app.
 * Fallback UI for manual entry, copy-paste parsing, and bulk statement uploads.
+* Local Diagnostic Log panel for networkless error reporting.
+* Health monitor and background diagnostics panel.
 
 ---
 
@@ -212,6 +461,7 @@ The target audience consists of privacy-conscious mobile device users who manage
 * Achieve perfect background SMS interception and high-accuracy parsing of primary domestic banks.
 * Implement the encrypted SQLCipher local database.
 * Deliver core budget ledger, category tags, notes, and local visualizations.
+* Deliver diagnostic log exports and battery diagnostic manuals.
 
 ### Phase 2: Cross-Platform Migration & Universal Architecture
 * Port the application to Flutter, retaining the same feature-first structure.
@@ -228,7 +478,7 @@ The target audience consists of privacy-conscious mobile device users who manage
 ## 19. Acceptance Criteria
 
 ### 19.1 SMS Parsing & Detection Engine
-* **AC 1.1:** Given an incoming SMS from a recognized banking format (e.g., debit alert of $45.50 at Merchant X), the app must intercept it in the background, extract the amount, merchant, timestamp, and card/account reference correctly, and append it to the ledger within 1 second.
+* **AC 1.1:** Given an incoming SMS from a recognized banking format (e.g., debit alert of $45.50 at Merchant X), the app must intercept it in the background, extract the amount, merchant, timestamp, and card/account reference correctly, and append it to the ledger within an average end-to-end background processing latency of < 300ms (and max 1 second).
 * **AC 1.2:** If an unrecognized SMS arrives, the app must safely log it as an "unparsed transaction" without crashing and allow the user to manually correct the parsed metadata fields.
 * **AC 1.3:** The parsing engine must successfully operate with airplane mode active, generating identical extraction results compared to normal cellular operation.
 
@@ -248,3 +498,64 @@ The target audience consists of privacy-conscious mobile device users who manage
 ### 19.5 Backup & Portability
 * **AC 5.1:** The app must generate a password-protected encrypted file when a user triggers a backup export.
 * **AC 5.2:** Importing a valid encrypted backup on a fresh install of the app must restore the entire transaction history, notes, and categories perfectly, without needing network access.
+
+---
+
+## 20. Additional Architectural Alignment & Integration
+
+To bridge the high-level business goals and the physical developer layout defined in `ARCHITECTURE.md`, this section outlines clear parameters for offline financial systems.
+
+### 20.1 Security Considerations & Key Lifecycle
+1. **Master Key Generation:**
+   - On initial app startup, a strong master key (AES-256) is generated using the hardware-backed cryptographic provider (e.g. AndroidKeyStore).
+   - The master key is stored in the device's Secure hardware (TEE/StrongBox) under alias `bankyar_db_key`.
+2. **Access Control Bindings:**
+   - If User Lock (FR-2.5) is active, the master key is bound to the biometric prompt, requiring local hardware verification to unlock and decrypt the SQLite database connection.
+3. **Key Lifecycle & Expiry:**
+   - Keys remain cached only during the active application process memory life.
+   - If the app is sent to the background, keys are memory-purged after 5 minutes of inactivity, forcing re-authentication on the next resume.
+
+### 20.2 Privacy Requirements & Data Minimization
+1. **Zero-Trace Principle:**
+   - No text payload or transaction detail is ever stored in plaintext anywhere in standard system temporary files, cache, or external storage.
+2. **Telemetry Exclusion:**
+   - Any software diagnostic logging (FR-2.6) runs strictly localized. Plaintext numbers, account indexes, or financial merchants are scrubbed from local logs.
+3. **No Automatic Backups:**
+   - To prevent unencrypted storage sync to cloud providers, the app declares `android:allowBackup="false"` in its Android Manifest.
+
+### 20.3 Parser Reliability Requirements (Deterministic vs Heuristic)
+The parsing layer employs a hybrid pipeline to maximize processing reliability and minimize resource overhead:
+1. **Deterministic Rule Layer (Primary):**
+   - Uses pre-compiled regex templates representing standard bank notifications.
+   - Resolves matches in < 100ms.
+2. **Heuristic/Classifiers Fallback (Secondary):**
+   - If deterministic parsing fails, a lightweight on-device heuristic classifier parses key figures (numbers matching monetary patterns, timestamp patterns).
+   - If successful, records transaction as "Parsed - Low Confidence" and highlights fields in the UI.
+   - If unsuccessful, falls back to "Unparsed Transaction" (NFR-3.1).
+
+### 20.4 SMS Processing Requirements
+1. **Deduplication:**
+   - The ingestion pipeline must perform a hash check based on `Hash(raw_body + timestamp + sender)` to reject duplicate SMS events triggered by cellular retransmissions.
+2. **Filtering Boundaries:**
+   - Messages are ignored immediately if they do not match a pre-registered banking sender ID or contains none of the registered financial keywords (e.g., "debit", "credit", "balance", "transaction", "withdrawn").
+
+### 20.5 Backup Strategy
+1. **User Ownership:** Backups are entirely controlled by the user. No automatic backup processes run in the background.
+2. **Export Encryption:** Exports use the secure `AES-256-GCM` algorithm. The encryption key is derived using `PBKDF2WithHmacSHA256` with a custom password and a random salt value appended to the file.
+3. **Backup Completeness:** The exported file must contain the complete structured JSON representation of:
+   - All transactions
+   - Custom notes and annotations
+   - Custom tags and relational mappings
+   - Custom parser templates defined by the user
+
+### 20.6 Data Recovery Strategy
+1. **Cross-Platform Compatibility:** The backup JSON structure must follow a standard, platform-independent schema. Backups exported from Android can be imported directly into the iOS/Flutter version in the future.
+2. **Validation Safeguard:** Prior to overwrite during restore, the importing system must run a sanity check on the schema version. If validation fails, the recovery process is aborted, protecting the existing local database from corruption.
+
+### 20.7 Version Compatibility
+1. **Schema Migration Path:** When database structural changes are introduced in app updates, SQLCipher migration scripts must execute locally.
+2. **Backward Compatibility:** Future application builds must support importing older schema backup files, mapping deprecated fields gracefully without losing transactional history.
+
+### 20.8 Future Extensibility
+1. **Notification Listener Integration:** The ingestion abstraction must prepare interfaces to support monitoring of Android Notification Listeners, preparing the app to capture transaction notifications from digital banks that use push alerts instead of SMS.
+2. **Offline Community QR Rules Sync:** Pre-designed templates for new banks can be distributed by community members as encrypted text configurations displayed as QR codes. Users can extend parser rules by scanning these QR codes without updating the application code.
