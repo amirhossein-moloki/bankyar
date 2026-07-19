@@ -17,3 +17,9 @@ To ensure strict code quality, scalability, security, and a seamless future migr
 - **Offline & Privacy-First Guidelines**
 
 For detailed technical specifications, low-level data structures, and the Flutter migration blueprint, read our **[Architecture Design Document (ARCHITECTURE.md)](ARCHITECTURE.md)**.
+
+## 🤖 AI-First Software Engineering Governance
+
+As an AI-first software development project, BankYar implements deterministic governance over stochastic code generation processes to guarantee security, privacy, and architectural purity:
+- **[AI Development Playbook (AI_PLAYBOOK.md)](AI_PLAYBOOK.md)**: Defines the official operational framework, prompt structures, quality gates, and risk registers governing all Artificial Intelligence-assisted development.
+- **[AI Development Workflow Constitution (AI_CONSTITUTION.md)](AI_CONSTITUTION.md)**: Outlines the tactical guidelines and template structures for individual layer-by-layer software artifact creation.
