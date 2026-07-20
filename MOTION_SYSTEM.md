@@ -9,9 +9,9 @@ This document establishes the official **Motion & Animation System Architecture*
 In strict alignment with BankYar’s **Offline-First**, **Privacy-First**, and **Accessibility-First** tenets:
 * **No visual animations** are designed for mere decoration.
 * **No Lottie or GIF files** are created or bundled.
-* **No hardcoded durations** (e.g., specific millisecond numbers) are allowed.
-* **No numerical easing curves** (e.g., cubic bezier coordinates) are permitted in component styles.
-* **No physical dimensions** (such as pixels, dp, or sp units) are declared.
+* **No hardcoded durations** are allowed.
+* **No numerical easing curves** are permitted in component styles.
+* **No physical dimensions** are declared.
 * **No framework-specific code** or class definitions are generated.
 
 Every motion behavior defined herein is abstracted to semantic motion tokens, logical directional rules, and accessibility-first constraints. This architecture ensures absolute consistency across light and dark modes, native RTL Persian layouts, variable pixel densities, accessibility high-contrast regimes, and guarantees high-performance execution on low-end Android hardware and future iOS/cross-platform environments.
@@ -76,11 +76,15 @@ We reject decorative loops, bouncy elastic scales, playful animations, or slow t
 ---
 
 ## 2. Motion Principles
-The execution of any animation sequence must conform to four fundamental Motion Principles:
-1. **Communicative Purpose:** Every motion sequence must have a clear structural or state-based reason to exist. It must guide the user's focus, indicate the start/end of a transition, or verify an interactive selection. If an animation is purely decorative, it must be removed.
-2. **Immediate Responsiveness:** User-triggered interaction feedback (such as button presses or switch toggles) must initiate immediately. Visual shifts must complete within fast duration thresholds to maintain a sense of instant performance.
-3. **Spatial Continuity & Logic:** Components must move logically within the layout grid. A card cannot fade into existence arbitrarily; it must scale from its boundary or slide along a logical axis. Spatial direction must mirror perfectly when switching between Persian RTL and English LTR layouts.
-4. **Restraint & Sobriety:** Easing curves must feel calm, structured, and professional. There are no dramatic bounces, spring-elastic parameters, or excessive screen shaking. The interface behaves like a high-precision physical instrument.
+The execution of any animation sequence must conform to eight fundamental Motion Principles:
+1. **Purposeful Motion:** Every motion sequence must have a clear structural or state-based reason to exist. It must guide the user's focus, indicate the start/end of a transition, or verify an interactive selection. If an animation is purely decorative, it must be removed.
+2. **Natural Movement:** Easing curves must feel calm, structured, and professional. There are no dramatic bounces, spring-elastic parameters, or excessive screen shaking. Easing curves mimic physical properties (such as controlled friction and inertia) but maintain absolute deceleration boundaries to ensure zero overshoot.
+3. **Spatial Continuity:** Sibling and hierarchical layers must transition logically within the layout grid. A card cannot fade into existence arbitrarily; it must scale from its boundary or slide along a logical axis. Spatial direction must mirror perfectly when switching between Persian RTL and English LTR layouts.
+4. **Reduced Cognitive Load:** Limiting active elements to a single focus node. Unaffected items remain completely static. Simultaneous competing animations are strictly prohibited to prevent visual clutter and confusion.
+5. **Performance First:** Animations must execute flawlessly at maximum frame rates, utilizing GPU-accelerated layers (such as transforms and opacity transitions) while completely avoiding layout recalculations or repaints.
+6. **Accessibility:** Motion is optional. The system respects device settings (such as Reduced Motion toggles and Android animation scale overrides) and adapts transitions to prevent visual distress or vestibular triggers.
+7. **Consistency:** Interaction signatures, timing curves, and haptic feedback profiles are shared globally across all interactive elements, creating a predictable and cohesive user experience.
+8. **Trustworthy Financial UX:** Reliable, calm, and high-precision visual and haptic verification profiles confirm sensitive transactions, assuring the user that their offline local database is secure and accurate.
 
 ---
 
@@ -110,6 +114,7 @@ To prevent simultaneous, competing animations from overwhelming the user’s att
 ### Hierarchy Rules:
 * **Concurrency Protection:** No Tier 1 transition may run concurrently with a Tier 2 expansion. Component animations inside a container must remain static until the container's structural movement completes.
 * **Focus Anchoring:** A Tier 3 animation must only occur at the immediate coordinate of user contact, keeping peripheral elements completely stable.
+* **Sequential Execution:** Multiple parent-child layout transformations must sequence their entry times smoothly using structured stagger delay tokens.
 
 ---
 
@@ -134,12 +139,23 @@ All system motions are classified under a structured **Animation Taxonomy**, ens
 ---
 
 ## 5. Screen Transition Strategy
-Screen transitions govern how the user moves between the primary application views (Ledger, Analytics, Rules, Diagnostics, Settings).
+Screen transitions govern how the user moves between the primary application views (Ledger, Analytics, Rules, Diagnostics, Settings) with strict adherence to parent-to-child, child-to-parent, and sibling-to-sibling layout relationships.
 
-### Architectural Rules:
-* **Lateral Transitions (Peer-to-Peer):** Moving between primary bottom navigation sections utilizes a simple opacity fade combined with a subtle horizontal translation.
-* **RTL-First Directionality:** The horizontal translation must follow logical direction tokens. In Persian RTL, navigating forward to a peer section translates content from logical start to logical end.
-* **Hierarchical Transitions (Parent-to-Child):** Navigating into a sub-page (such as a detailed template creator) utilizes a logical container-transform motion. The card container expands from its original dashboard coordinates to cover the viewport, maintaining spatial continuity.
+### Transition Paths:
+* **Splash → Onboarding:** The splash brand elements fade out smoothly while scaling down slightly using the fast duration token and standard curve. Simultaneously, the onboarding introduction text and layout components fade in and scale up from a compressed scale to baseline.
+* **Onboarding → Dashboard:** Utilizing a sibling horizontal transition, the onboarding screen translates out toward the logical end edge while the dashboard home screen slides in from the logical start edge, accompanied by an opacity fade.
+* **Dashboard → Transaction Details:** This path utilizes a high-fidelity container transform. The selected ledger card expanding boundary morphs smoothly in both directions to fill the entire screen, maintaining text reading line alignment throughout the transition.
+* **Dashboard → Statistics:** Sibling cross-fade with logical lateral shift. The statistics screen shifts into place along the horizontal axis, reflecting peer navigation.
+* **Dashboard → Search:** The search input bar scales horizontally to cover the top area, while secondary elements fade out and the list viewport slides down.
+* **Dashboard → Settings:** A lateral transition that translates settings menus smoothly from the logical start to logical end.
+* **Security Center:** Parent-to-child vertical translate from the bottom screen boundary, accompanied by a subtle elevation surface depth shift.
+* **Backup Center:** Elevated bottom-sheet transition sliding up vertically from the bottom safe area limit.
+* **Dialogs:** Symmetrical scale expansion starting from the screen center coordinates, paired with a backdrop dimming fade.
+* **Bottom Sheets:** Vertical slide-up transition from the bottom edge of the layout, tracking drag gestures.
+* **Navigation Drawer (Future):** Horizontal slide transition from the logical start edge of the layout, overlaying the main surface with an ambient scrim.
+
+### RTL-First Directionality:
+All horizontal translations are logical. In Persian RTL, navigating forward to a peer section translates content from logical start to logical end.
 
 ---
 
@@ -147,7 +163,9 @@ Screen transitions govern how the user moves between the primary application vie
 Navigation animations control how lateral tab bars, drawer menus, and top app bars update when the active route changes.
 
 ### Architectural Rules:
-* **Bottom Navigation Highlights:** When a user taps a bottom navigation icon, the inactive outline style switches to a filled style. The active colored state expands outwards from the icon's mathematical center using a smooth, linear opacity fade.
+* **Bottom Navigation Highlights:** When a user taps a bottom navigation icon, the inactive outline style switches to a filled style. The active colored background pill expands horizontally from the icon's mathematical center using a smooth, linear opacity fade.
+* **Navigation Rail:** Designed for tablet devices, the active rail item highlights its selected state using a vertical translation or fill interpolation, reflecting the physical layout.
+* **Future Navigation Drawer:** Slips smoothly from the logical start boundary using the decelerate curve token, resting with an ambient drop shadow overlay.
 * **App Bar Transitions:** Page titles must transition smoothly when navigation occurs. The old title fades out while translating slightly vertically, and the new title fades in from the opposite vertical offset, maintaining visual stability.
 
 ---
@@ -167,9 +185,10 @@ Dialogs represent high-priority system alerts (such as PIN confirmations or data
 ```
 
 ### Architectural Rules:
-* **Background Scrim:** The background overlay scrim fades in with a flat opacity transition, using the linear curve token `bankyar.motion.curve.linear`.
+* **Background Scrim:** The background overlay scrim fades in with a flat opacity transition, using the linear curve token `bankyar.motion.curve.linear` and a translucent opacity value.
 * **Container Entry:** The dialog container scales up slightly (from a compressed scale factor to its final base dimensions), using the decelerate curve token `bankyar.motion.curve.decelerate`. It must never bounce or overshoot.
 * **Container Exit:** When dismissed, the dialog container fades out quickly while scaling down slightly, using the accelerate curve token `bankyar.motion.curve.accelerate`.
+* **Touch Boundary Safety:** Tap events outside the dialog bounds will trigger a subtle horizontal shake animation if the dialog requires an explicit action, indicating that a choice must be made.
 
 ---
 
@@ -179,7 +198,8 @@ Bottom sheets are interactive drawer menus that expand from the bottom edge of t
 ### Architectural Rules:
 * **Slide Entry:** The sheet container slides up vertically from the bottom screen edge, using the decelerate curve token `bankyar.motion.curve.decelerate`.
 * **Slide Exit:** When dismissed, the sheet slides down vertically, exiting the screen area rapidly using the accelerate curve token `bankyar.motion.curve.accelerate`.
-* **Gesture Dismissal Tracking:** If the user drags the sheet downwards, the sheet container must track their touch coordinates with perfect 1:1 spatial mapping. If dismissed, the slide out completes smoothly.
+* **Gesture Dismissal Tracking:** If the user drags the sheet downwards, the sheet container must track their touch coordinates with perfect 1:1 spatial mapping.
+* **Throw Velocity Snap:** Upon release, if the dragging speed exceeds the system threshold, the sheet exits completely. If the velocity is low, it snaps back smoothly to its resting point.
 
 ---
 
@@ -187,9 +207,9 @@ Bottom sheets are interactive drawer menus that expand from the bottom edge of t
 Snackbars provide brief, self-dismissing confirmations (such as "Custom note saved") at the bottom of the screen.
 
 ### Architectural Rules:
-* **Entry Path:** Snackbars slide up vertically from below the bottom safe area boundary, using the decelerate curve token `bankyar.motion.curve.decelerate`.
+* **Entry Path:** Snackbars slide up vertically from below the bottom safe area boundary, using the decelerate curve token `bankyar.motion.curve.decelerate` and resting above the bottom navigation bar.
+* **Layout Shifts:** When a snackbar enters, any active Floating Action Button (FAB) translates vertically upward to avoid overlapping interactive targets.
 * **Exit Path:** After its self-dismissal duration completes, the snackbar fades out while translating slightly downwards, avoiding abrupt visual cuts.
-* **Layout Isolation:** Snackbars must float over bottom navigation bars, using z-index layers to prevent layout collisions or overlapping touch areas.
 
 ---
 
@@ -197,9 +217,9 @@ Snackbars provide brief, self-dismissing confirmations (such as "Custom note sav
 Notification animations govern how real-time, background SMS capture confirmations or security alerts render in the system notification tray.
 
 ### Architectural Rules:
-* **Low Visual Impact:** Notifications must slide into the notification view using the standard decelerate curve token `bankyar.motion.curve.decelerate`.
+* **Low Visual Impact:** Banners translate downwards from the top screen margin using the standard decelerate curve.
 * **Zero Loop Animations:** Notification icons must remain completely static. Glowing, flashing, or pulsing animations are prohibited to prevent visual distraction.
-* **Dismissal Behavior:** Standard swipe gestures slide the notification horizontally off the screen canvas, matching the system-native behavior.
+* **Dismissal Behavior:** Swipe gestures slide the notification horizontally off the screen canvas, matching the system-native behavior with 1:1 touch coordinate mapping.
 
 ---
 
@@ -207,8 +227,9 @@ Notification animations govern how real-time, background SMS capture confirmatio
 Floating Action Buttons (FABs) provide rapid access to the primary screen action (such as manual SMS parsing or custom template creation).
 
 ### Architectural Rules:
-* **Scale Transitions:** When scrolling down a dense ledger feed, the FAB must scale down to zero to maximize reading surface area. When scrolling stops, the FAB scales back up to its standard dimensions.
-* **Icon Rotations:** When a FAB triggers an expandable speed-dial menu (if permitted by governance), the central plus icon rotates clockwise to form a close cross symbol (×). The rotation must use a smooth, standard easing curve with zero overshoot.
+* **Scale Transitions:** When scrolling down a dense ledger feed, the FAB must scale down to zero using the accelerate curve to maximize reading surface area. When scrolling stops, the FAB scales back up to its standard dimensions using the decelerate curve.
+* **Icon Rotations:** When a FAB triggers an expandable speed-dial list, the central plus icon rotates clockwise to form a close cross symbol (×). The rotation must use a smooth, standard curve with zero overshoot.
+* **Speed-Dial Stagger:** The child quick-action items expand sequentially from the FAB boundary, utilizing the stagger delay token to establish a clean visual flow.
 
 ---
 
@@ -217,7 +238,8 @@ Cards represent the primary visual vessel for financial records in BankYar.
 
 ### Architectural Rules:
 * **Pressed Compression:** When pressed, cards compress slightly inward (scaling down by a minor scale factor) to confirm the touch event instantly.
-* ** transformative Details Expansion:** When tapped to show transaction details, the card does not open a new screen. Instead, the card container expands vertically on the active canvas, using the standard curve token `bankyar.motion.curve.standard` to reveal hidden metadata rows.
+* **Elevation Shifts:** Upon selection or touch, the ambient surface shadow changes its depth range to simulate a physical lift.
+* **Details Expansion:** When tapped to show transaction details, the card does not open a new screen. Instead, the card container expands vertically on the active canvas, using the standard curve token `bankyar.motion.curve.standard` to reveal hidden metadata rows while adjacent cards translate downwards.
 
 ---
 
@@ -225,8 +247,14 @@ Cards represent the primary visual vessel for financial records in BankYar.
 List animations control how new items (such as parsed banking SMS entries) are rendered in scrollable ledger feeds.
 
 ### Architectural Rules:
-* **Sequential Ingestion:** Newly parsed entries slide into the top of the ledger vertically while fading in. If multiple items are added, they must animate sequentially with a minor staggered offset, preventing jarring layout jumps.
-* **Horizontal Deletion Swipe:** Swiping to delete an unparsed log slides the item horizontally along the scroll track, matching the user's touch movement with 1:1 precision.
+* **Insert:** Newly parsed entries slide into the top of the ledger vertically while fading in. If multiple items are added, they must animate sequentially with a minor staggered offset, preventing jarring layout jumps.
+* **Remove:** Swiping to delete an entry slides the item horizontally along the scroll track, matching the user's touch movement with 1:1 precision. The empty slot then collapses vertically as adjacent items translate smoothly to fill the gap.
+* **Reorder:** Active items selected for reordering elevate vertically, casting a soft ambient shadow. Adjacent items translate vertically to open a space, providing real-time feedback during the drag.
+* **Refresh:** A manual refresh operation animates a progress loader, translating vertically before scaling down smoothly once the feed is updated.
+* **Pagination:** When reaching the bottom of the list, a subtle shimmer loader fades in, expanding the list container vertically without interrupting the scroll momentum.
+* **Swipe to Delete:** Swiping past the activation boundary triggers a rapid horizontal exit, blending the background fill color to the error status red.
+* **Swipe to Archive:** Swiping in the opposite logical direction transitions the background container to a secondary status tint.
+* **Expansion / Collapse:** Detailed transaction rows expand vertically using a clip-mask path, maintaining layout stability.
 
 ---
 
@@ -236,6 +264,7 @@ Search animations coordinate search input expansion, clear-button states, and li
 ### Architectural Rules:
 * **Input Expansion:** Tapping the search icon expands the search bar horizontally to fill the screen margin boundary, while secondary page titles fade out smoothly.
 * **Instant Clear Feedback:** The clear cross button (×) fades in instantly when characters are typed. When tapped, the search term is erased, and the button fades out immediately.
+* **Live Result Updates:** As search inputs change, list results fade and translate slightly vertically to reveal the filtered set, keeping the transition light.
 
 ---
 
@@ -245,6 +274,7 @@ Filter animations handle chip selections, filter panel drawers, and category tag
 ### Architectural Rules:
 * **Chip State Transitions:** Tapping a filter chip (e.g., selecting a specific bank filter) transitions its background fill from neutral to the active color. The transition is a smooth, linear blend.
 * **Panel Drawer entries:** The filtering drawer slides horizontally from the logical start edge of the layout, matching the reading direction of the active locale.
+* **Tag Accumulation:** Newly added filter tags scale up from their center coordinates sequentially, keeping focus on the active filters.
 
 ---
 
@@ -254,6 +284,7 @@ Expand and collapse motions handle accordions, sub-menus, and detailed transacti
 ### Architectural Rules:
 * **Vertical Growth:** Collapsed content areas expand vertically, pushing lower content cards downwards smoothly. Using hard visual cuts or clipping masks without layout interpolation is prohibited.
 * **Chevron Indication:** Beside the expandable title, a disclosure chevron icon rotates smoothly to indicate the expanded state.
+* **Clipping Boundary:** Content rendering inside the expanding container must clip to the animated height boundary, preventing text elements from overlapping.
 
 ---
 
@@ -263,6 +294,7 @@ Loading motions indicate background task processing, such as database ingestion,
 ### Architectural Rules:
 * **Skeleton Shimmer Fades:** Full-screen spinning wheels are prohibited. Feeds must use flat skeleton UI elements. Skeleton shapes must animate with a soft, pulsing opacity transition, using the linear curve token `bankyar.motion.curve.linear`.
 * **Linear Continuity:** The opacity transition must repeat smoothly without sudden visual breaks, establishing a quiet, non-distracting loading state.
+* **Staggered Sweep:** Multiple shimmer cells sweep their gradient highlights sequentially, creating an elegant progress flow.
 
 ---
 
@@ -271,6 +303,7 @@ Progress motions track multi-step long-running background tasks, such as file re
 
 ### Architectural Rules:
 * **Continuous Interpolation:** Progress bars must animate their filled region smoothly. When the progress percentage updates, the bar must transition to the new width using a decelerate curve, preventing jerky increments.
+* **Circular Progress Ring:** Applied in small containers, the progress ring path expands its arc smoothly, maintaining velocity control.
 * **State Transition:** Upon reaching maximum progress, the bar fades out smoothly, transitioning into the success feedback screen.
 
 ---
@@ -281,6 +314,7 @@ Success feedback confirms positive system events, such as successful database ba
 ### Architectural Rules:
 * **Subtle Confirmed State:** Success states utilize a quiet, non-playful animation. A circular checkmark badge scales up slightly while its internal path draws in smoothly, using the decelerate curve token `bankyar.motion.curve.decelerate`.
 * **Automatic Dismissal:** The success view must dismiss itself automatically after a brief, stable duration, returning the user to their active task with zero extra taps.
+* **Path Stroke Drawing:** The checkmark outline uses a path-stroke animation, drawing from start to finish to confirm the state change.
 
 ---
 
@@ -290,6 +324,7 @@ Error feedback highlights critical failures that require user attention, such as
 ### Architectural Rules:
 * **Anxiety-Free Shakes:** In input forms (such as PIN entry), a validation error triggers a subtle, horizontal shake animation. The shake moves horizontally along a tight axis, using a linear curve before returning to its center. No vertical bouncing is allowed.
 * **Visual Isolation:** The error banner fades in vertically above the form input field, drawing immediate focus to the validation message.
+* **Transition Alert:** The container transitions its border color to the semantic error status color instantly, providing clear feedback.
 
 ---
 
@@ -299,6 +334,7 @@ Empty states appear when screens contain no transaction, rule, or log records.
 ### Architectural Rules:
 * **Fading Entry:** When a screen resolves to an empty state, the empty state illustration and its descriptive copy fade in smoothly.
 * **Call to Action Scale:** The primary get-started action button scales up slightly from its center, drawing the user's focus to their next step.
+* **Slight Translation:** Elements translate slightly along the vertical axis during entry to establish vertical rhythm.
 
 ---
 
@@ -308,6 +344,7 @@ Gesture feedback controls how the interface reacts to user touch inputs, swipes,
 ### Architectural Rules:
 * **Perfect 1:1 Tracking:** Interactive elements that track user dragging (such as bottom sheets or swipe-to-delete cards) must update their spatial coordinates with perfect 1:1 alignment with the user's touch input.
 * **Velocity-Based Completion:** When a gesture is released, the system calculates the release velocity. If the velocity exceeds a threshold, the transition completes automatically; otherwise, the element slides smoothly back to its default state.
+* **Damping and Resistance:** As gestures approach layout margins, visual feedback applies friction to indicate edge boundaries.
 
 ---
 
@@ -332,8 +369,9 @@ Press states provide immediate visual and haptic confirmation when an interactiv
 ```
 
 ### Architectural Rules:
-* **Immediate Reaction:** Touch press states must render within fast response limits (typically under 100 milliseconds) to feel instantaneous.
-* **Proportionate Scaling:** Clickable items compress slightly inward, scaling down by a minor factor (e.g., to 98% of their size) to simulate physical depth.
+* **Immediate Reaction:** Touch press states must render within fast response limits to feel instantaneous.
+* **Proportionate Scaling:** Clickable items compress slightly inward, scaling down by a minor factor to simulate physical depth.
+* **State Recovery:** If a touch is dragged away from the element boundary, the scale expands back to default, cancelling the pending action.
 
 ---
 
@@ -343,6 +381,7 @@ Hover states provide immediate visual feedback on desktop or pointer devices whe
 ### Architectural Rules:
 * **Instant Contrast Shifts:** When hovered, the component background transitions to a slightly darker or lighter tint (shifting by +1 step on the semantic color scale).
 * **Cursor Selection:** The pointer cursor must switch to an interactive hand indicator, signaling that the element is clickable.
+* **Elevation Adjustment:** Small containers (such as analytics cards) elevate slightly during hover, indicating interactive focus.
 
 ---
 
@@ -352,6 +391,7 @@ Focus states are a critical accessibility requirement, helping users navigate th
 ### Architectural Rules:
 * **Focus Outline Ring:** Focused elements must render a clear, high-contrast outline indicator using the focused border token. The outline fades in instantly to draw immediate focus.
 * **No Layout Shifting:** The focus ring must overlay the component boundaries without altering its padding or size, preventing layout shifts.
+* **Color Contrast:** The focus indicator uses high-contrast colors to ensure maximum visibility against dark or light canvases.
 
 ---
 
@@ -361,6 +401,7 @@ Scroll behaviors manage how feeds, lists, and charts transition vertically or ho
 ### Architectural Rules:
 * **Natural Inertia Decay:** Scrolling lists must utilize standard system-native physics and deceleration decay, keeping scrolling feeling natural and responsive.
 * **Overscroll Clamping:** Scroll containers must clamp smoothly when reaching list boundaries. Glowing or bouncy overscroll effects are prohibited.
+* **Sliver Transitions:** Top headers shrink smoothly into compact app bar states as scrolling proceeds, keeping title elements legible.
 
 ---
 
@@ -379,22 +420,36 @@ Drag and drop guidelines govern how elements (such as ordering custom template m
 ### Architectural Rules:
 * **Visual Lift:** When grabbed, the item scales up slightly and increases its elevation, casting a soft ambient shadow to indicate that it is detached from the list surface.
 * **Logical Reordering:** As the item is dragged vertically, adjacent cards translate downwards or upwards smoothly to make space, ensuring the reordering process is predictable.
+* **Drop Confirmation:** Dropping an item in a new position resets its elevation and scale with standard easing, accompanied by a light haptic confirmation.
 
 ---
 
 ## 29. Motion Token Mapping
 This system links design tokens to semantic animation parameters, separating visual timing from layout and component code:
 
-| Motion Token Name | Semantic Use Case Mapping | Abstract Easing Efficacy |
-| :--- | :--- | :--- |
-| `bankyar.motion.duration.instant` | Color swaps, active state focus rings, text entries | Absolute instantaneous state shift |
-| `bankyar.motion.duration.fast` | Button touch pressed compressions, hover feedback | Immediate tactile verification |
-| `bankyar.motion.duration.medium` | Modal bottom sheet entries, dialog animations | Balanced spatial transition |
-| `bankyar.motion.duration.slow` | Large parent container transforms, onboarding views| Deep structural transitions |
-| `bankyar.motion.curve.linear` | Opacity fades, skeleton loading shimmers | Even visual distribution |
-| `bankyar.motion.curve.standard` | Expanding card details, vertical list rearrangements| Natural, physical spatial motion |
-| `bankyar.motion.curve.decelerate` | Sliding modal bottom sheets up, scaling dialogs in | Rapid, responsive entry |
-| `bankyar.motion.curve.accelerate` | Dismissing sheets down, fading dialogs out | Swift, clean exit |
+### Duration Tokens:
+* `bankyar.motion.duration.instant`: Used for color swaps, active state focus rings, and text entries.
+* `bankyar.motion.duration.fast`: Used for button touch pressed compressions and hover feedback.
+* `bankyar.motion.duration.medium`: Used for modal bottom sheet entries, dialog animations, and sliding drawers.
+* `bankyar.motion.duration.slow`: Used for large parent container transforms and onboarding transitions.
+
+### Delay Tokens:
+* `bankyar.motion.delay.none`: Immediate execution without offset.
+* `bankyar.motion.delay.short`: Minor offset for quick sequential layouts.
+* `bankyar.motion.delay.stagger`: Standard spacing offset for vertical list rendering.
+
+### Curve Tokens:
+* `bankyar.motion.curve.linear`: Absolute flat motion, reserved for opacity fades and skeleton loading shimmers.
+* `bankyar.motion.curve.standard`: Natural easing curve, used for expanding card details and list rearrangements.
+* `bankyar.motion.curve.decelerate`: Fast entry curve, used to bring elements onto the screen rapidly.
+* `bankyar.motion.curve.accelerate`: Exit acceleration curve, used to move departing elements off the screen rapidly.
+* `bankyar.motion.curve.spring_damped`: Critically damped curve for touch tracking overshoot recovery, ensuring zero oscillation.
+
+### Parameter Scales:
+* `bankyar.motion.scale.compress`: Pressed container scale reduction factor.
+* `bankyar.motion.scale.expand`: Expansion container scale growth factor.
+* `bankyar.motion.opacity.hidden`: Zero opacity transparency.
+* `bankyar.motion.opacity.visible`: Full opacity reading contrast.
 
 ---
 
@@ -402,7 +457,8 @@ This system links design tokens to semantic animation parameters, separating vis
 To ensure BankYar remains lightweight, responsive, and battery-efficient on low-end Android hardware, all animations must adhere to a strict **Performance Budget**:
 
 ### Performance Guidelines:
-* **60 FPS Minimum Guarantee:** Scroll feeds, list transitions, and interactive buttons must maintain a minimum rendering speed of 60 frames per second.
+* **60 FPS Minimum Guarantee:** Scroll feeds, list transitions, and interactive buttons must maintain a minimum rendering speed of sixty frames per second.
+* **120 FPS Native Support:** Devices with high refresh rate displays (such as flagship Android and iOS devices) must render transitions at one hundred and twenty frames per second.
 * **GPU Overdraw Prevention:** Complex animations must avoid overlapping semi-transparent layers. Background surfaces must remain flat to prevent GPU overdraw.
 * **No Layout Recalculations:** Animations must only modify transform and opacity properties. Modifying spatial dimensions (such as width, height, or padding) during animation is prohibited, as it forces expensive layout recalculations.
 * **Graceful Interruption:** If a user initiates a new transition while an animation is running, the active animation must terminate immediately and transition to the new state without causing UI stuttering.
@@ -413,10 +469,11 @@ To ensure BankYar remains lightweight, responsive, and battery-efficient on low-
 The accessibility strategy ensures that the application remains usable and comfortable for all users, including those with visual impairments or motion sensitivities.
 
 ### Accessibility Checklist:
-- [ ] **Contrast Integrity:** Text elements inside animated components must maintain high contrast ratios against their backgrounds under all lighting conditions.
-- [ ] **Reduced Motion Support:** The system must detect when the user has enabled "Reduce Motion" in their system settings, immediately switching animations to instant durations.
-- [ ] **Screen Reader Support:** Screen readers must read the final, resolved state of animated components immediately, avoiding reading intermediate transition states.
-- [ ] **Dynamic Text Scaling:** Animated cards and forms must scale vertically to support up to 200% text magnification without clipping text.
+* **Contrast Integrity:** Text elements inside animated components must maintain high contrast ratios against their backgrounds under all lighting conditions.
+* **Reduced Motion Support:** The system must detect when the user has enabled "Reduce Motion" in their system settings, immediately switching animations to instant durations.
+* **Screen Reader Support:** Screen readers must read the final, resolved state of animated components immediately, avoiding reading intermediate transition states.
+* **Dynamic Text Scaling:** Animated cards and forms must scale vertically to support up to two hundred percent text magnification without clipping text.
+* **Focus Order Alignment:** Focus transitions match visual reading direction, avoiding random spatial jumps during layout shifts.
 
 ---
 
@@ -426,6 +483,7 @@ Reduced Motion settings protect users who experience discomfort or motion sickne
 ### Architectural Rules:
 * **Instant State Switches:** When "Reduce Motion" is enabled in system settings, all motion durations are immediately set to `bankyar.motion.duration.instant`.
 * **Transitions Override:** Sliding sheets and scaling dialogs switch to simple opacity fade-ins, ensuring the interface remains completely flat and static.
+* **Alternative Animations:** Complex structural transforms default to instant opacity cross-fades, avoiding all spatial translating and scaling.
 
 ---
 
@@ -435,6 +493,7 @@ Dark Mode considerations optimize visual transitions for low-light environments,
 ### Architectural Rules:
 * **No High-Contrast Flashes:** Opacity transitions must be carefully balanced to prevent sudden flashes of light when opening modals against deep gray canvases.
 * **Elevation via Opacity:** Instead of heavy shadows, elevation changes in dark mode are communicated by applying soft white opacity overlays to container surfaces.
+* **Phosphor Ghosting Mitigation:** Easing curves and timings are optimized to reduce visual smearing on OLED screens during fast scrolling.
 
 ---
 
@@ -445,6 +504,7 @@ Haptic feedback provides tactile confirmations that work alongside visual animat
 * **Light Tap Confirmation:** Tapping buttons, filter chips, or settings toggles triggers a short, light haptic vibration.
 * **Medium Alert Confirmation:** Saving a custom note, completing a database backup, or confirming a template triggers a distinct, medium haptic vibration.
 * **Heavy Warning Confirmation:** Destructive actions, validation errors, or PIN mismatches trigger a sequence of sharp haptic vibrations, warning the user of the state.
+* **System-Native Sync:** Physical feedback profiles synchronize with visual animations to reinforce the sense of physical depth.
 
 ---
 
@@ -517,9 +577,12 @@ To transition the existing codebase to the structured Motion & Animation System,
 
 ## 40. Future Evolution Strategy
 As BankYar expands, the Motion & Animation System is built to scale:
-* **Multi-Platform Portability:** Motion tokens use platform-agnostic definitions, ensuring a seamless future migration path to iOS and desktop environments.
-* **Theme Isolation:** Transition parameters are isolated from layout logic, allowing the design system to support new brand variations or white-label demands without changes to the core code.
-* **Continuous Performance Auditing:** Automated CI/CD performance checks profile frame rates across device pools, ensuring new visual updates never compromise our 60 FPS budget.
+* **AI Assistant:** Future AI parsing assistants will use dynamic line progress and organic pulsing shimmers that scale up smoothly to represent deep parsing cycles, ensuring the transition from raw text is legible.
+* **Voice Interaction:** Speech capture states will use localized indicator waves translating outwards from the search bar center, matching the amplitude.
+* **Wear OS:** Spacing and duration tokens scale to match compact circular screen limits, adapting transitions to shorter pathways.
+* **Foldables:** Transitions handle dual-screen fold splits dynamically, translating content containers to separate screen halves during detail expansions without breaking spatial continuity.
+* **Desktop:** Pointer coordinates determine hover scaling effects, adapting components to standard cursor selections.
+* **Multi-window:** Layout structures scale dynamically when resizing screen boundaries, transitioning components from expanded columns to single-column feeds smoothly.
 
 ---
 **End of Document**
