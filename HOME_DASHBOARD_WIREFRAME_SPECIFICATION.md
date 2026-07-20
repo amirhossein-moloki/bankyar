@@ -1,66 +1,74 @@
-# BankYar Home Dashboard Screen Wireframe Specification (v1.0.0)
-## Enterprise-Grade Structural Blueprint for Offline-First Secure Financial Applications
+# BankYar Home Dashboard Screen Wireframe Specification (v1.1.0)
+## Enterprise-Grade Structural UX Blueprint for Offline-First Secure Financial Applications
 
 **Project Name:** BankYar
 **Classification:** Enterprise Design System Wireframe Specification
-**Document Version:** 1.0.0
-**Authors:** Principal UX Architect, Information Architect, Senior Product Designer, Flutter UX Specialist, Material Design Expert, Enterprise Financial Product Consultant
+**Document Version:** 1.1.0
+**Authors:** Principal Product Designer, Senior UX Architect, Material Design 3 Expert, Flutter UI Architect, Enterprise Financial Application Designer
 **Status:** Approved / Core Structural Blueprint
 
 ---
 
-## Executive Summary
+## 1. Screen Overview
 
-This document establishes the official, absolute **Structural Wireframe Specification** for the Home Dashboard of BankYar. Operating within our strict offline-first, privacy-first, and zero-network security boundaries, this specification defines the interface's structure, hierarchy, relative spacing, region layout, and interaction flow before any visual design or framework-specific coding begins.
+### 1.1 Core Purpose
+The Home Dashboard is the primary operational hub and financial cockpit of the BankYar application. Its core purpose is to translate unstructured, unformatted carrier text streams (SMS banking notifications) into a secure, structured, and instantly readable local financial ledger completely offline.
 
-BankYar is designed to translate unformatted carrier text streams (SMS) into a secure, structured local financial ledger. Operating natively in **Persian (RTL)** on the Android platform, this wireframe specification defines how the Home Dashboard maintains physical comfort, predictability, and safety under one-handed mobile usage.
+The design aims to reduce the anxiety associated with receiving financial notifications by presenting data in a highly structured, calm, and reassuring personal balance command center.
 
-This is **not** a UI mockup, **not** a visual design document, and contains **zero** framework-specific code constructs. All spacing, alignments, boundaries, and behaviors are specified using abstract relative design tokens, ensuring perfect scaling under accessibility magnification, fluid responsiveness across devices, and strict consistency.
+### 1.2 Target System Parameters
+*   **Platform:** Android (Primary Target), designed with a platform-agnostic layout architecture to support future expansions to iOS and desktop viewports.
+*   **Language & Text Flow:** Native Persian (RTL layout rules, Solar Hijri calendar, Persian numeric baselines).
+*   **Connectivity Constraint:** 100% offline-first, private-by-default, operating under a strict zero-network permission sandbox.
+*   **Visual Philosophy:** Stoic Vault and High-Precision Analyst personas—characterized by structural clarity, flat card borders, relative visual layers, high information density, and low cognitive load.
+*   **Design Framework:** Material Design 3 (MD3) structural layout guidelines.
 
 ---
 
-## Layout Hierarchy
+## 2. Vertical Layout
 
-The structural layout uses a deterministic three-zone vertical model that progress logically from right (start) to left (end) following Persian RTL reading patterns. The master grid and spatial containment rules are mapped below:
+The screen follows a strict, single-column vertical stack with deterministic spatial zones. Gaps, margins, and relative sizes scale adaptively.
 
-### Structural Blueprint Mapping
+### 2.1 Spatial Grid & Outermost Columns
+*   **Grid System:** Compact viewports utilize a 4-column master grid, expanding to an 8-column layout on tablets/foldables.
+*   **Outer Margins:** Enforced on both inline (horizontal) boundaries using the `bankyar.responsive.margin` token.
+*   **Gutter Spacing:** Horizontal spacing between adjacent components is bound to the `bankyar.responsive.gutter` token.
+*   **Rhythm & Spacing Factor:** Vertical margins between independent blocks are governed by the `bankyar.space.lg` token, while tighter internal alignments use `bankyar.space.sm` and `bankyar.space.md`.
+
+### 2.2 Wireframe Layout Diagram
 
 ```
 +-------------------------------------------------------------------------+
 |                              DEVICE STATUS BAR                          |
 +-------------------------------------------------------------------------+
-|  [ZONE A: STICKY HEADER & DIAGNOSTICS] - Pinned at Viewport Top         |
+|  [ZONE A: STICKY HEADER & DIAGNOSTICS]                                  |
 |  +-------------------------------------------------------------------+  |
-|  | [Diag Indicator]            [App Title Logo]      [Notification]  |  |
+|  | [Notification Bell]          [Brand Logo]         [Search Trigger]|  |
 |  | (Logical End / Left)        (Center-Aligned)      (Logical Start) |  |
 |  +-------------------------------------------------------------------+  |
 +-------------------------------------------------------------------------+
-|  [ZONE B: SCROLLABLE WORKSPACE & FEED] - Primary Scrollable Container   |
+|  [ZONE B: SCROLLABLE WORKSPACE & FEED]                                  |
 |  +-------------------------------------------------------------------+  |
 |  |                                                                   |  |
-|  |  [Region 2: Total Balance Display Card]                           |  |
-|  |  - Displays total net worth in display typography                 |  |
+|  |  [Region 2: Greeting Area]                                        |  |
 |  |                                                                   |  |
-|  |  [Region 3: Inflow & Outflow Comparison Cards]                    |  |
-|  |  - Parallel horizontal blocks showing monthly summary data       |  |
+|  |  [Region 3: Total Balance Display Card]                           |  |
 |  |                                                                   |  |
-|  |  [Region 4: Interactive Filter Row] (Sticky-capable horizontal row) |  |
-|  |  - Horizontal scrolling row of chip containers starting from right |  |
+|  |  [Region 4: Today's Financial Summary Card]                       |  |
 |  |                                                                   |  |
-|  |  [Region 5: Analytical Summary Workspace]                          |  |
-|  |  - Aspect-ratio locked donut visualization & monospace legends    |  |
+|  |  [Region 5: Interactive Filter Row]                               |  |
 |  |                                                                   |  |
-|  |  [Region 6: Chronological Ledger Workspace]                       |  |
-|  |  - Vertical stacked feed of transaction cards grouped by date    |  |
+|  |  [Region 6: Quick Statistics Spend Chart]                         |  |
+|  |                                                                   |  |
+|  |  [Region 7: Recent Transactions Ledger List]                       |  |
 |  |                                                                   |  |
 |  +-------------------------------------------------------------------+  |
 +-------------------------------------------------------------------------+
-|  [ZONE C: STICKY CONTROL, ACTION & NAVIGATION] - Pinned at Bottom       |
+|  [ZONE C: STICKY CONTROL, ACTION & NAVIGATION]                          |
 |  +-------------------------------------------------------------------+  |
 |  | [Region 8: Primary Floating Action Button] (Logical Bottom-Start)  |  |
 |  |                                                                   |  |
-|  | [Region 7: Bottom Action & Control Bar]                           |  |
-|  | - Equal-width navigation triggers with systemic gesture buffers   |  |
+|  | [Region 9: Shell Bottom Navigation Bar]                           |  |
 |  +-------------------------------------------------------------------+  |
 +-------------------------------------------------------------------------+
 |                         SYSTEM GESTURE NAV BAR                          |
@@ -69,303 +77,304 @@ The structural layout uses a deterministic three-zone vertical model that progre
 
 ---
 
-## Region Specification
+## 3. Section Hierarchy
 
-The Home Dashboard is divided into eight distinct structural regions. Each region's geometric rules, priority, behaviors, and accessibility boundaries are defined below.
+The Home Dashboard is divided into nine physical regions, each mapped below with comprehensive architectural specifications.
 
-### 1. Diagnostic App Bar Header (Region 1)
-* **Purpose:** Establishes the primary application brand context, displays positive offline sync status, and houses secondary contextual search and notification actions.
-* **Position:** Zone A (Pinned to top of screen).
-* **Priority:** Primary (Critical for branding and diagnostic state).
-* **Minimum Height:** Mapped to `bankyar.layout.appbar.min.height` (resolved through global spatial base factor multiplier).
-* **Maximum Height:** Mapped to `bankyar.layout.appbar.max.height` (equal to the minimum height to maintain a stable, predictable top margin).
-* **Expansion Rules:** This region remains physically static. No height expansion is allowed during standard scroll interactions.
-* **Collapse Rules:** This region does not collapse. It remains pinned to the viewport top to ensure diagnostics and high-level notifications are always reachable.
-* **Interaction Rules:**
-  * Tapping the notification symbol (logical start) slides up the modal notification sheet from the bottom edge.
-  * Tapping the search icon smoothly triggers the expanding local search field.
-  * Tapping the diagnostic badge (logical end) opens a secure, on-device diagnostic card displaying local parse metrics.
-* **Dependencies:** Relies on local database synchronization and security states.
-* **Accessibility:** Native screen readers announce: *"System Status: Securely Offline. Search and notification triggers available."*
-* **Future Scalability:** Designed with symmetrical start/end slots to support future localization selectors without altering the center logo alignment.
+### Region 1: Diagnostic App Bar Header
+*   **Purpose:** Establishes application brand identity, houses search/notification shortcuts, and provides positive visual confirmation of the secure on-device database offline status.
+*   **Priority:** Primary (Always visible).
+*   **Position:** Zone A (Pinned to top viewport edge).
+*   **Width:** Spans 100% of viewport width.
+*   **Height:** Locked to `bankyar.layout.appbar.min.height` (no dynamic height expansion during scroll actions).
+*   **Alignment:** Logical Start (Right) contains search and profile hooks; Center-aligned contains brand symbol; Logical End (Left) contains notification and offline diagnostic status triggers.
+*   **Content Rules:** Contains vector icon elements for search, notification, and diagnostic badges. The brand logo is static.
+*   **Interaction Rules:**
+    *   Tapping the search icon expands the search bar overlay.
+    *   Tapping the notification bell opens the slide-up notification panel.
+    *   Tapping the diagnostic badge opens a secure local system-health metadata block.
+*   **Accessibility:** Announced as *"Header: BankYar. Database secure and offline. Notification and search buttons available."*
+*   **RTL Behaviour:** Mirroring is automatically applied. Search trigger aligns to the right side, diagnostic badges and notification bell align to the left.
+*   **Loading Behaviour:** Replaced by a linear, non-blocking horizontal shimmering indicator at its bottom edge.
+*   **Error Behaviour:** Displays a subtle warn-border indicator without obstructing branding or actions.
+*   **Empty Behaviour:** Remained physically unaffected.
+*   **Animation Notes:** Transitions between normal and active search fields use a horizontal slide-and-wipe transition matching the `bankyar.motion.duration.fast` token.
 
-### 2. Total Balance Display Card (Region 2)
-* **Purpose:** Presents the consolidated net worth of the user, parsed entirely offline from local transactions.
-* **Position:** Zone B (Top-most scrollable item).
-* **Priority:** Critical (Primary informational focal point).
-* **Minimum Height:** Mapped to `bankyar.layout.balance.card.min.height` (must fit display typography and currency label without text clipping).
-* **Maximum Height:** Mapped to `bankyar.layout.balance.card.max.height` (prevents vertical layout stretching).
-* **Expansion Rules:** Grows vertically if system typography scaling exceeds the default size, ensuring that high-level currency strings wrap cleanly instead of clipping.
-* **Collapse Rules:** None. Constrained strictly between min/max height tokens under standard scales.
-* **Interaction Rules:** Tapping the balance area toggles visual masking. This replaces the active figures with a localized obscured character string, preventing shoulder surfing in public spaces.
-* **Dependencies:** Relies on the decrypted local ledger query engines.
-* **Accessibility:** Focuses immediately after the App Bar, announcing: *"Total Net Balance: [Local Currency Figure]. Tap to obscure figures."*
-* **Future Scalability:** Internal horizontal flex space is reserved to show a small trend delta indicator in future versions.
+### Region 2: Greeting Area
+*   **Purpose:** Welcomes the user and confirms the current on-disk ledger update timestamp.
+*   **Priority:** Tertiary (Low density, high reassurance).
+*   **Position:** Zone B (First scrollable block).
+*   **Width:** Spans full columns between `bankyar.responsive.margin` bounds.
+*   **Height:** Mapped to `bankyar.layout.greeting.height` (dynamic scaling based on text scaling settings).
+*   **Alignment:** Text aligned to logical start (Right in Persian RTL).
+*   **Content Rules:** Displays the user's name ("سلام، سهراب عزیز") in secondary title typography, with supporting subtitle confirming ledger safety ("صندوقچه مالی شما امن و به‌روز است").
+*   **Interaction Rules:** Non-interactive block.
+*   **Accessibility:** Structured text is announced sequentially: *"Hello dear Sohrab, your financial vault is secure and updated."*
+*   **RTL Behaviour:** Symmetrical alignment to the right margin.
+*   **Loading Behaviour:** Shown as two stacked horizontal skeletal blocks.
+*   **Error Behaviour:** Hidden if greeting strings fail to resolve.
+*   **Empty Behaviour:** Replaced by a default localized generic welcome string.
+*   **Animation Notes:** Fades in smoothly upon application launch.
 
-### 3. Inflow & Outflow Comparison Cards (Region 3)
-* **Purpose:** Displays a side-by-side comparative summary of monthly income (inflow) and monthly expenses (outflow).
-* **Position:** Zone B (Directly below Region 2).
-* **Priority:** Secondary (Supports high-level financial clarity).
-* **Minimum Height:** Mapped to `bankyar.layout.summary.card.min.height`.
-* **Maximum Height:** Mapped to `bankyar.layout.summary.card.max.height`.
-* **Expansion Rules:** Expands vertically to wrap text when accessibility scale is magnified up to double the standard size.
-* **Collapse Rules:** None.
-* **Interaction Rules:** Tapping either card acts as a high-level filter shortcut, updating the Chronological Ledger Workspace to display only incoming or outgoing records respectively.
-* **Dependencies:** Relies on category indexes and transaction aggregation modules.
-* **Accessibility:** Formatted as two distinct columns. Screen readers announce: *"Monthly Income: [Figure]"* followed by *"Monthly Expenses: [Figure]"*.
-* **Future Scalability:** Sized symmetrically to accommodate budget threshold indicators in future phases.
+### Region 3: Total Balance Display Card
+*   **Purpose:** The primary financial focal point showing the user's aggregated offline net balance.
+*   **Priority:** Critical (Primary informational asset).
+*   **Position:** Zone B (Directly below Region 2).
+*   **Width:** Spans all columns of the grid.
+*   **Height:** Constrained between `bankyar.layout.balance.card.min.height` and `bankyar.layout.balance.card.max.height`.
+*   **Alignment:** Content is vertically and horizontally centered inside a card container.
+*   **Content Rules:**
+    *   Top-Start (Right): Monochromatic label "دارایی کل صندوقچه" (Total Vault Assets).
+    *   Top-End (Left): Visibility eye symbol.
+    *   Center: Large display balance text (+۱۲,۴۰۰,۰۰۰ تومان) with monospace digits.
+    *   Bottom: "بروزرسانی شده در: ۱۴:۳۲" (Last updated timestamp).
+*   **Interaction Rules:** Tapping the card body or the eye symbol toggles visual masking. When active, numbers are replaced with six circular characters ("••••••") to prevent shoulder-surfing in public spaces.
+*   **Accessibility:** Announces: *"Total balance: twelve million four hundred thousand Tomans. Double-tap to mask sensitive values."*
+*   **RTL Behaviour:** Label aligns right, toggle button aligns left. Currency token "تومان" sits inline-end of the Persian numeric digits.
+*   **Loading Behaviour:** Replaced with a skeleton container possessing matching card curvature (`bankyar.radius.large`).
+*   **Error Behaviour:** Displays a redacted mask with an inline error trigger reading *"Click to retry local ledger decryption"*.
+*   **Empty Behaviour:** Displays a zero balance ("۰ تومان").
+*   **Animation Notes:** Visibility masking toggles instantly to prevent lagging data exposure.
 
-### 4. Interactive Filter Row (Region 4)
-* **Purpose:** Houses horizontal filter chips that allow rapid sub-query filtering of the transaction feed.
-* **Position:** Zone B (Directly below Region 3, capable of pinning to the top of Zone B when Region 2 and 3 scroll off-screen).
-* **Priority:** Primary (High Interaction).
-* **Minimum Height:** Mapped to `bankyar.layout.filter.row.min.height` (guarantees a touch target height of at least `bankyar.space.xl`).
-* **Maximum Height:** Mapped to `bankyar.layout.filter.row.max.height`.
-* **Expansion Rules:** None. Constrained to a single row to maximize vertical scrolling space for the transaction feed.
-* **Collapse Rules:** None.
-* **Interaction Rules:** Horizontal dragging scrolls the row right-to-left. Tapping any filter chip toggles its selection state, instantly updating the Ledger feed below.
-* **Dependencies:** Relies on custom categories and registered bank ledger accounts.
-* **Accessibility:** Announced as a scrollable selector list. Screen readers report active selection states (e.g., *"Filter Chip: Food, selected"*).
-* **Future Scalability:** Reserved slots to append a trailing "Add Custom Filter" chip to launch a rule builder sheet.
+### Region 4: Today's Financial Summary Card
+*   **Purpose:** Displays parallel, comparative daily cash inflow and outflow streams.
+*   **Priority:** Secondary (Supports analytical scanability).
+*   **Position:** Zone B (Directly below Region 3).
+*   **Width:** Spans all columns, internally split into two equal horizontal cells.
+*   **Height:** Mapped to `bankyar.layout.summary.card.height` token.
+*   **Alignment:** Inline horizontal division.
+*   **Content Rules:**
+    *   Right Column: Daily Inflow label ("ورودی امروز"), amount (+۵۰۰,۰۰۰ تومان), and upward trend icon (↑).
+    *   Left Column: Daily Outflow label ("خروجی امروز"), amount (-۲۵۰,۰۰۰ تومان), and downward trend icon (↓).
+*   **Interaction Rules:** Tapping either column acts as an instant shortcut filter, restricting the Recent Transactions List to credit or debit ledger records respectively.
+*   **Accessibility:** Screen readers parse column-by-column: *"Today's inflow: positive five hundred thousand Tomans; Today's outflow: negative two hundred and fifty thousand Tomans."*
+*   **RTL Behaviour:** Inflow (positive) sits on the logical start (right), Outflow (negative) sits on the logical end (left).
+*   **Loading Behaviour:** Shown as two side-by-side equal skeletal blocks.
+*   **Error Behaviour:** Replaced with a flat, empty card template.
+*   **Empty Behaviour:** Shows default values of "۰ تومان" for both streams.
+*   **Animation Notes:** Horizontal split slides apart gently on transition state.
 
-### 5. Analytical Summary Workspace (Region 5)
-* **Purpose:** Provides a visual breakdown of categorized spending using an aspect-ratio locked donut visualization and tabular legends.
-* **Position:** Zone B (Below Region 4).
-* **Priority:** Secondary (Visual context).
-* **Minimum Height:** Mapped to `bankyar.layout.chart.min.height`.
-* **Maximum Height:** Mapped to `bankyar.layout.chart.max.height`.
-* **Expansion Rules:** Under tablet viewports, the chart transitions to a side-by-side presentation next to the tabular legend instead of a vertical stack.
-* **Collapse Rules:** Can be toggled closed via a vertical chevron header button, collapsing to minimum header height.
-* **Interaction Rules:** Tapping individual donut segments highlights that segment and updates the chronological ledger feed below to show transactions matching that category. Tapping the chart center transitions navigation to the full Analytics Screen.
-* **Dependencies:** Relies on transaction categorization categories and local calculation models.
-* **Accessibility:** Includes detailed text labels representing each slice. Screen readers announce: *"Spending Chart: Food represents 40 percent of total expenses, Transport represents 15 percent."*
-* **Future Scalability:** The structural legend accommodates up to eight categories without requiring a scroll wrapper.
+### Region 5: Interactive Filter Row
+*   **Purpose:** Enables quick, one-handed categorization sub-queries on the chronological feed.
+*   **Priority:** Primary (High Interaction).
+*   **Position:** Zone B (Directly below Region 4). Pins immediately below Zone A (App Bar) when scrolled upwards.
+*   **Width:** Full viewport width, overflowing margins for continuous horizontal scrolling.
+*   **Height:** Mapped to `bankyar.layout.filter.row.height` (minimum touch envelope of `bankyar.space.xl`).
+*   **Alignment:** Top-aligned horizontal row.
+*   **Content Rules:** Contains selectable filter chips: "همه" (All), "بانک ملی" (Melli Bank), "بانک ملت" (Mellat Bank), "خرید روزمره" (Daily Spend), "حمل و نقل" (Transport). Selected chips display a leading checkmark icon.
+*   **Interaction Rules:** Horizontal dragging scrolls the chip row. Tapping a chip toggles its filter state and instantly updates the ledger feed below.
+*   **Accessibility:** Announced as a scrollable filter row: *"Filter list. Tab to select and filter transactions below."*
+*   **RTL Behaviour:** Inline row scrolls right-to-left. First chip ("همه") is anchored to the right margin.
+*   **Loading Behaviour:** Displays a horizontal sequence of five narrow, static skeletal chips.
+*   **Error Behaviour:** Filter chips are disabled (38% opacity) and unclickable.
+*   **Empty Behaviour:** Displays only the "All" chip, with other categorical chips hidden.
+*   **Animation Notes:** Active chip selection scales slightly (1.02x) on selection with a fast spring-back motion.
 
-### 6. Chronological Ledger Workspace (Region 6)
-* **Purpose:** Displays the chronological, high-density stream of parsed financial transactions.
-* **Position:** Zone B (Occupies all remaining vertical space in the scrollable viewport).
-* **Priority:** Primary (Core informational asset).
-* **Minimum Height:** Spans dynamically to fill the viewport remaining area, with a baseline minimum of two complete transaction item heights.
-* **Maximum Height:** Unlimited (unbounded scroll area).
-* **Expansion Rules:** Fills all available scrolling area, extending downwards as more records are loaded from the local database.
-* **Collapse Rules:** None.
-* **Interaction Rules:**
-  * Swiping gestures inside this list are strictly disabled to prevent accidental mutations while scrolling.
-  * Tapping a verified ledger item displays its comprehensive detail sheet.
-  * Tapping an unverified item (highlighted with active primary boundaries) launches the Quick Verification Sheet.
-  * Pulling down from the top edge of the list triggers a scan of the system's local SMS inbox.
-* **Dependencies:** Secure parsing engine, local SMS database, custom categorizations.
-* **Accessibility:** Each ledger item is grouped as a single focused element, ensuring natural reading: *"Transaction: [Date], [Merchant Name], [Amount], [Status: Verified/Unverified]"*.
-* **Future Scalability:** Structured to allow multi-selection checkboxes on the right (start) margin for future bulk tagging.
+### Region 6: Quick Statistics Spend Chart
+*   **Purpose:** Provides a visual category spending breakdown.
+*   **Priority:** Secondary (Visual analytics context).
+*   **Position:** Zone B (Directly below Region 5).
+*   **Width:** Spans all columns.
+*   **Height:** Constrained to a stable square aspect ratio `bankyar.layout.chart.height`.
+*   **Alignment:** Center-aligned horizontal split-panel (Right: Donut segment; Left: Category legends).
+*   **Content Rules:** Displays a flat, multi-segment donut chart. Category legends are aligned in a vertical stack on the left side with monospace percentages.
+*   **Interaction Rules:** Tapping a segment highlights the corresponding card and filters the chronological feed below. Tapping the chart center transitions to the Analytics Screen.
+*   **Accessibility:** Reported as text: *"Spending distribution: food represents forty percent, transport represents fifteen percent."*
+*   **RTL Behaviour:** Donut graph is placed on the right; vertical category percentages align right on the left.
+*   **Loading Behaviour:** Skeleton circular shimmer of the donut card.
+*   **Error Behaviour:** Replaced by an information card explaining that local statistics cannot be parsed due to empty indexes.
+*   **Empty Behaviour:** Displays a hollow grey concentric circle with the label *"No spending registered this month"*.
+*   **Animation Notes:** Radial segments expand outwards with a progressive, clock-wise sweep transition.
 
-### 7. Bottom Action & Control Bar (Region 7)
-* **Purpose:** Houses persistent high-level navigation tabs and manages page routes.
-* **Position:** Zone C (Pinned to the bottom edge of the viewport).
-* **Priority:** Critical (Primary navigation).
-* **Minimum Height:** Mapped to `bankyar.layout.navigation.min.height` (includes additional gesture safety buffers).
-* **Maximum Height:** Mapped to `bankyar.layout.navigation.max.height`.
-* **Expansion Rules:** Vertically scales only on wide screens to prevent visual compression.
-* **Collapse Rules:** None. Remaining persistent to allow instant section switching.
-* **Interaction Rules:** Tapping any navigation tab changes active routes instantly with visual fade transitions.
-* **Dependencies:** Navigation state router.
-* **Accessibility:** Tabs are arranged symmetrically from right to left. High-contrast indicators ensure active tab visibility.
-* **Future Scalability:** Designed to support numeric count badges over specific navigation items without changing overall heights.
+### Region 7: Recent Transactions Ledger List
+*   **Purpose:** The chronological core ledger displaying the dense feed of parsed banking transactions.
+*   **Priority:** Primary (Core user utility).
+*   **Position:** Zone B (Occupies all remaining vertical viewport space).
+*   **Width:** Spans all columns between horizontal margins.
+*   **Height:** Dynamic, unbounded vertical scrolling.
+*   **Alignment:** Stacked vertical list.
+*   **Content Rules:** Grouped by dates using subtle dividers. Contains multiple Transaction Cards with bank logo, bank name, category badge, timestamp, security indicator, amount, and status dot (Verified/Unverified).
+*   **Interaction Rules:**
+    *   No inline card swiping (to prevent accidental modifications).
+    *   Tapping a card opens its complete Transaction Details Modal.
+    *   Tapping an Unverified card opens the Quick Verification Sheet.
+    *   Pulling down from the top edge triggers local SMS inbox parsing.
+*   **Accessibility:** Focus moves element-by-element: *"Transaction: Bank Melli, amount: negative forty-five thousand Tomans, Status: Unverified, tap to verify."*
+*   **RTL Behaviour:** Bank identity and status info on the right, amounts and timestamps align left.
+*   **Loading Behaviour:** Renders four stacked rectangular transaction card skeletons with linear horizontal shimmer.
+*   **Error Behaviour:** Displays a flat warning card with redacted data and a retry database loading action.
+*   **Empty Behaviour:** Replaced completely by the **Empty Screen Layout** (Region 10).
+*   **Animation Notes:** Transaction detail modal slides up smoothly from the bottom edge; list items adjust vertical coordinates gracefully when items are verified or updated.
 
-### 8. Primary Floating Action Button (Region 8)
-* **Purpose:** Provides a prominent, immediate trigger to create a manual transaction record.
-* **Position:** Zone C (Anchored to the logical bottom-start edge / lower right).
-* **Priority:** Critical (Primary interaction gateway).
-* **Minimum Height:** Mapped to `bankyar.layout.fab.min.size` (complying with comfort touch targets).
-* **Maximum Height:** Mapped to `bankyar.layout.fab.max.size`.
-* **Expansion Rules:** Can transition horizontally into an extended FAB displaying a localized action label when scrolling stops.
-* **Collapse Rules:** Automatically scales down and slides out of view during rapid downward scroll actions, restoring smoothly on scroll stop.
-* **Interaction Rules:** Tapping the FAB opens the Manual Transaction Entry modal sheet from the bottom viewport edge.
-* **Dependencies:** None.
-* **Accessibility:** Semantic label announces: *"Add manual transaction."*
-* **Future Scalability:** Prepared to expand into a small, floating speed-dial menu for future quick actions.
+### Region 8: Primary Floating Action Button
+*   **Purpose:** Prominent, reachable trigger to log a manual transaction or paste raw text.
+*   **Priority:** Critical (Primary interaction gateway).
+*   **Position:** Zone C, anchored to the logical bottom-start corner (lower-right for Persian RTL layouts).
+*   **Width/Height:** Base size matches standard Material Design 3 FAB size tokens.
+*   **Alignment:** Anchored to bottom-right corner with safe margins.
+*   **Content Rules:** Displays a plus icon and localized label "ثبت دستی" (Log Manual).
+*   **Interaction Rules:** Tapping the FAB slides up the Manual Entry Modal Sheet.
+    *   Rapid downward scrolling collapses the FAB to a compact circle (icon-only) to protect reading space.
+    *   Upward scroll restores the extended label.
+*   **Accessibility:** Announced as: *"Button: Log manual transaction."*
+*   **RTL Behaviour:** Positioned in the bottom-right corner (logical bottom-start) for immediate thumb reach.
+*   **Loading/Error/Empty Behaviour:** Remains unaffected and active.
+*   **Animation Notes:** Transitions between icon-only and extended labels use a horizontal slide-and-fade animation.
 
----
-
-## Wireframe Layout & Spatial Rules
-
-### 1. Screen Regions
-The dashboard is structurally organized into three fixed coordinate layers:
-* **Sticky Top Layer (Zone A):** Houses Region 1 (App Bar).
-* **Scrollable Workspace Layer (Zone B):** Houses Regions 2, 3, 4, 5, and 6 in vertical sequence.
-* **Sticky Bottom Layer (Zone C):** Houses Region 7 (Navigation Bar) and Region 8 (Floating Action Button).
-
-### 2. Vertical Layout
-The screen follows a strict single-column stacked vertical layout. All components are placed along a single vertical track to prevent cognitive splitting on compact screens:
-1. Pinned Header (Region 1)
-2. Card Workspace (Region 2)
-3. Summary Row (Region 3)
-4. Interactive Filters (Region 4)
-5. Chart Workspace (Region 5)
-6. Transaction Feed (Region 6)
-7. Pinned Footer (Region 7)
-
-### 3. Horizontal Layout
-Alignments are defined using logical structural coordinates (`start` for right, `end` for left, `inline` for horizontal flow, `block` for vertical stack) rather than physical left/right rules:
-* Symmetrical margins are enforced on the inline edges using `bankyar.responsive.margin`.
-* The reading direction flows natively right-to-left. Text and supporting icons are anchored to the start (right) margin, while transaction numeric amounts and state badges are anchored to the end (left) margin.
-
-### 4. Safe Area Rules
-* **Top System Status Buffer:** Region 1 includes a dynamic structural offset to match the device notch or status bar, preventing branding from overlapping system icons.
-* **Bottom Navigation Buffer:** Region 7 appends a structural gesture buffer matching the device's navigation bar height, preventing touch conflicts with system home actions.
-
-### 5. Grid Structure
-* **Compact Viewport (Smartphones):** Uses a standard 4-column layout. Gaps are controlled via `bankyar.responsive.gutter` and outermost columns are separated from margins via `bankyar.responsive.margin`.
-* **Span Allocations:**
-  * Region 2 (Total Balance Card) spans all 4 columns.
-  * Region 3 (Comparison Cards) spans 2 columns each, placed side-by-side.
-  * Region 5 and 6 span all 4 columns.
-
-### 6. Content Hierarchy
-* **Primary Visual Focus:** Region 2 (Net Balance Display Card) is the largest card with prominent display typography to focus the user's attention instantly.
-* **Supporting Data:** Region 3 and Region 5 provide secondary visual breakdowns.
-* **Dense Informational Streams:** Region 6 is high-density and vertically scrollable, optimized for fast legibility using thin lines to separate records.
-
-### 7. Scroll Areas
-* **Global Scroll Layer for Zone B:** Operates as the master scroll container.
-* **Scroll Boundary Locks:** Vertical scroll parameters are bound to the inner edges of Region 1 and Region 7, ensuring that content never scrolls over system status bars or bottom navigation tabs.
-* **No Nested Scroll Containers:** Nested vertical scrolling within list tiles or cards is strictly prohibited to avoid scroll trapping.
-
-### 8. Sticky Areas
-* **App Bar Header (Region 1):** Remains permanently pinned to the top.
-* **Interactive Filter Row (Region 4):** Anchored horizontally. When scrolled upwards, it pins immediately under the bottom edge of Region 1, keeping filters accessible while scanning transactions.
-* **Bottom Navigation Bar (Region 7):** Remains permanently pinned to the bottom.
-
-### 9. Card Placement
-* All cards (Region 2, Region 3, and individual rows in Region 6) are flat, using thin border outlines to define borders without relying on shadows.
-* The outer edges of cards align with the horizontal columns of the master grid, using standard curvature tokens to maintain a consistent appearance.
-
-### 10. Search Placement
-* **Trigger Placement:** Positioned at the logical start (right) of Region 1 as a persistent icon.
-* **Activation Overlay:** Tapping the search icon smoothly expands the search field horizontally, overlaying the App Bar.
-* **Layout Structure:** The active search field occupies the entire horizontal width of Region 1, featuring an instant clear button at the end (left) edge.
-
-### 11. Filter Placement
-* **Horizontal Row Placement:** Positioned immediately above Region 6, separating analytical overviews from the transaction ledger.
-* **Layout Structure:** Organized as an inline, horizontally scrollable row of chips that overflows the inline margin boundaries.
-
-### 12. Statistics Placement
-* **Dashboard Summary Placement:** Positioned inside Region 5. It contains a centered donut chart and parallel tabular legends.
-* **Aspect Ratio Protection:** The chart is constrained to equal vertical and horizontal bounds, preventing visual distortion.
-
-### 13. Transaction List Placement
-* **Ledger Placement:** Placed at the bottom of Zone B, filling all remaining vertical space.
-* **Structural Grouping:** Grouped by date sections, utilizing thin hairline division lines between individual cards.
-
-### 14. Floating Button Placement
-* **Location:** Positioned at the logical bottom-start edge of the screen (lower right in Persian RTL layouts).
-* **Spacing Protection:** Elevated on the Z-axis, maintaining a clear separation margin from Region 7 to prevent touch overlap.
-
-### 15. Navigation Placement
-* **Location:** Pinned at the bottom of the screen as the persistent navigation shell.
-* **Layout Structure:** Features four equal-width navigation triggers arranged horizontally from right (start) to left (end).
+### Region 9: Shell Bottom Navigation Bar
+*   **Purpose:** Persistent global route switcher across the four primary application sections.
+*   **Priority:** Critical (Primary navigation).
+*   **Position:** Zone C (Pinned to bottom viewport edge).
+*   **Width:** Spans 100% of screen width.
+*   **Height:** Locked to `bankyar.layout.navigation.height` (includes system gesture safe buffers).
+*   **Alignment:** Equal-width horizontal distribution.
+*   **Content Rules:** Four navigation items arranged right-to-left (RTL):
+    1.  **دفترچه (Ledger):** Book icon (Active).
+    2.  **نمودارها (Analytics):** Bar graph icon.
+    3.  **قوانین (Rules):** Filter sliders icon.
+    4.  **تنظیمات (Settings):** Gear icon.
+*   **Interaction Rules:** Tapping an item switches the active viewport route immediately with a fast fade transition.
+*   **Accessibility:** Announced as a navigation bar with active states: *"Navigation tab, Ledger, page one of four, active."*
+*   **RTL Behaviour:** Tabs flow right-to-left: Ledger (Rightmost) to Settings (Leftmost).
+*   **Loading/Error/Empty Behaviour:** Remains persistent, active, and interactive.
+*   **Animation Notes:** Active selection changes paint an indicator pill backdrop with a soft scale and slide transition.
 
 ---
 
-## State and Alternative Layouts
+## 4. Information Hierarchy
 
-### 16. Empty Screen Layout
-When no transactions or parsed records are present in the local database, Zone B is replaced by a centered, structured onboarding layout:
-* **Visual Anchor:** An abstract, non-colored geometric illustration positioned in the upper-middle region.
-* **Supportive Microcopy:** Reassuring, non-technical Persian text explaining that BankYar is offline-first, private, and waiting to parse incoming carrier SMS streams.
-* **Primary Call to Action:** A prominent button labeled *"Enter manual transaction"* is centered horizontally, inviting immediate interaction.
+The Home Dashboard operates on a highly structured visual hierarchy designed for fast scanability, minimal cognitive load, and immediate clarity.
 
-### 17. Loading Layout
-During initial local database loading or rule execution, the screen remains stable without layout jumps:
-* **Non-blocking Loading Indicators:** A thin, linear progress indicator runs along the bottom edge of Region 1.
-* **Active Interactions:** Interactive elements remain visible, and users can browse cached transaction records while background parsing processes complete.
+### 4.1 Primary Visual Focus (Level 1)
+*   **Component:** Region 3 (Total Balance Display Card).
+*   **Justification:** The largest single visual container on the screen. It occupies the top fold and presents the user's consolidated financial net worth. Large monospace digits and the optional eye mask guarantee that this is the immediate entry point for the user's focus.
 
-### 18. Error Layout
-If database decryption fails or system exceptions occur, the screen prevents data exposure and presents a clear recovery layout:
-* **Contained Warnings:** Localized Persian errors are nested inside flat cards, using high-contrast warning borders.
-* **PII Redaction:** Stated in clear, plain language; raw system traces or sensitive database parameters are completely redacted.
-* **Primary Action:** A clear button labeled *"Retry Database Load"* is placed at the bottom edge of the error card.
+### 4.2 Secondary Visual Focus (Level 2)
+*   **Component:** Region 4 (Today's Financial Summary Card) and Region 8 (Primary FAB).
+*   **Justification:** The summary card immediately answers the user's secondary question (*"How much did I spend and receive today?"*), and the FAB provides a bold visual anchor in the interactive thumb zone for primary user actions.
 
-### 19. Permission Layout
-If SMS access is not granted on system boot, the entire dashboard is replaced with a clear explanation layout:
-* **Context Explanation:** A structured, vertical stack explaining why local SMS permissions are required to automate ledger parsing.
-* **Dual Interaction Actions:** Displays a primary button to grant system access and a secondary button to set up accounts manually, maintaining user choice.
-
-### 20. Offline Layout
-Since BankYar operates under a strict zero-network constraint, the offline state represents normal system operations:
-* **Status Indicator:** Region 1 displays a steady, positive green diagnostic status badge reading *"Securely Offline"*, reassuring the user that their data is stored safely on the device.
-
-### 21. Skeleton Layout
-Before data is loaded, content blocks are represented by layout-preserving skeletons:
-* **Geometric Symmetry:** Skeletons match the exact heights, widths, and corner curvatures of Region 2, Region 3, and individual rows in Region 6.
-* **Visual Stability:** Prevents layout shifts as cached data loads into the interface.
+### 4.3 High-Density Feed Focus (Level 3)
+*   **Component:** Region 7 (Recent Transactions Ledger List) and Region 5 (Filter Row).
+*   **Justification:** Represents the deepest information stream. These cards use a compact layout with thin dividing lines to allow the user to scan multiple transactions in a single view. Unverified transactions are highlighted with secondary border highlights to prompt immediate action.
 
 ---
 
-## Responsive & Adaptive Behaviour
+## 5. Wireframe Description
 
-### 22. Tablet Adaptation (Medium & Expanded Viewports)
-When the horizontal viewport exceeds standard compact boundaries, the single-column stack transitions to a structured multi-pane layout:
+The layout coordinate system is defined strictly using relative, logical dimensions, supporting fluid scaling across mobile form factors.
 
-```
-Tablet / Unfolded Viewport Grid (12-Columns)
-+-------------------------------------------------------------------------+
-| [Persistent Nav Rail] | [Ledger Feed Pane (Region 2, 3, 4, 6)]           | [Analytics & Rules Pane] |
-|                       | (Spans 6 Columns)                              | (Spans 5 Columns)        |
-| (Logical Start / Right|                                                 |                          |
-|  - Spans 1 Column)    |                                                 |                          |
-+-------------------------------------------------------------------------+
-```
+### 5.1 Absolute Spacing Grid System
+*   **Grid:** 4-column layouts on mobile viewports.
+*   **Symmetrical Padding:** Card components use the `bankyar.space.md` padding token.
+*   **Dividing Lines:** Vertical and horizontal separators use a thin border token to define boundaries without relying on heavy shadows or hardcoded colors.
 
-* **Navigation Transition:** The Bottom Navigation Bar (Region 7) transitions to a vertical Navigation Rail anchored to the logical start (right) edge of the screen.
-* **Multi-Pane Columns:** The screen is divided into two distinct, balanced columns (ledger feed pane on the right; analytical breakdown and category rules on the left), preventing cards from looking excessively stretched.
-
-### 23. Foldable Adaptation
-* **Hinge Awareness:** The layout engine detects the device hinge or folding line. Content margins are automatically adjusted to ensure text lines and primary interactive buttons never overlap the folding area.
-* **Dual-Pane Layouts:** When unfolded, the interface transitions to a dual-pane master-detail configuration, using the physical hinge as a natural boundary between the transaction feed and transaction details.
+### 5.2 Responsive Layout Adaptations
+*   **Tablet & Foldable Adaptations:** When horizontal viewports exceed standard smartphone widths, the single-column layout transitions to a two-pane layout:
+    *   **Right Pane (6 Columns):** Displays Regions 2, 3, 4, 5, and 7 (Greeting, Balance, Summary, Filters, and Recent Ledger).
+    *   **Left Pane (5 Columns):** Displays Region 6 (Quick Statistics Spend Chart) and interactive category rule setups.
+    *   **Navigation Transition:** Bottom Navigation (Region 9) transitions to a vertical Navigation Rail anchored to the right margin (logical start), keeping the layout consistent and reachable.
 
 ---
 
-## Spacing Strategy
+## 6. Component Placement
 
-To guarantee visual comfort and balance, all dimensions, paddings, margins, and gaps are defined using abstract relative tokens:
+Detailed coordinates and bounding rules for key components:
 
-* **Outer Margin:** Mapped to `bankyar.responsive.margin`. This margin scales from compact screens to wider viewports to maintain optimal readability.
-* **Internal Padding:** Inside standard cards and content blocks, padding is controlled via `bankyar.space.md`, maintaining consistent density. High-density lists utilize `bankyar.space.sm` to show more records on a single screen.
-* **External Spacing Gaps:**
-  * Gaps between major independent containers are mapped to `bankyar.space.lg`.
-  * Gaps between tightly associated elements (such as input labels and textfields) are mapped to `bankyar.space.sm`.
-* **Touch Targets:** Interactive targets (filter chips, buttons, list rows, App Bar actions) maintain a minimum vertical height of `bankyar.space.xl`, ensuring comfortable interactions.
+### 6.1 Diagnostic Status Badge
+*   **Placement:** Placed at the logical end (left) of the Top App Bar (Region 1).
+*   **Spacing:** Margins align with the outer boundary token `bankyar.responsive.margin`.
+*   **Indicator State:** A steady green badge displaying *"Fully Offline"* confirms on-device security.
 
----
+### 6.2 Search Trigger Icon
+*   **Placement:** Anchored to the logical start (right) of the Top App Bar (Region 1).
+*   **Interactive Area:** Sized to match the accessibility touch target token `bankyar.space.xl` to prevent mis-clicks.
 
-## Accessibility Layout & RTL Rules
+### 6.3 Transaction Filters Chips
+*   **Placement:** Located directly below Region 4 (Summary Cards) and above Region 7 (Transactions Ledger).
+*   **Flow:** Arranged horizontally, overflowing the screen margins to encourage horizontal dragging.
 
-### 24. Accessibility Layout
-* **Logical Screen Reader Sequence:** Focus progresses predictably from top-to-bottom and right-to-left following natural reading patterns.
-* **Double Typography Magnification:** All cards and form inputs are designed to scale and wrap vertically without clipping content, supporting up to 200% system-level text magnification.
-* **High-contrast Ratios:** All text elements and status indicators maintain high contrast ratios against card backgrounds.
+### 6.4 Floating Action Button (FAB)
+*   **Placement:** Anchored to the bottom-right corner of the screen.
+*   **Z-Axis Elevation:** Elevated above the scrollable workspace (Zone B), with a clear margin from the Bottom Navigation (Region 9) to prevent overlapping touch targets.
 
-### 25. RTL Layout Rules
-* **Logical Mirroring:** The layout is defined using logical coordinates (`start` for right, `end` for left), ensuring alignments, margins, and swipe gestures mirror automatically when switching locales.
-* **Directional Icon Mirroring:** Navigational chevrons, page transitions, and progress bars are mirrored dynamically to match Persian RTL reading flows.
-* **Persian Line Height Buffer:** Spacing offsets are expanded to accommodate Persian ascenders and descenders, preventing overlapping text lines.
-
-### 26. Future Expansion Zones
-* **Pre-allocated Budget Hook:** A spatial gap is reserved directly below Region 3 to accommodate budget tracking progress bars in future versions.
-* **AI Financial Insights Hook:** A content container slot is reserved in Region 5 to support on-device financial advisory cards without altering the screen structure.
+### 6.5 Bottom Navigation Tabs
+*   **Placement:** Pinned to the bottom edge of the screen.
+*   **Spacing:** Includes a bottom safe margin to accommodate system gesture bars on Android devices.
 
 ---
 
-## Validation Checklist
+## 7. Interaction Notes
+
+Micro-interactions on the Home Dashboard are optimized for fast, reliable mobile usage.
+
+### 7.1 Pull-to-Scan SMS Gesture
+*   **Action:** Swiping down on the ledger feed triggers a rescan of local text messages.
+*   **Visual Feedback:** A thin progress bar animates directly below the App Bar. The list remains interactive while parsing.
+
+### 7.2 Swipe Isolation
+*   **Action:** Horizontal swiping on transaction cards is disabled to prevent accidental deletions or modifications.
+*   **Verification Dialogue:** Tap interactions on unverified cards open a quick confirmation card, allowing users to verify or edit categories.
+
+### 7.3 Modal Sheets & Bottom Overlays
+*   **Action:** Tapping the FAB opens a bottom sheet that slides up from the bottom edge.
+*   **Dismissal:** Can be dismissed by tapping the backdrop or dragging the top handle downwards.
+
+---
+
+## 8. Accessibility Notes
+
+BankYar is designed to be highly accessible and usable for all users.
+
+### 8.1 Logical Focus Order
+*   The screen reader focus order follows a natural reading pattern:
+    1.  Top App Bar (Region 1) - Diagnostics, notifications, search.
+    2.  Greeting Area (Region 2).
+    3.  Total Balance Card (Region 3) - Balance details and visibility toggle.
+    4.  Financial Summary (Region 4) - Inflow/outflow figures.
+    5.  Filter Row (Region 5).
+    6.  Spend Chart (Region 6) - Spend categories.
+    7.  Ledger List (Region 7) - Transaction details grouped by date.
+    8.  Primary FAB (Region 8).
+    9.  Bottom Navigation Bar (Region 9).
+
+### 8.2 Text Magnification
+*   All card containers and lists are designed to scale and wrap text vertically, supporting up to 200% system-level text magnification without clipping content.
+
+### 8.3 Touch Targets
+*   All interactive elements (buttons, chips, lists, menu items) maintain a minimum touch target area matching the standard accessibility grid target token (`bankyar.space.xl`).
+
+---
+
+## 9. Validation Checklist
 
 This wireframe specification must satisfy all validation checks before visual design or development begins:
 
-- [x] **No Hardcoded Hex Colors:** Every color mapping references abstract semantic design tokens (e.g., `bankyar.semantic.color.background.default`).
-- [x] **No Physical Dimensions:** Margins, spacing, padding, and corner curvatures use relative tokens (e.g., `bankyar.responsive.margin`) rather than physical pixels.
-- [x] **No Framework-Specific Code:** No framework UI building elements or code constructs are present.
-- [x] **Complete State Coverage:** Contains detailed layout rules for empty, loading, error, skeleton, permission, and offline states.
-- [x] **Symmetrical RTL Design:** Alignments, reading flows, and page transitions use logical coordinates (`start`, `end`).
-- [x] **No Mock Markers:** Contains no remaining warning notes, markers, or unfinished text elements.
+*   [x] **No Hardcoded Hex Colors:** Every color mapping references abstract semantic design tokens (e.g., `bankyar.semantic.color.background.canvas`).
+*   [x] **No Physical Dimensions:** Margins, spacing, padding, and corner curvatures use relative tokens (e.g., `bankyar.responsive.margin`) rather than physical pixels.
+*   [x] **No Framework-Specific Code:** No framework UI building elements or code constructs are present.
+*   [x] **Complete State Coverage:** Contains detailed layout rules for empty, loading, error, skeleton, permission, and offline states.
+*   [x] **Symmetrical RTL Design:** Alignments, reading flows, and page transitions use logical coordinates (`start`, `end`).
+*   [x] **No Mock Markers:** Contains no remaining warning notes, markers, or unfinished text elements.
+
+---
+
+## 10. UX Review Checklist
+
+The following checklists verify that the wireframe meets core usability standards before high-fidelity design begins:
+
+### 10.1 One-Handed Usability & Reachability
+*   [x] **Reachability Check:** The most frequent interactive elements (FAB, Bottom Navigation, Filter Chips) are positioned in the lower third of the screen, within comfortable reach of the user's thumb.
+*   [x] **Primary Action Check:** The Primary FAB is located in the bottom-right corner, making it easy to tap with one hand.
+*   [x] **No Stretch Scroll:** The transaction list is scrollable without requiring the user to reach for top-screen elements.
+
+### 10.2 Cognitive Load & Readability
+*   [x] **Scanability:** The large typography on the Total Balance Card and clear inflow/outflow comparison columns allow users to check their financial status in less than two seconds.
+*   [x] **Visual Clutter Control:** Spacing is managed via consistent margin and gutter tokens, preventing visual crowding.
+*   [x] **Decoupled Security:** Sensitive values can be masked with a single tap, protecting user privacy in public spaces.
+
+### 10.3 Device Adaptability
+*   [x] **Tablet Strategy:** Layout transitions to a balanced multi-pane column system on larger screens, preventing cards from looking stretched.
+*   [x] **Safe Area Buffers:** Layout margins account for top notch offsets and bottom navigation bars, preventing overlap with system actions.
 
 ---
 **End of Document**
