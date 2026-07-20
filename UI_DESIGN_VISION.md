@@ -1,312 +1,388 @@
 # BankYar Enterprise UI Design Vision Specification
-## Version 1.0.0 — Design-to-Implementation Visual System Blueprint
+## Version 2.0.0 — Design-to-Implementation Visual System Blueprint
 
 ---
 
 ## 1. Executive Summary
 
-This document establishes the official and authoritative UI Design Vision for BankYar Version 1. Operating as the absolute operational blueprint and visual standard for human-AI interaction, this specification defines the overall visual direction, interaction quality, emotional experience, consistency rules, and usability goals for the entire application.
+This specification establishes the official and authoritative UI Design Vision for BankYar. Operating as the absolute operational blueprint and visual standard for human-AI interaction, this document defines the overall visual direction, interaction quality, emotional experience, consistency rules, and usability goals across the BankYar ecosystem.
 
-As an offline-first, privacy-first mobile finance platform designed natively for the Persian language (RTL) on Android, BankYar manages highly sensitive transaction metadata on-device under strict zero-network constraints. The interface must balance professional rigor with elegant minimal aesthetics. It behaves as a high-precision, premium physical instrument: silent, completely reliable, and instantly understandable.
+As an offline-first, privacy-first mobile finance platform designed natively for the Persian language (RTL) on Android, with planned future expansions to iOS and desktop systems, BankYar manages highly sensitive transaction metadata on-device under strict zero-network constraints. The interface must balance professional rigor with elegant minimal aesthetics. It behaves as a high-precision, premium physical instrument: silent, completely reliable, and instantly understandable.
 
 This design vision is fully aligned with all baseline specifications (PRD, Architecture, Design Token Architecture, Component Library, Navigation Specification, and Semantic Color System) and maintains absolute compliance with zero hardcoded visual styles, hex colors, physical measurements, or platform code.
 
 ---
 
-## 2. Design Vision
+## 2. Design Philosophy
 
-### Product Vision
-BankYar is the world's most trusted, silent, and private offline-only financial companion. Our vision is to empower individuals to master their financial lives without ever surrendering their private data to cloud servers. The app intercepts scattered, chaotic banking communications and translates them instantly into an on-device, structured, and insightful financial ledger, returning complete ownership of financial truth back to the individual.
+### Product Design Philosophy
+BankYar is designed to look, feel, and function as a secure on-device sanctuary for financial data. Unlike mainstream financial tools that employ bright gradients, gamified badges, and intrusive alerts to capture and monetize user attention, BankYar behaves as a quiet, precise, and respectful companion.
 
-### Design Vision
-Our design vision is to create a digital experience that behaves like a high-precision, premium physical instrument: silent, completely reliable, and instantly understandable. It does not compete for the user's attention or introduce cognitive noise. It presents financial truth with absolute clarity, creating a safe, calm harbor where users can observe and make decisions about their wealth with confidence. This overall visual system treats user attention as a finite, precious asset that must never be squandered.
+The core philosophy is **Content as Interface**:
+- **Attention as a Precious Resource:** The user experience is optimized for fast extraction of facts and immediate task execution. The product remains in the background, generating zero decorative alerts, zero forced system interruptions, and zero visual clutter.
+- **Surgical Structural Truth:** The design boundaries, container shapes, and grid lines are defined by the actual structure of the banking SMS text and mathematical figures, not by artificial embellishments.
+- **Visual Calmness:** Using highly controlled, low-saturation canvas colors minimizes cognitive eye strain during deep financial reviews and helps users observe their cash flow without anxiety.
 
-### Product Personality
-BankYar's product personality is defined by three main characteristics:
-* **Stoic:** Silent, calm, and focused. The product remains in the background until explicitly called upon. It has no artificial animations, no gamified achievements, and no unnecessary messages or alerts.
-* **Precise:** Information is displayed with surgical accuracy. Transactions, balances, dates, and category tags are structured with structured layouts, preserving absolute correctness.
-* **Empowering:** It does not lecture the user or prescribe financial behavior. Instead, it processes complex inputs and organizes them cleanly, letting the user derive their own insights.
+### Emotional Response Goals
+Every screen and interaction in BankYar must evoke six primary emotional responses:
+1. **Trust:** Reassured that sensitive SMS text, transaction lists, and financial balances remain completely local, encrypted, and protected inside an on-device vault.
+2. **Calmness:** Experiencing a sense of peace, clarity, and control when reviewing financial statements, free from visual noise or high-saturation warnings.
+3. **Clarity:** Understanding income, expense, and net cash flow at a single glance, with high-contrast text and a consistent visual hierarchy.
+4. **Reliability:** Complete confidence that the application works at 100% capacity under all offline conditions, power constraints, or background states without latency.
+5. **Speed:** Instant responsiveness, where tasks like editing rules, assigning categories, or querying logs can be achieved with minimal taps and zero delay.
+6. **Dignity:** Feeling respected by a mature, professional interface designed RTL-first, honoring the native Persian typography and layout patterns.
 
-### Brand Personality
-Our brand identity is built on a foundation of professional trust and safety:
-* **The Guardian:** Reliable and secure. Our brand feels solid, unchanging, and absolute. It represents an offline vault protecting sensitive financial data.
-* **The Analyst:** Smart and objective. The brand is professional and serious, presenting data without promotional language or emotional bias.
-* **The Minimalist:** Elegant and uncluttered. We respect the user's cognitive capacity, presenting only what is essential and stripping away all decorative elements.
+### Visual Communication of Trust
+In an offline-first environment, user trust is built on verifiable safety and complete transparency:
+- **Verifiable Offline State:** The interface clearly highlights that zero network permissions are requested. There are no "no internet connection" warnings; the app simply operates at full capacity.
+- **Explicit Local Security Markers:** Utilizing solid, grounded grayscale surfaces and subtle padlock symbols reminding the user that they are in an encrypted on-device environment.
+- **No Magic Transitions:** Automated operations, such as regex parsing rules or machine learning categorizations, are displayed with full explanation. The user can inspect *why* a specific template matched or override any classification manually.
+- **Total Data Ownership:** The UI prominently exposes data portability controls—such as manual encrypted JSON/CSV exports and permanent local database purge options—putting the user in complete control.
 
-### Emotional Experience & Emotional Design Goals
-The experience must communicate and trigger six distinct emotional states:
-1. **Trust:** Reassured that data is completely private, local, and protected.
-2. **Calmness:** Peaceful and anxiety-free when reviewing financial balances.
-3. **Clarity:** Instantly understanding cash flow, spending habits, and trends.
-4. **Reliability:** The system performs flawlessly under any network or battery scenario.
-5. **Speed:** Tasks and information are retrieved with minimal interaction cost.
-6. **Professionalism:** The visual presentation is consistent, mature, and rigorous.
-
-### Visual Story
-The visual narrative of BankYar is the journey from **"Chaos to Order."** The raw, incoming text messages from Persian banks represent chaotic, fragmented, and stressful streams of data. The visual design system intercepts this stream and transforms it into structured, calm, and clean layers of financial clarity.
-This visual story is told through the gradual refinement of elements:
-* **The Intercept:** The raw SMS text is preserved exactly to build trust, representing the raw data input.
-* **The Structure:** Flat, clean container blocks group the data, instantly organizing information by metadata types.
-* **The Insight:** Soft, semantic highlights draw immediate focus to the numbers and transaction directions.
-
-### Premium Feel Strategy
-A premium experience is not defined by decoration, but by the meticulous control of execution details. BankYar achieves its premium feel through:
-* **Precise Grid Alignment:** Everything aligns perfectly to a unified baseline, creating a sense of mechanical precision.
-* **Optimal Spacing:** Generous whitespace around content ensures the interface never feels crowded.
-* **High-Contrast Typography:** Clean typography weights establish an effortless hierarchy.
-* **Tactile Feedback:** Low-latency transitions and physical haptic cues make interactive controls feel substantial.
-
-### User Trust Strategy & Trust-building Principles
-User trust is our highest priority. To build absolute trust in an offline application:
-* **Verifiable Offline Operations:** The interface explicitly highlights that zero network permissions are requested.
-* **No Magic Transformations:** Every automated action (such as categorizations or regex parses) is transparent and can be inspected to see why a specific category was assigned.
-* **Complete Data Ownership:** The user has total control to override automated classifications, edit rules, or purge all local files permanently.
-
-### Security Perception & Security UX Guidelines
-Security must not only exist; it must be felt. Security is communicated visually through:
-* **The Lock Shield:** When resuming the application, the PIN or biometric entry screen presents a clean, simple layout, signaling absolute safety without complex decorative details.
-* **Concealed Previews:** The layout automatically conceals sensitive fields and transaction records when the user enters the task-switching menu, protecting privacy from bystanders.
-* **Local Vault Cues:** Using solid, flat, grounding grayscale backgrounds (`bankyar.semantic.color.background`) and clear key markers, reminding the user that they are in an encrypted on-device environment.
+### Presentation of Financial Information
+Financial figures represent raw reality and must be displayed with high-precision correctness:
+- **Mathematical Rigor:** Numbers are never rounded, truncated, or visually obscured unless explicitly collapsed by the user for privacy. Plus and minus symbols (such as `+` or `-`) are prepended to financial sums to denote transaction direction clearly.
+- **Transaction Integrity:** Every ledger row displays its parsing status (such as fully matched, low-confidence match, or manually entered) using clear text labels and badges.
+- **Balance Verification:** Derived balances from SMS histories are explicitly distinguished from verified account statements to prevent ambiguity.
 
 ---
 
-## 3. UX Principles
+## 3. Product Personality
 
-### User Experience Philosophy
-Every interaction must respect the user’s cognitive, emotional, and physical boundaries. We reject "delight" when it conflicts with utility. The user experience is optimized for fast extraction of facts and immediate task execution. We treat user attention as a finite, precious asset that must never be squandered.
+BankYar's interface behavior and visual presentation are governed by eight cohesive personality traits. Each trait directly shapes UI layout, typographical, and interaction design decisions:
 
-### Design Principles Matrix
+### Professional
+- **Description:** Rigorous, mature, and objective. The app communicates with absolute correctness, treating financial records with high-precision respect.
+- **UI Impact:** Typographical layouts utilize high-contrast vertical alignments and strict line-height spacing. Persian writing avoids informal or casual terms, and error alerts provide clear recovery instructions rather than technical stack dumps or vague codes.
 
-The following matrix defines the priority weight and design governance rules for the primary dimensions of the BankYar design system:
+### Calm
+- **Description:** Peaceful, silent, and anxiety-free. The interface is a quiet harbor that minimizes user stress when reviewing financial balances.
+- **UI Impact:** The color palette uses low-saturation semantic scales against solid neutral canvases. Decorative gradients, heavy shadows, and flashing alert banners are prohibited. Background processes run quietly, confirming their completion via subtle progress indicators or non-intrusive notification badges.
 
-| Design Dimension | Primary Objective | Trade-off Decision Rule | Priority Weight | Governance Status |
-| :--- | :--- | :--- | :---: | :---: |
-| **Information Accessibility** | Clear visual readability and proper screen reader labeling. | Accessibility ALWAYS takes priority over decorative layouts. | **Highest** | Mandatory |
-| **Privacy / Security** | Protecting sensitive financial details from local exposure. | Local security controls ALWAYS take priority over convenience. | **High** | Mandatory |
-| **Interface Simplicity** | Low cognitive load and minimal decorative noise. | Clean structural utility ALWAYS takes priority over creative layouts. | **High** | Mandatory |
-| **Interaction Speed** | Fast task execution and minimal interaction cost. | Performance perception ALWAYS takes priority over slow animations. | **Medium** | Mandatory |
+### Premium
+- **Description:** High-precision, high-quality, and meticulously crafted. It feels like a premium physical instrument.
+- **UI Impact:** The interface relies on precise grid alignment, generous whitespace, and tactile haptic feedback. Elements are separated by thin, clean hairline borders instead of thick shadows, and typography weights are balanced to establish an effortless reading hierarchy.
 
-### Design Laws
+### Friendly
+- **Description:** Respectful, helpful, and highly accessible to all user classes.
+- **UI Impact:** Interactive bottom sheets expand smoothly, bringing controls directly to the user's thumb. Form textfields provide clear helper text and real-time input validations, and complex tools (such as regular expression builders) offer guided step-by-step creation paths.
 
-Every screen, feature, and interaction layout in BankYar must strictly comply with these design laws:
+### Intelligent
+- **Description:** Proactive, predictive, and structurally smart without being invasive.
+- **UI Impact:** The app displays contextual, clickable suggestion chips for categorization and filtering. It handles state restoration perfectly, allowing the user to resume their active flow even after system lockouts, and presents relevant historical insights exactly when the user inspects a transaction.
 
-1. **One Primary Goal Per Screen:** Every layout must focus on a single core task, displaying only relevant controls.
-2. **Information Before Decoration:** Visual embellishments, decorative illustrations, and complex icons are prohibited.
-3. **Maximum Two Primary Actions:** Screens must not present more than two primary buttons, reducing choice anxiety.
-4. **Recognition Over Recall:** Actions, categories, and tags must be displayed clearly, ensuring users do not have to memorize previous steps.
-5. **No Surprise Behaviors:** Standard elements (buttons, fields, lists) must function predictably.
-6. **Low Interaction Cost:** Common tasks (such as assigning a category or adding a note) must be achievable in two taps or fewer.
-7. **Privacy by Default:** Sensitive financial details must be concealed on launch until the user unlocks the app.
-8. **RTL Native Alignment:** Persian layouts must be built RTL-first, ensuring natural reading and scrolling patterns.
+### Minimal
+- **Description:** Uncluttered, simple, and strictly focused on utility.
+- **UI Impact:** Adheres to the "Content as Interface" philosophy, removing all non-functional borders, background cards, and decorative icons. Views present a single primary task, and secondary actions are limited to a maximum of two per screen.
 
-### UX Decision Matrix
+### Modern
+- **Description:** Clean, contemporary, and strictly compliant with Material Design 3.
+- **UI Impact:** Uses flat surfaces, soft corner radii, and highly legible geometric layouts. Theme schemas are completely decoupled from UI code, allowing responsive reflows across diverse screen form factors and support for native light, dark, and high-contrast modes.
 
-Use this matrix to resolve design conflicts during feature planning:
-
-| Conflict Scenario | Option A (Exciting/Decorative) | Option B (Simple/Utility) | Resolution Decision Rule |
-| :--- | :--- | :--- | :--- |
-| **Visualizing Categories** | Colorful 3D pie charts with detailed gradients. | Flat structural donut charts with text percentages. | **Option B.** Flat structural charts preserve readability, reducing visual clutter and rendering overhead. |
-| **Assigning Categories** | Multi-gesture drag-and-drop interaction. | Stable bottom sheet with large, clickable category chips. | **Option B.** Clicking category chips has a lower interaction cost and is easier to perform one-handed. |
-| **Presenting Data** | Complex visual dashboards with multiple indicators. | Clean, structured vertical lists. | **Option B.** Structured vertical lists reduce cognitive load, making financial records easier to scan. |
-
-### Information Density Strategy & Cognitive Load Reduction Strategy
-To prevent cognitive overload and maintain spatial balance on screens of any density:
-* **Information Chunking:** Adjacent data fields are grouped into logical, semantic cards (such as Origin, Transaction Details, and Category Rules).
-* **Consistent Visual Grid:** Layout structures align to a strict structural grid, enabling users to scan different screens using identical eye movements.
-* **Progressive Disclosure Strategy:** High-level lists display only core facts (Amount, Date, and Merchant). Detailed parameters (such as raw SMS text or system parsing rules) are hidden behind a single-tap transaction inspector.
-* **Contrast-Based Hierarchy:** Information is arranged strictly by transactional significance:
-  1. **The Number:** The financial amount of the transaction, representing the highest visual emphasis.
-  2. **The Counterparty:** The merchant or financial sender.
-  3. **The Date & Time:** The timestamp of the transaction.
-  4. **The Meta-tags:** Categories, custom notes, and hashtags.
-
-### Touch Experience & Mobile-first Principles
-Interactive visual components must have custom constant structures and follow strict touch guidelines:
-* **Tappable Comfort:** All interactive touch targets are large and well-spaced (minimum forty-eight units on Android), preventing accidental triggers.
-* **Symmetrical Padding:** Layouts maintain consistent padding values to shield interactive regions from screen borders.
-* **System-Native Feedback:** Interaction confirmations leverage system haptics and native sheet transitions to feel familiar and immediate.
-
-### One-Hand Usage Philosophy & One-Hand Usage Strategy
-Operating a device on the move requires an optimal layout structure that places controls directly within the user's natural range of reach:
-* **Interaction Zone Split:** Actionable controls and interactive elements reside in the lower half of the viewport, while reading content and static charts reside in the top half.
-* **Predictable Bottom Sheets:** Configuration settings and categorization flows expand as stable bottom sheets, bringing controls directly to the user's thumb.
-* **No Side Gestures:** Horizontal swipes are reserved strictly for high-level tab switches, ensuring users do not accidentally trigger destructive actions (like deletions) while scrolling.
-
-### Thumb Zone Optimization
-Following ergonomics, the viewport is split into three functional zones:
-* **Natural Reach Zone (Bottom third):** Reserved for primary navigation tabs, quick category chips, search triggers, and action buttons.
-* **Stretch Zone (Middle third):** Used for interactive list items, secondary filters, and select text fields.
-* **Hard Reach Zone (Top third):** Reserved for non-interactive analytical readouts, cash flow balances, and structural headers.
+### Reliable
+- **Description:** Durable, stable, and completely predictable under any system constraints.
+- **UI Impact:** State changes commit instantly to the local database, updating the UI under sub-one-hundred-unit timelines. Skeleton structures prevent screen shifting when lists load, and critical data workflows (such as backing up or restoring) utilize explicit confirmation prompts.
 
 ---
 
-## 4. Interaction Philosophy
+## 4. UX Vision
 
-### Navigation Experience & Navigation Philosophy
-The navigation architecture is linear, simple, and flat to reduce cognitive search paths:
-* **Flat Linear Hierarchy:** Primary screens are accessible via a persistent bottom navigation bar. Deep nesting is prohibited, with sub-pages limited to a maximum depth of one layer.
-* **Immediate Context Return:** Sub-pages (such as rule editors) exist only one layer deep, returning users immediately to the parent context.
-* **Standard Back Actions:** The system back button or swipe gesture always returns the user to their immediate previous screen.
+The User Experience of BankYar is designed to respect the cognitive, physical, and emotional limits of the user. Every layout and interaction flow is structured for high-speed utility and reduced decision anxiety.
 
-### Motion Experience & Motion Philosophy
-Animations are strictly prohibited if they are merely decorative. Transitions and animations are used only to communicate structural relationships between screens (such as expanding a card into a details page) or confirm a system status change. All motions utilize linear eases and fast durations (typically under two hundred units) to maintain high-speed rendering and prevent lag.
+### Navigation Philosophy
+The navigation structure is linear, flat, and highly predictable to minimize cognitive search paths:
+- **Flat Section Hierarchy:** Primary screens (Ledger, Analytics, Rules, Settings) are directly accessible via a persistent bottom navigation bar. Deep nesting is prohibited, with sub-pages limited to a maximum depth of one layer.
+- **Immediate Context Return:** Sub-pages (such as rule editors or transaction inspectors) slide on top of the parent screen. Dismissing them returns the user immediately to their precise scroll position.
+- **Standard Back Actions:** The system back button or swipe gesture always behaves predictably, returning the user to the immediate previous screen.
 
-### Micro-interaction Philosophy & Feedback Philosophy
-Every interaction must confirm its state instantly:
-* **Tactile Affirmation:** Activating a control triggers a subtle, instant haptic vibration and surface contrast adjustment.
-* **Sub-100-Unit Timelines:** Interactive controls render their updated states immediately on-screen before verifying database confirmation, keeping the interface feeling instantaneous.
-* **Self-Dismissing Overlays:** Success states (such as a saved rule or database backup) use calm visual overlays that dismiss themselves automatically, returning the user to their active task with zero extra taps.
+### Simplicity Principles
+- **One Primary Goal Per Screen:** Every viewport focuses on a single core task (such as reviewing a ledger, configuring an import, or writing a regex template) to eliminate choice anxiety.
+- **Maximum Two Primary Actions:** Screens must not present more than two primary buttons, steering the user toward clear next steps.
+- **Recognition Over Recall:** Interactive options, category chips, and rules are displayed with clear visual labels, ensuring users never have to memorize previous inputs.
+- **Low Interaction Cost:** Common daily tasks—such as assigning a category or adding a transaction note—must be achievable in two taps or fewer.
 
-### Animation Principles
-All animations must comply with three core principles:
-1. **Immediate Response:** Transition feedback must trigger immediately upon user touch.
-2. **Linear Ease Control:** Animations use clean, standard, or decelerated curves to ensure transitions start immediately and settle smoothly.
-3. **Spatial Logic Preservation:** Components must expand and move from their literal physical touch origins, preserving spatial continuity.
+### Information Hierarchy
+To support effortless scan-readability, data within any container is structured strictly by transactional importance:
+1. **The Number:** The financial amount of the transaction, using large, bold typography with maximum contrast.
+2. **The Counterparty:** The merchant, bank, or transfer source.
+3. **The Date & Time:** The exact chronological timestamp.
+4. **The Meta-tags:** Interactive badges denoting category, custom notes, or rule associations.
 
-### Delight Moments
-While we reject decorative animations, we introduce subtle, functional moments of delight:
-* **The Parsing Ingestion Event:** When a new banking SMS is received and parsed successfully in the background, a subtle, linear progress indicator transitions smoothly to a success state on the ledger, quietly confirming background ingestion.
-* **Perfect Balance Match:** When the derived balance from parsed SMS data perfectly matches the confirmed bank statement balance, a clean badge updates with a soft, stable green checkmark, signaling precision.
+### Decision Reduction
+- **Safe Defaults:** Forms and settings pre-select the most secure, privacy-first options, requiring no technical knowledge from the user.
+- **Horizontal Suggestion Chips:** Instead of forcing the user to type or open deep dropdown menus, bottom sheets present horizontal scroll lists of popular categories and tags, allowing single-tap selection.
+
+### One-Hand Usability
+- **Interaction Zone Split:** Static summaries, analytical balances, and charts reside in the top half of the screen, while active controls, text inputs, and confirm buttons occupy the lower half.
+- **Bottom-Drawer Execution:** High-frequency workflows (such as editing transaction parameters or picking dates) open as stable bottom sheets, bringing interactive elements within easy reach.
+
+### Thumb-Friendly Interactions
+Following ergonomic reach boundaries, the viewport is split into three functional zones:
+- **Natural Reach Zone (Bottom third):** Contains primary navigation tabs, quick category chips, search entry bars, and action buttons.
+- **Stretch Zone (Middle third):** Used for interactive list items, secondary filters, and select text fields.
+- **Hard Reach Zone (Top third):** Reserved for non-interactive analytical displays and structural headers.
+
+### RTL-First Thinking
+BankYar is designed natively for the Persian language, treating LTR as an exception reserved strictly for numbers and technical codes:
+- **Mirrored Reading Direction:** Content flows from right to left (RTL). Chronological timelines, swipe gestures, and text fields are mirrored naturally.
+- **Persian Font Adaptation:** Typographic structures enforce generous line-heights and baseline buffers, preventing tall Persian characters from overlapping or clipping.
+- **Icon Mirroring:** Directional icons (such as back arrows, forward indicators, and textfield prefixes) mirror dynamically based on the active RTL locale.
 
 ---
 
 ## 5. Visual Strategy
 
-### Visual Philosophy
-The interface is a canvas for financial data. Layout boundaries, grouping containers, and reading lines are defined by the structure of the text and figures themselves. Decorative embellishments (like complex icons or heavy backgrounds) are strictly avoided.
+The Visual Strategy of BankYar implements our core philosophy by prioritizing structured layout systems over aesthetic ornamentation.
 
-### Financial Data Visualization Strategy & Financial Dashboard Philosophy
-* **Flat Donut Charts:** Financial categories and analytical ratios use flat donut charts with clean text percentages, preserving readability and avoiding visual clutter.
-* **Consistent Visual Scales:** Bar charts and sparklines use identical height limits and a single accent color scale to display monthly spending trends objectively.
-* **Mathematical Rigor:** Financial numbers are never truncated, rounded, or visually obscured unless explicitly collapsed by the user for privacy.
+### Visual Hierarchy
+Visual dominance is established strictly through typographic scale, weight, and contrast, rather than decorative colors:
+- **Primary Elements:** Displayed in deep neutral grays (or light grays in dark theme) with bold weights.
+- **Secondary Details:** Rendered in medium-contrast gray scales with regular weights and smaller sizes.
+- **Decorations Prohibited:** Gradients, textures, decorative illustrations, and accent colors behind non-functional elements are strictly prohibited.
 
-### Card-based Experience & Card Language
-Cards are the primary visual container in BankYar, used to group adjacent transactional metadata:
-* **Absolute Flatness:** Cards sit flat on the base canvas background, defined by subtle borders instead of heavy shadows.
-* **Inner Structural Margins:** Maintain consistent internal spacing around content to ensure card boundaries do not squeeze typography.
-* **Clean Typographic Layout:** Organize data hierarchically: place financial amounts at the visual start edge, with merchant names and timestamps aligned logically.
+### White Space Philosophy
+Whitespace is a critical functional element of the interface:
+- **Cognitive Buffer:** Generous, consistent gaps are maintained around card containers and reading lines, preventing elements from merging and reducing cognitive fatigue.
+- **No Dense Crowding:** Viewports are never packed with multiple analytical components; content is allowed to breathe, creating a calm, high-precision aesthetic.
 
-### Search Experience & Search-first Navigation
-Finding specific transactions is immediate:
-* **Instant Inline Results:** Results populate immediately as the user types, highlighting matching strings in bold text.
-* **Predictable Clears:** A simple close button allows the user to clear the search query with a single tap, resetting the view immediately.
-* **Clean Spacing:** Results align perfectly with the standard vertical ledger rhythm, maintaining design consistency.
+### Card-Based Layouts
+Cards serve as the primary containment vessel, grouping adjacent metadata cleanly:
+- **Absolute Flatness:** Cards sit completely flat on the canvas background. They are defined by thin, low-contrast borders rather than heavy shadows or deep background tints.
+- **Consistent Internal Margins:** Maintain strict internal margins around content to protect text from squeezing against card boundaries.
 
-### Filtering Experience & Filter Navigation
-* **Horizontal Chip Sliders:** Filters are arranged as horizontal chip sliders, positioned directly above the transaction feed for easy reach.
-* **Clear Active States:** Active filters use high-contrast outlines and a small checkmark icon to signal their state.
-* **Reset All Trigger:** An explicit "Reset All" button is displayed whenever filters are active, allowing users to clear all filters with a single tap.
+### Elevation Usage
+Depth is communicated strictly through surface value changes rather than 3D depth tricks:
+- **Layer 0 (Canvas):** Symmetrical, non-reflective gray base. Represents the lowest depth layer.
+- **Layer 1 (Surface Default):** Standard cards and list rows that sit flat on Layer 0.
+- **Layer 2 (Surface Raised):** Bottom sheets, persistent bars, and navigation sheets. Framed by clean, high-contrast borders.
+- **Layer 3 (Surface Overlay):** Locking prompts, biometric authentication screens, and modal dialogs. Combines with a soft scrim overlay to obscure underlying content.
 
-### Dark Theme Experience & Dark Theme Strategy
-The Dark Theme optimizes visual comfort in low-light environments, protecting users during night-time analytical reviews:
-* **Deep Grayscale Base:** The background uses deep neutral grays (`bankyar.global.color.gray.alpha`) rather than pure black, minimizing eye strain and preventing pixel smearing.
-* **Accessible Contrast:** Contrast ratios are verified to ensure body text and functional accents remain readable against dark backgrounds.
-* **Elevation via Opacity:** Standard shadows are ineffective against dark backgrounds. Elevation is instead communicated by applying soft white opacity overlays to container surfaces.
+### Shape Language
+Soft geometric shapes are used systematically to signal interactive boundaries:
+- **Corner Sharp:** Used for absolute full-screen containers and structural dividing lines.
+- **Corner Subtle:** Applied to text inputs, transaction tag chips, and small alert banners.
+- **Corner Default:** Applied to transaction cards and dashboard summary panels.
+- **Corner Soft:** Applied to expanded bottom sheets and modular modal dialogs, highlighting interactive containment.
+- **Corner Round:** Applied exclusively to circular action buttons and search bars.
 
-### Light Theme Experience & Light Theme Strategy
-The Light Theme provides clean, high-contrast readability under bright lighting conditions (such as direct sunlight):
-* **Pure Neutral Canvas:** The background uses light gray scales, maintaining a clean, spacious layout.
-* **Crisp Card Boundaries:** Cards are defined by thin, medium-contrast borders, keeping layouts flat and tidy.
-* **Highly Legible Typography:** Text uses deep neutral grays, providing maximum typographic contrast.
+### Icon Usage
+- **Linear Style:** Icons utilize thin, consistent strokes with open geometric shapes. Solid fills are reserved strictly for active states (such as the active tab in navigation).
+- **Strict Semantic Binding:** Icons share the exact semantic color of their adjacent labels, preventing visual clutter.
+- **Dynamic Mirroring:** Directional icons mirror automatically when switching between RTL and LTR viewports.
 
-### Privacy Experience & Privacy-first Design Principles
-To protect sensitive financial information from local exposure:
-* **Local Confidentiality by Default:** No sensitive financial information or transaction lists are visible on the dashboard without unlocking the app first.
-* **Window Redaction:** The layout remains blank or heavily blurred inside the operating system's task switcher card to prevent visual leaks.
-* **Input Privacy:** Forms do not pre-fill or cache financial details outside of the encrypted local database environment.
+### Illustration Philosophy
+- **Strict Abstraction:** Detailed sketches, realistic cartoons, and 3D icons are prohibited. Illustrations are strictly flat, monochromatic, and abstract.
+- **Minimal Presence:** Reserved exclusively for empty states, onboarding slides, and critical lockouts, ensuring they never distract from daily transactional review tasks.
 
----
-
-## 6. Experience Strategy
-
-### Empty State Experience & Empty State Philosophy
-* **Actionable Guidance:** Empty screens (such as a ledger with no transactions or a rules list with no entries) never present blank voids. Instead, they provide brief, reassuring context and a clear primary action to get started.
-* **Clear Reassurance:** On initial launch, empty states explain why there is no data and guide the user on granting permissions or manually importing their statement.
-* **Abstract Visual Anchor:** Place a flat, monochromatic icon at the vertical center of the container to ground the layout.
-
-### Loading Experience & Loading Experience Philosophy
-* **Instant Structured Layouts:** Feeds load instantly using stable structural layouts (skeletons), preventing awkward jumps as content renders.
-* **No Spinner Blocks:** Avoid full-screen loading spinner blocks; instead, allow the user to navigate and inspect the UI freely while background tasks run.
-* **Linear Progress Indicators:** For multi-step tasks (such as importing CSV histories), a thin linear progress bar displays deterministic progress clearly.
-
-### Error Recovery Experience & Error Prevention Philosophy
-* **Destructive Confirmation:** Destructive actions (such as purging databases or deleting templates) require explicit, secondary confirmations (such as entering a PIN or confirming a prompt).
-* **Validation Prior to Save:** Text entry fields, regex patterns, and CSV statements are validated in real-time, preventing invalid inputs from entering the database.
-* **Graceful Parsing Fallback:** If parsing fails, the message is saved as an unparsed item rather than failing silently, allowing manual correction.
-* **Supportive Recovery Messaging:** Error messages must use plain, non-technical Persian text, explaining the issue and providing clear recovery steps.
-
-### Notification Experience
-* **No Promotional Alerts:** The app never sends marketing notifications, behavior reminders, or promotional alerts.
-* **Transactional Integrity:** Notifications are reserved strictly for real-time background SMS parsing, confirming background ingestion quietly and securely.
-* **Quiet Channels:** System notifications are configured as quiet channels by default, preventing unnecessary audio interruptions.
+### Data Density Strategy
+- **Information Chunking:** Complex transaction properties are grouped into semantic sections (e.g., Bank Details, Text Representation, Parsing Logic) inside the transaction inspector.
+- **Progressive Disclosure:** High-level lists display only the core transaction details (Amount, Date, Merchant). Detailed parameters are accessed via single-tap expanders.
+- **Vertical Stack Rhythm:** Lists stack vertically using standard spacing tokens, providing a rhythmic, predictable flow as the user scrolls.
 
 ---
 
-## 7. Accessibility Strategy
+## 6. User Trust Strategy
 
-### Accessibility Experience & Accessibility Philosophy
-* **Color Independence:** Meaning is never conveyed solely by color (e.g., green for income and red for expense). Layouts use clear signs, text labels, and structural shapes (such as plus/minus symbols or descriptive badges) alongside color.
-* **Robust Contrast:** Text, icons, and focus indicators maintain strong, legible contrast ratios under all lighting conditions, meeting strict WCAG AA standards.
-* **Screen Reader Integrity:** Every interactive layout and data element is labeled with semantic descriptions for screen readers.
-* **Dynamic Scale Protection:** Text background containers must expand dynamically, preventing text from overlapping or clipping when system-level text magnification is increased.
+Because BankYar operates locally without a cloud backend, the UI is the primary mechanism for conveying security, privacy, and system integrity.
 
-### Native Persian (RTL) Layout System & RTL-first Design Principles
-* **Mirrored Flow Direction:** Layouts flow from right to left (RTL) for Persian. Chronological feeds, reading paths, and swipe gestures are mirrored naturally.
-* **Persian Font Adaptation:** Typographic layouts are designed specifically around the baseline and line-height requirements of Persian fonts, using custom vertical spacing boundaries.
-* **Icon Mirroring:** Directional icons (such as back arrows, progress indicators, and text fields) are mirrored dynamically based on the active locale.
+### Transparency
+- **No Hidden Computations:** Every automated category tag or regex rule match displays its match confidence and matching parameters.
+- **User Override Prominence:** Whenever the system performs an automated task, it displays a clear manual override action, assuring the user that they retain absolute control over their data.
+
+### Security Perception
+- **The Lock Shield:** PIN entry and biometric challenge screens are clean and solid. There are no distracting backgrounds, branding logos, or options that might suggest vulnerability.
+- **Task-Switcher Redaction:** The layout automatically blurs or conceals sensitive bank details and balances whenever the application transitions to the background multitasking list.
+- **On-Device Vault Signifiers:** Using solid, grounding grayscale backgrounds and clean padlock markers, reinforcing that the user's data is encrypted locally.
+
+### Privacy Communication
+- **Verifiable Permissions:** Onboarding screens guide the user to inspect the application’s manifest file, explicitly demonstrating that zero network permissions are requested.
+- **Direct Privacy Copy:** Empty states and status bars display clear, reassuring Persian copy (e.g., "داده‌های شما فقط روی دستگاه شما ذخیره می‌شوند"), continuously reinforcing data ownership.
+
+### Predictable Interactions
+- **Action Consistency:** Buttons, links, and list rows behave identically across all features. Swiping left or right never triggers destructive actions without an explicit confirmation prompt.
+- **No Surprise Updates:** Standard elements function exactly as expected. The UI does not contain hidden gestures, double-tap triggers, or forced onboarding loops.
+
+### Error Prevention
+- **Real-Time Input Validation:** Form fields, regex patterns, and numeric statements are validated as the user types, preventing invalid parameters from entering the database.
+- **Destructive Action Confirmation:** Purging database logs, deleting custom templates, or overriding system settings requires a clear, secondary confirmation step.
+
+### Confirmation Patterns
+- **Instant Haptic Validation:** Activating buttons or confirming settings triggers a subtle, immediate haptic pulse.
+- **Self-Dismissing Success Overlays:** Successful events (such as "Backup Saved") are confirmed via calm, low-saturation banners that dismiss themselves automatically, avoiding unnecessary taps.
 
 ---
 
-## 8. Future Evolution
+## 7. Motion Philosophy
 
-### Future Scalability & Future Evolution Strategy
-* **Scale via Layout Consistency:** As features expand, they must be integrated into our existing screen structures. For example, local Wi-Fi sync controls are located within the Settings page, maintaining our flat navigation hierarchy.
-* **Component-First Expansion:** New features must compose existing layout patterns (such as standard bottom sheets and flat cards) rather than introducing custom layouts.
-* **Unified Token Suffixes:** All future theme expansions must use our standard naming taxonomy, ensuring long-term consistency.
-* **Decoupled Theme Schemas:** Theme definitions are stored as platform-agnostic schemas. Component layouts query logical tokens, which resolve their physical values based on the active theme, supporting future iOS and cross-platform builds.
+All transitions, gestures, and state changes inside BankYar use purposeful motion to guide the user's focus, communicate layout changes, and establish high-speed performance perception.
+
+### Animation Principles
+1. **Utility-First Focus:** Animations are strictly prohibited if they do not serve a clear structural or feedback purpose. Decorative splash loops, complex loading animations, and playful physics are excluded.
+2. **Immediate Response:** Feedback must trigger immediately upon user touch (sub-one-hundred-unit response times) to keep the application feeling instantaneous.
+3. **Linear Ease Control:** Transitions utilize standard linear ease or decelerated curves, starting quickly and settling smoothly into their destinations.
+4. **Spatial Logic Preservation:** Elements expand and move from their literal physical origins, maintaining spatial continuity.
+
+### Duration
+All animations are kept extremely fast to maintain high rendering speeds and prevent interaction drag:
+- **Micro-feedback:** Sub-one-hundred-unit timelines.
+- **Container Transitions:** Under two hundred units.
+- **Screen Slides:** Under two hundred and fifty units.
+
+### Easing
+- **Decelerated Easing:** Used for incoming components (like sliding bottom sheets), allowing them to start quickly and decelerate smoothly as they reach focus.
+- **Accelerated Easing:** Used for outgoing elements (like closing modal drawers), ensuring they clear the screen immediately.
+- **Linear Easing:** Reserved for progress meters and subtle background parsing indicators.
+
+### Purpose of Animations
+- **Spatial Relationship: ** Demonstrates how a detail sheet expands directly out of a ledger card, helping the user understand where they are.
+- **State Confirmation: ** Instantly highlights active filters or selected chips via swift, subtle border and contrast transitions.
+- **Focus Guidance: ** Guides the user's attention toward critical validation errors or warning badges when forms are submitted.
+
+### Navigation Transitions
+- **Horizontal RTL Push:** When navigating to sub-screens, the current viewport slides horizontally out of view, while the incoming page slides in from the logical start edge (right), matching RTL reading habits.
+- **Vertical Drawer Expansion:** Configuration dialogs and settings expand vertically from the bottom edge, settling in the natural thumb reach zone.
+
+### Feedback Animations
+- **Surface Contrast Shift:** Clicking interactive containers triggers an immediate contrast adjustment on their surface.
+- **Haptic Confirmations:** Works alongside contrast changes to provide tactile feedback for core actions.
+
+### Loading Animations
+- **Zero-Spinner Policy:** Full-screen blocking spinner wheels are prohibited.
+- **Skeleton Shimmer:** Feeds and ledger cards load using stable, gray layout outlines (skeletons), maintaining layout integrity as content renders.
+- **Linear Progress Bars:** Multi-step workflows (such as importing a statements history file) utilize thin linear progress bars to show deterministic progress.
+
+### Success Animations
+- **State Progressions:** Processing states transition smoothly to success checkmarks inside the action container, quietly confirming database commits.
+- **Self-Dismissing Sheets:** Success panels slide smoothly off the viewport once confirmed, returning the user to their active task with zero extra taps.
 
 ---
 
-## 9. Quality Checklist & Governance
+## 8. Accessibility Vision
+
+BankYar is designed to provide an inclusive, accessible financial experience for all users, including those with low vision, high fatigue, and cognitive or physical constraints.
+
+### RTL-First Support
+- **Native Layout Mirroring:** Every layout, spacing guideline, chevron, and swipe interaction mirrors naturally from right to left (RTL) for Persian.
+- **Persian Baseline Adaptation:** Typographic layouts are structured around the specific vertical height requirements of Persian character baselines, preventing overlapping.
+
+### Dynamic Font Scaling
+- **Flexible Containers:** Background shapes and list containers expand dynamically. Text is never locked to fixed heights, ensuring it never overlaps or clips when system-level text magnification is enabled.
+- **Flow Reflow:** Text blocks reflow cleanly to vertical arrangements when scaled up, preserving readability.
+
+### High Contrast Compatibility
+- **WCAG AA Compliance:** All body text and functional icons maintain a minimum contrast ratio of 4.5:1 against their active background states. Large displays (over 18pt) meet a minimum ratio of 3:1.
+- **Explicit Focus Rings:** Interactive components feature high-contrast, double-layered outlines, ensuring they remain highly visible during keyboard, screen reader, or switch control navigation.
+
+### Screen Reader Compatibility
+- **Semantic Labels:** Every list row, financial metric, and custom button is labeled with clear semantic descriptions.
+- **Screen Reader Focus Order:** Navigation paths flow in a logical, chronological sequence from right to left and top to bottom.
+
+### Touch Target Sizing
+- **Comfortable Targets:** Interactive elements have a minimum touch target size of forty-eight units, separated by generous margin buffers to prevent accidental triggers.
+
+### Color Independence
+- **No Color-Only Meaning:** Meaning is never conveyed solely by color. Green and red scales (used for credit/debit or success/error) work alongside explicit mathematical signs (`+` or `-`), directional arrows (`↑` or `↓`), and detailed text labels.
+
+### Inclusive Interaction Principles
+- **No Complex Gestures:** Primary tasks are achievable via simple, distinct taps. Complex gestures, such as double-tapping, long-pressing, or multi-finger swipes, are excluded from core workflows.
+- **Predictable Keyboard Focus:** Form elements and filters support straightforward tab sequences, ensuring a smooth experience for users navigating via physical keyboards or switch buttons.
+
+---
+
+## 9. Dark & Light Experience
+
+BankYar provides optimized Light and Dark themes, protecting readability and comfort across all lighting conditions.
+
+### Light Mode Experience
+- **Pure Neutral Canvas:** The background canvas uses light gray scales, maintaining a clean, spacious layout.
+- **Crisp Card Boundaries:** Cards are defined by thin, medium-contrast borders, keeping layouts flat and tidy.
+- **Highly Legible Typography:** Text uses deep neutral grays, providing maximum typographic contrast.
+
+### Dark Mode Experience
+- **Deep Grayscale Base:** The background uses deep neutral grays rather than pure black, minimizing eye strain and preventing pixel smearing during scrolling.
+- **Accessible Contrast:** Contrast ratios are verified to ensure body text and functional accents remain readable against dark backgrounds.
+- **Elevation via Opacity:** Standard shadows are ineffective against dark backgrounds. Elevation is instead communicated by applying soft white opacity overlays to container surfaces.
+
+### Color Behavior Across Themes
+- **Low-Saturation Adaptability:** Semantic colors (Success green, Error red, Warning amber) scale down their saturation in the Dark theme, preventing glowing effects and preserving WCAG contrast standards.
+- **Consistent Tone:** The underlying color identity remains uniform, ensuring transition states feel identical in both modes.
+
+### Elevation Behavior Across Themes
+- **Light Theme Elevation:** Employs thin borders and subtle, diffused ambient shadows.
+- **Dark Theme Elevation:** Shadows are disabled; container depth is communicated strictly by applying soft white opacity overlays to container surfaces (e.g., surface surfaces become progressively lighter as depth layer increases).
+
+### Contrast Rules
+- **Constant Validation:** Regardless of active theme (Light, Dark, or High-Contrast), body text and interactive icons must maintain strict WCAG AA contrast standards, validated programmatically before release.
+
+---
+
+## 10. Future Evolution
+
+The BankYar design system is engineered to scale gracefully, supporting new features and device form factors without visual degradation.
+
+### AI Insights
+- **Inline Rationale Cards:** When heuristic or AI modules process data, insights are displayed in flat inline panels, explaining the reasoning behind classifications.
+- **Clear Suggestion Chips:** AI suggestions (such as category predictions or budgeting targets) appear as single-tap interactive chips, minimizing data entry effort.
+
+### Multi-Device Support
+- **Flexible Grid System:** Layouts follow a responsive grid system, adapting margins and gaps proportionally as viewport widths expand.
+- **Component-First Adaptations:** Core modules (like navigation sheets or card containers) are designed to scale smoothly from small phone screens to wider displays.
+
+### Tablet
+- **Multi-Pane Layouts:** Wide screens display a dual-pane setup, with lists on the start edge and details in a wider pane on the end edge, eliminating unnecessary navigation steps.
+- **Expanded Sidebar Navigation:** Bottom navigation bars transition to persistent vertical sidebars, keeping controls easily accessible.
+
+### Desktop
+- **Three-Column Experience:** Adapts to a three-column layout: navigation sidebar on the start edge, main transaction list in the center, and a transaction inspector on the end edge.
+- **Full Keyboard Bindings:** Navigation and filtering support standard keyboard shortcuts and tab loops.
+
+### Wearables
+- **Ultra-Low Density Cards:** Summarizes financial metrics in single, high-contrast values, accompanied by simple upward/downward transaction indicators.
+- **Vertical Scroll Ledger:** Displays lists in simple vertical lists with large, easily tapable action buttons.
+
+### Additional Banking Features
+- **Decoupled Theme Schemas:** Theme definitions are stored as platform-agnostic JSON schemas. Swapping themes modifies color and border tokens, leaving sizes, margins, and spatial grid alignments completely untouched.
+- **White-Label Adaptability:** The abstract token architecture supports white-label brand deployments, allowing enterprise partners to adapt the palette without altering the layout code.
+
+---
+
+## 11. Quality Checklist & Governance
+
+To maintain visual integrity and prevent design debt, all additions and refactors must pass strict quality and architectural standards.
 
 ### Review Checklist
-
 Before releasing any screen, layout, or feature, verify compliance against this checklist:
+- [ ] **Single Focus:** Does the screen focus on a single, clear primary goal?
+- [ ] **Primary Actions Limit:** Are primary action buttons limited to a maximum of two per viewport?
+- [ ] **Decoupled Tokens:** Does the layout rely 100% on active design tokens, with zero hardcoded values (colors, margins, sizes)?
+- [ ] **No Forbidden Units:** Is the document free of hardcoded physical units (such as px, dp, or sp)?
+- [ ] **No Platform Code:** Is the specification completely free of Flutter classes, UI components, and syntax?
+- [ ] **RTL-First Layout:** Do Persian text, chevrons, forms, and transitions align natively from right to left?
+- [ ] **Color Independence:** Is meaning conveyed through text labels, badges, or shapes, rather than relying solely on color shifts?
+- [ ] **WCAG AA Compliance:** Do all typography and interactive icons meet WCAG AA contrast standards in both Light and Dark themes?
+- [ ] **Task-Switcher Redaction:** Are all sensitive balances and transaction details masked when the app transitions to the background task switcher?
+- [ ] **One-Hand Usability:** Are high-frequency controls and bottom sheets placed within the comfortable thumb reach zone?
+- [ ] **Stable Loading Skeletons:** Do scroll feeds load using stable layout outlines (skeletons) without full-screen blocking spinners?
+- [ ] **Error Prevention:** Do text inputs and regex fields validate in real-time, displaying non-technical Persian recovery steps?
 
-- [ ] Does the screen focus on a single, clear primary goal?
-- [ ] Is all sensitive financial information concealed on launch?
-- [ ] Are all Persian text layouts aligned RTL-first?
-- [ ] Do interactive elements avoid complex gestures, relying on clear clicks instead?
-- [ ] Are all decorative gradients, 3D elements, and unnecessary animations excluded?
-- [ ] Does the screen maintain clear visual contrast and accessibility labeling?
-- [ ] Does the layout rely 100% on active design tokens, with zero hardcoded values?
-- [ ] Are all sensitive balances and transaction details masked when the app transitions to the background task switcher?
-- [ ] Do all text elements meet WCAG AA contrast standards against their background?
-- [ ] Is meaning conveyed through text labels, badges, or shapes, rather than relying solely on color shifts?
-- [ ] Are all layout boundaries and vertical lists stacked using standard spacing tokens?
-
-### Anti-pattern Catalog
-
-The following visual and interaction anti-patterns are strictly prohibited:
-
-* **Overloaded Dashboards:** Do not crowd multiple widgets, charts, and summaries onto a single screen.
-* **Heavy Gradients & Neumorphism:** Avoid deep 3D-styled cards, heavy shadows, and glowing gradients.
-* **Unnecessary Animations:** Decorative spin transitions, complex loading shapes, and slow slide transitions are prohibited.
-* **Hidden Actions:** Primary actions (such as saving, editing, or deleting) must not be concealed behind non-standard gestures (like long-pressing or double-tapping).
-* **Multiple Floating Buttons:** Do not place multiple floating actions on a single screen.
-* **Color-Only Indicators:** Relying exclusively on green or red color shifts to convey credit/debit operations, without adding math symbols or badges.
-* **Un-Masked Previews:** Leaving sensitive card details and balances visible when the app transitions to the background multitasking task-switcher menu.
+### Anti-Pattern Catalog
+The following visual and interaction designs are strictly prohibited:
+- **Overloaded Dashboards:** Crowding multiple charts, summaries, and lists onto a single view, which increases cognitive load.
+- **Heavy Gradients & Neumorphism:** Using deep 3D-styled cards, glowing shadows, or neon colors on cards and containers.
+- **Unnecessary Animations:** Decorative spin transitions, complex loading shapes, and slow slide transitions.
+- **Hidden Actions:** Concealing primary actions (such as saving, editing, or deleting) behind complex gestures (such as long-pressing or double-tapping).
+- **Multiple Floating Buttons:** Placing multiple floating action buttons on a single screen.
+- **Color-Only Indicators:** Relying exclusively on green or red color shifts to convey credit/debit operations, without adding math symbols or badges.
+- **Un-Masked Previews:** Leaving sensitive card details and balances visible when the app transitions to the background multitasking task-switcher menu.
 
 ### Governance Rules
+- **Consistency Over Novelty:** Long-term design consistency takes precedence over visual novelty. New features must compose existing, documented design system components instead of introducing custom layouts.
+- **Explainable Visual Decisions:** Every design choice (such as adding a visual cue or placing a control) must be justified based on usability, accessibility, or privacy benefits.
+- **Compliance Checks:** All new features must pass the official Design Review Checklist before implementation.
+- **Mandatory Token Usage:** Every color, spacing margin, border, corner curve, and typography style must reference an active design token. Hardcoded visual values are prohibited.
+- **One Purpose Per Token:** A semantic token must serve exactly one purpose. Reusing semantic tokens for secondary meanings is prohibited.
 
-* **Design Consistency Priority:** Long-term design consistency takes precedence over visual novelty. Every screen must utilize our standard, flat layout patterns.
-* **Explainable Visual Decisions:** Every design choice (such as adding a visual cue or placing a control) must be justified based on usability, accessibility, or privacy benefits.
-* **Compliance Checks:** All new features must pass the official Design Review Checklist before implementation.
-* **Mandatory Token Usage:** Every color, spacing margin, border, corner curve, and typography style must reference an active design token. Hardcoded visual values are prohibited.
-* **One Purpose Per Token:** A semantic token must serve exactly one purpose. Reusing semantic tokens for secondary meanings is prohibited.
-
-### Trade-off Analysis
-
+### Trade-Off Analysis
 1. **Absolute Privacy vs. Cloud Convenience:**
    - *The Trade-off:* Eliminating cloud-sync requires users to manually export and import backup files.
    - *Rationale:* User trust is our highest priority. Verifiable, 100% offline local storage protects user privacy, which outweighs the convenience of automated cloud sync.
@@ -315,8 +391,7 @@ The following visual and interaction anti-patterns are strictly prohibited:
    - *Rationale:* BankYar is a precise financial tool, not an entertainment app. Silent, ultra-fast performance reduces user anxiety and accelerates task execution.
 
 ### Architecture Alignment
-
 This design philosophy is aligned with the **BankYar Architecture Baseline v1.0**:
-* **Thread Separation:** The UI thread remains responsive (60fps+) by running intensive tasks (like processing statements or executing backups) in separate background processes.
-* **Zero Network Manifest:** No design element relies on external assets, fonts, or remote trackers, ensuring perfect offline operation.
-* **Secure Cache Erasure:** Sensitive details are purged from temporary layouts immediately after the application is sent to the background, preventing visual exposure.
+- **Thread Separation:** The UI thread remains responsive (60fps+) by running intensive tasks (like processing statements or executing backups) in separate background processes.
+- **Zero Network Manifest:** No design element relies on external assets, fonts, or remote trackers, ensuring perfect offline operation.
+- **Secure Cache Erasure:** Sensitive details are purged from temporary layouts immediately after the application is sent to the background, preventing visual exposure.
