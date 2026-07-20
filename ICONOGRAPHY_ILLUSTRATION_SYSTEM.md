@@ -1,63 +1,64 @@
 # BankYar Design System: Iconography & Illustration System Architecture (v1.0.0)
 
 ## Executive Summary
-This document establishes the official **Iconography & Illustration System Architecture** for BankYar. Designed to implement the core product personality (*Stoic*, *Precise*, *Empowering*) and UX principles defined in `DESIGN_PHILOSOPHY.md`, this architecture serves as the absolute visual and structural authority for all graphical assets beyond typography and color.
+This document establishes the official **Iconography & Illustration System Architecture** for BankYar. Designed to implement the core product personality (*Stoic*, *Precise*, *Empowering*) and UX principles defined in `DESIGN_PHILOSOPHY.md` and `VISUAL_DESIGN_LANGUAGE_SPECIFICATION.md`, this architecture serves as the absolute visual and structural authority for all graphical assets beyond typography and color.
 
 In strict adherence to BankYar’s **Offline-First**, **Privacy-First**, and **Accessibility-First** tenets:
 * **No Flutter code** is generated.
 * **No SVG files** are defined.
 * **No visual mockups** are created.
 * **No brand colors or HEX values** are hardcoded.
+* **No physical units** (such as pixels, dp, sp, or milliseconds) are utilized.
+* **No development markers** (such as incomplete comments, template tags, or mock text) are allowed; all text is fully resolved.
 
 This system resides entirely at the visual language, design system architecture, and governance level. It defines structural properties, logical behaviors, mirroring mechanics, and semantic mappings for every icon and illustration, ensuring absolute consistency across Light, Dark, High-Contrast, and future multi-platform (Android, iOS, Desktop) themes.
 
 ---
 
 ## TABLE OF CONTENTS
-1. [Icon Philosophy](#1-icon-philosophy)
-2. [Illustration Philosophy](#2-illustration-philosophy)
-3. [Visual Language Principles](#3-visual-language-principles)
-4. [Icon Categories](#4-icon-categories)
-5. [Navigation Icons](#5-navigation-icons)
-6. [Action Icons](#6-action-icons)
-7. [Financial Icons](#7-financial-icons)
-8. [Status Icons](#8-status-icons)
-9. [Notification Icons](#9-notification-icons)
-10. [Settings Icons](#10-settings-icons)
-11. [Security Icons](#11-security-icons)
-12. [Search Icons](#12-search-icons)
-13. [Filter Icons](#13-filter-icons)
-14. [Empty State Illustrations](#14-empty-state-illustrations)
-15. [Error Illustrations](#15-error-illustrations)
-16. [Loading Illustrations](#16-loading-illustrations)
-17. [Success Illustrations](#17-success-illustrations)
-18. [Onboarding Illustrations](#18-onboarding-illustrations)
-19. [Placeholder Graphics](#19-placeholder-graphics)
-20. [Financial Symbol Guidelines](#20-financial-symbol-guidelines)
-21. [Icon Sizing Strategy](#21-icon-sizing-strategy)
-22. [Stroke Style Strategy](#22-stroke-style-strategy)
-23. [Filled vs Outlined Rules](#23-filled-vs-outlined-rules)
-24. [Icon Alignment Rules](#24-icon-alignment-rules)
-25. [Icon + Text Rules](#25-icon--text-rules)
-26. [RTL Mirroring Rules](#26-rtl-mirroring-rules)
-27. [Animation Readiness](#27-animation-readiness)
-28. [Accessibility Guidelines](#28-accessibility-guidelines)
-29. [Color Independence](#29-color-independence)
-30. [Dark Theme Compatibility](#30-dark-theme-compatibility)
-31. [Semantic Mapping](#31-semantic-mapping)
-32. [Token Mapping](#32-token-mapping)
-33. [Asset Naming Convention](#33-asset-naming-convention)
-34. [Versioning Strategy](#34-versioning-strategy)
-35. [Governance Rules](#35-governance-rules)
-36. [Validation Rules](#36-validation-rules)
-37. [Anti-pattern Catalog](#37-anti-pattern-catalog)
-38. [Review Checklist](#38-review-checklist)
-39. [Migration Strategy](#39-migration-strategy)
-40. [Future Evolution Strategy](#40-future-evolution-strategy)
+- [1. Icon System Philosophy](#1-icon-system-philosophy)
+- [2. Illustration Philosophy](#2-illustration-philosophy)
+- [3. Visual Asset Strategy](#3-visual-asset-strategy)
+- [4. Financial Icon Language](#4-financial-icon-language)
+- [5. Security Icon Language](#5-security-icon-language)
+- [6. Banking Symbol Standards](#6-banking-symbol-standards)
+- [7. Transaction Status Icons](#7-transaction-status-icons)
+- [8. Notification Icons](#8-notification-icons)
+- [9. Navigation Icons](#9-navigation-icons)
+- [10. Action Icons](#10-action-icons)
+- [11. Category Icons](#11-category-icons)
+- [12. Empty State Illustrations](#12-empty-state-illustrations)
+- [13. Error Illustrations](#13-error-illustrations)
+- [14. Loading Illustrations](#14-loading-illustrations)
+- [15. Success Illustrations](#15-success-illustrations)
+- [16. Warning Illustrations](#16-warning-illustrations)
+- [17. Onboarding Illustrations](#17-onboarding-illustrations)
+- [18. Accessibility Icon Rules](#18-accessibility-icon-rules)
+- [19. RTL Icon Considerations](#19-rtl-icon-considerations)
+- [20. SVG Standards](#20-svg-standards)
+- [21. Stroke Rules](#21-stroke-rules)
+- [22. Fill Rules](#22-fill-rules)
+- [23. Corner Style Rules](#23-corner-style-rules)
+- [24. Grid Alignment](#24-grid-alignment)
+- [25. Pixel Alignment](#25-pixel-alignment)
+- [26. Optical Balance Rules](#26-optical-balance-rules)
+- [27. Size Categories](#27-size-categories)
+- [28. Color Usage Rules](#28-color-usage-rules)
+- [29. Theming Strategy](#29-theming-strategy)
+- [30. Dark Mode Adaptation](#30-dark-mode-adaptation)
+- [31. Animation Readiness](#31-animation-readiness)
+- [32. Asset Naming Convention](#32-asset-naming-convention)
+- [33. Folder Organization](#33-folder-organization)
+- [34. Versioning Strategy](#34-versioning-strategy)
+- [35. Asset Governance](#35-asset-governance)
+- [36. Quality Standards](#36-quality-standards)
+- [37. Validation Checklist](#37-validation-checklist)
+- [38. Anti-patterns](#38-anti-patterns)
+- [39. Future Expansion Strategy](#39-future-expansion-strategy)
 
 ---
 
-## 1. Icon Philosophy
+## 1. Icon System Philosophy
 Icons in BankYar are primary information carriers. They are **functional visual signals, not decoration.**
 * **Functional Utility over Decoration:** An icon is only introduced to reduce cognitive load, accelerate spatial navigation, or group visual components. If an icon does not serve an immediate functional purpose, it is excluded.
 * **Meaning Communication:** Icons exist to support and clarify, never to replace, critical text descriptions. No critical financial action may rely solely on a visual metaphor.
@@ -75,444 +76,253 @@ Illustrations represent high-level conceptual summaries. They are used to guide 
 
 ---
 
-## 3. Visual Language Principles
-Every visual asset in BankYar is built on three visual design rules, implementing the core product personality:
-1. **Geometric Precision (The "Precise" Trait):** Icons and illustration bases conform to a strict 24dp grid. Angles are mathematically calculated (using increments of 45 and 90 degrees), and curves maintain a consistent radius scale mapped from `DESIGN_TOKEN_ARCHITECTURE.md`.
-2. **Minimalist Volume (The "Stoic" Trait):** Visual representations are stripped to their minimal geometric lines. Unnecessary details, complex patterns, and heavy fills are omitted to preserve reading clarity.
-3. **Structured Focus (The "Empowering" Trait):** Visual assets direct focus directly to financial truths. High contrast is reserved strictly for primary indicators (e.g., active locked security states or directional transaction flow arrows), keeping secondary elements neutral.
+## 3. Visual Asset Strategy
+The visual asset strategy outlines the lifecycle, production pipeline, and integration model for all graphical assets inside the BankYar ecosystem.
+* **Mathematical Vector Base:** All icons are generated as pure mathematical vectors on a normalized reference coordinate box. This ensures infinite scaling across low-density and high-density screens.
+* **Zero External HTTP Calls:** In alignment with our offline-first constraint, all icons and illustrations are bundled natively within the application binary. No external graphic networks or dynamic asset servers are contacted.
+* **Multi-Theme Compilation:** Vector assets are compiled without baked-in fill or stroke colors. Instead, styles are injected dynamically by referencing the active semantic theme tokens.
+* **Unified Visual Grid System:** A strict geometric layout is applied to ensure that visual weight is distributed evenly across all assets, preventing rendering shifts.
 
 ---
 
-## 4. Icon Categories
-To simplify development and structure design, BankYar organizes all system symbols into a formal **Icon Taxonomy**:
-
-```
-                              BankYar Icon Taxonomy
-                                        |
-         +------------------+-----------+-----------+------------------+
-         |                  |                       |                  |
-   System Control      Financial & Ledger       User Context       Contextual Safety
-   - Navigation Icons  - Financial Icons        - Settings Icons   - Security Icons
-   - Action Icons      - Search Icons           - Notification     - Status Icons
-                       - Filter Icons
-```
-
-Every icon must be categorized under exactly one taxonomic branch, ensuring predictable asset organization and clean code reference mappings.
+## 4. Financial Icon Language
+Financial icons represent the primary visual vocabulary for cash flow, transactions, accounts, and monetary categories.
+* **Directional Arrow Precision:** Directional transaction arrows represent flow: income points upwards and inwards, while expenses point downwards and outwards.
+* **Mathematical Truth over Abstraction:** Icons represent real financial categories and actions (e.g., bank cards, cash, bank transactions) with absolute objectivity, avoiding speculative concepts.
+* **Consistency in Meaning:** A financial icon mapped to a specific cash-flow state or category retains its symbolic mapping across the entire application workspace.
 
 ---
 
-## 5. Navigation Icons
-Navigation icons are the primary structural guides used inside the persistent bottom tab bar, header navigation rails, and lateral menu structures.
-
-### Design Constraints
-* Navigation icons must use outline-style vectors by default. They switch to filled versions strictly when the item becomes active, providing clear, immediate visual confirmation of the user's current section.
-* In RTL Persian layouts, back-navigation and forward-transition markers must be mirrored programmatically to preserve natural chronological flow.
-
-### Core Registry
-* `bankyar.icon.nav.ledger`: A flat, structured vertical sheet metaphor. Represents the main ledger and transaction list feed.
-* `bankyar.icon.nav.analytics`: A clean, flat bar-chart metaphor with vertical bars of varying heights. Represents reports and spending summaries.
-* `bankyar.icon.nav.rules`: A structured flowchart or interlocking gears metaphor. Represents automated SMS parsing templates and categorization rules.
-* `bankyar.icon.nav.diagnostics`: A technical checklist or heart-rate monitor metaphor. Represents offline logs, database optimization, and parser debugging.
-* `bankyar.icon.nav.settings`: A single, precise hexagonal mechanical gear. Represents configuration panels and backup tools.
+## 5. Security Icon Language
+Security is a core value of BankYar's offline-first database. The security icon language builds psychological trust through structural, protective, and encryption symbols.
+* **Protective Shielding:** The shield symbol represents verified data integrity, active database encryption, and platform security.
+* **Lock State Clarity:** Physical locks represent localized sessions. A closed padlock signifies encrypted local databases, while an open padlock signifies authenticated read-write access.
+* **Biometric Verification Patterns:** Fingerprint and scanning arcs represent localized device authentication, explicitly separated from online networks.
 
 ---
 
-## 6. Action Icons
-Action icons provide visual support for interactive controls, such as confirming inputs, initiating exports, or deleting invalid templates.
-
-### Design Constraints
-* Action icons must remain visually secondary to their text labels. They align logical-start inside button wrappers, preserving RTL balance.
-* Destructive actions must utilize clear, non-ambiguous visual warning metaphors, ensuring users are fully aware of the consequences.
-
-### Core Registry
-* `bankyar.icon.action.add`: A mathematically centered plus symbol (+). Represents creating a manual transaction or writing a new parsing rule.
-* `bankyar.icon.action.edit`: A clean, diagonal precision stylus or pencil drawing on a flat baseline. Represents modifying category details, notes, or rules.
-* `bankyar.icon.action.delete`: A flat, top-down recycling bin or trash can with a removable lid. Represents deleting custom rules or wiping unparsed SMS logs.
-* `bankyar.icon.action.confirm`: A sharp checkmark. Represents saving custom categories or approving heuristic parsing results.
-* `bankyar.icon.action.close`: A centered multiplication cross (×). Represents dismissing bottom sheets, closing dialog boxes, or canceling actions.
+## 6. Banking Symbol Standards
+Banking symbols identify account types, banks, payment channels, and financial sources.
+* **Objective Formats:** Icons represent the physical format of the payment source (e.g., cards, wallets, direct wire bank accounts) rather than individual commercial bank logos.
+* **Bank SMS Source Indicators:** Technical symbols represent on-device SMS parsing feeds, distinguishing raw data from user-entered accounts.
+* **Neutral Weighting:** Banking symbols are kept visually neutral to avoid cluttering the transaction list, allowing the primary financial transaction values to stand out.
 
 ---
 
-## 7. Financial Icons
-Financial icons are the primary shorthand used to identify transaction categories, cash flow directions, and wallet formats.
-
-### Design Constraints
-* Transaction flow indicators must never rely on color alone. They must use clear, distinct directional arrow metaphors alongside color to distinguish income and expenses.
-* Financial icons must maintain a highly technical, objective look, avoiding gamified or emotional styling.
-
-### Core Registry
-* `bankyar.icon.financial.income`: A bold, diagonal arrow pointing up-left (`↖` in LTR, mirrored to `↗` in RTL). Represents incoming salary, deposits, or transfers.
-* `bankyar.icon.financial.expense`: A bold, diagonal arrow pointing down-right (`↘` in LTR, mirrored to `↙` in RTL). Represents retail purchases, bills, or fees.
-* `bankyar.icon.financial.transfer`: Two parallel, horizontal or vertical arrows pointing in opposite directions. Represents internal transfers between accounts.
-* `bankyar.icon.financial.card`: A flat, horizontal card outline with an off-center magnetic strip. Represents debit or credit cards.
-* `bankyar.icon.financial.wallet`: A small, rectangular container with a curved latch. Represents cash or unparsed SMS transaction logs.
+## 7. Transaction Status Icons
+Transaction status icons communicate the exact state of processed, pending, or failed payments in the local ledger.
+* **Completed States:** Validated, confirmed transactions are marked with a flat, circular checkmark symbol using success color tokens.
+* **Heuristic Alerts:** Low-confidence automated SMS parses are highlighted with an interactive alert tag, prompting user review.
+* **Failed Processes:** Invalid entries or failed database operations are marked with a circular cross symbol using error color tokens.
 
 ---
 
-## 8. Status Icons
-Status icons are high-level indicators that communicate system health, process states, and database validation results.
-
-### Design Constraints
-* Status icons must use a highly consistent geometric style. Warning states use flat triangles, while errors are represented by circles, ensuring clear recognition through shape alone.
-* Icons must match the exact semantic state mappings defined in `SEMANTIC_COLOR_SYSTEM.md`.
-
-### Core Registry
-* `bankyar.icon.status.completed`: A solid circle containing a clear centered checkmark. Represents fully parsed transactions or successful database backups.
-* `bankyar.icon.status.pending`: A flat, equilateral triangle containing a centered vertical exclamation mark (!). Represents pending actions or upcoming scheduled payments.
-* `bankyar.icon.status.failed`: A solid circle containing a centered diagonal multiplication cross (×). Represents failed parsing attempts or invalid backup formats.
-* `bankyar.icon.status.heuristic`: A clean, flat magnifying glass overlaid with a small warning exclamation badge. Represents parsing matches requiring manual review.
-
----
-
-## 9. Notification Icons
+## 8. Notification Icons
 Notification icons confirm background operations (such as SMS parsing or automatic database optimization) without disrupting active user tasks.
-
-### Design Constraints
-* Notification icons are kept minimal. They must use clean, solid geometries that do not create visual clutter inside the status bar or notification drawers.
-* They must never contain promotional, gamified, or red-dot badges by default, respecting the user's cognitive boundaries.
-
-### Core Registry
-* `bankyar.icon.notification.sms`: A flat envelope icon containing a small incoming arrow. Represents a successfully captured banking SMS.
-* `bankyar.icon.notification.backup`: A clean cloud icon containing an upward-pointing arrow. Represents a successful, secure offline database backup.
-* `bankyar.icon.notification.optimize`: A technical checklist icon showing a checkmark. Represents completed on-device database optimizations.
+* **Minimal Geometric Footprints:** Notifications use highly compressed, outline-only visual forms to avoid cluttering status bars or alert banners.
+* **Zero Promotional Badges:** Notification icons do not support decorative red dots or gamified alert bubbles, respecting the user's attention.
+* **Status Updates:** Icons change state to show task progress, reverting to simple system outlines once complete.
 
 ---
 
-## 10. Settings Icons
-Settings icons organize configuration panels, metadata directories, and system-level toggle controls.
-
-### Design Constraints
-* Settings icons must use outline-style vectors with a highly consistent geometric weight, ensuring lists remain readable and clean.
-* Icons must align logical-start in settings rows, balancing text labels in RTL layouts.
-
-### Core Registry
-* `bankyar.icon.settings.backup`: A circular, clockwise directional arrow surrounding a centered document icon. Represents backup management.
-* `bankyar.icon.settings.restore`: A circular, counter-clockwise directional arrow surrounding a centered document icon. Represents data restoration.
-* `bankyar.icon.settings.theme`: A clean, half-shaded circular disk. Represents theme adjustments (Light, Dark, High-Contrast).
-* `bankyar.icon.settings.locale`: A flat, grid-lined globe icon with an overlaid text symbol. Represents language preferences.
+## 9. Navigation Icons
+Navigation icons are the primary structural guides used inside the persistent bottom tab bar, header navigation rails, and lateral menu structures.
+* **Active vs. Inactive States:** Navigation icons use outline-style vectors by default. They switch to filled versions strictly when the item becomes active, providing clear, immediate visual confirmation of the user's current section.
+* **Symmetrical Layout Adaptability:** Icons adapt to right-to-left Persian layouts. Navigation paths (e.g., back and forward chevrons) mirror dynamically.
+* **Consistent Height Baselines:** Navigational elements align perfectly with adjacent typography baselines, ensuring horizontal continuity.
 
 ---
 
-## 11. Security Icons
-Security icons identify the safety boundaries of our local storage, encryption systems, and biometric lock screens.
-
-### Design Constraints
-* Security indicators must use highly clear, non-ambiguous visual metaphors. A padlock, for example, must clearly show locked or unlocked states.
-* They must use primary accent or success tokens to communicate safety and trust.
-
-### Core Registry
-* `bankyar.icon.security.lock`: A solid, closed padlock with a thick curved shackle. Represents secured databases or active screen locks.
-* `bankyar.icon.security.unlock`: A solid, open padlock with a raised curved shackle. Represents unlocked sessions or verified PINs.
-* `bankyar.icon.security.biometric`: A clean fingerprint diagram or face outline with scan lines. Represents biometric authentication.
-* `bankyar.icon.security.shield`: A flat shield icon containing a centered checkmark. Represents active SQLCipher encryption and database integrity.
+## 10. Action Icons
+Action icons provide visual support for interactive controls, such as confirming inputs, initiating exports, or deleting invalid templates.
+* **Semantic Alignment:** Icons share the exact color token of their parent button, preventing visual confusion.
+* **Destructive Indicators:** Actions like deletion or rule wipes use clear, high-contrast symbols to ensure users are aware of the consequences.
+* **Consistent Visual Weights:** Action icons use a uniform stroke weight token to ensure buttons across the UI look cohesive.
 
 ---
 
-## 12. Search Icons
-Search icons support text and template lookups, helping users find specific transaction records and rules.
-
-### Design Constraints
-* Search icons must align logical-start inside search inputs, providing a clear visual anchor for text entry.
-* The search metaphor must mirror logically when switching between RTL and LTR layouts.
-
-### Core Registry
-* `bankyar.icon.search.default`: A flat magnifying glass angled down-right (mirrored to down-left in LTR). Represents active search input triggers.
-* `bankyar.icon.search.clear`: A flat, solid circular button containing a centered diagonal multiplication cross (×). Represents clearing active searches.
+## 11. Category Icons
+Category icons categorize user transactions (e.g., bills, groceries, utilities, transfers).
+* **Simplified Metaphors:** Categories use highly recognizable shapes (e.g., a home outline for utilities, an envelope for bills) to minimize cognitive search times.
+* **Background Isolation:** Category icons reside inside circular or rounded visual containers, separating them from adjacent transaction lists.
+* **Standardized Sizing:** Every category icon uses the small icon size token, preserving vertical list spacing.
 
 ---
 
-## 13. Filter Icons
-Filter icons organize transaction list views, allowing users to categorize records by date, value, or bank.
-
-### Design Constraints
-* Filter icons must clearly indicate active or inactive states. Active filters use filled styles or highlight chips to show that a filter is currently applied.
-* They must align logical-end in input headers, leaving search controls at the start.
-
-### Core Registry
-* `bankyar.icon.filter.default`: Three parallel horizontal lines of decreasing lengths stacked vertically. Represents ledger filtering tools.
-* `bankyar.icon.filter.active`: A funnel or filter icon with a small solid circle badge at the top corner. Represents applied filter states.
-
----
-
-## 14. Empty State Illustrations
+## 12. Empty State Illustrations
 Empty state illustrations appear when screens contain no data, such as a ledger with no transactions or an empty rule feed.
-
-### Design Guidelines
-* Empty states must never feel like an error or a failure. They must offer supportive, clear guidance that helps the user get started.
-* The illustration must align vertically centered, remaining secondary to a brief description and a clear primary action button.
-
-```
-                  Empty State Layout
-             +--------------------------+
-             |                          |
-             |       Illustration       |  <- Minimal, non-distracting
-             |                          |
-             |       Title Copy         |  <- Clear, calm, and direct
-             |    Descriptive Copy      |  <- Reassuring context
-             |                          |
-             |     [Primary Button]     |  <- Actionable path forward
-             +--------------------------+
-```
-
-### Core Assets
-* `bankyar.illustration.empty.ledger`: A flat, outline-style open document showing empty vertical lines. Tells the user how to grant SMS permissions or manually import their statement.
-* `bankyar.illustration.empty.rules`: A clean, flat diagram of disconnected nodes with a gear. Encourages the user to create their first SMS parsing rule.
+* **Calm & Instructive Layout:** The illustration works alongside clear, descriptive copy and a single primary action button to guide the user forward.
+* **Non-Alarmist Style:** Empty states represent natural starting points rather than system errors. They use highly muted neutral grays to keep the layout feeling clean and spacious.
+* **Horizontal Balance:** The illustration is mathematically centered, maintaining visual balance on both compact and wide displays.
 
 ---
 
-## 15. Error Illustrations
+## 13. Error Illustrations
 Error illustrations handle system failures, such as file import issues, database errors, or biometric lockouts.
-
-### Design Guidelines
-* Error illustrations must avoid alarmist, high-saturation, or threatening visuals. They are designed to reduce user anxiety by presenting a calm, structured explanation.
-* They must use soft, low-saturation error fills programmatically to signal the state while keeping the text and primary recovery action readable.
-
-### Core Assets
-* `bankyar.illustration.error.database`: A flat diagram of a vault or storage cylinder with horizontal division lines. Explains how to recover from a database error or import a backup.
-* `bankyar.illustration.error.auth`: A flat shield icon containing a centered multiplication cross. Appears during biometric lockout, directing the user to enter their PIN.
+* **Anxiety Reduction:** Error screens are designed to reduce user panic. They use structured, clean visuals and clear recovery steps.
+* **Diagnostic Accuracy:** A technical symbol represents the failure type (e.g., a cylinder division line for database issues, a broken key for authentication failures).
+* **Semantic Warning Fills:** Low-saturation error fills are applied programmatically to highlight the issue while keeping all diagnostic text readable.
 
 ---
 
-## 16. Loading Illustrations
+## 14. Loading Illustrations
 Loading illustrations represent active background processes, such as database optimization, SMS ingestion, or backup exports.
-
-### Design Guidelines
-* Loading states must remain stable and avoid sudden layout jumps. Full-screen loading blocks are prohibited; instead, layouts must use stable skeleton frames.
-* The loading motion must use simple, smooth linear interpolations that do not cause UI lag.
-
-### Core Assets
-* `bankyar.illustration.loading.skeleton`: A set of flat, grey blocks representing text lines and cards. Animates with a soft, pulsing opacity transition to indicate loading feeds.
-* `bankyar.illustration.loading.ingest`: A horizontal progress bar that pulses with a linear animation curve during database imports or backups.
+* **Skeleton Layouts:** Empty feeds use stable skeleton frames that mirror the actual content layout, preventing sudden screen shifts when data renders.
+* **Smooth Infinite Motion:** Spinners or linear progress bars use continuous, linear interpolation curves to ensure smooth motion without impacting system performance.
+* **Interactive Freedom:** Full-screen blocking spinners are prohibited. The user can continue navigating and interacting with other areas of the interface.
 
 ---
 
-## 17. Success Illustrations
+## 15. Success Illustrations
 Success illustrations confirm major system achievements, such as completed data restoration or successful PIN setup.
-
-### Design Guidelines
-* Success states must use a calm, subtle design. They must avoid flashy, childish animations (like confetti bursts or trophy icons) to preserve our professional tone.
-* The success panel must dismiss itself automatically within a short time, returning the user to their active task with zero extra taps.
-
-### Core Assets
-* `bankyar.illustration.success.restore`: A flat document icon showing a checkmark inside a shield. Confirms successful database restorations.
-* `bankyar.illustration.success.setup`: A clean, flat vault door with a checkmark. Confirms secure PIN and biometric setup.
+* **Muted Celebrations:** Success illustrations use professional, calm symbols (e.g., a shield checkmark), avoiding childish animations like confetti bursts.
+* **Self-Dismissing Timing:** Success panels dismiss themselves automatically using short timing duration tokens, returning the user to their active task with zero extra taps.
+* **High Contrast:** Text labels and primary actions remain clearly readable under all lighting conditions, meeting WCAG AA standards.
 
 ---
 
-## 18. Onboarding Illustrations
+## 16. Warning Illustrations
+Warning illustrations highlight states that require user attention but do not disrupt system operations.
+* **Heuristic Review Fills:** Applied to low-confidence SMS parsing results, inviting the user to verify the transaction details with a single tap.
+* **Soft Amber Boundaries:** Warning areas are framed with soft amber borders, keeping the transaction legible without creating visual panic.
+* **Graceful Fallbacks:** If a template cannot resolve a merchant name, the layout falls back to display the raw SMS sender ID, ensuring data is never hidden.
+
+---
+
+## 17. Onboarding Illustrations
 Onboarding illustrations introduce the core product values during initial application launch, such as privacy-first operation and local parsing.
-
-### Design Guidelines
-* Onboarding screens must use highly precise, professional visuals that build trust. They must explicitly illustrate why zero network access is requested.
-* The illustrations must align with our flat-card layout, keeping descriptions and navigation buttons in the bottom half of the screen.
-
-### Core Assets
-* `bankyar.illustration.onboard.privacy`: A clean, flat shield protecting a mobile device with zero external connection lines. Explains offline-only local storage.
-* `bankyar.illustration.onboard.sms`: A flat diagram showing an incoming envelope being parsed into structured ledger cards on-device. Explains background parsing.
+* **Trust-Building Visuals:** Onboarding screens use precise, professional graphics to clearly illustrate why zero network access is requested.
+* **Structured Progress:** Works alongside standard layout zones, keeping all descriptive copy and navigation controls in the bottom half of the screen.
+* **Perfect Scaling:** Onboarding illustrations adapt to compact, tablet, and foldable screens without clipping text or overlapping borders.
 
 ---
 
-## 19. Placeholder Graphics
-Placeholder graphics occupy temporary image containers while the system loads assets or categories.
-
-### Design Guidelines
-* Placeholders must use highly neutral, low-contrast grayscale colors to prevent them from drawing attention away from active elements.
-* They must adapt automatically to Dark Mode and high-contrast themes.
-
-### Core Assets
-* `bankyar.placeholder.avatar`: A flat, outline circular silhouette. Used for category or bank logos when no custom icon is available.
-* `bankyar.placeholder.chart`: A flat, dotted horizontal gridline block. Used while chart assets are being calculated in the background.
+## 18. Accessibility Icon Rules
+To ensure the interface remains accessible to all users, every icon must comply with the following rules:
+* **Descriptive Semantic Labels:** All icons must include a descriptive semantic text string (e.g., `semanticsLabel: "Secure Encryption Verified"`), allowing screen readers to communicate their purpose.
+* **Minimum Interactive Touch Targets:** Interactive icons must maintain a comfortable touch target envelope mapped to the standard interactive touch size token.
+* **Contrast Independence:** Core informational icons must maintain a minimum contrast ratio of 4.5:1 against their backgrounds under all lighting conditions.
 
 ---
 
-## 20. Financial Symbol Guidelines
-To represent transactions with absolute mathematical rigor, financial symbols must follow these strict rules:
-
-```
-  Credit Layout:  [ Currency Label ] [ Non-breaking Space ] [ + ] [ Digit Run ]
-  Debit Layout:   [ Currency Label ] [ Non-breaking Space ] [ - ] [ Digit Run ]
-```
-
-1. **Mandatory Symbols:** Income must be preceded by a plus symbol (`+`), and expenses must be preceded by a minus symbol (`-`). Currency symbols must never be omitted.
-2. **Horizontal Alignment:** The symbol and the digit block must be separated by a non-breaking space, ensuring they wrap together as a unified block and preventing clipping on small devices.
-3. **No Decorative Graphs:** Simple bar charts must use semantic success and error colors to represent cash flow trends directly, avoiding decorative, non-functional visual elements.
+## 19. RTL Icon Considerations
+Because Persian is read from right to left, directional assets must adapt automatically to mirror natural reading patterns:
+* **Programmatic Vector Mirroring:** Directional navigation arrows, forward progress indicators, and text entry icons mirror horizontally in RTL layouts.
+* **Static Visuals:** Universal symbols (e.g., security padlocks, credit cards, settings gears, and dials) must not mirror; they remain identical across all locales.
+* **Alignment Margins:** In RTL layouts, icons paired with text are aligned logical-start (to the right of the text block), separated by an 8-unit spatial gap token.
 
 ---
 
-## 21. Icon Sizing Strategy
-To maintain a consistent layout rhythm and comfortable touch targets, all icons conform to a strict, non-negotiable sizing scale mapped to `DESIGN_TOKEN_ARCHITECTURE.md`:
-
-| Sizing Token | Dimension | Target Use Cases | Minimum Interactive Target |
-| :--- | :--- | :--- | :--- |
-| `bankyar.icon.size.sm` | 16dp × 16dp | Inline category badges, table cell markers, metadata timestamps | 48dp × 48dp (via touch envelope padding) |
-| `bankyar.icon.size.md` | 24dp × 24dp | Bottom navigation tabs, settings rows, textfield anchors, primary buttons | 48dp × 48dp |
-| `bankyar.icon.size.lg` | 32dp × 32dp | Dialog banners, success panels, dashboard summary headers | 48dp × 48dp |
-| `bankyar.icon.size.xl` | 48dp × 48dp | Empty state layouts, onboarding graphics, error screen summaries | 48dp × 48dp |
+## 20. SVG Standards
+All vector assets are structured according to these SVG specifications:
+* **Clean Vector Paths:** Paths must use continuous coordinate points with explicit start and end anchors. Unused layers, hidden groups, and duplicate nodes are removed.
+* **Semantic Attribute Bindings:** Stroke and fill attributes are bound to CSS variables or platform-neutral design tokens. Hardcoded hex values are strictly prohibited.
+* **Strict Grid Packaging:** SVGs are bounded by standard dimension scales (e.g., standard size token `bankyar.icon.size.md` equivalent to standard medium scale bounds) to ensure alignment.
 
 ---
 
-## 22. Stroke Style Strategy
-To ensure all icons feel unified, they must use a single, shared stroke style across all active themes:
-* **Uniform Stroke Weight:** Every icon must use a single stroke weight of 2.0px. Combining variable line weights within a single icon is prohibited.
+## 21. Stroke Rules
+To ensure all icons look cohesive, they must follow these stroke standards:
+* **Uniform Stroke Weights:** Every icon must use a single stroke weight of standard weight tokens (equivalent to standard medium line weight). Combining variable line weights within a single icon is prohibited.
 * **Rounded Terminals:** Outer ends and joints must use rounded terminal styles (`stroke-linecap: round`, `stroke-linejoin: round`), providing a clean, professional look.
-* **Non-Scaling Strokes:** Strokes must maintain their physical width (2.0px) regardless of asset magnification, preventing lines from becoming too thin or too thick on high-density screens.
+* **Non-Scaling Strokes:** Strokes must maintain their physical width regardless of asset magnification, preventing lines from becoming too thin or too thick on high-density screens.
 
 ---
 
-## 23. Filled vs Outlined Rules
-Filled and outlined styles must be used consistently to represent interactive states:
-
-```
-                  Navigation Icon State Switch
-  [ Ledger: Outlined (Default) ]  --->  [ Ledger: Filled (Active Tab) ]
-```
-
-1. **Default State (Outlined):** Inactive bottom navigation tabs, settings options, and secondary actions must use outlined styles.
-2. **Active State (Filled):** Active navigation tabs, selected filters, and highlighted statuses must switch to filled styles to provide clear, immediate visual feedback.
-3. **Selection Rule:** Filled and outlined styles must never be mixed within a single list; all inactive options must remain outlined.
+## 22. Fill Rules
+Fills are used systematically to represent state changes and visual grouping:
+* **Outline by Default:** Inactive bottom navigation tabs, settings options, and secondary actions must use outlined styles.
+* **Filled Active States:** Active navigation tabs, selected filters, and highlighted statuses switch to filled styles to provide clear, immediate visual feedback.
+* **Consistent Application:** Filled and outlined styles must never be mixed within a single list or menu; all inactive options must remain outlined.
 
 ---
 
-## 24. Icon Alignment Rules
-Icons must be perfectly aligned inside their parent containers to prevent visual distortion:
-
-```
-                 Perfect Icon Grid Centering
-            +-----------------------------------+
-            |  Active Touch Envelope (48dp)     |
-            |                                   |
-            |      +---------------------+      |
-            |      |  Icon Vector (24dp) |      |
-            |      |   (Exactly Centered)|      |
-            |      +---------------------+      |
-            |                                   |
-            +-----------------------------------+
-```
-
-* **Grid Centering:** Vector paths must be mathematically centered within their bounding grid (e.g., 24dp).
-* **Baseline Preservation:** Inline icons next to text labels must align to the text baseline rather than the container cap, ensuring clean reading lines.
-* **Touch Target Envelopes:** Smaller icons (16dp) must use symmetrical padding to meet the minimum touch target requirement (48dp) without distorting the vector.
+## 23. Corner Style Rules
+Curves soften geometric containers, helping users distinguish separate interactive cards and input fields:
+* **Corner Sharp (`radius.none`):** Used for absolute fullscreen containers, status bar blocks, and layout dividing lines.
+* **Corner Default (`radius.medium`):** Applied to transaction ledger cards, setting cards, and dashboard panels.
+* **Corner Soft (`radius.large`):** Applied to expanded bottom sheets and modular modal dialogues, signaling container transition focus.
 
 ---
 
-## 25. Icon + Text Rules
-When icons and text are grouped, layouts must maintain a balanced and readable spacing:
-
-```
-  RTL Layout:  [ Text Label ] [ 8dp Gutter ] [ Icon (Start-Aligned) ]  <- Reading Flows RTL
-  LTR Layout:  [ Icon (Start-Aligned) ] [ 8dp Gutter ] [ Text Label ]  <- Reading Flows LTR
-```
-
-1. **Logical Spacing:** In RTL Persian layouts, the icon must align logical-start (to the right of the text), separated by an 8dp spacing gutter.
-2. **Size Proportion:** The icon size must scale proportionally with the text height (e.g., a 24dp icon paired with 16pt body copy).
-3. **No Orphan Icons:** Icons must wrap together with their text labels to prevent them from becoming detached on narrow screens.
+## 24. Grid Alignment
+Visual elements align strictly to a unified spatial layout grid to maintain horizontal and vertical balance:
+* **Unified Layout Grid:** All icons align to a standard layout grid to ensure visual balance.
+* **Structural Alignments:** Container borders and structural lines align strictly to the grid margins, preventing visual drift.
+* **Horizontal Centering:** Central elements inside cards align horizontally, maintaining clean reading lines.
 
 ---
 
-## 26. RTL Mirroring Rules
-Directional icons must mirror programmatically to preserve natural chronological flow in Persian layouts:
-
-### RTL Mirroring Matrix
-| Icon Identifier | Default Direction (LTR) | Mirrored Direction (RTL) | Mirroring Rationale |
-| :--- | :--- | :--- | :--- |
-| `bankyar.icon.nav.back` | Pointing Left (`←`) | Pointing Right (`→`) | In Persian RTL, back steps move to the right. |
-| `bankyar.icon.nav.forward`| Pointing Right (`→`) | Pointing Left (`←`) | Forward progress moves to the left. |
-| `bankyar.icon.financial.income`| Up-Left (`↖`) | Up-Right (`↗`) | Matches the starting edge of RTL text lines. |
-| `bankyar.icon.financial.expense`| Down-Right (`↘`)| Down-Left (`↙`) | Matches the trailing edge of RTL text lines. |
-| `bankyar.icon.search` | Glass on Left | Glass on Right | Magnifying handle aligns with the RTL text baseline. |
-
-### Exceptions
-* **Universal Symbols:** Security padlocks, credit cards, hexagonal gears, and mechanical dials must not mirror; they remain identical across all locales.
+## 25. Pixel Alignment
+Pixel alignment ensures that all vector paths render cleanly without blurriness:
+* **Integer Grid Coordinates:** Vector anchor points must align strictly to integer coordinates on the reference box, avoiding fractional values.
+* **Anti-Aliasing Prevention:** Straight lines must lie precisely on the grid lines to prevent the rendering engine from creating blurry edges.
+* **Uniform Spacing:** Adjacent lines must maintain standard spacing intervals to remain legible on low-resolution screens.
 
 ---
 
-## 27. Animation Readiness
-To support future updates, all icons must be built to support simple, functional animations:
-* **Clean Vector Paths:** Vector lines must use continuous paths with explicit start and end anchors.
-* **Separated Layers:** Interactive elements (such as lock shackles or checkmarks) must be layered separately, allowing them to animate independently.
-* **Zero Bounce Curves:** Animations must use smooth linear curves and short durations (under 200ms) to prevent UI lag.
+## 26. Optical Balance Rules
+Because geometric and visual centers do not always match, icons are optically adjusted:
+* **Visual Weight Distribution:** Icons with asymmetrical shapes (e.g., play arrows, triangles) are offset slightly to ensure they look centered inside their buttons.
+* **Symmetrical Outlines:** Outward strokes are adjusted to distribute physical space evenly, preventing the icon from looking lopsided.
+* **Whitespace Allocation:** White space is balanced on all sides of the vector path to ensure clean optical alignments.
 
 ---
 
-## 28. Accessibility Guidelines
-All visual assets must meet strict accessibility standards to ensure they remain usable for all users:
-* **Large Touch Targets:** All interactive icons must maintain a minimum touch target of 48dp × 48dp, preventing accidental mis-taps.
-* **Screen Reader Labels:** Every icon and illustration must have a clear, descriptive semantic label (e.g., `semanticsLabel: "Locked Security State"`), ensuring they are read correctly by screen readers.
-* **High Contrast:** Icons must maintain a minimum contrast ratio of 4.5:1 against their backgrounds under all lighting conditions.
+## 27. Size Categories
+All icons conform to a strict, non-negotiable sizing scale mapped to `DESIGN_TOKEN_ARCHITECTURE.md`:
+* **Small (`bankyar.icon.size.sm`):** Mapped to inline category badges, table cell markers, and metadata timestamps.
+* **Medium (`bankyar.icon.size.md`):** Mapped to bottom navigation tabs, settings rows, textfield anchors, and primary buttons.
+* **Large (`bankyar.icon.size.lg`):** Mapped to dialog banners, success panels, and dashboard summary headers.
+* **Extra Large (`bankyar.icon.size.xl`):** Mapped to empty state layouts, onboarding graphics, and error screen summaries.
 
 ---
 
-## 29. Color Independence
-Meaning must never be conveyed solely by color. The visual system must always combine color with clear secondary indicators:
-
-```
-  Color-Only (Prohibited): [ Red Text Block ] Amount: -1,250,000 IRR
-  Accessible (Mandatory):  [ Minus Sign (-) ] [ Downward Arrow (↓) ] [ Red Text Block ]
-```
-
-* **Income vs Expense:** Incoming and outgoing transactions must use mathematical signs (`+` / `-`) and directional arrows (`↖` / `↗`) alongside green/red colors.
-* **System Statuses:** Parsing warnings and errors must use explicit text labels and distinct geometric shapes (e.g., warning triangles and error circles) alongside color.
+## 28. Color Usage Rules
+Color in BankYar is used strictly as an information carrier, never as a decorative filler:
+* **Semantic Scale Mapping:** Icons and illustrations query semantic tokens (e.g., `bankyar.semantic.color.background`), allowing them to adapt automatically when switching themes.
+* **Color Independence:** Meaning must never be conveyed solely by color. Every financial transaction amount must use explicit math symbols next to semantic color scales.
+* **Contrast Requirements:** Fills and stroke colors must maintain a contrast ratio that meets WCAG AA standards.
 
 ---
 
-## 30. Dark Theme Compatibility
-All visual assets must adapt automatically to Dark Mode and low-light environments, protecting users during night-time reviews:
-
-```
-                  Theme Mapping Switch
-  Light Theme:  [ Background: White ] ---> [ Stroke Color: Dark Gray ]
-  Dark Theme:   [ Background: Deep Gray ] ---> [ Stroke Color: Light Gray ]
-```
-
-* **No Hardcoded Fills:** Fills and stroke colors must reference semantic tokens, allowing them to remap automatically when switching themes.
-* **Accessible Contrast:** Contrast ratios must be verified to ensure icons remain clearly readable against deep gray backgrounds, meeting WCAG AA standards.
-* **Deep Grayscale Canvas:** Dark backgrounds must use deep neutral grays rather than pure black, minimizing eye strain.
+## 29. Theming Strategy
+Theme tokens control how entire groups of semantic tokens translate dynamically depending on the current user setting (Light, Dark, High-Contrast):
+* **No Direct Raw Color Mappings:** All UI components reference semantic tokens exclusively, isolating physical palette bindings from structural layouts.
+* **Dimensional Stability:** Swapping themes modifies color and border tokens, leaving sizes, margins, and spatial grid alignments completely untouched.
+* **Dynamic Environment Swapping:** Remaps semantic tokens to different sets of global values instantly at runtime without altering layout code.
 
 ---
 
-## 31. Semantic Mapping
-This matrix defines how our visual asset categories map directly to functional user contexts:
-
-| Asset Category | Target User Context | Primary UX Objective | Mapping Target |
-| :--- | :--- | :--- | :--- |
-| **Navigation Icons** | Persistent bottom bars, page headers | Guide users through main application sections | `bankyar.semantic.color.icon.primary` |
-| **Action Icons** | Dialog actions, primary buttons | Support interactive controls and inputs | `bankyar.semantic.color.action.primary` |
-| **Financial Icons**| Ledger transaction lists, trends | Classify cash flow directions and transaction types | `bankyar.semantic.color.financial.income` |
-| **Status Icons** | Parsing logs, database validation | Confirm system states and database health | `bankyar.semantic.color.status.completed` |
-| **Security Icons** | PIN lock screens, biometric drawers | Confirm active encryption and database safety | `bankyar.semantic.color.security.lock` |
+## 30. Dark Mode Adaptation
+The dark theme strategy optimizes visual comfort in low-light environments, protecting users during night-time reviews:
+* **Deep Grayscale Base:** The background uses deep neutral grays (`neutral.950`) to minimize eye strain and prevent pixel smearing.
+* **Elevation via Opacity:** Standard shadows are ineffective against dark backgrounds. Elevation is instead communicated by applying soft white opacity overlays to container surfaces.
+* **Accessible Contrast Guarantee:** Contrast ratios are verified to ensure body text and functional accents remain readable against dark backgrounds.
 
 ---
 
-## 32. Token Mapping
-This matrix links our semantic icon tokens to the global primitive scales defined in `DESIGN_TOKEN_ARCHITECTURE.md`:
-
-| Semantic Icon Token Name | Target Property | Light Theme Mapping | Dark Theme Mapping |
-| :--- | :--- | :--- | :--- |
-| `bankyar.semantic.icon.primary` | System navigation stroke | `bankyar.global.color.neutral.950` | `bankyar.global.color.neutral.50` |
-| `bankyar.semantic.icon.secondary`| Metadata, secondary icons | `bankyar.global.color.neutral.600` | `bankyar.global.color.neutral.400` |
-| `bankyar.semantic.icon.disabled` | Deactivated action stroke | `bankyar.global.color.neutral.300` | `bankyar.global.color.neutral.750` |
-| `bankyar.semantic.icon.success` | Income indicator stroke | `bankyar.global.color.success.600` | `bankyar.global.color.success.400` |
-| `bankyar.semantic.icon.error` | Expense indicator stroke | `bankyar.global.color.error.600` | `bankyar.global.color.error.400` |
+## 31. Animation Readiness
+All vector assets are structured to support future functional animations:
+* **Continuous Vector Paths:** Path lines must use continuous anchor points to ensure smooth, predictable motion.
+* **Layered Elements:** Interactive elements (such as lock shackles, checkmarks, and progress indicators) are layered separately, allowing them to animate independently.
+* **Linear Curve Transitions:** Animated states use smooth, linear curves with short durations to prevent UI lag.
 
 ---
 
-## 33. Asset Naming Convention
+## 32. Asset Naming Convention
 To ensure consistent file structures across developer teams and future platforms, all asset file names must follow a strict, lowercase taxonomic convention:
+* **Naming Schema:** `[category]_[sub_category]_[asset_name]_[state].[extension]`
+* **Strict Case Rules:** Every segment must use lowercase alphanumeric characters and underscores. Hyphens, uppercase, and camelCase are prohibited.
+* **Descriptor Accuracy:** Names must use precise, non-ambiguous descriptors (e.g., `icon_nav_ledger_active.svg` instead of `my_icon_v2.svg`).
 
-```
-[category]_[sub_category]_[asset_name]_[state].[extension]
-```
+---
 
-### Taxonomy Rules
-* **Strict Case Rules:** Every segment must use lowercase alphanumeric characters. Separation is handled strictly by underscores. No uppercase, camelCase, or hyphens are allowed.
-* **Descriptor Accuracy:** Names must use precise, non-ambiguous descriptors (e.g., `icon_nav_ledger_active.png` instead of `my_icon_v2.png`).
-
-### Examples
-* `icon_nav_ledger_default.svg`
-* `icon_nav_ledger_active.svg`
-* `icon_status_failed.svg`
-* `illustration_empty_ledger.svg`
-* `illustration_success_setup.svg`
+## 33. Folder Organization
+All visual assets are organized in a structured, platform-agnostic directory hierarchy:
+* **Icons Directory (`assets/icons/`):** Organized into standard taxonomic subfolders (e.g., `nav/`, `financial/`, `security/`, `status/`).
+* **Illustrations Directory (`assets/illustrations/`):** Organized by user states (e.g., `onboarding/`, `empty/`, `error/`, `success/`).
+* **Fallback Directory (`assets/fallbacks/`):** Contains default avatar silhouettes and generic indicators.
 
 ---
 
@@ -524,77 +334,426 @@ To ensure layout stability across development teams, the Iconography & Illustrat
 
 ---
 
-## 35. Governance Rules
-To prevent inconsistent icon usage and protect the design system, all design contributions must comply with the following governance rules:
-
-1. **Mandatory Token Reference:** Every icon and illustration must map to an active design token. Hardcoded visual parameters are strictly prohibited.
-2. **One Meaning Per Icon:** A semantic icon must serve exactly one purpose. Reusing icons for secondary, unrelated meanings is prohibited.
-3. **Color Independence:** Meaning must never be conveyed solely by color. Visual signals must work alongside text labels, signs, or distinct shapes.
-4. **No Decorative Assets:** Purely decorative icons and emoji-based UIs are prohibited; every symbol must serve an active functional purpose.
-5. **Approval Required:** Any addition of new icons or illustrations to the system requires approval from the Design System Governance Board.
+## 35. Asset Governance
+Asset governance rules protect the design system from unstructured additions and visual inconsistencies:
+* **Mandatory Token Reference:** Every icon and illustration must map to an active design token. Hardcoded visual parameters are strictly prohibited.
+* **One Meaning Per Icon:** A semantic icon must serve exactly one purpose. Reusing icons for secondary, unrelated meanings is prohibited.
+* **Approval Required:** Any addition of new icons or illustrations to the system requires approval from the Design System Governance Board.
 
 ---
 
-## 36. Validation Rules
-The design system compiler validates all asset definitions against a strict validation matrix before deployment:
-
-### Validation Matrix
-| Rule ID | Check Target | Validation Condition | Failure Penalty |
-| :--- | :--- | :--- | :--- |
-| **VAL-AST-01** | Asset Naming | File names must use lowercase alphanumeric and underscores | Build Failure |
-| **VAL-AST-02** | Stroke Width | SVGs must use a uniform stroke weight of 2.0px | Build Failure |
-| **VAL-AST-03** | Token Mapping| Every asset must link to a valid token reference | Build Failure |
-| **VAL-AST-04** | Touch Target | Interactive icons must meet the minimum 48dp target | Build Failure |
-| **VAL-AST-05** | Mirroring | Directional assets must have explicit RTL mirroring rules | Compile Warning |
+## 36. Quality Standards
+Quality standards ensure that all visual assets are technically and visually consistent:
+* **Strict File Validations:** Automated scripts scan all assets before commits, verifying that files are under size limits and use clean SVG formatting.
+* **Standard Viewport Mapping:** Icons are packaged on standard rectangular templates to prevent scaling distortion.
+* **Pixel Grid Cleanliness:** Paths must align strictly to integer coordinates on the reference box to prevent rendering artifacts.
 
 ---
 
-## 37. Anti-pattern Catalog
-The following visual and architectural anti-patterns are strictly prohibited:
+## 37. Validation Checklist
+Before releasing any screen or visual asset, verify compliance against this checklist:
+- [ ] Does the icon map to a semantic design token, avoiding hardcoded values?
+- [ ] Is the icon paired with a descriptive label for screen readers?
+- [ ] Are directional icons mirrored programmatically for RTL layouts?
+- [ ] Do interactive icons maintain a comfortable touch target envelope?
+- [ ] Does the asset file name comply with the lowercase taxonomy convention?
 
+---
+
+## 38. Anti-patterns
+The following visual and interaction anti-patterns are strictly prohibited:
 * **Hardcoded Styling:** Defining stroke widths, colors, or sizes directly in UI files instead of referencing design tokens.
 * **Dual-purpose Icon Meanings:** Reusing a single icon for multiple, unrelated meanings (e.g., using a gears icon for both rules and settings).
 * **Color as Only Indicator:** Displaying transaction credit/debit statuses or validation errors using color alone, without adding text or structural markers.
 * **Playful Cartoon Illustrations:** Using childish, exaggerated cartoon illustrations that do not align with our professional, secure tone.
-* **Unstructured Asset Naming:** Saving files with arbitrary, non-standard names (e.g., `temp_icon_1.png` or `ledgericon_new.svg`).
 
 ---
 
-## 38. Review Checklist
-Before releasing any screen or visual asset, verify compliance against this checklist:
+## 39. Future Expansion Strategy
+As BankYar expands, the Iconography & Illustration System is built to scale:
+* **Universal Portability:** The asset system uses a platform-agnostic design (SVG standard), ensuring future portability to iOS and desktop environments.
+* **Multi-Brand Compatibility:** Theme tokens isolate visual styles from component logic, allowing the design system to support new visual configurations and white-label demands without changes to the core layout code.
+* **Backward Compatibility:** Deprecated icons must follow our standard lifecycle (`Draft -> Active -> Deprecated -> Obsolete`), providing development teams with clear migration pathways between updates.
 
+---
+
+## Section II: Icon System Specification
+
+This section defines the core visual, semantic, and structural standards for every icon category in BankYar. Every symbol must reside under exactly one taxonomic branch, ensuring predictable asset organization and clean code reference mappings.
+
+### 1. Navigation Icons
+* **Purpose:** Guide users through primary persistent sections (bottom bar, header rails, and menus).
+* **Visual Style:** Outline-style vectors by default, switching to filled versions when selected.
+* **Meaning:** Represent core application modules (Ledger, Reports, SMS Parser, Diagnostics, Settings).
+* **Priority:** Critical (Level 1).
+* **Consistency Rules:** Must share a uniform stroke weight token and coordinate baseline across all tabs.
+* **Accessibility Notes:** Must be paired with a unique local semantic label for screen readers.
+* **RTL Behaviour:** Mirror horizontally to reflect RTL reading patterns (e.g., back/forward chevrons).
+* **Scalability:** Must scale smoothly from standard to large layout sizes without line distortion.
+* **Animation Compatibility:** Built with layered vector lines to support smooth horizontal slide transitions.
+* **Future Expansion:** Standard structural paths allow the addition of future modules (e.g., Budgeting) without altering the layout.
+
+### 2. Financial Icons
+* **Purpose:** Classify cash flow directions, account types, and payment channels.
+* **Visual Style:** Clean, high-contrast mathematical symbols and direct outline vectors.
+* **Meaning:** Differentiate income (`+` and upward arrow) from expenses (`-` and downward arrow).
+* **Priority:** Critical (Level 1).
+* **Consistency Rules:** Arrow angles must align strictly to diagonal grid layout lines.
+* **Accessibility Notes:** Meaning must be clear through shape and math symbols, never relying on green/red color alone.
+* **RTL Behaviour:** Directional arrows mirror horizontally to align with RTL flow.
+* **Scalability:** Small size scale optimization ensures readability inside dense transaction rows.
+* **Animation Compatibility:** Layered arrow paths allow subtle vertical slide animations on hover.
+* **Future Expansion:** Path architecture scales to support new payment methods (e.g., contactless mobile pay) with ease.
+
+### 3. Security Icons
+* **Purpose:** Confirm data protection, active encryption, and device locking.
+* **Visual Style:** Strong, solid protective outline vectors (e.g., padlocks, shields).
+* **Meaning:** Closed locks signify active local database encryption (SQLCipher); open locks signify decrypted read-write sessions.
+* **Priority:** High (Level 2).
+* **Consistency Rules:** Padlock shackle curvature must match the standard border radius tokens.
+* **Accessibility Notes:** Pair with high-contrast success and alert colors to reinforce security states.
+* **RTL Behaviour:** Standard security padlocks do not mirror; they remain identical across all locales.
+* **Scalability:** Optimized for large scales in authentication screens and small scales in list footers.
+* **Animation Compatibility:** Shackle paths are isolated to allow smooth rotational opening animations.
+* **Future Expansion:** Scalable layout supports biometric additions (e.g., facial scan boundaries) without restructuring.
+
+### 4. Notifications Icons
+* **Purpose:** Confirm background operations (e.g., SMS captured, backup success) inside notification drawers.
+* **Visual Style:** Muted, highly simplified outline shapes with low geometric weight.
+* **Meaning:** Communicate automatic background tasks that do not disrupt the active screen workspace.
+* **Priority:** Medium (Level 3).
+* **Consistency Rules:** Must use the small icon size token to fit comfortably inside system bars.
+* **Accessibility Notes:** Notifications must include rich semantic descriptors for external screen readers.
+* **RTL Behaviour:** Progress lines and incoming symbols mirror to slide from start (right) to end (left).
+* **Scalability:** Muted layouts prevent visual clutter on small, high-density notification bars.
+* **Animation Compatibility:** Line components support subtle opacity fades to indicate active ingestion.
+* **Future Expansion:** Generic status slots support future background tasks (e.g., scheduled sync) without rework.
+
+### 5. Action Icons
+* **Purpose:** Assist interactive buttons, forms, and dialog operations (e.g., Add, Edit, Delete, Close).
+* **Visual Style:** Linear mathematical shapes (plus, edit stylus, trash bin, confirmation check, cross).
+* **Meaning:** Represent user triggers for modifying, saving, or deleting local files and rules.
+* **Priority:** High (Level 2).
+* **Consistency Rules:** Align logical-start inside button containers, maintaining consistent gutters.
+* **Accessibility Notes:** Minimum interactive touch target envelopes are enforced across all actions.
+* **RTL Behaviour:** Actions mirror logical coordinates automatically when changing languages.
+* **Scalability:** Muted visual weights prevent actions from competing with text buttons.
+* **Animation Compatibility:** Checkmarks and delete lids support rotational shifts on touch interactions.
+* **Future Expansion:** Action sets scale to support batch actions (e.g., multi-row selection checks).
+
+### 6. Settings Icons
+* **Purpose:** Organize configuration subpanels, theme switches, and regional adjustments.
+* **Visual Style:** Single mechanical gear, half-shaded circular theme disk, or line globe symbols.
+* **Meaning:** Represent advanced settings, localized rules, and offline data management.
+* **Priority:** Medium (Level 3).
+* **Consistency Rules:** Kept strictly outlined to maintain layout clarity inside lists.
+* **Accessibility Notes:** Labels describe the settings category explicitly, avoiding technical jargon.
+* **RTL Behaviour:** Symmetrical symbols (gears, globes) do not mirror; list indicators mirror natively.
+* **Scalability:** Scale standardly to match list item heights, preserving clean horizontal baselines.
+* **Animation Compatibility:** Gears support continuous linear rotation during active system checks.
+* **Future Expansion:** Clear taxonomic division allows settings expansion without cluttering menus.
+
+### 7. Search Icons
+* **Purpose:** Trigger and clear database lookups for transactions and custom rules.
+* **Visual Style:** Angular magnifying glass, circular cross delete button.
+* **Meaning:** Active text entry trigger and query clearing control.
+* **Priority:** High (Level 2).
+* **Consistency Rules:** Center vertically within the search input field bounding box.
+* **Accessibility Notes:** Search buttons must be announced as text input search triggers.
+* **RTL Behaviour:** The magnifying handle mirrors horizontally to align with RTL text starts.
+* **Scalability:** Standard medium sizing ensures comfortable click regions inside headers.
+* **Animation Compatibility:** Cross button fades in smoothly when search text is entered.
+* **Future Expansion:** Interface scales to support advanced, multi-parameter search chips.
+
+### 8. Statistics Icons
+* **Purpose:** Represent spending trends, summaries, and financial reports.
+* **Visual Style:** Flat bar-charts, line-graphs, or pie slice outline metaphors.
+* **Meaning:** Financial analysis, category distribution, and trend summaries.
+* **Priority:** High (Level 2).
+* **Consistency Rules:** Charts are kept simple and linear, avoiding heavy, complex 3D graphics.
+* **Accessibility Notes:** Visual charts are accompanied by tabular screens with full text labels.
+* **RTL Behaviour:** Time-series charts progress chronologically from right to left in RTL.
+* **Scalability:** Optimized for large dashboard banners and compact detail cards.
+* **Animation Compatibility:** Charts animate with smooth vertical bar slide-ins on display.
+* **Future Expansion:** Design scales to support multi-account comparisons and advanced analytics.
+
+### 9. Backup Icons
+* **Purpose:** Manage on-device secure database exports.
+* **Visual Style:** Circular clockwise arrow surrounding a flat document outline.
+* **Meaning:** Local encrypted database export and storage operations.
+* **Priority:** Critical (Level 1).
+* **Consistency Rules:** Shared visual weight matches settings row icons.
+* **Accessibility Notes:** Inform the user clearly of local file destinations.
+* **RTL Behaviour:** Arrow points clockwise, maintaining a universal direction across all locales.
+* **Scalability:** Mapped to standard settings sizes to maintain neat layout lines.
+* **Animation Compatibility:** Dynamic circular path rotates during active local file writes.
+* **Future Expansion:** Scalable model supports multi-profile backups in future editions.
+
+### 10. Restore Icons
+* **Purpose:** Manage on-device database imports.
+* **Visual Style:** Circular counter-clockwise arrow surrounding a flat document outline.
+* **Meaning:** Local encrypted database restoration and file validation.
+* **Priority:** Critical (Level 1).
+* **Consistency Rules:** Pair with high-priority warnings during active data overrides.
+* **Accessibility Notes:** Clear labels warn that active data will be overwritten.
+* **RTL Behaviour:** Arrow points counter-clockwise, representing a backward chronological restoration.
+* **Scalability:** Matches backup icon size to ensure uniform list layout.
+* **Animation Compatibility:** Circular path rotates counter-clockwise during file imports.
+* **Future Expansion:** Architecture scales to support selective category imports.
+
+### 11. PIN Icons
+* **Purpose:** Secure localized sessions and verify authorization.
+* **Visual Style:** Secure numeric grids, lock keys, or masked pass-dot grids.
+* **Meaning:** Device lock screen, session authorization, and security gates.
+* **Priority:** Critical (Level 1).
+* **Consistency Rules:** Align strictly with screen margins to prevent off-center grids.
+* **Accessibility Notes:** Grids support large touch target scaling for physical ease of use.
+* **RTL Behaviour:** Numeric keypad layout remains standard; entry progress indicators flow RTL.
+* **Scalability:** key shapes scale to occupy vertical screen space on varying mobile heights.
+* **Animation Compatibility:** Masked pass-dots pulse subtly to confirm keyboard entry.
+* **Future Expansion:** Pad layout scales to support custom-length passcodes.
+
+### 12. Authentication Icons
+* **Purpose:** Confirm localized biometric verifications (biometric fingerprint or face scanning).
+* **Visual Style:** Fingerprint patterns or face frames with scan indicators.
+* **Meaning:** Biometric validation, device verification, and session opening.
+* **Priority:** High (Level 2).
+* **Consistency Rules:** Symmetrical layout centered inside biometric bottom sheets.
+* **Accessibility Notes:** Biometric prompts provide immediate fallback to manual PIN input.
+* **RTL Behaviour:** Fingerprint lines are symmetrical and do not mirror; scan lines follow RTL paths.
+* **Scalability:** Standard large size ensures easy identification during authentication prompts.
+* **Animation Compatibility:** Scan line animates with a vertical linear slide curve.
+* **Future Expansion:** System scales to support future device security APIs with ease.
+
+### 13. Accessibility Icons
+* **Purpose:** Highlight settings for large text, high contrast, or screen readers.
+* **Visual Style:** Unified outline figure or stylized eye symbol.
+* **Meaning:** Accessibility enhancements, text scaling, and low-vision tools.
+* **Priority:** High (Level 2).
+* **Consistency Rules:** Position at the primary level of configuration lists.
+* **Accessibility Notes:** Screen readers must announce this action with highest focus.
+* **RTL Behaviour:** Universal symbols are symmetrical; reading lines mirror programmatically.
+* **Scalability:** Extra large sizing options ensure visibility for low-vision users.
+* **Animation Compatibility:** Simple fade transitions confirm selected configuration shifts.
+* **Future Expansion:** Scale to support advanced reading assistants in subsequent releases.
+
+### 14. Help Icons
+* **Purpose:** Access documentation, FAQs, and database parser tips.
+* **Visual Style:** Outline circle containing a centered question mark (`?`).
+* **Meaning:** In-app assistance, user guides, and parser troubleshooting.
+* **Priority:** Medium (Level 3).
+* **Consistency Rules:** Kept small and secondary to avoid cluttering forms.
+* **Accessibility Notes:** Question mark remains clear and high-contrast in all themes.
+* **RTL Behaviour:** The question mark symbol mirrors in Arabic/Persian scripts (`؟`).
+* **Scalability:** Inline sizing allows help icons to sit cleanly next to form labels.
+* **Animation Compatibility:** Subtle outline expand transition when tapped.
+* **Future Expansion:** Paths support future contextual help bubbles on specific fields.
+
+### 15. About Icons
+* **Purpose:** Access legal information, system version details, and privacy manifestos.
+* **Visual Style:** Outline circle containing a centered letter (`i`).
+* **Meaning:** Information, software version details, and legal licenses.
+* **Priority:** Low (Level 4).
+* **Consistency Rules:** Positioned at the bottom of settings lists.
+* **Accessibility Notes:** Clearly state that this is read-only application metadata.
+* **RTL Behaviour:** Symmetrical circle and vertical glyph require no mirroring.
+* **Scalability:** Standard medium size matches secondary setting list items.
+* **Animation Compatibility:** Simple fade-out when transitioning to details sub-pages.
+* **Future Expansion:** Supports expanded license lists in future builds.
+
+### 16. System Status Icons
+* **Purpose:** Report on-device database health, storage use, and parser logs.
+* **Visual Style:** Heart-rate monitor pulses or clean vertical checklist indicators.
+* **Meaning:** Database optimization status, log levels, and memory safety indicators.
+* **Priority:** High (Level 2).
+* **Consistency Rules:** Keep lines clean, matching active diagnostic dashboard grids.
+* **Accessibility Notes:** Screen readers announce exact status numbers alongside icons.
+* **RTL Behaviour:** Status paths and charts progress RTL.
+* **Scalability:** Scales standardly to sit in top headers or settings items.
+* **Animation Compatibility:** Pulse paths animate with soft linear expand curves.
+* **Future Expansion:** Interface scales to support real-world memory usage charts.
+
+### 17. Empty States Icons
+* **Purpose:** Ground the vertical center of empty lists and ledger screens.
+* **Visual Style:** Clean, muted outline document with disconnected lines.
+* **Meaning:** Empty ledger feeds, inactive rule boards, or zero search results.
+* **Priority:** Medium (Level 3).
+* **Consistency Rules:** Centered horizontally within the parent layout zones.
+* **Accessibility Notes:** Text captions explain clearly why the container is empty.
+* **RTL Behaviour:** Symmetrical layouts centered horizontally, ensuring visual balance.
+* **Scalability:** Extra large sizing provides a strong visual anchor for blank feeds.
+* **Animation Compatibility:** Simple opacity fade-in when active lists are emptied.
+* **Future Expansion:** Support contextual illustration shifts depending on specific empty triggers.
+
+### 18. Future AI Features Icons
+* **Purpose:** Highlight future local on-device machine-learning and rule heuristics.
+* **Visual Style:** Interconnected node clusters, clean sparkle symbols, or brain-pulse outlines.
+* **Meaning:** Smart automatic categorizations, localized predictive templates, and analytical tips.
+* **Priority:** Medium (Level 3).
+* **Consistency Rules:** Styled to match high-precision analytical indicators.
+* **Accessibility Notes:** Describe the action clearly as automated system suggestions.
+* **RTL Behaviour:** Node paths and progress circles mirror RTL natively.
+* **Scalability:** Medium sizing allows placement inside header action lists or list items.
+* **Animation Compatibility:** Nodes pulse softly during active background heuristics.
+* **Future Expansion:** Adapt to represent advanced, on-device prediction models as features roll out.
+
+---
+
+## Section III: Illustration System Specification
+
+This section defines visual standards for onboarding, fallback visuals, empty feeds, and system alerts. Illustrations must use geometric abstraction and low-saturation grayscale colors to maintain a professional, secure tone.
+
+### 1. Onboarding Guidelines
+* **Target Scenario:** First launch screens introducing local privacy, secure on-device parsing, and automated bank categories.
+* **Visual Standards:** Clean device outline framed by a solid protective shield. Disconnected network lines highlight our offline-first architecture.
+* **Tone:** Professional, calming, and highly secure.
+
+### 2. No Data Guidelines
+* **Target Scenario:** The main transaction ledger is empty, with no records parsed from SMS messages.
+* **Visual Standards:** Outline document containing empty text baselines, centered horizontally.
+* **Tone:** Reassuring, helpful, and non-alarmist.
+
+### 3. No Search Result Guidelines
+* **Target Scenario:** Active ledger searches or template filtering yields zero results.
+* **Visual Standards:** Large magnifying glass looking over empty rows of dashed dots.
+* **Tone:** Calm, clear, and direct.
+
+### 4. Offline Mode Guidelines
+* **Target Scenario:** Reassuring the user that offline-first operation is active and secure.
+* **Visual Standards:** Symmetrical globe outline overlaid with a prominent, secure local padlock.
+* **Tone:** Confident, quiet, and trustworthy.
+
+### 5. Permission Required Guidelines
+* **Target Scenario:** Application requires access to SMS logs to parse banking notifications.
+* **Visual Standards:** Message envelope accompanied by a subtle lock key indicator.
+* **Tone:** Objective, instructive, and trust-building.
+
+### 6. Database Error Guidelines
+* **Target Scenario:** Failures during on-device database imports or file decryption.
+* **Visual Standards:** Vault door cylinder divided by a prominent visual warning triangle.
+* **Tone:** Diagnostic, secure, and helpful.
+
+### 7. Backup Success Guidelines
+* **Target Scenario:** Successful database export to a secure local file.
+* **Visual Standards:** Document icon containing a centered checkmark inside a protective shield.
+* **Tone:** Confident, supportive, and clean.
+
+### 8. Restore Success Guidelines
+* **Target Scenario:** Successful restoration of all ledger transactions from an encrypted local backup.
+* **Visual Standards:** Solid storage vault with a checkmark on the door.
+* **Tone:** Reassuring, successful, and professional.
+
+### 9. Unexpected Error Guidelines
+* **Target Scenario:** General system failures or unparsed SMS template formats.
+* **Visual Standards:** High-contrast warning circle with clear recovery action steps.
+* **Tone:** Direct, helpful, and calm.
+
+### 10. Maintenance Guidelines
+* **Target Scenario:** Automated on-device database optimizations and index rebuilds.
+* **Visual Standards:** Linear gear systems aligning with horizontal layout baselines.
+* **Tone:** Technical, precise, and quiet.
+
+### 11. Future Features Guidelines
+* **Target Scenario:** Previewing upcoming advanced local analytics and local prediction engines.
+* **Visual Standards:** Symmetrical sparkle clusters framed by precise geometric layout guides.
+* **Tone:** Inspiring, minimal, and clean.
+
+---
+
+## Section IV: Asset Taxonomy & Naming Standards
+
+### 1. Asset Naming Convention
+To ensure consistent file structures across developer teams and future platforms, all asset file names must follow a strict, lowercase taxonomic convention:
+
+```
+[category]_[sub_category]_[asset_name]_[state].[extension]
+```
+
+#### Taxonomy Rules
+* **Strict Case Rules:** Every segment must use lowercase alphanumeric characters. Separation is handled strictly by underscores. No uppercase, camelCase, or hyphens are allowed.
+* **Descriptor Accuracy:** Names must use precise, non-ambiguous descriptors (e.g., `icon_nav_ledger_active.svg` instead of `my_icon_v2.svg`).
+
+#### Examples
+* `icon_nav_ledger_default.svg`
+* `icon_nav_ledger_active.svg`
+* `icon_status_failed.svg`
+* `illustration_empty_ledger.svg`
+* `illustration_success_setup.svg`
+
+### 2. Folder Organization
+All visual assets are organized in a structured, platform-agnostic directory hierarchy:
+
+```
+assets/
+  ├── icons/
+  │   ├── nav/
+  │   │   ├── icon_nav_ledger_default.svg
+  │   │   └── icon_nav_ledger_active.svg
+  │   ├── financial/
+  │   │   ├── icon_financial_income_default.svg
+  │   │   └── icon_financial_expense_default.svg
+  │   ├── security/
+  │   │   └── icon_security_lock_default.svg
+  │   └── status/
+  │       ├── icon_status_completed_default.svg
+  │       └── icon_status_failed_default.svg
+  ├── illustrations/
+  │   ├── onboarding/
+  │   │   └── illustration_onboard_privacy.svg
+  │   ├── empty/
+  │   │   └── illustration_empty_ledger.svg
+  │   └── error/
+  │       └── illustration_error_database.svg
+  └── fallbacks/
+      ├── fallback_avatar_default.svg
+      └── fallback_chart_default.svg
+```
+
+---
+
+## Section V: Governance & Quality Rules
+
+### 1. Asset Governance
+This section defines the mandatory operational lifecycle and rules for adding, reviewing, and deprecating visual assets:
+* **Approval Workflow:** Proposing a new asset requires submitting a formal design request to the Governance Board. The proposal must document the semantic token mapping, the exact target screens, and provide proof of WCAG AA compliance.
+* **Version Control:** Assets are checked into version control using our semantic naming convention. Vector modifications trigger minor or patch version increments based on their visual impact.
+* **Deprecation Policy:** Deprecated assets follow a standard lifecycle (`Draft -> Active -> Deprecated -> Obsolete`). Deprecated files remain in the codebase for a single release cycle, during which developers must migrate all references.
+* **Review Process:** The Design System team reviews all additions. Automated scripts run as pre-commit hooks, validating assets against stroke rules, sizing scales, and name structures.
+* **Accessibility Validation:** All new icons must be tested to ensure they maintain a minimum contrast ratio of 4.5:1 against the active theme backgrounds.
+* **Quality Assurance:** Assets are verified to ensure that vector paths contain zero overlapping lines, use integer coordinates, and align perfectly with the grid.
+
+### 2. Validation Checklist
+Before releasing any screen or visual asset, verify compliance against this checklist:
 - [ ] Does the icon map to a semantic design token, avoiding hardcoded values?
 - [ ] Does the icon serve a clear functional purpose, avoiding pure decoration?
 - [ ] Is the icon paired with a descriptive label for screen readers?
 - [ ] Does the icon maintain a minimum contrast ratio of 4.5:1 against its background?
 - [ ] Are directional icons mirrored programmatically for RTL layouts?
-- [ ] Do interactive icons maintain a comfortable touch target of at least 48dp × 48dp?
+- [ ] Do interactive icons maintain comfortable touch targets?
 - [ ] Does the asset file name comply with the lowercase taxonomy convention?
 
 ---
 
-## 39. Migration Strategy
-To transition the existing codebase to the structured Iconography & Illustration System, development teams follow a phased migration plan:
+## Section VI: Accessibility Matrix
 
-```
-+------------------+     +------------------+     +------------------+
-| 1. Audit & Map   | --> | 2. Asset Cleanup | --> | 3. Refactor UI   |
-| (Identify raw    |     | (Rename and      |     | (Replace raw     |
-| icons in code)   |     | optimize SVGs)   |     | paths with keys) |
-+------------------+     +------------------+     +------------------+
-```
+The following matrix maps WCAG AA accessibility requirements directly to our iconography and illustration standards:
 
-1. **Audit & Map (Phase 1):** Identify and map all raw icon files and styling definitions in the codebase, establishing corresponding tokens in the design dictionary.
-2. **Asset Cleanup (Phase 2):** Rename all SVG files to comply with the lowercase taxonomy convention, and verify stroke styles and grid alignments.
-3. **Refactor UI (Phase 3):** Replace raw asset references with token paths across all UI components and page layouts, and run automation tests to verify rendering.
+| Accessibility Target | WCAG AA Requirement | Design System Rule |
+| :--- | :--- | :--- |
+| **Visual Legibility** | Minimum 4.5:1 contrast ratio for graphical controls | Icons must map to active semantic tokens (`bankyar.semantic.icon.primary`), allowing them to adapt automatically when switching themes. |
+| **Color Independence** | Meaning must not be conveyed by color alone | Financial cash flow must use explicit mathematical symbols (`+` / `-`) next to directional arrows. Warnings must use distinct shapes. |
+| **Touch Usability** | Minimum interactive touch targets of 48 units | Interactive icons must use symmetrical padding to meet the minimum touch target envelope without distorting the vector. |
+| **Screen Reader Support** | Accessible text alternatives for visual content | Every icon and illustration must include a descriptive semantic label (e.g., `semanticsLabel: "Locked Security State"`). |
+| **Cognitive Simplicity** | Minimize visual clutter and cognitive search times | Icons must use highly recognizable shapes (e.g., home for utility bills) to help users scan transaction feeds. |
 
 ---
 
-## 40. Future Evolution Strategy
+## Section VII: Future Expansion Strategy
+
 As BankYar expands, the Iconography & Illustration System is built to scale:
 * **Universal Portability:** The asset system uses a platform-agnostic design (SVG standard), ensuring future portability to iOS and desktop environments.
 * **Multi-Brand Compatibility:** Theme tokens isolate visual styles from component logic, allowing the design system to support new visual configurations and white-label demands without changes to the core layout code.
-* **Backward Compatibility:** Deprecated icons must follow our standard lifecycle (`Draft -> Active -> Deprecated -> Obsolete`), providing development teams with clear migration pathways between updates.
+* **On-Device Machine Learning (ML) Visualization:** Ready to scale with advanced ML predictors and automated SMS categorization engines.
 
 ---
 **End of Document**
