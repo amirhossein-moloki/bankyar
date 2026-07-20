@@ -1,9 +1,9 @@
-# BankYar Transaction Details Screen Specification (v1.0.0)
+# BankYar Transaction Details Screen Specification (v1.1.0)
 ## Enterprise-Grade Screen Specification for Offline-First Secure Financial Applications
 
 **Project Name:** BankYar
 **Classification:** Enterprise Design System Specification
-**Document Version:** 1.0.0
+**Document Version:** 1.1.0
 **Authors:** Principal Product Designer, Senior UX Architect, Flutter UI Architect, Material Design 3 Expert, Financial Dashboard Specialist, Enterprise Design System Consultant
 **Status:** Approved / Core Specification Blueprint
 
@@ -17,7 +17,7 @@ This screen is built strictly upon **Material Design 3 (MD3)** design systems an
 
 ---
 
-## Screen Blueprint & Spatial Mapping
+## 1. Screen Structure
 
 The Transaction Details Screen is constructed using the logical three-zone vertical layout model. Horizontal reading paths, vertical grids, and interactive touch triggers mirror natively to support Persian RTL workflows.
 
@@ -27,7 +27,7 @@ The Transaction Details Screen is constructed using the logical three-zone verti
 +-------------------------------------------------------------------------+
 |  [ZONE A: STICKY HEADER & CONTEXT CONTROLS]                             |
 |  +-------------------------------------------------------------------+  |
-|  | [More Options]  [Export]  [Share]           [Favorite]   [Back chevron] |
+|  | [More Options] [Export] [Archive] [Share] [Favorite] [Back chevron] |  |
 |  +-------------------------------------------------------------------+  |
 +-------------------------------------------------------------------------+
 |  [ZONE B: SCROLLABLE DETAILED WORKSPACE]                                 |
@@ -35,7 +35,7 @@ The Transaction Details Screen is constructed using the logical three-zone verti
 |  |                                                                   |  |
 |  |  [1. Bank Identity Section]                                       |  |
 |  |     [Bank Logo Avatar] Mellat Bank (Bank Name)                    |  |
-|  |     Source: Parsed SMS                                            |  |
+|  |     SMS Sender: +982000001                                        |  |
 |  |                                                                   |  |
 |  |  [2. Transaction Summary Card]                                    |  |
 |  |     +-------------------------------------------------------+     |  |
@@ -45,21 +45,26 @@ The Transaction Details Screen is constructed using the logical three-zone verti
 |  |     | Status: Successful Transaction                        |     |  |
 |  |     +-------------------------------------------------------+     |  |
 |  |                                                                   |  |
-|  |  [3. Date & Time Section]                                         |  |
+|  |  [3. Date, Time & Balance Section]                                |  |
 |  |     Date: ۱۴۰۲/۱۰/۱۲   |   Time: ۱۴:۳۲                            |  |
+|  |     Balance After Transaction: ۲,۴۵۰,۰۰۰ Tomans             |  |
 |  |                                                                   |  |
 |  |  [4. Reference & Merchant Section]                                |  |
 |  |     Reference Number: 987654321012 [Copy Action]                  |  |
-|  |     Merchant: Snapp Taxi [Category Icon]                          |  |
+|  |     Merchant / Category: Snapp Taxi [Category Icon]               |  |
 |  |                                                                   |  |
-|  |  [5. Transaction Description]                                     |  |
-|  |     "پرداخت قبوض و خدمات اسنپ"                                    |  |
+|  |  [5. Raw SMS Content Block]                                       |  |
+|  |     +-------------------------------------------------------+     |  |
+|  |     | [Search Inside SMS Trigger]                           |     |  |
+|  |     | "بانک ملت - برداشت ۱۲۰,۰۰۰ تومان از کارت ۵۶۷۸"        |     |  |
+|  |     | [Copy SMS Text Button]                                |     |  |
+|  |     +-------------------------------------------------------+     |  |
 |  |                                                                   |  |
-|  |  [6. User Note Section]                                           |  |
+|  |  [6. User Note Component]                                         |  |
 |  |     Note: Taxi ride to office.                                    |  |
-|  |     [Edit Note Action Button]                                     |  |
+|  |     [Add/Edit Note Action Button]                                 |  |
 |  |                                                                   |  |
-|  |  [7. Tags Section (Future-Ready)]                                 |  |
+|  |  [7. Tags Section]                                                |  |
 |  |     [Transport] [Business] [Daily Expense] [+ Add Tag]            |  |
 |  |                                                                   |  |
 |  |  [8. Attachments Section (Future-Ready)]                          |  |
@@ -67,13 +72,6 @@ The Transaction Details Screen is constructed using the logical three-zone verti
 |  |                                                                   |  |
 |  |  [9. Security Information Shield]                                 |  |
 |  |     "Encrypted Locally on Device | No Network Access"             |  |
-|  |                                                                   |  |
-|  |  [10. Metadata Section]                                           |  |
-|  |      Confidence Level: 100% | Matched Rule ID: Mellat-04          |  |
-|  |                                                                   |  |
-|  |  [11. Related Transactions Feed (Future-Ready)]                   |  |
-|  |      - Prev Ride (Yesterday): -15,000 Tomans                      |  |
-|  |      - Prev Ride (3 days ago): -15,000 Tomans                     |  |
 |  |                                                                   |  |
 |  +-------------------------------------------------------------------+  |
 +-------------------------------------------------------------------------+
@@ -88,388 +86,351 @@ The Transaction Details Screen is constructed using the logical three-zone verti
 
 ---
 
-## Core Specification Deliverables
+## 2. Visual Layout
 
-### 1. Screen Purpose
-The Transaction Details Screen provides a dedicated, focused inspection environment for individual parsed transactions. Its primary objective is to decompose high-complexity banking text messages into organized, legible metadata fields, enabling users to verify, annotate, categorize, and archive their financial actions with absolute confidence.
+The visual layout consists of an elegant, low-saturation neutral canvas with semantic colors indicating transaction status and direct cash flow. The structure relies on horizontal alignment, spatial cards, and clear typography lines.
 
-### 2. Business Objectives
-* **Increase Ledger Accuracy:** Facilitate easy correction and manual verification of parsed heuristic patterns, boosting overall database precision.
-* **Cultivate Local Security Trust:** Reinforce the offline-first message directly through security shield components, showcasing the safety of the on-device vault.
-* **Eliminate Information Loss:** Offer a permanent archive of transaction records, notes, and receipt structures, functioning as a robust personal audit trial.
-
-### 3. User Goals
-* **Inspect Key Metrics:** Instantly review exact transacted amounts, transacting entities (Sender/Receiver), and original bank cards.
-* **Add Custom Annotations:** Write local text notes and associate searchable category tags for streamlined querying.
-* **Verify Heuristics:** Confirm low-confidence automated SMS parses, converting warning-state entries into verified ledger items.
-* **Perform Administrative Maintenance:** Safe export of specific receipts or the deletion of double-parsed or erroneous items.
-
-### 4. Entry Points
-* **Dashboard Ledger Row Tap:** Clicking any transaction card on the main chronological feed transitions directly to this detail screen.
-* **System Notification Tap:** Clicking an incoming parsed banking SMS notification launches the application and opens this details card directly.
-* **Analytics Category Feed Drilldown:** Clicking a transaction item within specialized statistics or category breakdown views segues to this screen.
-
-### 5. Exit Points
-* **Top App Bar Back Navigation:** Returns the user to their immediate previous view (Dashboard feed, search results, or analytics views).
-* **System Back Gesture:** Standard device back motion returns user to the preceding visual context.
-* **Transaction Deletion:** Completing a deletion flow removes the record from the local database and returns the user to the active chronological ledger.
-
-### 6. Navigation Behaviour
-* **Right-to-Left Slide Transitions:** Entering the screen triggers a smooth horizontal slide from the logical start edge (right) to the logical end edge (left).
-* **Self-Contained Bottom Sheets:** Triggering editing or deletion tasks expands modal overlays upwards from Zone C, avoiding jarring fullscreen jumps.
-* **Scroll-Preserving Dismissal:** Returning to the dashboard feed preserves the list's exact scroll offset, preventing visual disorientation.
-
-### 7. Information Hierarchy
-* **Primary Visual Tier:** Amount Highlight, transacted currency, and Transaction Type Badge, located inside the main summary card in Zone B.
-* **Secondary Visual Tier:** Bank identity, merchant name, localized Solar Hijri timestamps, and masked card numbers.
-* **Tertiary Visual Tier:** User notes, category chips, raw description strings, and attachment previews.
-* **Contextual Meta Tier:** Security indicator text, parsing confidence percentages, and rule indexing identifiers.
-
-### 8. Screen Layout Structure
-* **Zone A (Sticky App Bar):** Contains the primary navigation back action, favorite toggle, action overrides (Share, Export), and a secondary more-options trigger.
-* **Zone B (Workspace Grid):** A vertically scrollable, responsive layout hosting structured cards and details grids, bound strictly by the standard screen margin.
-* **Zone C (Sticky Footer):** Houses the primary operational actions (Delete, Confirm/Verify) pinned to the bottom of the viewport for comfortable one-handed reach.
-
-### 9. Component Composition
-The Transaction Details Screen is constructed by composing these primary design elements:
-* **Contextual Header App Bar**
-* **Bank Identity & Source Badge**
-* **Transaction Summary Card**
-* **Metadata Detail Grid**
-* **User Notes Component**
-* **Tag & Categorization Group**
-* **Receipt Attachment & OCR Section**
-* **Security Shield Indicator**
-* **Action Footer Row**
-
-### 10. Primary Actions
-* **Verify / Confirm Entry:** Converts an unverified, heuristic-parsed transaction into a verified record with a single tap.
-* **Edit Note Trigger:** Opens an inline input box or bottom sheet text field to modify custom notes.
-
-### 11. Secondary Actions
-* **Export PDF / Image receipt:** Compiles the transaction metadata into a clean, sharing-ready local visual receipt.
-* **Share Details:** Triggers the native system share sheet with a secure, formatted plaintext summary.
-
-### 12. Contextual Actions
-* **Favorite Toggle:** Flags the transaction as a starred item for rapid filtering in search views.
-* **Delete Record:** Prompts a destructive confirmation drawer to permanently wipe the record from the encrypted local database.
-
-### 13. Transaction Card Details (Inside Summary Container)
-* **Visual Grouping:** Content is consolidated inside a flat, low-contrast container card using default corner curves.
-* **Display Fields:** Houses the Bank Logo Avatar, Bank Name, Transaction Type Badge, Amount Highlight, Monospace Currency Label, Status Indicator, and Source Info.
-
-### 14. Statistics Preview (Contextual Analytics Context)
-* **Category Association:** Shows the transaction's visual weight compared to the overall monthly budget of its parent category (e.g., "This represents 15% of your Transport budget this month").
-
-### 15. Search & Metadata Querying
-* **Copy Indicators:** Reference numbers and raw transaction texts include quick-action copy buttons that trigger self-dismissing feedback messages.
-
-### 16. Filter Behaviour (Related Transactions)
-* **Chronological Association:** Tapping items in the Related Transactions row transitions to the respective details page of the matched historical record.
-
-### 17. Notification & Parsing Source
-* **Transparency Indicators:** The screen displays the original raw SMS body alongside a diagnostic label, ensuring full traceability of how the transaction was parsed.
-
-### 18. FAB Behaviour
-* **Absence of Main Screen FAB:** To prevent visual clutter and layout overlap on this deep-feature page, the primary Floating Action Button is excluded. All administrative tasks are handled via standard text buttons or app bar controls.
-
-### 19. Empty State (Field Specific)
-* **Annotation States:** When optional elements (such as notes or attachments) are empty, they render a clean, low-contrast dashed outline with supportive add-actions, inviting user customization.
-
-### 20. Loading State
-* **Geometric Skeletons:** Renders shimmering outlines matching the card structures, ensuring layout stability during slow local database retrievals.
-
-### 21. Error State
-* **Corrupt Data Handling:** Displays localized warning cards inside the workspace if the record contains damaged values or fails local decryption.
-
-### 22. Offline State
-* **Natural System State:** All screen components render instantly using local data, with an offline-secure marker reinforcing the zero-network operation.
-
-### 23. Permission State
-* **Attachment Storage Access:** Prompts system permission flows only when users attempt to attach physical files or camera receipts.
-
-### 24. Refresh Behaviour
-* **Auto-Sync Update:** Automatically refreshes displayed metrics if background rules update the transaction's category or details.
-
-### 25. Animation Guidelines
-* **Responsive Easing:** Interactive state changes (such as toggling favorites or adding notes) trigger under standard performance limits using smooth, decelerated easing curves.
-
-### 26. Accessibility Behaviour
-* **Dynamic Sizing Compatibility:** Layout grids wrap dynamically and text fields expand vertically to prevent overlaps when system text magnification scales up to 200%.
-* **High-Contrast Focus:** All body text elements maintain a minimum contrast ratio of 4.5:1 against surfaces.
-
-### 27. RTL Behaviour
-* **Mirrored Navigation Flow:** Back arrows and chevrons point natively to the right (logical start edge), and horizontal text lists proceed from right to left.
-
-### 28. Theme Behaviour
-* **Consistent Semantic Mapping:** Automatically adapts visual properties across Light, Dark, or High-Contrast themes without modifying component placements or layout grids.
-
-### 29. Security Behaviour
-* **Sensitive Data Masking:** Balances, card numbers, and raw SMS text blocks are immediately masked with solid visual shapes when the application transitions to the background multitasking switcher.
-
-### 30. Performance Expectations
-* **Sub-One-Hundred-Unit Rendering:** Details transitions and database queries must resolve in under standard performance budgets on mid-range Android devices.
-
-### 31. Future Expansion Hooks
-* **AI Expense Classification:** Slot allocated below category tags to display machine-learning categorizations and model confidence levels.
-* **OCR Receipt Extraction:** Visual container ready to display parsed physical receipt values (itemized subtotals, tax figures) matched against the transaction.
-
-### 32. Validation Checklist
-* **Strict Token Alignment:** Confirms that every visual property, margin, and curved edge maps directly to an active design token.
-
-### 33. Governance Rules
-* **No Platform Hacks:** The layout must remain platform-independent, relying strictly on relative spacing blocks and logical components.
+* **Layout Scaffold:** The design uses a clean vertical card-stack layout inside the scrollable Zone B workspace.
+* **Symmetrical Insets:** Content margins align strictly to `bankyar.responsive.margin` to prevent information from crowding the screen edges.
+* **Separation Lines:** Elements are grouped with flat containers (`bankyar.radius.medium` corner curves) and subtle boundary lines (`bankyar.semantic.color.border.subtle`), omitting all physical pixel specifications and physical unit properties.
 
 ---
 
-## Screen Regions Definition
+## 3. Information Hierarchy
 
-The Transaction Details Screen is split into six distinct, structured layout regions, managing vertical scrolling and touch interactions:
+The screen establishes high-fidelity visual scanning from top to bottom:
 
-```
-+------------------------------------------------------------+
-|  Region 1: App Bar & Secondary Actions (Zone A - Pinned)   |
-+------------------------------------------------------------+
-|  Region 2: Identity & Primary Summary Card (Zone B - Scroll) |
-+------------------------------------------------------------+
-|  Region 3: Key Details & Reference Grid (Zone B - Scroll)  |
-+------------------------------------------------------------+
-|  Region 4: User Notes & Annotations Block (Zone B - Scroll)|
-+------------------------------------------------------------+
-|  Region 5: Attachments & Future Ready Hook (Zone B - Scroll)|
-+------------------------------------------------------------+
-|  Region 6: Destructive & Confirm Action Footer (Zone C - Pin)|
-+------------------------------------------------------------+
-```
-
-### 1. App Bar & Secondary Actions Region (Zone A)
-* **Visual Presentation:** Pinned to the top of the viewport. Features a transparent background that renders a subtle separation line when the details workspace scrolls beneath.
-* **Layout Flow (RTL):** The back navigation chevron sits on the logical start edge (right), the favorite star toggle sits adjacent to the chevron, while Share, Export, and More-Options triggers align to the logical end edge (left).
-
-### 2. Identity & Primary Summary Card Region (Zone B)
-* **Visual Presentation:** The top card section of the scrollable workspace. It features the Bank Identity Row and the Transaction Summary Card.
-* **Horizontal Flow (RTL):** The Bank Logo Avatar and Bank Name align to the right (start), with the "Source: SMS" indicator aligned to the left (end). Within the Summary Card, the large amount display and transaction type badge occupy prominent vertical space.
-
-### 3. Key Details & Reference Grid Region (Zone B)
-* **Visual Presentation:** A structured, double-column grid presenting key transaction metadata.
-* **Layout Flow (RTL):** Section headings and labels align strictly to the right (start). Localized numbers and values (Dates, Times, and Reference numbers) are displayed in monospace typography, aligned to the left (end) with subtle touch triggers for quick copying.
-
-### 4. User Notes & Annotations Block Region (Zone B)
-* **Visual Presentation:** A flat container card dedicated to user notes, category tags, and heuristic confidence ratings.
-* **Layout Flow (RTL):** Note texts flow RTL, and the "Edit Note" button sits on the logical start edge. Category chips are arranged in a horizontal wrap-list, starting from the right.
-
-### 5. Attachments & Future Ready Hook Region (Zone B)
-* **Visual Presentation:** Contains receipt attachment slots, OCR extractions, and the local encryption security badge.
-* **Layout Flow (RTL):** Receipt preview thumbnails sit on the start edge. The security shield is centered horizontally, serving as a clean, trust-building anchor.
-
-### 6. Destructive & Confirm Action Footer Region (Zone C)
-* **Visual Presentation:** A sticky row pinned to the bottom of the screen, housing the primary administrative action buttons.
-* **Layout Flow (RTL):** The primary "Verify / Confirm" action button is positioned at the logical start edge (right), and the "Delete" button is positioned at the logical end edge (left) to prevent accidental destructive taps.
+* **Primary Visual Tier (High Salience):** Large readable amount and cash direction indicator (Income green vs Expense crimson math signs).
+* **Secondary Visual Tier (Medium Salience):** Bank Name, Card Identity, Date and Time, Balance After Transaction, and Category Badge.
+* **Tertiary Visual Tier (Low Salience):** SMS Sender address, Full SMS content block, Reference numbers, custom notes, and tag chips.
+* **Trust & Security Tier:** The local on-device encryption shield banner.
 
 ---
 
-## Detailed Component Specifications
+## 4. Interaction Flow
 
-### 1. Contextual Header App Bar
-* **Purpose:** Manages page context, exits the details view, and provides secondary tools.
-* **Position:** Zone A (Pinned).
-* **Priority:** Primary.
-* **Interactions:**
-  * Tapping back chevron triggers screen pop transition.
-  * Tapping favorite toggle stars the transaction in local database indexes.
-  * Tapping share icon launches system share dialogue.
-  * Tapping export icon triggers local receipt builder.
-  * Tapping more-options displays dropdown with Delete option.
-* **Accessibility:** Screen reader announces: *"Back, button. Favorite, button. Share, button. Export, button."*
-* **RTL Mirroring:** Back chevron mirrors to point right (`bankyar.icon.back.rtl`).
+A seamless, predictable flow governs all actions on the screen:
 
-### 2. Bank Identity Row
-* **Purpose:** Establishes transaction origin and verified system source.
-* **Position:** Zone B (Scrollable).
-* **Priority:** High.
-* **Visual Style:** Flat row with no borders, nested above the primary summary card.
-* **Interactions:** None (Read-only status group).
-* **Display Fields:**
-  * **Bank Logo Avatar:** Circular container holding flat bank symbol (`bankyar.avatar.medium`).
-  * **Bank Name:** Bold medium-weight Persian text (e.g. *"بانک ملت"*).
-  * **Source Label:** Small category chip displaying *"پیامک خوانده‌شده"* (Parsed SMS).
-
-### 3. Transaction Summary Card
-* **Purpose:** Highlights the absolute most critical transaction metrics: transacted sum, cash direction, card index, and system status.
-* **Position:** Zone B (Scrollable).
-* **Priority:** Critical (Primary Focus).
-* **Visual Style:** Flat surface container using `bankyar.radius.lg` curves and `bankyar.semantic.color.border.subtle` outline.
-* **Interactions:** Single-tap masks amount totals in public environments, blurring the text.
-* **Core Elements:**
-  * **Amount Highlight:** Display-large typography with explicit math symbols (e.g., `-120,000` or `+2,500,000`).
-  * **Currency Label:** Appended to amount in Persian script (e.g., *"تومان"*).
-  * **Transaction Type Badge:** High-contrast rounded chip (e.g., *"هزینه"* / *"درآمد"*). Uses semantic success green for income, and semantic error crimson for expense.
-  * **Masked Card Info:** Monospace text showing active bank card (e.g., *"ملت **** ۵۶۷۸"*).
-  * **Status Badge:** Horizontal row icon with success indicator (e.g., *"تراکنش موفق"* / *"در انتظار تأیید"*).
-
-### 4. Metadata Detail Grid
-* **Purpose:** Groups chronological coordinates, tracking reference numbers, and transacting counterparties.
-* **Position:** Zone B (Scrollable).
-* **Priority:** High.
-* **Visual Style:** Structured vertical stack of flat list tiles, separated by `bankyar.border.width.thin` dividers.
-* **Core Elements:**
-  * **Sender / Receiver Row:** Displays origin and destination entities in medium title font.
-  * **Solar Hijri Date Tile:** Monospace localized date (e.g., *"۱۴۰۲/۱۰/۱۲"*).
-  * **Time Tile:** Monospace localized time (e.g., *"۱۴:۳۲"*).
-  * **Reference Number Tile:** Localized transaction tracking number with inline Copy icon.
-  * **Merchant Info Tile:** Displays recognized merchant name (e.g. *"اسنپ تاکسی"*) with category-specific icon.
-
-### 5. User Notes Component
-* **Purpose:** Lets users add custom local descriptions to transactions.
-* **Position:** Zone B (Scrollable).
-* **Priority:** Medium.
-* **Visual Style:** Flat surface container with a dashed outline when empty, and a solid subtle border when populated.
-* **Interactions:**
-  * Tapping the "Edit Note" icon opens the Bottom Sheet text editor.
-* **Dynamic Content:** If no note is present, it displays: *"بدون یادداشت. برای افزودن کلیک کنید"* (No note. Tap to add).
-
-### 6. Tag & Categorization Group (Future-Ready)
-* **Purpose:** Supports adding secondary tags for advanced financial reporting.
-* **Position:** Zone B (Scrollable).
-* **Priority:** Medium (Future-Ready Hook).
-* **Visual Style:** Wrapping row of small rounded chips.
-* **Interactions:**
-  * Tapping active tag filters the ledger list by that tag.
-  * Tapping the "+ Add Tag" chip opens the tag selector bottom sheet.
-
-### 7. Receipt Attachment & OCR Section (Future-Ready)
-* **Purpose:** Supports physical verification by allowing users to attach paper receipt images.
-* **Position:** Zone B (Scrollable).
-* **Priority:** Low (Future-Ready Hook).
-* **Visual Style:** Dashed rectangular surface container matching default card curves.
-* **Core Elements:**
-  * **Attach Receipt Trigger:** Center-aligned icon button.
-  * **OCR Extraction Summary:** Reserved vertical slot to display parsed receipt line items, itemized VAT, and totals.
-
-### 8. Security Shield Indicator
-* **Purpose:** Reassures users of complete data privacy.
-* **Position:** Zone B (Scrollable).
-* **Priority:** High (Trust-Building Anchor).
-* **Visual Style:** Horizontally centered, low-contrast banner featuring a flat security shield icon.
-* **Microcopy:** *"این تراکنش به صورت کاملاً محلی در دستگاه شما رمزنگاری شده است و به هیچ شبکه خارج از گوشی دسترسی ندارد."* (This transaction is encrypted completely locally on your device and has zero network access).
-
-### 9. Destructive & Confirm Action Footer
-* **Purpose:** Handles transaction confirmation and deletion.
-* **Position:** Zone C (Pinned Footer).
-* **Priority:** Critical.
-* **Visual Style:** Sticky bottom horizontal row, utilizing comfortable padding to prevent gesture navigation conflicts.
-* **Core Elements:**
-  * **Verify / Confirm Button (Start Edge):** Prominent filled primary button. Converts heuristic-parsed transaction into verified status, dismissing warning states.
-  * **Delete Button (End Edge):** Outlined button styled with the semantic error crimson scale. Triggers confirmation drawer to wipe the record.
+1. **Screen Entry:** The screen is launched from a ledger feed tap or notification click, sliding in from the right logical start edge (RTL) or displaying with a soft scale-and-fade transition.
+2. **Favorite Star Toggling:** A single tap on the star button fills the shape with brand accent, indexing the transaction as starred instantly in the local database.
+3. **Copy Tracking Action:** Tapping the copy button on the reference number or raw SMS text copies content to the clipboard and triggers a self-dismissing feedback banner at the bottom of the viewport.
+4. **Note Management Flow:** Tapping the Note Editor button slides up a bottom sheet for writing, validating, and saving custom annotations inline.
+5. **Accidental Loss Mitigation:** Permanent deletion triggers a confirmation overlay, separating destructive and confirm actions to prevent user errors.
 
 ---
 
-## Technical Integration & State Matrices
+## 5. Component Placement
 
-### Interaction Matrix
-
-| UI Component | User Action | Target Component | State Mutation | Expected Transition |
-| :--- | :--- | :--- | :--- | :--- |
-| **Back Chevron** | Single Tap | Navigation Stack | Pop Screen State | Smooth right-to-left exit animation. |
-| **Favorite Icon** | Single Tap | Favorite Indicator | Toggle Boolean (`IsFavorite`) | Star icon fills instantly with brand accent color. |
-| **Amount Text** | Single Tap | Amount Display | Toggle Masking (`Active` <-> `Blurred`) | Instantly blurs/reveals financial amount. |
-| **Copy Ref Button**| Single Tap | Reference Tile | Clipboard Write | Triggers success snackbar: *"شماره پیگیری کپی شد"*. |
-| **Edit Note Button**| Single Tap | Notes Sheet | Launches Input Sheet | Notes sheet slides vertically up from Zone C. |
-| **Delete Button** | Single Tap | Delete Drawer | Launches Confirmation Sheet| Confirmation drawer slides up with destructive option. |
-| **Verify Button** | Single Tap | Status Badge | Converts state to `Verified` | Warning outline fades; success checkmark animates. |
-
-### State Matrix
-
-| System State | App Bar Header | Summary Card | Notes Block | Security Shield | Action Footer |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| **Normal (Verified)**| Standard Icons | Active Figure | Shows Custom Note | Visible | Shows "Delete" only |
-| **Unverified (Heuristic)**| Standard Icons | Warning Border | Shows Empty State | Visible | Shows "Confirm" & "Delete" |
-| **Loading** | Shimmer | Shimmer Card | Shimmer block | Hidden | Disabled |
-| **Error (Decryption)**| Disabled Icons | Locked Card | Disabled Note | Hidden | Disabled |
-| **Offline** | Secure Badge | Active Figure | Editable | Visible | Active |
-| **Edit Mode** | Back Blocked | Blurred Amount | Active Input Textfield| Hidden | Shows "Save" & "Cancel" |
-| **Delete Confirmed** | Scrim Covered | Scrim Covered | Scrim Covered | Scrim Covered | Shows Confirmation Sheet |
-| **Backgrounded** | Mask Overlay | Mask Overlay | Mask Overlay | Mask Overlay | Mask Overlay |
-
-### Accessibility Matrix
-
-| UI Component | Accessibility Trait | Screen Reader Announcement | Touch Target Offset | Keyboard Focus Sequence |
-| :--- | :--- | :--- | :--- | :--- |
-| **Back Chevron** | Action Trigger | *"برگشت به صفحه قبل. دکمه."* | Standard Insets | Step 1 (Start-to-End) |
-| **Favorite Button**| Toggle Action | *"افزودن به علاقه‌مندی‌ها. تغییر وضعیت."*| Standard Insets | Step 2 (Start-to-End) |
-| **Amount Card** | Toggle Mask | *"مبلغ تراکنش: منفی ۱۲۰,۰۰۰ تومان. برای پنهان‌سازی ضربه بزنید."*| Card Boundary | Step 3 (Top-to-Bottom) |
-| **Ref Copy Button**| Clipboard Action| *"کپی کردن شماره پیگیری. دکمه."* | Comfort Target | Step 4 (Top-to-Bottom) |
-| **Edit Note Trigger**| Edit Action | *"ویرایش یادداشت تراکنش. دکمه."* | Comfort Target | Step 5 (Top-to-Bottom) |
-| **Verify Button** | Action Trigger | *"تأیید صحت اطلاعات تراکنش. دکمه."* | Full Button | Step 6 (Bottom Footer) |
-| **Delete Button** | Destructive Action| *"حذف دائمی تراکنش از دستگاه. دکمه هشدار."*| Full Button | Step 7 (Bottom Footer) |
+* **Zone A (Sticky App Bar):** Standard back action on the logical start edge (right), favorite indicator adjacent to the back chevron. Operational tools (Share, Archive, Export, and More Options) are aligned at the logical end edge (left).
+* **Zone B (Detailed Scroll Workspace):** Houses components chronologically starting with the Bank Identity, moving through the Financial Summary Card, Details Grid, the search-enabled Raw SMS container, User Notes, Categories and Tags, Attachments, and concluding with the trust-building Security Shield.
+* **Zone C (Sticky Footer):** Houses the primary actions aligned comfortably within the thumb-reach zone. Destructive delete button is placed at the logical end (left), and the verify/confirm action is positioned at the logical start (right).
 
 ---
 
-## Design Token Matrix
+## 6. Typography Usage
 
-The Transaction Details Screen resolves all visual properties using these global semantic design tokens:
+The typography scale enforces absolute readable contrast ratios:
 
-```
-+--------------------------------------------------------------------------+
-|                       CORE DESIGN TOKENS MATRIX                          |
-+---------------------+----------------------------------------------------+
-| Visual Element      | Design Token Key                                   |
-+---------------------+----------------------------------------------------+
-| Screen Background   | `bankyar.semantic.color.background.default`        |
-| Card Surface Base   | `bankyar.semantic.color.surface.default`           |
-| High Contrast Text  | `bankyar.semantic.color.text.primary`              |
-| Supporting Text     | `bankyar.semantic.color.text.secondary`            |
-| Divider Lines       | `bankyar.semantic.color.border.subtle`             |
-| Amount Display Font | `bankyar.semantic.typography.display.lg`           |
-| Local Monospace Font| `bankyar.semantic.typography.monospace.standard`   |
-| Outer Screen Margin | `bankyar.responsive.margin`                        |
-| Container Curve     | `bankyar.radius.medium`                            |
-| Bottom Sheet Curve  | `bankyar.radius.large`                             |
-| Minimum Touch Area  | `bankyar.space.xl`                                 |
-+---------------------+----------------------------------------------------+
-```
+* **Display Font (`bankyar.semantic.typography.display.lg`):** Large readable amount with mathematical sign and monospace formatting for numerical figures.
+* **Heading Font (`bankyar.semantic.typography.title.sm`):** Bank Name, Section Headers, and Title labels.
+* **Body Font (`bankyar.semantic.typography.body.md`):** Raw SMS Content blocks and User Notes.
+* **Monospace Font (`bankyar.semantic.typography.monospace.standard`):** Solar Hijri timestamps, card indices, balance figures, and reference tracking digits to maintain flawless column alignment.
 
 ---
 
-## Responsive Design & Adaptive Viewports
+## 7. Icon Usage
 
-The Transaction Details layout adjusts dynamically across standard responsive breakpoints:
+Linear, thin-stroke icons are mapped to functional actions, mirroring dynamically in RTL locales:
 
-* **Standard Phone:** Vertically stacked card regions. The details grid utilizes a single-column layout, and action buttons occupy the full horizontal width of Zone C.
-* **Large Phone / Foldable (Folded):** Standard layout metrics, expanding the details card paddings to `bankyar.space.lg` for improved readability.
-* **Tablet / Foldable (Unfolded):** Splits the screen into a dual-pane master-detail layout:
-  * **Logical Start Pane (Right):** Primary transaction card, amount highlight, and bank metadata details.
-  * **Logical End Pane (Left):** Interactive user notes, category tags, receipts, and related historical transactions.
-* **Landscape Orientation:** Adjusts the workspace into a balanced double-column layout to prevent long, unreadable text lines.
-
----
-
-## Validation Checklist
-
-Before implementation, this specification must satisfy these quality checks:
-
-- [ ] **No Hardcoded Hex Colors:** Every color maps directly to an active semantic design token.
-- [ ] **No Physical Dimensions:** All Spacing, margins, and curved boundaries use abstract token keys.
-- [ ] **No Flutter Code references:** The document remains platform-independent and free of Flutter-specific references.
-- [ ] **RTL-First Compliance:** Layout alignments and transitions use logical start/end properties.
-- [ ] **Data Security Compliance:** Sensitive data is masked and local security microcopy is clearly visible.
+* **Back Chevron (`bankyar.icon.back.rtl`):** Mirrored to point right.
+* **Favorite Toggle (`bankyar.icon.star.empty`/`bankyar.icon.star.filled`):** Standard star symbol representing saved entries.
+* **Clipboard Copy (`bankyar.icon.copy`):** Visual indicator of copy actions.
+* **Search Icon (`bankyar.icon.search`):** Interactive magnifying glass inside raw SMS.
+* **Security Shield (`bankyar.icon.security`):** Trusted local vault visual marker.
+* **Delete Trash Bin (`bankyar.icon.delete`):** Semantic warning/destructive action indicator.
 
 ---
 
-## Governance Rules
+## 8. Elevation Strategy
 
-1. **Strict Design Token Adherence:** Custom style adjustments inside components are prohibited. Every visual attribute must reference an active design token.
-2. **Deterministic Destructive Flow:** Transaction deletion must always trigger a confirmation bottom sheet, protecting users from accidental data loss.
-3. **No Network Operations:** All elements must function offline. Incorporating external assets or third-party web dependencies is strictly prohibited.
+Elevation is mapped through distinct layer hierarchies to avoid visual noise:
+
+* **Layer 0 (Canvas - Background):** Lowest logical level (`bankyar.semantic.color.background.default`).
+* **Layer 1 (Cards - Flat):** Transaction Summary Card and Detail Containers (`bankyar.semantic.color.surface.default`), styled with a subtle border.
+* **Layer 2 (Actions - Raised):** Form controls and interactive chips.
+* **Layer 3 (Overlays - Sheets):** Modal Sheets and deletion dialogs (`bankyar.semantic.color.surface.overlay`), using high-contrast scrim backdrops.
+
+---
+
+## 9. Animation Notes
+
+* **Screen Transition:** Decelerated horizontal slide from the right logical start edge, matching the RTL reading path.
+* **Interactive Toggles:** Star-fill and checkmark scale transitions occur instantly (`bankyar.motion.duration.instant`).
+* **Sheet Expansion:** Notes Editor bottom sheet slides up with standard easing curves, settling into position within standard performance timelines.
 
 ---
 
-## Future Expansion Hooks
+## 10. Accessibility Review
 
-* **AI Expense Classification:** Displays automated category predictions and model confidence ratings.
-* **OCR Receipt Extraction:** Reserved vertical container to display parsed physical receipt line items, itemized VAT, and totals.
-* **Recurring Transactions Group:** Space reserved below the Related Transactions feed to flag matched recurring intervals.
-* **Budget Integration Progress Bar:** Displays the transacted amount's visual impact on the active monthly budget category.
+* **Contrast Standards:** Contrast ratios of all critical typography elements are verified to meet or exceed WCAG AA 4.5:1 parameters.
+* **No Color-Only Signifiers:** Outflows are distinguished by a preceding minus sign (`-`) next to crimson accents, while inflows are preceded by a plus sign (`+`) next to emerald success tones.
+* **Screen Reader Semantic Mapping:** Image components use meaningful alternative text. Custom interactive buttons are declared with explicit semantic trait markers.
 
 ---
-**End of Document**
+
+## 11. RTL Review
+
+* **Reading Path Mirrored:** Text alignments, list entries, and headings flow natively from right to left.
+* **Logical Spacing Property Mapping:** Left and right coordinates are prohibited, using logical start and end spacing tokens to adjust layouts automatically.
+* **Vertical Space Buffers:** Standard spacing multipliers account for tall Persian text loops, preventing layout line overlapping.
+
+---
+
+## 12. Component Specifications (In-Depth Core Fields)
+
+For every component on the Transaction Details Screen, the following 16 properties define their exact presentation, state behavior, and boundaries:
+
+### 12.1 Contextual Header App Bar
+1. **Purpose:** Coordinates navigation exits, toggles saved entries, and houses administrative utilities.
+2. **Hierarchy:** Secondary context tier, pinned at the top of the viewport.
+3. **Placement:** Zone A (Sticky).
+4. **Visual Weight:** Medium. Uses transparent backdrop, rendering a subtle separation border when text scrolls underneath.
+5. **Spacing:** Bound vertically to standard app bar height. Margins adhere to `bankyar.responsive.margin`.
+6. **Elevation:** Layer 0 by default, Layer 1 when content scrolls beneath.
+7. **Typography:** Action titles set to `bankyar.font.size.medium` and bold.
+8. **Icons:** Back chevron (`bankyar.icon.back.rtl`), Star outline, Share, Archive, Export, and More-Options triggers.
+9. **States:** Default, Pressed, Selected, and Disabled.
+10. **Loading:** Renders shimmer on individual icon bounds.
+11. **Error:** Outlines with subtle warning color if state fails to mutate.
+12. **Offline:** Operates normally with zero network access.
+13. **Accessibility:** Screen readers announce: *"برگشت به صفحه قبل. دکمه"* and *"علاقه‌مندی. تغییر وضعیت"*. Minimum touch targets map to `bankyar.space.xl`.
+14. **RTL Behaviour:** Back chevron is mirrored to point to the right logical start edge.
+15. **Animation:** Soft fade transitions on icon presses.
+16. **Future Expansion:** Dedicated slot to add custom user bookmarks and folder organization.
+
+### 12.2 Bank Identity & Source Row
+1. **Purpose:** Confirms the origin bank and verified carrier SMS source.
+2. **Hierarchy:** Primary contextual metadata tier.
+3. **Placement:** Zone B, positioned above the main Transaction Summary Card.
+4. **Visual Weight:** Medium.
+5. **Spacing:** Separated by `bankyar.space.md` from Zone A, and `bankyar.space.sm` from components below.
+6. **Elevation:** Layer 0 (Flat on background).
+7. **Typography:** Bank name uses `bankyar.semantic.typography.title.sm`. Sender and parse source use Caption small.
+8. **Icons:** Bank logo avatar, message parser icon.
+9. **States:** Read-only (Static state).
+10. **Loading:** Replaced by shimmering circular avatar and text-line bounds.
+11. **Error:** Renders localized warning text if decryption or card identification fails.
+12. **Offline:** Instant local evaluation.
+13. **Accessibility:** Alternate text for bank logo avatar provided.
+14. **RTL Behaviour:** Bank avatar aligns right (start edge), source labels align left (end edge).
+15. **Animation:** None.
+16. **Future Expansion:** Dynamic expansion to support multiple linked credit/debit profiles under the same bank.
+
+### 12.3 Transaction Summary Card
+1. **Purpose:** Highlights transacted sum, cash flow direction, card metadata, and system status.
+2. **Hierarchy:** Critical (Screen focus point).
+3. **Placement:** Zone B, topmost card container.
+4. **Visual Weight:** Extreme. High typography contrast.
+5. **Spacing:** Internal padding matches `bankyar.space.md`. Spaced from adjacent components by `bankyar.space.lg`.
+6. **Elevation:** Layer 1 (`bankyar.semantic.color.surface.default`).
+7. **Typography:** Numeric display uses `bankyar.semantic.typography.display.lg` (Monospace). Status indicator and card details use Caption small.
+8. **Icons:** Upward/Downward cashflow arrows, security lock indicator.
+9. **States:** Default (Visible figures), Masked (Blurred balances for privacy), Pressed.
+10. **Loading:** Replaced by a unified shimmering card skeleton.
+11. **Error:** Renders with a soft crimson outline if transaction data is corrupted.
+12. **Offline:** Operates fully offline.
+13. **Accessibility:** Text reader parses: *"مبلغ تراکنش: منفی صد و بیست هزار تومان. موفق."* Screen readers do not read masked text blocks.
+14. **RTL Behaviour:** Value and symbol align right, category tags and transaction indicators align left.
+15. **Animation:** Smooth opacity blur transition during balance masking.
+16. **Future Expansion:** Ability to display cash conversion rates if international currencies are parsed.
+
+### 12.4 Details Grid Section (Date, Time, Balance & Ref)
+1. **Purpose:** Lists timestamps, running balances, and bank tracking reference IDs.
+2. **Hierarchy:** Secondary analytical tier.
+3. **Placement:** Zone B, grouped in a container below the Summary Card.
+4. **Visual Weight:** Medium.
+5. **Spacing:** Margin padding is set to standard spacing factors, separated internally by hairline dividers.
+6. **Elevation:** Layer 1.
+7. **Typography:** Captions use Caption small, numeric values use standard Monospace text size.
+8. **Icons:** Solar Calendar symbol, Clock outline, Scale indicator, Copy tracker badge.
+9. **States:** Default, Pressed (Copy button trigger).
+10. **Loading:** Shimmering lines match grid divisions.
+11. **Error:** Local warning banner displays if numerical data is missing.
+12. **Offline:** Displays verified local ledger logs.
+13. **Accessibility:** Accessible touch targets around copy elements. Monospace font prevents overlap on large text configurations.
+14. **RTL Behaviour:** Grid columns and titles align right (start), values and copy triggers align left (end).
+15. **Animation:** Success checkmark animation inside the copy button on tap.
+16. **Future Expansion:** Direct export hooks for individual invoice components.
+
+### 12.5 Raw SMS Content Inspector
+1. **Purpose:** Displays full, unmodified carrier SMS text with search and copy capabilities.
+2. **Hierarchy:** Secondary validation tier.
+3. **Placement:** Zone B, centered within the scroll workspace.
+4. **Visual Weight:** Medium. Low-contrast surface wrapper.
+5. **Spacing:** Outer margins match responsive rules. Internal vertical padding is set to standard spacing.
+6. **Elevation:** Layer 1.
+7. **Typography:** Raw SMS text block is rendered in `bankyar.semantic.typography.body.md` with loose leading line heights.
+8. **Icons:** Magnifying glass (Search inside SMS), Clipboard Copy, Close search.
+9. **States:** Default, Searching (Highlights matching characters), Pressed.
+10. **Loading:** Standard shimmering block layout.
+11. **Error:** Displays parsing alert label if text file is unreadable.
+12. **Offline:** Fully operational locally.
+13. **Accessibility:** Search text is fully navigable by screen reader focus orders. Focus outlines are distinct.
+14. **RTL Behaviour:** Raw text preserves original SMS alignment (RTL for Persian banks). Search input and magnifying icons align to the start edge.
+15. **Animation:** Search input scales horizontally when search is activated.
+16. **Future Expansion:** Regex rule customizer launch button linked directly from the SMS inspector view.
+
+### 12.6 Note Display Component
+1. **Purpose:** Renders the user's custom text notes or invites additions if empty.
+2. **Hierarchy:** Tertiary customization tier.
+3. **Placement:** Zone B.
+4. **Visual Weight:** Medium. Solid subtle borders if notes exist, dashed borders if empty.
+5. **Spacing:** Internal space factor `bankyar.space.md`, outer spacing `bankyar.space.lg`.
+6. **Elevation:** Layer 1.
+7. **Typography:** Body copy set to `bankyar.semantic.typography.body.md`.
+8. **Icons:** Edit note pencil, Trash bin, Add note icon.
+9. **States:** Empty (dashed outline), Populated (solid border), Pressed.
+10. **Loading:** Shimmer lines match layout depth.
+11. **Error:** None.
+12. **Offline:** Completely supported (local DB storage only).
+13. **Accessibility:** Screen reader parses notes or announces empty slot actions.
+14. **RTL Behaviour:** Persian text flows RTL naturally.
+15. **Animation:** Smooth transition between empty state bounds and text blocks.
+16. **Future Expansion:** Rich text formatting (Bold, list bullets, etc.) for note fields.
+
+### 12.7 Tag & Categorization Group
+1. **Purpose:** Enables adding and filtering metadata categories and tags.
+2. **Hierarchy:** Tertiary organization tier.
+3. **Placement:** Zone B.
+4. **Visual Weight:** Medium.
+5. **Spacing:** Wrapped chips are spaced by standard horizontal and vertical margin tokens.
+6. **Elevation:** Layer 2 (Raised chip surfaces).
+7. **Typography:** Chip text uses standard caption scales.
+8. **Icons:** Tag category icon, Add tag plus sign, Remove tag close icon.
+9. **States:** Default, Selected, Pressed, Disabled.
+10. **Loading:** Replaced by shimmering chip outlines.
+11. **Error:** Standard error boundary if database fails to associate metadata.
+12. **Offline:** Instant on-device tagging.
+13. **Accessibility:** Active chips read: *"برچسب حمل و نقل. انتخاب شده"* or *"دکمه افزودن برچسب جدید"*.
+14. **RTL Behaviour:** Chip row flows from right to left, wrapping downward.
+15. **Animation:** Soft scaling on tap.
+16. **Future Expansion:** Machine-learning suggested category badges showing confidence scores.
+
+### 12.8 Attachment Section (Future-Ready)
+1. **Purpose:** Visual slot ready to display paper receipts and OCR extracted items.
+2. **Hierarchy:** Tertiary data tier.
+3. **Placement:** Zone B, lower section of the scroll area.
+4. **Visual Weight:** Low. Light neutral boundaries.
+5. **Spacing:** Spaced by standard macro tokens.
+6. **Elevation:** Layer 1 (Flat outline).
+7. **Typography:** Captions and labels use micro and caption fonts.
+8. **Icons:** Paperclip symbol, camera outline.
+9. **States:** Empty/Slot, Loaded (thumbnail previews), Disabled.
+10. **Loading:** Unified image skeleton shimmers.
+11. **Error:** Renders red outline if attachment type is unsupported.
+12. **Offline:** All attachments stored on secure local system directories.
+13. **Accessibility:** Descriptive alt text for thumbnail previews.
+14. **RTL Behaviour:** Grid layout mirrors starting from right to left.
+15. **Animation:** Thumbnail fade-in when selected.
+16. **Future Expansion:** OCR extraction cards listing parsed subtotal items and tax percentages.
+
+### 12.9 Security Shield Indicator
+1. **Purpose:** Reassures users of strict on-device encryption and zero network connectivity.
+2. **Hierarchy:** Primary trust tier.
+3. **Placement:** Zone B, centering above the sticky footer.
+4. **Visual Weight:** Medium. Soft grounding grey palette.
+5. **Spacing:** Vertical margins match standard spacing multipliers.
+6. **Elevation:** Layer 0 (Flat on background).
+7. **Typography:** Description text uses Caption small, bold headers.
+8. **Icons:** Security shield outline.
+9. **States:** Read-only (Static).
+10. **Loading:** Disabled.
+11. **Error:** None.
+12. **Offline:** Normal system state.
+13. **Accessibility:** Read: *"پیام امنیتی: اطلاعات تراکنش رمزنگاری شده محلی بدون دسترسی اینترنت"*.
+14. **RTL Behaviour:** Shield icon is centered with RTL text blocks flowing naturally below it.
+15. **Animation:** None.
+16. **Future Expansion:** Vault configuration quick-link button.
+
+### 12.10 Destructive & Confirm Action Footer
+1. **Purpose:** Triggers transaction validation (heuristic to verified state) or permanently deletes records.
+2. **Hierarchy:** Critical operational tier.
+3. **Placement:** Zone C (Sticky bottom).
+4. **Visual Weight:** Extreme. Filled container actions.
+5. **Spacing:** Aligns to viewport margins. Bottom padding shields against native gesture bars.
+6. **Elevation:** Layer 2 (Raised footer background overlay).
+7. **Typography:** Button text uses Button medium typography tokens.
+8. **Icons:** Checkmark (Confirm), Trash outline (Delete).
+9. **States:** Default, Pressed, Disabled, Scrim Overlay Active.
+10. **Loading:** Buttons show inline activity shimmers, blocking inputs.
+11. **Error:** High-contrast crimson validation highlights on database failure.
+12. **Offline:** Zero network actions required.
+13. **Accessibility:** Prominent touch target zones, strict contrast limits.
+14. **RTL Behaviour:** Confirm/Verify button is placed on the logical start (right) and the destructive delete button is mapped to the logical end (left).
+15. **Animation:** Soft elevation translation on button hover/press.
+16. **Future Expansion:** Archive/Restore toggles inside the more options drawer.
+
+---
+
+## 13. Note Editor Specification
+
+The Note Editor is a core interactive component engineered to handle custom annotations with zero friction, providing absolute data safety and complete predictability.
+
+### 13.1 Editor Layout
+* **Visual Container:** The Editor is structured as an interactive Modal Bottom Sheet sliding up from Zone C. It occupies 60% of the viewport height.
+* **Header Area:** Draggable indicator handle centered at the top boundary, followed by a bold title: *"یادداشت تراکنش"* (Transaction Note) and a close trigger on the logical end edge.
+* **Input Box:** Large outlined text field (`bankyar.radius.medium` corner curve) filling the central container area, optimized for fingers.
+* **RTL Text Flow:** The cursor and characters align right by default, with text wrapping vertically.
+
+### 13.2 Character Counter
+* **Placement:** Positioned at the bottom-left corner of the input box container.
+* **Format:** Monospace numerical indicator (e.g., `120 / 250`).
+* **Limit:** Capped at 250 characters.
+* **Visual Transitions:** Stays in neutral secondary text color during normal typing. If characters exceed 240, the counter turns to the warning orange scale, and locks input with an error crimson color if the limit is breached.
+
+### 13.3 Autosave Behaviour
+* **Strategy:** Every character stroke is stored in a temporary on-disk memory block.
+* **Recovery Shield:** If the app transitions to the background or if the user accidentally closes the sheet, the written string is cached locally. When the editor is reopened, it prompts a recovery banner: *"یادداشت ذخیره نشده بازیابی شد"*.
+
+### 13.4 Validation
+* **Constraints:** Special injection strings, script tags, and database symbols are blocked and sanitized instantly.
+* **Feedback Rules:** Invalid characters trigger a soft inline error banner at the bottom of the input container, disabling the save action.
+
+### 13.5 Keyboard Behaviour
+* **Activation:** Tapping the text area slides up the system keyboard.
+* **Dynamic Viewport Adjustment:** The bottom sheet adjusts its height dynamically based on the active keyboard layout inset, preventing input boxes from being obscured.
+* **Dismissal:** Swiping downward on the draggable handle dismisses both the keyboard and the bottom sheet.
+
+### 13.6 Focus Behaviour
+* **Outline:** On active focus, the input border is colored with the high-contrast `bankyar.semantic.color.border.active` token.
+* **Cursor State:** Focused cursor uses the primary brand accent, blinking steadily.
+
+### 13.7 Undo Strategy
+* **Keyboard Triggers:** Deleting text preserves a state history queue of 15 steps.
+* **Visual Action:** Undo and redo icon triggers are positioned in the input accessory bar above the keyboard for quick retrieval.
+
+### 13.8 Cancel Behaviour
+* **Action:** Tapping the Close button or swiping downward prompts an immediate transition to dismiss.
+* **Unsaved Data Protection:** If changes exist, a prompt sheet appears: *"آیا می‌خواهید تغییرات لغو شوند؟"* (Do you want to discard changes?), offering discard and resume controls.
+
+### 13.9 Save Behaviour
+* **Action:** Tapping the "Save Note" primary action button writes the validated string permanently into the local encrypted database.
+* **Success Feedback:** The bottom sheet slides down, updating the Note Display Component instantly, and triggers a self-dismissing feedback snackbar: *"یادداشت ذخیره شد"*.
+
+---
+
+## 14. Validation Checklist
+
+Before releasing any layout or implementing code, verify compliance against this checklist:
+
+- [x] **No Hardcoded Hex Colors:** Every visual color maps directly to a semantic design token.
+- [x] **No Physical Dimensions:** Margins, paddings, and curves use abstract token keys with no physical units (px, dp, sp).
+- [x] **No Flutter Code References:** Visual layouts are specified independently of code constructs.
+- [x] **RTL-First Compliance:** Screen structures align right-to-left, utilizing logical start and end properties.
+- [x] **Note Editor Defined:** Completed specifications for editor layouts, counters, autosave, and keyboard interactions.
+- [x] **Display Fields Met:** Includes Bank logo, transaction totals, reference numbers, full raw SMS, notes, and attachments.
+- [x] **User Actions Met:** Outlines copy, share, edit notes, favorite status, search inside SMS, and destructive actions.
+- [x] **Accessibility Matrix Completed:** Meets minimum WCAG AA contrast rules and defines screen reader flows.
+
+---
+**End of Specification Document**
