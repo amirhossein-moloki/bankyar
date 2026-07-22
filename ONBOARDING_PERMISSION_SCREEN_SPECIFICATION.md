@@ -1,10 +1,11 @@
-# BankYar Onboarding & Permission Experience Specification (v1.0.0)
+# BankYar Onboarding & Permission Experience Specification
+
 ## Enterprise-Grade Screen Specification for Offline-First Secure Financial Applications
 
 **Project Name:** BankYar
 **Classification:** Enterprise Design System Specification
-**Document Version:** 1.0.0
-**Authors:** Principal Product Designer, Senior UX Architect, Material Design 3 Expert, Flutter UI Architect, Android Permission UX Specialist, Privacy-by-Design Consultant, Enterprise FinTech Design Director
+**Document Version:** 2.0.0
+**Authors:** Principal Product Designer, Onboarding Experience Specialist, Material Design 3 Expert, Flutter UI Architect, FinTech UX Consultant, and Behavioral Design Expert
 **Status:** Approved / Core Specification Blueprint
 
 ---
@@ -13,394 +14,424 @@
 
 The BankYar Onboarding & Permission experience is the foundational gatekeeper of an offline-first, secure, and privacy-centric mobile personal finance platform. Built for native **Persian (RTL)** layouts and strict **on-device data sovereignty boundaries** (zero network permission, zero cloud trackers), the onboarding experience must balance education, trust-building, and seamless permission acquisition with the highest possible user conversion rates.
 
-This specification outlines the complete, production-ready visual architecture, layout rhythm, spatial grids, typography scale, interactive behaviors, responsive modes, and accessibility structures for all **16 steps of the onboarding and permission experience**. In strict adherence to **Material Design 3 (MD3)** design systems, it utilizes design tokens to allow themes to adapt dynamically, ensuring a premium, reassuring, and highly secure first-run experience.
+This specification outlines the complete, production-ready visual architecture, layout rhythm, spatial grids, typography scale, interactive behaviors, responsive modes, and accessibility structures for all **12 screens of the onboarding and permission experience**. In strict adherence to **Material Design 3 (MD3)** design systems, it utilizes design tokens to allow themes to adapt dynamically, ensuring a premium, reassuring, and highly secure first-run experience.
 
 ---
 
-## Onboarding Screen Flow Sitemap & Spatial Zones
+## Deliverable 1: Complete User Flow
 
-The Onboarding experience utilizes a strict logical three-zone vertical layout model. All indicators, progress bars, text alignments, and swipe directions mirror natively to support Persian RTL workflows.
+The onboarding user journey is structured into a logical, sequential progression designed to gradually build trust, introduce features, and prepare the environment before requesting system permissions.
 
 ```
-+-------------------------------------------------------------------------+
-|                              DEVICE STATUS BAR                          |
-+-------------------------------------------------------------------------+
-|  [ZONE A: FIXED TOP HEADER & PERSISTENT PROGRESS REGION]                |
-|  +-------------------------------------------------------------------+  |
-|  | [Step Indicator]          [Brand Tagline]              [Exit/Skip] |  |
-|  | [======================== Segmented Linear Progress Bar =========] |  |
-|  +-------------------------------------------------------------------+  |
-+-------------------------------------------------------------------------+
-|  [ZONE B: SCROLLABLE WORKSPACE & CONTENT CONTAINER]                     |
-|  +-------------------------------------------------------------------+  |
-|  |                                                                   |  |
-|  |  [Central Visual Area: Abstract Vector Illustration / Logo]       |  |
-|  |                                                                   |  |
-|  |  [Header Area: Prominent Educational Headline]                    |  |
-|  |  [Subtext Area: Supporting Copy / Privacy Assurances]             |  |
-|  |                                                                   |  |
-|  |  [Interactive Card Container: Custom Forms or Interactive Chips]  |  |
-|  |                                                                   |  |
-|  +-------------------------------------------------------------------+  |
-+-------------------------------------------------------------------------+
-|  [ZONE C: CONTROL & ACCESSIBLE NAV BAR]                                 |
-|  +-------------------------------------------------------------------+  |
-|  |  [Primary Action Button: High contrast, CTA]                      |  |
-|  |  [Secondary Action Button / Skip Trigger: Soft outline or text]   |  |
-|  |  [Privacy Trust Seal Badge: "کاملاً آفلاین و رمزگذاری‌شده"]       |  |
-|  +-------------------------------------------------------------------+  |
-+-------------------------------------------------------------------------+
-|                         SYSTEM GESTURE NAV BAR                          |
-+-------------------------------------------------------------------------+
+[Splash Screen]
+      │
+      ▼ (Initialization & Hardware Keystore verification)
+[Welcome Screen] ◄─────────────────────────────────────────────┐
+      │                                                       │
+      ▼ (Start experience)                                    │
+[Core Benefits]                                               │ (PIN forgot reset fallback)
+      │                                                       │
+      ▼ (Proceed)                                             │
+[Privacy Commitment]                                          │
+      │                                                       │
+      ▼ (Accept & Proceed)                                    │
+[Offline-first Explanation]                                   │
+      │                                                       │
+      ▼ (Proceed)                                             │
+[How SMS Processing Works]                                    │
+      │                                                       │
+      ▼ (Proceed)                                             │
+[Why SMS Permission Is Needed]                                │
+      │                                                       │
+      ▼ (Grant SMS permission / Manual fallback setup)        │
+[Notification Benefits]                                       │
+      │                                                       │
+      ▼ (Enable / Skip notifications)                         │
+[Security Overview]                                           │
+      │                                                       │
+      ▼ (Configure App PIN)                                   │
+[Feature Highlights] ──────────────────────────────────────────┘
+      │
+      ▼ (Configure custom categories/rules)
+[Ready to Begin]
+      │
+      ▼ (Finalize database setup)
+[Permission Preparation]
+      │
+      ▼ (Redirect to Ledger Tab)
+[Application Ledger Dashboard]
 ```
 
 ---
 
-## Complete 16-Step Screen Flow Specifications
+## Deliverable 2: Screen-by-Screen Layout Specifications
+
+Every screen uses a standardized three-zone vertical layout layout. Outer margins are handled via `bankyar.responsive.margin` and gutters via `bankyar.responsive.gutter`.
+
+### Zone A: Persistent Progress & Steps Header
+* **Segmented Linear Progress Indicator:** Positioned at the very top, flowing logically from logical-start (right) to logical-end (left). It displays the user's progress through the onboarding flow using a thin track.
+* **Navigation Controls:** A "Skip" (رد شدن) button is placed at the logical-end (left) edge for non-mandatory steps, and a "Back" (بازگشت) chevron at the logical-start (right) edge.
+
+### Zone B: Scrollable Content Workspace
+* **Central Visual Container:** Houses a single abstract vector illustration or geometric brand mark.
+* **Typography Stack:** Includes a prominent educational headline followed by highly legible supporting copy.
+* **Interactive Controls Card:** Optional card enclosure housing configuration forms, selection chips, or checklist items.
+
+### Zone C: Fixed Control Bar
+* **Primary Action CTA:** Solid, high-contrast button positioned prominently to drive progression.
+* **Secondary Action CTA:** Soft outlined or text button for non-primary paths.
+* **Privacy Trust Seal Badge:** A persistent, comforting security label confirming: "کاملاً آفلاین و رمزگذاری‌شده" (100% Offline & Encrypted).
 
 ---
 
-### 1. Splash Screen (صفحه آغازین)
+### Screen 1: Splash Screen (صفحه آغازین)
 
 * **Purpose:** Initialize the secure local runtime environment, authenticate hardware Keystore signatures, and establish the BankYar brand identity.
-* **Visual Components:**
-  * **Application Logo:** Centered geometric abstract logo styled with `bankyar.semantic.typography.heading.lg` representing a protected vault intersecting with ascending financial bars.
-  * **Brand Animation:** A subtle on-disk pulse representing localized, encrypted databases.
-  * **Loading Indicator:** Indeterminate circular progress ring (`bankyar.radius.full`) styled with primary accent colors.
-  * **Version Information:** Low-contrast monospace text placed at the bottom center: `v1.0.0 - آفلاین و امن`.
-* **State & Interaction:**
-  * **Default (Loading) State:** Runs internal self-tests (checks if database exists, checks filesystem permissions, validates local keystore).
-  * **Transition Behaviour:** If a local database with active PIN configuration is detected, transitions instantly to the PIN Lock Screen. If no local database exists, executes a 1200ms ease-out fade transition to the Welcome Screen.
-* **Accessibility:**
-  * Screen reader announces: "برنامه بانک‌یار، در حال آماده‌سازی محیط امن آفلاین، لطفاً منتظر بمانید."
+* **Business Goal:** Minimize cold-start abandonment while proving instant localized security on startup.
+* **Visual Priority:** The centralized protected vault brand mark receives highest focus, surrounded by a subtle loading arc.
+* **Layout:** Centered single-column layout with Zone A and Zone C empty to emphasize brand focus.
+* **Spacing:** Top and bottom gaps scale proportionally via `bankyar.space.xxl`.
+* **Typography:** Brand name styled with `bankyar.semantic.typography.heading.lg`.
+* **Illustration Placement:** Geometric brand mark placed exactly in the viewport center.
+* **Icons:** Dynamic secure lock outline centered.
+* **Animations:** Pulse transition representation of the local encrypted database.
+* **Interaction:** Fully automated; user touch interaction is disabled during environment self-tests.
+* **Loading:** Indeterminate circular progress ring using active primary accent colors.
+* **Accessibility:** Screen readers announce: "برنامه بانک‌یار، در حال آماده‌سازی محیط امن آفلاین، لطفاً منتظر بمانید."
+* **RTL Behaviour:** Progress ring rotates counter-clockwise to match Persian directional preference.
+* **Future Expansion:** Prepared layout slots to integrate multi-profile local directory initialization if user profiles are introduced.
 
 ---
 
-### 2. Welcome Screen (صفحه خوش‌آمدگویی)
+### Screen 2: Welcome Screen (صفحه خوش‌آمدگویی)
 
 * **Purpose:** Introduce BankYar as a premium offline-first personal finance platform and present its central value proposition.
-* **Display Elements:**
-  * **Welcome Message:** "به بانک‌یار خوش آمدید" styled with `bankyar.semantic.typography.heading.lg`.
-  * **Application Value Proposition:** "مدیریت مالی هوشمند، کاملاً در دستان شما و بدون نیاز به اینترنت."
-  * **Short Product Description:** "بانک‌یار با تحلیل خودکار پیامک‌های بانکی، بدون خروج حتی یک بیت اطلاعات از گوشی شما، گزارش‌های مالی دقیقی ایجاد می‌کند."
-  * **Primary CTA:** "شروع تجربه امن" (Solid button styled with `bankyar.radius.medium` corner curves).
-  * **Secondary CTA:** "بازیابی نسخه پشتیبان" (Outlined button for returning users who wish to bypass onboarding by uploading an existing `.bankyar` file).
-  * **Privacy Summary:** A comforting footnote at the bottom: "با شروع، سیاست حفظ حریم خصوصی ۱۰۰٪ آفلاین ما را می‌پذیرید."
+* **Business Goal:** Encourage the user to start the secure setup, maximizing onboarding completion rates.
+* **Visual Priority:** A welcoming title and a clear "Get Started" call-to-action button.
+* **Layout:** Vertical stack. Zone B contains the welcoming message and a central conceptual illustration; Zone C houses primary and secondary action buttons.
+* **Spacing:** Margins use `bankyar.responsive.margin`; spacing between elements uses `bankyar.space.lg`.
+* **Typography:** Title uses `bankyar.semantic.typography.heading.lg`; supporting copy uses `bankyar.semantic.typography.body.md`.
+* **Illustration Placement:** Abstract vector welcome illustration centered horizontally in Zone B.
+* **Icons:** Logical-end chevron on the primary action button.
+* **Animations:** Elements fade in sequentially from top to bottom.
+* **Interaction:** Primary action advances to the next step; secondary action initiates the "Restore Backup" flow for returning users.
+* **Loading:** Static layout; loads instantly.
+* **Accessibility:** Large touch target sizing on action buttons with explicit screen reader voice support.
+* **RTL Behaviour:** Text is aligned logical-start (right), and chevrons point to the left logical-end.
+* **Future Expansion:** Expansion slot to present community-designed localized welcome screens.
 
 ---
 
-### 3. Core Value Introduction (معرفی ارزش‌های محوری)
+### Screen 3: Core Benefits (معرفی ارزش‌های محوری)
 
 * **Purpose:** Introduce the 3 core pillars of BankYar's product personality: "The Stoic Vault", "The High-Precision Analyst", and "The Calm Companion".
-* **Visual Presentation:**
-  * An interactive three-column horizontal list representing the three values, adapting to vertical lists on smaller devices.
-  * **Card 1 (صندوقچه آرام):** A linear shield icon depicting silent, enduring safety with no ads, tracking, or telemetry.
-  * **Card 2 (تحلیل‌گر دقیق):** A geometric chart icon representing automated, mathematical precision.
-  * **Card 3 (همراه همیشگی):** A calm horizontal bar representing clear cash flows, converting chaotic messages into financial control.
-* **Primary Action:** "ادامه مسیر" (Next).
-* **Secondary Action:** "بازگشت" (Back).
+* **Business Goal:** Establish psychological safety, framing the app as a silent, reliable, and secure assistant.
+* **Visual Priority:** Core benefits cards grouped cleanly, showing high structural organization.
+* **Layout:** Three distinct cards stacked vertically on mobile screens, reflowing to a horizontal layout on tablet viewports.
+* **Spacing:** Card internal padding uses `bankyar.space.md`; gaps between cards use `bankyar.space.sm`.
+* **Typography:** Card titles use `bankyar.semantic.typography.heading.sm` in bold; descriptions use `bankyar.semantic.typography.body.sm`.
+* **Illustration Placement:** Soft linear vector symbols integrated at the start edge of each benefits card.
+* **Icons:** Shield icon (Security), trend-line icon (Precision), and calm balance slider icon (Companionship).
+* **Animations:** Subtle card hover scale-up on active selection.
+* **Interaction:** Users can tap individual cards to expand detailed descriptions.
+* **Loading:** Static; elements render immediately.
+* **Accessibility:** Cards support simple tap navigation with descriptive voice-overs for screen readers.
+* **RTL Behaviour:** Card symbols align on the right edge (logical-start); text wraps cleanly to the left (logical-end).
+* **Future Expansion:** Prepared slots to support future analytical highlights as the feature set expands.
 
 ---
 
-### 4. Privacy Commitment (تعهدنامه حریم خصوصی)
+### Screen 4: Privacy Commitment (تعهدنامه حریم خصوصی)
 
 * **Purpose:** Establish absolute, uncompromising user trust before any local data collection or scanning takes place.
-* **Visual Presentation:**
-  * A central card container with a green success outline, showcasing a locked padlock vector.
-  * **Privacy Promises:**
-    - "عدم دسترسی به اینترنت:" explicitly stating that BankYar does not declare or require internet permission in its system manifest.
-    - "بدون بارگذاری ابری:" confirming zero telemetry trackers, cloud services, or external profile sharing.
-    - "مالکیت کامل داده‌ها:" guaranteeing that 100% of financial data belongs to the user and can be wiped instantly.
-* **Interactive Element:** A mandatory interactive checkbox: "متن تعهدنامه حریم خصوصی آفلاین را مطالعه کردم و آن را می‌پذیرم." The primary action remains disabled until this checkbox is toggled.
+* **Business Goal:** Maximize trust, proving that the user is the sole owner of their financial information.
+* **Visual Priority:** A central security card showing green success outline borders and a mandatory privacy checkbox.
+* **Layout:** Symmetrical single-column layout. The central workspace houses the privacy commitment list; the control bar holds the mandatory checkbox and primary CTA.
+* **Spacing:** Internal card spacing uses `bankyar.space.md`; screen boundary margins use `bankyar.responsive.margin`.
+* **Typography:** Commitment points use bold headers with clear supporting paragraphs.
+* **Illustration Placement:** A clean, abstract locked padlock symbol centered in Zone B.
+* **Icons:** Checkmark indicators next to each commitment item.
+* **Animations:** Checkbox toggles with quick, responsive scale changes.
+* **Interaction:** The primary "Accept & Continue" button remains disabled until the user checks the privacy agreement box.
+* **Loading:** Static view; loads instantly.
+* **Accessibility:** Screen reader requires confirmation: "دکمه ادامه تا زمان پذیرش تعهدنامه حریم خصوصی غیرفعال است."
+* **RTL Behaviour:** Checkboxes align on the right (logical-start); confirmation statements flow from right to left.
+* **Future Expansion:** Prepared slots to display independent third-party open-source privacy audits in future releases.
 
 ---
 
-### 5. Offline-first Explanation (مفهوم همگام‌سازی آفلاین)
+### Screen 5: Offline-first Explanation (مفهوم همگام‌سازی آفلاین)
 
 * **Purpose:** Educate the user on how the app operates without an active network connection, addressing potential confusion about automatic updates.
-* **Visual Presentation:**
-  * A flat flow diagram showing SMS messages going directly into the local encrypted SQLite DB, bypassing any remote cloud databases.
-  * **Key Explanations:**
-    - "دریافت محلی:" Incoming banking SMS messages are captured on the phone using Android's broadcast receiver APIs.
-    - "رمزگذاری بومی:" Data is processed instantly on the device, remaining encrypted with AES-256.
-    - "عملکرد مستقل:" The application is fully functional in airplane mode, low-signal areas, or underground vaults.
-* **Primary Action:** "متوجه شدم" (I understand).
+* **Business Goal:** Mitigate user concern about missing internet access by clearly explaining localized processing.
+* **Visual Priority:** A flow diagram illustrating how raw SMS alerts go directly into the local SQLite DB, bypassing any remote cloud databases.
+* **Layout:** Horizontal split diagram on the upper half, with explanatory text blocks stacked in the lower half of Zone B.
+* **Spacing:** Separation between diagram blocks uses `bankyar.space.lg`; inner padding uses `bankyar.space.md`.
+* **Typography:** Titles use `bankyar.semantic.typography.heading.md`; technical terms use monospaced text elements.
+* **Illustration Placement:** A flat flow diagram showing SMS messages moving directly to a secure, encrypted local database.
+* **Icons:** Database cylinder, cellular signal lines, and a prominent red cross symbol blocking cloud lines.
+* **Animations:** Linear flowing indicator paths represent the movement of data from SMS to the local database.
+* **Interaction:** Simple "I Understand" primary button to advance.
+* **Loading:** Static; flow lines render instantly.
+* **Accessibility:** High-contrast lines on diagram elements with clear text labels describing each step.
+* **RTL Behaviour:** Data flows logically from right (SMS input) to left (Local Secure Storage).
+* **Future Expansion:** Prepared to support local Wi-Fi synchronization guides if peer-to-peer sync features are introduced.
 
 ---
 
-### 6. Security Overview (امنیت داده‌ها)
+### Screen 6: How SMS Processing Works (نحوه پردازش پیامک)
 
-* **Purpose:** Detail the enterprise-grade cryptographic guardrails safeguarding local transaction details.
-* **Visual Presentation:**
-  * An abstract secure safe vault illustration, rendered with neutral grayscale and brand azure highlights.
-  * **Security Bullet Points:**
-    - "پایگاه داده SQLCipher:" All transactional history, ledger cards, and custom notes are stored in an AES-256 encrypted database.
-    - "کلیدهای سخت‌افزاری Android Keystore:" Encryption keys are stored in the device's hardware enclave, inaccessible to other apps.
-    - "سپر امنیتی در برابر بدافزارها:" System windows are secured (`FLAG_SECURE`) to block unauthorized screenshots or clipboard snooping.
-* **Primary Action:** "تنظیم قفل امنیتی" (Setup Security Lock).
-
----
-
-### 7. Permission Introduction (مقدمه مجوزها)
-
-* **Purpose:** Introduce the permissions required by BankYar to operate, explaining why they are necessary to achieve high conversion rates.
-* **Visual Presentation:**
-  * A checklist of required and optional permissions with brief, non-intrusive descriptions.
-  * **Checklist Items:**
-    - "پیامک‌ها (اجباری):" Automated transaction tracking.
-    - "اعلان‌ها (اختیاری):" Transaction confirmations and security lockout alerts.
-    - "زیست‌سنجی (اختیاری):" Instant biometric unlock.
-    - "ذخیره‌سازی (اختیاری):" Manual local backup imports and exports.
-* **Primary Action:** "شروع فرآیند پیکربندی" (Start permissions setup).
+* **Purpose:** Demystify the automated background capture and regex parsing mechanics.
+* **Business Goal:** Build technical transparency, showing that personal SMS logs remain private.
+* **Visual Priority:** Interactive visual steps showing a raw text message transforming into a clean transaction ledger card.
+* **Layout:** A step-by-step vertical list of parser stages.
+* **Spacing:** Spacing between stages uses `bankyar.space.sm`; internal card padding uses `bankyar.space.md`.
+* **Typography:** Step labels use `bankyar.semantic.typography.body.md` in bold; code snippets use monospace tokens.
+* **Illustration Placement:** Flat, abstract card transformation vectors centered in Zone B.
+* **Icons:** Message envelope, parser gear, and transaction checkmark.
+* **Animations:** Subtle transition showing text elements converting into clean numerical figures.
+* **Interaction:** Tap-to-inspect triggers open detailed explanations of each parsing step.
+* **Loading:** Smooth shimmers present the parsing transformation sequence.
+* **Accessibility:** Structured vertical layout with clear focus steps for screen readers.
+* **RTL Behaviour:** Text transforms and flows naturally from right to left.
+* **Future Expansion:** Prepared slot to demonstrate future on-device machine-learning classifiers.
 
 ---
 
-### 8. SMS Permission (مجوز خواندن پیامک)
+### Screen 7: Why SMS Permission Is Needed (چرا مجوز پیامک نیاز است؟)
 
-* **Purpose:** Acquire Android `READ_SMS` and `RECEIVE_SMS` permissions to enable automated transaction tracking.
-* **Display Elements:**
-  * **Why it is needed:** To automatically detect incoming transactions from bank gateways and log them instantly without manual input.
-  * **What data is accessed:** Only incoming SMS messages that match bank gateway sender IDs and contain transaction-related keywords.
-  * **What data is NOT accessed:** Personal conversations, multi-factor authentication codes (OTPs), or non-financial sender IDs are ignored.
-  * **Benefits:** Real-time financial reports, zero manual input errors, and automatic background category assignments.
-  * **Privacy Guarantees:** Message processing is performed 100% on-device inside memory; raw text is processed and deleted from active buffers immediately.
-  * **Primary Action:** "اعطای دسترسی به پیامک‌ها" (Grant SMS Access - triggers native Android dialog).
-  * **Secondary Action:** "ورود دستی تراکنش‌ها" (Skip/Manual Fallback).
-  * **Skip Behaviour:** Disables automated capture, redirects user to step 13 with an educational banner explaining how manual imports function.
-  * **Failure Behaviour:** If denied, displays an educational alert card: "بانک‌یار بدون این دسترسی فقط به صورت دستی قابل استفاده خواهد بود. در صورت تمایل می‌توانید این دسترسی را بعداً از تنظیمات فعال کنید."
-
----
-
-### 9. Notification Permission (مجوز اعلان‌ها)
-
-* **Purpose:** Acquire Android notification permissions to support real-time transaction alerts and security warnings.
-* **Display Elements:**
-  * **Why it is needed:** To send immediate confirmations when transactions are logged in the background, or alert the user during database locks.
-  * **What data is accessed:** Device notification delivery channel.
-  * **What data is NOT accessed:** No data from other applications is read or altered.
-  * **Benefits:** Instant spending alerts, automated backup reminders, and critical security warning notifications.
-  * **Privacy Guarantees:** Notifications are generated and handled locally by the Android operating system with zero external tracking.
-  * **Primary Action:** "فعال‌سازی اعلان‌ها" (Enable notifications).
-  * **Secondary Action:** "رد کردن" (Skip notification setup).
-  * **Skip Behaviour:** Disables push notifications, saving this setting in local shared preferences, and proceeds to the next step.
-  * **Failure Behaviour:** Proceeds to the next step without interrupting the onboarding flow.
+* **Purpose:** Explain the functional need for SMS access to achieve high permission acceptance rates.
+* **Business Goal:** Maximize permission conversion rates while maintaining full transparency.
+* **Visual Priority:** The primary "Grant Access" button and a clear list of what data is and is not accessed.
+* **Layout:** Split list cards: "داده‌هایی که خوانده می‌شوند" (Accessed Data - Bank SMS only) versus "داده‌هایی که هرگز لمس نمی‌شوند" (Never Accessed Data - Personal chats, OTPs).
+* **Spacing:** Grid margins use `bankyar.responsive.margin`; vertical spacing uses `bankyar.space.lg`.
+* **Typography:** Title uses `bankyar.semantic.typography.heading.lg`; lists use clear bullet points.
+* **Illustration Placement:** Secure envelope with a prominent lock symbol centered in Zone B.
+* **Icons:** Green checkmarks next to accessed bank data; red crosses next to personal and sensitive data.
+* **Animations:** Shake animation on the permission card if the user denies access, showing helpful tips.
+* **Interaction:** Primary action triggers the system permission dialog; secondary action configures the manual ledger fallback.
+* **Loading:** Instantly loads.
+* **Accessibility:** Large touch targets on all interactive items, with clear accessibility descriptions.
+* **RTL Behaviour:** Text aligns right; green/red status markers are positioned on the right logical edge.
+* **Future Expansion:** Prepared layout to show community trust rating scores for system security permissions.
 
 ---
 
-### 10. Biometric Permission (احراز هویت زیست‌سنجی)
+### Screen 8: Notification Benefits (مزایای اعلان‌ها)
 
-* **Purpose:** Link system biometric APIs (fingerprint/face unlock) to support fast, secure app unlocks.
-* **Display Elements:**
-  * **Why it is needed:** To provide quick, convenient access to the financial ledger while keeping data secure from unauthorized physical access.
-  * **What data is accessed:** Android system biometric authentication status.
-  * **What data is NOT accessed:** Raw biometric templates, fingerprints, or face models are handled by the OS and are never shared with the application.
-  * **Benefits:** Sub-100ms secure unlocks, replacing manual 4-digit PIN entries.
-  * **Privacy Guarantees:** Operates entirely through Android Keystore APIs; cryptographic verification is handled by hardware enclaves.
-  * **Primary Action:** "فعال‌سازی زیست‌سنجی" (Activate biometrics).
-  * **Secondary Action:** "استفاده از پین‌کد" (Use PIN only).
-  * **Skip Behaviour:** Keeps standard 4-digit PIN access active, skipping biometric configurations.
-  * **Failure Behaviour:** If biometrics are unsupported or fail to configure, fallback automatically to the secure 4-digit PIN setup screen.
-
----
-
-### 11. Storage Access (دسترسی به حافظه خارجی)
-
-* **Purpose:** Obtain storage access permissions (on applicable Android versions) to support local backup imports and exports.
-* **Display Elements:**
-  * **Why it is needed:** To let the user choose local directories to save password-encrypted backups or select backup files to restore.
-  * **What data is accessed:** Selected backup files or specified export directories.
-  * **What data is NOT accessed:** Photos, media, or personal folders are completely ignored.
-  * **Benefits:** Portability of financial records across devices, protecting against hardware damage.
-  * **Privacy Guarantees:** Backup files are encrypted with AES-256-GCM using a user-defined password before write.
-  * **Primary Action:** "تنظیم دسترسی به فایل‌ها" (Setup file access).
-  * **Secondary Action:** "رد کردن" (Skip).
-  * **Skip Behaviour:** User can still use the app; backups must be manually copied or shared via the system share sheet.
-  * **Failure Behaviour:** Fallback gracefully to system share sheets for database exports, bypasses storage permission blocks.
+* **Purpose:** Explain the benefits of enabling local push notifications for background transaction tracking and security lockout alerts.
+* **Business Goal:** Encourage the user to enable notifications, keeping them informed of background activities.
+* **Visual Priority:** A sample push notification card with custom mock transaction details.
+* **Layout:** Single-column layout. The mock notification card is displayed in the center of Zone B; explanatory notes and action buttons are placed below.
+* **Spacing:** Margins use `bankyar.responsive.margin`; element gaps use `bankyar.space.md`.
+* **Typography:** Mock notification text uses medium and small body text scales.
+* **Illustration Placement:** Mock phone lock screen vector showing the local alert card.
+* **Icons:** Notification bell and secure vault lock.
+* **Animations:** The mock notification card slides in smoothly from the top of the mock screen.
+* **Interaction:** Primary CTA triggers the system notification permission; secondary CTA skips notification setup.
+* **Loading:** Instantly loads.
+* **Accessibility:** High-contrast text on the mock card, meeting strict WCAG AA requirements.
+* **RTL Behaviour:** Mock notification content is aligned right, and the app icon is placed on the logical-start (right) edge.
+* **Future Expansion:** Prepared slot to configure custom priority channels for notifications.
 
 ---
 
-### 12. Battery Optimization Guide (راهنمای بهینه‌سازی مصرف باتری)
+### Screen 9: Security Overview (مرور کلی امنیت)
 
-* **Purpose:** Guide the user to whitelist BankYar from aggressive system battery managers, preventing background task termination.
-* **Display Elements:**
-  * **Why it is needed:** Android battery optimization policies can aggressively terminate background services, causing the app to miss incoming SMS messages.
-  * **What data is accessed:** Background service status.
-  * **What data is NOT accessed:** No battery usage or diagnostic details are sent externally.
-  * **Benefits:** 100% reliable transaction logging in the background, even when the device is locked or in battery-saver mode.
-  * **Privacy Guarantees:** The background service runs completely offline, processing SMS messages locally inside memory.
-  * **Primary Action:** "غیرفعال‌سازی محدودیت فعالیت پس‌زمینه" (Disable background restrictions - triggers system settings navigation).
-  * **Secondary Action:** "ادامه بدون تغییر" (Continue without changes).
-  * **Skip Behaviour:** User continues with default system battery settings, acknowledging background task limitations.
-  * **Failure Behaviour:** Displays a visual tip card showing step-by-step instructions: "تنظیمات دستگاه > برنامه‌ها > بانک‌یار > باتری > بدون محدودیت (Unrestricted)."
-
----
-
-### 13. Initial Bank Detection (شناسایی اولیه بانک‌ها)
-
-* **Purpose:** Scan local incoming SMS history to detect supported financial institutions and active credit/debit cards.
-* **Visual Presentation:**
-  * A clean loading card with a circular progress ring.
-  * **Scanning Progress:** Real-time, step-by-step confirmation of detected bank gateways (e.g., "Mellat", "Melli", "Tejarat").
-  * **Detected Counts:** Shows the active count of detected card numbers and bank senders.
-* **Progress Feedback:** Horizontal linear progress bar showing the scan completion percentage.
-* **Estimated Time:** "زمان تقریبی: کمتر از ۲۰ ثانیه" (Approximate time: under 20 seconds).
-* **Cancellation Rules:** Safe to cancel at any point; tapping "انصراف" stops the scan, saves already verified transactions, and proceeds to the dashboard.
-* **Error Recovery:** If an on-disk read failure occurs, pause scanning, write a diagnostic error to local logs, and allow the user to retry the scan.
+* **Purpose:** Detail the local encryption technologies protecting transaction data.
+* **Business Goal:** Reassure the user of their financial data security on their device.
+* **Visual Priority:** Secure shield illustration and a card explaining the local cryptographic keys.
+* **Layout:** Centered single-column layout with grouped bullet points inside a flat, bordered card.
+* **Spacing:** Card internal padding uses `bankyar.space.md`; gaps between sections use `bankyar.space.lg`.
+* **Typography:** Title uses `bankyar.semantic.typography.heading.md` in bold.
+* **Illustration Placement:** Abstract secure safe vault vector centered in Zone B.
+* **Icons:** Shield lock, encryption key, and security monitor.
+* **Animations:** Subtle lock rotating animation when transitioning to the screen.
+* **Interaction:** Primary CTA advances the user to configure their secure 4-digit PIN.
+* **Loading:** Static; renders immediately.
+* **Accessibility:** Complete screen reader coverage of all security guarantees.
+* **RTL Behaviour:** Text is aligned right, and bullet icons align logical-start.
+* **Future Expansion:** Support for future hardware security keys if advanced security protocols are integrated.
 
 ---
 
-### 14. Initial SMS Scan (اسکن اولیه پیامک‌ها)
+### Screen 10: Feature Highlights (ویژگی‌های برجسته)
 
-* **Purpose:** Process detected banking SMS messages, extracting financial metadata (amounts, counterparties, types, and timestamps).
-* **Visual Presentation:**
-  * A high-contrast linear list showing transaction card skeletons. Skeletons are replaced in real-time with parsed transaction details as the scan proceeds.
-  * **Status Feed:** Monospace text scrolling showing current progress (e.g., "تحلیل پیامک شماره ۱۴۲ از ۴۵۰...").
-* **Progress Feedback:** Display percentage text (e.g., `۴۵٪` in Persian) next to the linear progress bar.
-* **Estimated Time:** "زمان باقیمانده: ۱۰ ثانیه" (Time remaining: 10 seconds).
-* **Cancellation Rules:** Tapping "انصراف" stops the scan, preserving already parsed transactions in the database.
-* **Error Recovery:** If a message format cannot be parsed, log it as an "Unparsed Transaction" and continue scanning, ensuring the process does not crash.
-
----
-
-### 15. Initial Database Preparation (آماده‌سازی پایگاه داده اولیه)
-
-* **Purpose:** Write parsed transaction history to the SQLCipher database, compile full-text search indexes, and calculate initial analytics.
-* **Visual Presentation:**
-  * A full-screen stepped progress layout with interactive checklist items:
-    - `✓` مقداردهی اولیه محیط رمزگذاری (Database initialization complete)
-    - `✓` ذخیره تراکنش‌های شناسایی‌شده (Saved transactions)
-    - `↻` ساخت نمایه‌های جستجوی سریع (FTS5) (Building FTS5 index - active step)
-    - `○` محاسبه تراز مالی و آمار اولیه (Calculating initial analytics - pending)
-* **Progress Feedback:** Stepped loading checkmarks; progress bar displays indeterminate loading while compiling database tables.
-* **Estimated Time:** "زمان تقریبی: کمتر از ۵ ثانیه" (Approximate time: under 5 seconds).
-* **Cancellation Rules:** Interaction is blocked during database writes to prevent corruption.
-* **Error Recovery:** If database writes fail due to file system blocks, roll back active transactions to preserve integrity, and display a helpful retry option.
+* **Purpose:** Present secondary application features (Notes, Statistics, Search, Backup, Security).
+* **Business Goal:** Build product excitement, demonstrating utility beyond simple SMS capture.
+* **Visual Priority:** A clean, interactive grid of feature cards.
+* **Layout:** 2x2 grid of feature cards, reflowing to a vertical list on smaller screens.
+* **Spacing:** Grid gutters use `bankyar.responsive.gutter`; screen margins use `bankyar.responsive.margin`.
+* **Typography:** Feature titles use `bankyar.semantic.typography.body.md` in bold.
+* **Illustration Placement:** Soft background feature symbols inside each grid cell.
+* **Icons:** Stylized stylus (Notes), bar-chart (Statistics), magnifying glass (Search), and folder-download (Backup).
+* **Animations:** Quick, responsive hover transitions on card interaction.
+* **Interaction:** Users can tap individual cards to preview how the features work.
+* **Loading:** Instantly loads.
+* **Accessibility:** Grid elements are fully keyboard and switch control accessible, using logical RTL tab order.
+* **RTL Behaviour:** Grid order flows right-to-left, top-to-bottom.
+* **Future Expansion:** Expansion slots to highlight future localized AI capabilities.
 
 ---
 
-### 16. Onboarding Completion Screen (پایان پیکربندی اولیه)
+### Screen 11: Ready to Begin (آماده برای شروع)
 
-* **Purpose:** Celebrate the successful completion of the onboarding experience, display a summary of detected data, and transition the user to the Ledger tab.
-* **Display Elements:**
-  * **Congratulations Message:** "پیکربندی با موفقیت انجام شد!" styled with `bankyar.semantic.typography.heading.lg` with a green success tick.
-  * **Detected Transactions:** A prominent numeric card displaying the total count of parsed transactions (e.g., "۲۸۴ تراکنش با موفقیت تحلیل و وارد شد").
-  * **Supported Banks:** Small horizontal chips displaying the active logos of detected banks (e.g., "بانک ملت", "بانک ملی").
-  * **Security Status:** A green shield badge confirming: "پایگاه داده ۱۰۰٪ رمزگذاری‌شده و ارتباط اینترنتی کاملاً مسدود است."
-  * **Next Steps:** Brief guidance: "شما آماده استفاده از بانک‌یار هستید. از این پس تراکنش‌های جدید شما به محض دریافت پیامک، به‌طور خودکار ثبت خواهند شد."
-  * **Go To Dashboard:** A high-contrast primary CTA button: "ورود به دفترچه تراکنش‌ها" (Enter Ledger).
-
----
-
-## Onboarding Screen Interaction States
-
-To provide instant visual and tactile confirmation to the user, onboarding elements adapt dynamically based on standard interaction states:
-
-| Interactive State | UI Component Visual Representation | Transition Curve & Speed |
-| :--- | :--- | :--- |
-| **Default State** | Elements sit flat on the canvas background. Standard text contrast is maintained. | Initial load state |
-| **Pressed State** | Element surface contrast shifts by +2 steps. Applies tactile touch-scale compression of 0.98x. | Immediate response trigger under `bankyar.motion.duration.instant` |
-| **Selected / Active State** | Checkboxes and permission chips toggle to active positions with primary color fill. | Smooth transition under `bankyar.motion.duration.fast` |
-| **Permission Granted** | Standard action button transitions to a disabled green checkmark: "دسترسی اعطا شد". | Smooth scale transition under `bankyar.motion.duration.fast` |
-| **Permission Denied** | Displays a yellow warning border around the permission card with detailed fallback instructions. | Shake animation on horizontal axis on launch |
-| **Skipped** | Row is faded to 38% transparency opacity, and active touch listeners are deactivated. | Muted contrast change instantly |
-| **Loading / Scanning** | Shimmering list items animate with horizontal sweep movements; active controls are locked. | Linear opacity loop under `bankyar.motion.duration.medium` |
-| **Error / Recovery** | Borders are outlined with high-contrast crimson tokens. Alert warnings and a "Retry" button are shown. | Shake animation on horizontal axis on launch |
-| **Completed** | Transitions the progress bar to 100% fill, followed by an immediate fade-in of success components. | Decelerated scale-up under `bankyar.motion.duration.medium` |
+* **Purpose:** Prompt the user to set up their 4-digit security PIN and configure their first bank details.
+* **Business Goal:** Finalize the security and functional configuration of the application.
+* **Visual Priority:** PIN entry dots and the primary "Confirm & Save" action button.
+* **Layout:** Symmetrical layout. PIN dots are centered in Zone B, with a numeric entry keypad placed in the lower region.
+* **Spacing:** Numeric pad keys are spaced evenly using `bankyar.space.sm`.
+* **Typography:** Keypad numbers use large, highly legible typography scales.
+* **Illustration Placement:** Subtle background safe lock centered behind PIN entry dots.
+* **Icons:** Backspace icon on the bottom corner keypad cell.
+* **Animations:** Keypad buttons compress slightly when pressed.
+* **Interaction:** User enters and confirms their 4-digit security PIN; if biometrics are supported, prompts biometric setup.
+* **Loading:** Transitions to the database setup screen instantly upon PIN confirmation.
+* **Accessibility:** Numeric keypad supports large touch targets with clear accessibility voice confirmations.
+* **RTL Behaviour:** Keypad layout is symmetrical; PIN dots fill from right to left.
+* **Future Expansion:** Support for custom password length configurations.
 
 ---
 
-## Responsive Design & Adaptive Onboarding Viewports
+### Screen 12: Permission Preparation (آماده‌سازی دسترسی‌ها)
 
-The Onboarding layout adapts dynamically across standard responsive breakpoints to preserve visual balance:
-
-### 1. Phone Viewport
-* **Grid Layout:** 4 Columns. Symmetrical outer margins are optimized for close physical interaction.
-* **Workspace:** Vertical stack. Scrollable content area in Zone B; Zone A and Zone C remain pinned to the top and bottom of the viewport.
-* **Illustrations:** Scaled down to prioritize typography and touch targets.
-
-### 2. Large Phone Viewport
-* **Grid Layout:** 4 Columns.
-* **Visual Adaptation:** Vertical spacers and outer padding expand slightly to protect layout balance.
-
-### 3. Tablet Viewport
-* **Grid Layout:** 8 Columns.
-* **Visual Adaptation (Split Pane Layout):**
-  * **Logical Start Pane (Right - 4 Columns):** Visual illustrations, brand animations, and educational taglines remain pinned on the right side.
-  * **Logical End Pane (Left - 4 Columns):** Interactive forms, permissions checkboxes, and action CTA buttons are displayed on the left side, reducing finger reach.
-* **Navigation:** Skip buttons are positioned within comfortable thumb-reach of the tablet borders.
-
-### 4. Foldable Viewport
-* **Grid Layout:** 8 Columns.
-* **Visual Adaptation:** Adapts based on hinge coordinates. Displays educational and visual illustrations on the right fold, and permission control panels on the left fold.
-
-### 5. Landscape Orientation
-* **Grid Layout:** Horizontal split layout. The vertical visual illustration is moved to a side-by-side configuration to prevent content from stretching, keeping text fields and CTA buttons fully legible.
+* **Purpose:** Perform initial database writes, run the first SMS inbox scan, and compile initial search indices.
+* **Business Goal:** Deliver a clean, ready-to-use ledger dashboard on the very first screen.
+* **Visual Priority:** A stepped progress checklist indicating active database initialization tasks.
+* **Layout:** Centered single-column layout containing a vertical step tracker and an horizontal progress indicator.
+* **Spacing:** Checklist spacing uses `bankyar.space.md`; outer boundaries use `bankyar.responsive.margin`.
+* **Typography:** Diagnostic monospace status lines are shown below the main checklist.
+* **Illustration Placement:** Abstract database indexing illustration centered in Zone B.
+* **Icons:** Rotating sync circular loops and green checkmark symbols.
+* **Animations:** Checklist checkmarks scale up and change color as steps complete.
+* **Interaction:** Screen interaction is locked during database compilation to protect file integrity.
+* **Loading:** High-contrast horizontal progress bar with real-time percentage text.
+* **Accessibility:** Screen reader periodically announces progress updates (every 10%).
+* **RTL Behaviour:** Horizontal progress bar fills from right to left.
+* **Future Expansion:** Extensibility slots to support cloud sync migration wizards.
 
 ---
 
-## Accessibility & Inclusive Onboarding Design
+## Deliverable 3: Content Hierarchy & Copywriting Scale
 
-BankYar's Onboarding interface implements strict WCAG AA standards to guarantee access for all users:
+Typography scale maps strictly to semantic tokens (`bankyar.semantic.typography.*`). No hardcoded pixel, dp, or sp units are used.
 
-* **Native RTL Persian Layouts:** Alignments, reading flows, transitions, and chevron indicators proceed naturally from right to left (RTL).
-* **Screen Reader Semantic Support:**
-  * Active elements have descriptive screen reader announcements (e.g., "تعهدنامه حریم خصوصی، برای ادامه باید این دکمه را انتخاب کنید").
-  * Progress updates (e.g., scanning SMS) are announced periodically (every 10%) using clear, spoken percentages.
-* **Focus Order Rules:** Focus progression flows systematically from top-right to bottom-left (logical RTL order). Focus remains locked within active permission dialogs until they are dismissed.
-* **Minimum Touch Target Envelopes:** All interactive buttons, checkboxes, and list rows maintain a minimum clickable area of `bankyar.space.xl` (conforming to the 48-unit Material minimum), protecting users with motor impairments.
-* **Dynamic Sizing & Font Scaling:** All text elements wrap automatically. List rows expand vertically to support large system font scales up to 200% without overlapping or clipping text.
-* **Color-Independent Progress Indicators:**
-  * Progress is never conveyed solely by color. Skeletons and progress indicators are accompanied by explicit text labels showing percentage numbers (e.g., `۴۵٪` in Persian).
-  * Validation statuses are confirmed with clear textual descriptors ("تأیید شد" vs "نیاز به دسترسی").
+### High-Contrast Educational Titles
+* **Token:** `bankyar.semantic.typography.heading.lg`
+* **Weight:** Bold
+* **Usage:** Welcome title, permission requests, and configuration headers.
+* **Persian Text Style:** "به بانک‌یار خوش آمدید" (Welcome Screen) / "امنیت اطلاعات شما، خط قرمز ماست" (Privacy Screen).
 
----
+### Medium-Contrast Explanations
+* **Token:** `bankyar.semantic.typography.body.md`
+* **Weight:** Regular
+* **Usage:** Supporting descriptions, lists, and secondary educational summaries.
+* **Persian Text Style:** "بانک‌یار با تحلیل خودکار پیامک‌های بانکی، گزارش‌های مالی دقیقی بدون نیاز به اینترنت ایجاد می‌کند."
 
-## Future-Ready Onboarding Expansion Hooks
+### Technical Metadata Labels
+* **Token:** `bankyar.semantic.typography.label.sm`
+* **Weight:** Monospace / Medium
+* **Usage:** Folder paths, encryption hash displays, and code syntax snippets.
+* **Persian Text Style:** `database.sqlcipher.aes256` / `READ_SMS_PERMISSION_GRANTED`.
 
-The Onboarding screen architecture includes dedicated layout slots to support future features without requiring a structural redesign:
-
-* **Cloud Sync Setup (Future - Opt-in):** A reserved setup slide positioned after "Offline-first Explanation" to configure encrypted cloud backups. Includes a prominent security warning explaining backup tradeoffs.
-* **AI Assistant Introduction (Future):** An optional slide positioned after "Core Value Introduction" introducing localized, offline machine learning features (such as auto-categorization of complex transaction layouts).
-* **Premium Features (Future):** A prepared layout slot on the welcome screen to introduce premium multi-account tools or custom spreadsheet exports.
-* **Multi-device Setup (Future):** An expansion hook inside the Welcome Screen to connect and sync with other local device databases via secure, peer-to-peer bluetooth connections.
-* **Import Existing Backups:** A dedicated, persistent "Restore Backup" button positioned on the Welcome screen, allowing users to restore previous data instantly and bypass onboarding.
-* **Future Migration Wizard:** A prepared layout slot inside the Completion Screen to import transaction histories from other legacy financial apps.
-
----
-
-## Design Token Mapping Reference
-
-Every visual property specified in this document maps directly to an active architectural design token, preserving long-term design consistency.
-
-| Screen Element | Visual Attribute | Design Token Path |
-| :--- | :--- | :--- |
-| Canvas Background | Base Background Fill | `bankyar.semantic.color.background.canvas` |
-| Primary Container Card| Card Background Fill | `bankyar.semantic.color.surface.default` |
-| Section Header Title| High Contrast Title Font | `bankyar.semantic.color.text.primary` |
-| Supporting Subtext | Medium Contrast Subtitle | `bankyar.semantic.color.text.secondary` |
-| Progress Bar Track | Background Fill | `bankyar.semantic.color.border.subtle` |
-| Progress Bar Fill | Active Accent Color | `bankyar.semantic.color.primary.active` |
-| Toggle Active Fill | Primary Accent Color | `bankyar.semantic.color.primary.active` |
-| Diagnostic Status Badge | Success Accent Color | `bankyar.semantic.color.success.default` |
-| Alert Warnings / Denied | Error Accent Color | `bankyar.semantic.color.error.default` |
-| Focus Outlines | Active Ring Color | `bankyar.semantic.color.focus.outline` |
-| Touch Target Boundaries| Sizing Spacing Factor | `bankyar.space.xl` |
-| Outer Screen Margin | Responsive Margins | `bankyar.responsive.margin` |
-| Standard Corner Radius | Card Corner Curves | `bankyar.radius.medium` |
-| Large Corner Radius | Sheet Corner Curves | `bankyar.radius.large` |
+### Mandatory Control Labels
+* **Token:** `bankyar.semantic.typography.button.md`
+* **Weight:** Bold
+* **Usage:** Solid action buttons and outlined triggers.
+* **Persian Text Style:** "پیکربندی محیط امن" / "تأیید و ورود".
 
 ---
 
-## Validation Checklist
+## Deliverable 4: Navigation Flow & Screen Progression
+
+* **Forward Navigation Path:** Handled strictly via the primary solid button in Zone C, moving sequentially through screens 1 to 12.
+* **Backward Navigation Path:** Tapping the back chevron in Zone A returns the user to the immediate previous screen, preserving already entered data in volatile memory caches.
+* **Exit/Skip Navigation Path:** Tapping the "Skip" button in Zone A bypasses non-mandatory steps (such as Notifications or Feature Highlights) and routes the user directly to the PIN lock setup (Screen 11).
+* **Reset/Restart Fallback:** If the user closes the app mid-onboarding, relaunching starts from the last uncompleted step, keeping configurations secure.
+
+---
+
+## Deliverable 5: Illustration & Graphic Asset Guidelines
+
+To maintain a professional, secure, and cohesive visual identity across all onboarding screens, all illustrations must comply with these design standards:
+
+* **Strict Flat Grayscale Style:** Illustrations must use flat vector styles using low-saturation grayscale colors. Bright, multi-color cartoon assets and 3D shapes are prohibited.
+* **Vector Path Completeness:** All SVGs must be constructed with clean, continuous vector paths. Unused layers, duplicate coordinates, and unclosed shapes are removed.
+* **Semantic Token Color Mapping:** Illustrations must bind fill and stroke properties to CSS variables referencing semantic design tokens (e.g., `bankyar.semantic.color.surface.default`), allowing them to adapt dynamically to Light and Dark themes.
+* **No Inline Text:** Text must never be baked directly into SVG files. All labels and legends must be rendered as independent HTML/Flutter text elements to support accessibility font scaling and RTL translation.
+* **Unified Visual Center:** Graphics must be optically adjusted to distribute visual weight evenly within their bounding boxes, preventing layout shifting on smaller viewports.
+
+---
+
+## Deliverable 6: Interaction Flow States
+
+Every interactive element in the onboarding flow adapts its visual presentation dynamically to communicate active state and response boundaries:
+
+* **Default State:** Elements sit flat against the canvas. Action buttons use solid primary colors, while secondary actions use outlined borders.
+* **Pressed State:** Triggers an immediate increase in surface contrast. Applies a tactile touch scale compression to provide physical feedback.
+* **Selected / Active State:** Checkboxes and category chips toggle to active positions with primary background fills.
+* **Permission Granted State:** The active button transitions to a disabled green state containing a success checkmark, confirming access.
+* **Permission Denied State:** Displays a soft yellow warning border around the permission card with helpful tips.
+* **Disabled State:** For unfinished forms (such as unaccepted privacy checkmarks), buttons are faded and touch triggers are deactivated.
+
+---
+
+## Deliverable 7: Progress & Stepped Loading Behaviors
+
+Progression through multi-step onboarding tasks uses precise indicators to keep the user informed without causing anxiety:
+
+* **Segmented Linear Progress Indicator:** Positioned at the top of screens 2 to 12. Individual segments fill sequentially from right to left as steps complete.
+* **Indeterminate Loading Arc:** Used on Splash Screen (Screen 1) and Security setup (Screen 9) for background initialization tasks of unknown duration.
+* **Stepped Vertical Checklist:** Used on the Permission Preparation screen (Screen 12) to show the sequential compilation of database tables and indexes.
+* **Cancellation Rules:** Tapping "Cancel" (انصراف) during long-running tasks (like the initial inbox scan) stops the scan, saves already verified transactions, and proceeds safely to the ledger.
+
+---
+
+## Deliverable 8: Accessibility & Inclusive Design Review
+
+To ensure BankYar remains fully usable for all individuals, the onboarding experience implements strict WCAG AA inclusive guidelines:
+
+* **Dynamic Font Magnification:** All typography and list rows expand vertically to support system text scaling up to 200% without clipping or overlapping text.
+* **Semantic Screen Reader Labels:** Every interactive element features unique spoken descriptions (e.g., "تعهدنامه حریم خصوصی، برای ادامه باید این دکمه را تأیید کنید").
+* **Consistent Focus Order:** Focus moves systematically from top-right to bottom-left (logical RTL order). Focus remains locked inside active dialogue frames until they are dismissed.
+* **Touch Target Envelopes:** Interactive buttons and chips maintain a minimum touch height of `bankyar.space.xl` (conforming to the 48-unit Material minimum), protecting users with motor impairments.
+* **Color-Independent Meanings:** Validation statuses and transaction directions are confirmed using clear text labels and distinct shapes, never relying on green/red shifts alone.
+
+---
+
+## Deliverable 9: Native RTL (Persian) Layout Review
+
+Every spatial coordinate and progression gesture is designed RTL-first, ensuring natural regional usage:
+
+* **Mirrored Screen Transitions:** When navigating forward, screens slide horizontally from the logical-start (right) to the logical-end (left), matching Persian reading patterns.
+* **Symmetrical Baseline Alignments:** Content blocks and headers are anchored right, with generous horizontal spacing to prevent Persian ascenders and descenders from overlapping.
+* **Dynamic Icon Mirroring:** Navigation chevrons and directional indicators mirror automatically when switching locales. Symmetrical icons (such as locks and gears) remain static.
+* **Input Keypad Symmetries:** Keypad layouts are centered and balanced, keeping numerical targets easy to reach with one hand.
+
+---
+
+## Deliverable 10: Onboarding UX Verification Checklist
 
 Before releasing any layout or screen iteration, developers must verify compliance against this checklist:
 
-- [ ] **100% Token Compliance:** Verify that every color, margin, padding, border width, and corner curve maps directly to an active design token, with zero hardcoded values.
-- [ ] **No Forbidden Patterns:** Ensure that absolutely no HEX color codes, physical pixel units, sp typography units, dp spacing units, or Flutter component names exist in the specification.
-- [ ] **RTL-First Interface:** Verify that page transitions, progress bars, text alignments, and back chevrons proceed naturally from right to left (RTL).
-- [ ] **Data Preservation Guard:** Confirm that initial database scanning and parsing routines run off-the-main-thread and write atomically to SQLCipher, protecting data from corruption if interrupted.
+- [ ] **100% Token Adherence:** Verify that every color, margin, and corner curve maps directly to an active design token, with zero hardcoded values.
+- [ ] **No Forbidden Patterns:** Ensure that absolutely no HEX color codes, physical units (`px`, `dp`, `sp`), or Flutter component names exist in the specification.
+- [ ] **RTL-First Interface:** Verify that page transitions, progress bars, text alignments, and back chevrons proceed naturally from right to left.
+- [ ] **Data Preservation Guard:** Confirm that initial database scanning and parsing routines run off-the-main-thread and write atomically, protecting data from corruption.
 - [ ] **Minimum Touch Target Met:** Confirm all interactive buttons, checkboxes, and selection rows have active touch heights of at least `bankyar.space.xl`.
 - [ ] **No Dead Ends:** Ensure that every permission denial, scan failure, and storage warning features a prominent, primary recovery action button.
+
+---
+
+## Deliverable 11: Visual Consistency Checklist
+
+To guarantee a uniform visual identity across all platforms and viewport sizes, the design must comply with these spatial rules:
+
+* **Symmetrical Layout Grids:** Standard smartphone displays utilize a 4-column grid with dynamic column widths; tablet viewports scale to an 8-column layout.
+* **Consistent Curvatures:** Standard card containers use `bankyar.radius.medium` corner curves; bottom sheets use the extra-large curve token `bankyar.radius.large` on top edges.
+* **Linear Stroke Harmony:** All interface icons use a uniform line weight, with rounded terminals to establish a neat, professional appearance.
+* **Zero Overlay Overlaps:** Layouts must query device safe-area notch regions, applying logical-start or logical-end padding buffers so that content remains readable.
+* **Comfortable Contrast Ratios:** All text elements and interactive icons meet WCAG AA standards, maintaining a minimum contrast ratio of 4.5:1 against their backgrounds.
 
 ---
 
