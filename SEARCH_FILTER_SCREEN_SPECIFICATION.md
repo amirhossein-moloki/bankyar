@@ -1,13 +1,14 @@
-# BankYar Search & Advanced Filter Screen Specification (v1.0.0)
+# BankYar Search & Advanced Filter Screen Specification (v2.0.0)
 ## Enterprise-Grade Screen Specification for Offline-First Secure Financial Applications
 
 **Project Name:** BankYar
 **Framework Target:** Flutter (Code-Agnostic Design Blueprint)
-**Platform Target:** Android (RTL-Native Layout)
+**Platform Target:** Android & iOS (RTL-Native Layouts)
 **Visual Style:** Material Design 3 (MD3)
 **Primary Language & Locale:** Persian (RTL, Solar Hijri Calendar)
+**Theme Philosophy:** Professional, Minimal, Secure, Offline-First
 **Classification:** Enterprise Design System Specification
-**Document Version:** 1.0.0
+**Document Version:** 2.0.0
 **Status:** Approved / Core Specification Blueprint
 
 ---
@@ -18,7 +19,7 @@ This document establishes the absolute visual, spatial, and interaction specific
 
 By transforming high-volume financial logs into a highly discoverable, blazing-fast, and premium search ledger, this design eliminates financial navigation friction. In strict compliance with BankYar’s Level 0 Engineering and Visual Design Constitutions:
 - **Zero Framework Code:** All layouts, interactions, and component structures are platform-independent, with zero Flutter/Dart implementation details.
-- **Zero Raw Styling Metrics:** Hardcoded dimensions (pixels, dp, sp) are strictly prohibited. All dimensions and spatial gaps map directly to abstract design tokens.
+- **Zero Raw Styling Metrics:** Hardcoded dimensions (such as pixels, dp, or sp) are strictly prohibited. All dimensions and spatial gaps map directly to abstract design tokens.
 - **Zero Hardcoded Colors:** No raw hex color strings are allowed. Every visual surface, state indicator, and typography layer references semantic tokens that adapt dynamically between Light, Dark, and High-Contrast modes.
 - **RTL-First Structure:** Horizontal reading paths, vertical grids, gesture swipes, and transition vectors mirror natively to support Persian RTL workflows from the logical start edge (right) to the logical end edge (left).
 
@@ -71,7 +72,7 @@ The Search page is constructed using the logical three-zone vertical layout mode
 |  | [Advanced Filter Btn]  [Scrollable RTL Quick Filter Chips Row]      |  |
 |  +-------------------------------------------------------------------+  |
 +-------------------------------------------------------------------------+
-|  [ZONE B: SCROLLABLE SEARCH CONTENT WORKSPACE]                         |
+|  [ZONE B: SCROLLABLE SEARCH CONTENT WORKSPACE]                          |
 |  +-------------------------------------------------------------------+  |
 |  |                                                                   |  |
 |  |  [Context 1: Empty Search (Recent Searches, Saved Searches)]      |  |
@@ -97,7 +98,7 @@ The Search page is constructed using the logical three-zone vertical layout mode
 ## 5. Screen Regions & Spatial Scaffolding
 
 ### 5.1 Region 1: Top Search App Bar (Zone A - Sticky Header)
-* **Visual Presentation:** Remains strictly pinned to the top of the screen during scrolling content shifts. Its background blends with the canvas background in its idle state, displaying a thin dividing boundary line `bankyar.semantic.color.border.subtle` once lists scroll underneath.
+* **Visual Presentation:** Pinned to the top of the screen during scrolling content shifts. Its background blends with the canvas background in its idle state, displaying a thin dividing boundary line `bankyar.semantic.color.border.subtle` once lists scroll underneath.
 * **Horizontal Flow (RTL):**
   - **Logical Start Edge (Right):** Native back chevron arrow `bankyar.icon.back.rtl` directing the user back to the Home Dashboard view.
   - **Center Block:** Container textfield representing the persistent Search Field. It expands horizontally, maintaining symmetrical margins bound to `bankyar.responsive.margin`.
@@ -131,284 +132,336 @@ The Search page is constructed using the logical three-zone vertical layout mode
 
 ---
 
-## 6. Detailed Component Specifications
+## 6. Detailed Component Specifications (The 13 Sections)
 
-### 6.1 Persistent Search Input Field
-* **Purpose:** Primary query box capturing user text strings.
-* **Layout Sizing:** Spans full horizontal column width, with height bound to `bankyar.space.xl` to ensure a touch target height of at least 48 dynamic units.
-* **Curvature:** Mapped to `bankyar.radius.full` (completely rounded) to establish high-fidelity Material Design 3 style.
-* **Internal RTL Elements:**
-  - **Start (Right):** Leading search icon `bankyar.icon.search` to signal query intent.
-  - **Text Field:** RTL-aligned text input using primary text color token `bankyar.semantic.color.text.primary` and body typography `bankyar.semantic.typography.body.md`.
-  - **End (Left):** Voice Search temporary icon `bankyar.icon.voice` (idle state) which transforms into a Clear Search cross icon button `bankyar.icon.clear` as soon as typing begins.
-* **Interactive Borders:** Idle state utilizes thin outline boundary `bankyar.semantic.color.border.subtle`. Active focused state shifts instantly to thicker boundary `bankyar.border.width.thick` colored with primary brand accent `bankyar.semantic.color.border.active`.
+Every individual component listed below has its design and behavior parameters defined to eliminate any ambiguity during mobile interface development.
 
-### 6.2 Quick Filter Chips
-* **Purpose:** Provides instantaneous, one-tap scoping of transaction queries directly on the main feed.
-* **Height:** Bound to `bankyar.space.lg` to guarantee standard tap touch areas.
-* **Curvature:** Mapped to `bankyar.radius.md` to distinguish chips visually from rounded cards.
-* **States & Design Tokens:**
-  - **Active Selected State:** Background container is filled with primary accent `bankyar.semantic.color.interactive.default` and white contrast text. A leading checkmark icon `bankyar.icon.checkmark` animates into view on the right edge.
-  - **Inactive Unselected State:** Container uses transparent background with thin outline `bankyar.semantic.color.border.subtle`. Text uses secondary readable token `bankyar.semantic.color.text.secondary`.
-* **Micro-interactions:** Tapping a chip triggers an instant on-device filtering query in the local SQLite database.
+### 6.1 Top App Bar
+* **Purpose:** Provides a persistent anchor for navigation back to the Home Dashboard and hosts the screen's main structural title context.
+* **Visual Priority:** Secondary. Serves as a framing container for search inputs.
+* **Placement:** Positioned strictly in Zone A (Sticky Header) at the uppermost boundary of the viewport.
+* **Spacing:** Height is locked to `bankyar.space.xl`. Symmetrical horizontal padding bound to `bankyar.responsive.margin`.
+* **Typography:** Subtitle text uses `bankyar.semantic.typography.title.sm` matching `bankyar.font.weight.bold`.
+* **Icons:** Back action uses logical directional arrow symbol `bankyar.icon.back.rtl`.
+* **Elevation:** Mapped to `bankyar.elevation.level.zero` when idle; morphs to `bankyar.elevation.level.one` during scrolling actions.
+* **States:**
+  - **Loading:** Background shows a subtle horizontal linear progress sweep `bankyar.semantic.color.interactive.default` at its lowermost boundary.
+  - **Disabled:** All icon buttons fade to `bankyar.opacity.medium` and drop pointer click events.
+  - **Empty:** Standard rendering with minimal text label "جستجو و فیلتر تراکنش‌ها".
+  - **Error:** Background shifts container highlight lines to `bankyar.semantic.color.status.error` to communicate system faults.
+  - **Offline:** Unaltered. A tiny secure status label remains visible.
+* **Accessibility:** Screen readers announce: *"بالای صفحه، دکمه بازگشت به داشبورد"*. Keyboard focus order starts at the Back Button logical action.
+* **RTL Behaviour:** The back chevron mirrors natively (pointing right for Persian RTL layout). Title text is aligned right.
+* **Animation:** Slide-in from top during screen loading using standard easing `bankyar.motion.curve.decelerate` over `bankyar.motion.duration.medium`.
+* **Future Expansion:** Reserved space on the left edge for future Quick Diagnostics and Security Score indicators.
 
-### 6.3 Advanced Filter Button
-* **Purpose:** Triggers the comprehensive Bottom Filter Sheet for deep, structured querying.
-* **Layout Sizing:** Positioned strictly on the logical start (right) of the Horizontal Quick Filter row, separated by a vertical separator hairline `bankyar.border.width.thin`.
-* **Visual Style:** Flat circular container utilizing `bankyar.radius.full` and subtle surface elevation `bankyar.elevation.level.one`. Shows a professional MD3 tuning icon.
-* **Touch Target:** Invisible touch envelope scales outer dimensions to meet minimum 48 x 48 target bounds.
+### 6.2 Search Field
+* **Purpose:** Primary user text string entry field to search across local transactions.
+* **Visual Priority:** Critical. Highest focus point on the screen.
+* **Placement:** Located immediately below the Top App Bar title within Zone A.
+* **Spacing:** Standard height of `bankyar.space.xl` (providing a minimum 48-unit tap target). Vertical gap below is `bankyar.space.md`.
+* **Typography:** Active text matches `bankyar.semantic.typography.body.md` with monospace Persian characters for typed numbers.
+* **Icons:** Leading icon uses `bankyar.icon.search`. Trailing icon toggles dynamically: showing the future voice icon `bankyar.icon.voice` when empty, and the clear cross `bankyar.icon.clear` when text is active.
+* **Elevation:** Flat card structure matching `bankyar.elevation.level.one` with outline boundary `bankyar.semantic.color.border.subtle`.
+* **States:**
+  - **Loading:** Display a tiny circular loading indicator spinning on the left.
+  - **Disabled:** Text input box background shifts to `bankyar.semantic.color.interactive.disabled` with reduced opacity.
+  - **Empty:** Shows subtle placeholder text "جستجو در مبالغ، بانک‌ها، یادداشت‌ها..." using `bankyar.semantic.color.text.secondary`.
+  - **Error:** Outlines shift to `bankyar.semantic.color.status.error`.
+  - **Offline:** Fully active. Performs instant on-device searching.
+* **Accessibility:** Linked directly to system accessibility focus. TalkBack announces: *"کادر جستجو، دو بار ضربه بزنید تا کیبورد باز شود"*. Focus target size is expanded to prevent input misses.
+* **RTL Behaviour:** Text cursor begins on the far right. Icons mirror their lateral alignment points natively.
+* **Animation:** Scale-up border thickness from `bankyar.border.width.thin` to `bankyar.border.width.thick` when focused, transitioning over `bankyar.motion.duration.fast`.
+* **Future Expansion:** Integrated with on-device natural language parsing APIs to translate conversational queries offline.
 
-### 6.4 Results Counter
-* **Purpose:** Reports the exact volume of current matches to keep the user oriented.
-* **Typography:** Bold Persian monospace characters via `bankyar.semantic.typography.monospace.standard` and small text size `bankyar.font.size.xs`.
-* **Spacing:** Inset horizontally by `bankyar.responsive.margin` to align with the chronological transaction card borders.
+### 6.3 Recent Searches
+* **Purpose:** Displays the last 5 transaction searches to avoid re-typing queries.
+* **Visual Priority:** Low. Displayed only when the search field is focused and empty.
+* **Placement:** Top section of the Scrollable Workspace in Zone B (Stage A).
+* **Spacing:** Row-by-row layout with vertical spacing `bankyar.space.sm` between items. Symmetrical horizontal padding `bankyar.responsive.margin`.
+* **Typography:** Query titles utilize standard body typeface `bankyar.semantic.typography.body.md` in regular weights.
+* **Icons:** Leading query history icon `bankyar.icon.clock`, trailing delete icon `bankyar.icon.close`.
+* **Elevation:** Surface is flat, blending with the default canvas background.
+* **States:**
+  - **Loading:** Hidden during query result calculations.
+  - **Disabled:** Read-only mode; delete buttons are hidden.
+  - **Empty:** The entire section collapses out of view.
+  - **Error:** Unaffected.
+  - **Offline:** Active. Data is loaded from the encrypted local storage.
+* **Accessibility:** Tab order moves cleanly down the chronological list. Screen readers read: *"عبارت جستجو شده قبلی: [متن]"*.
+* **RTL Behaviour:** Historical queries start on the right, clear icons align to the far left.
+* **Animation:** Fades out list items with scale reduction when deleted, using linear curve.
+* **Future Expansion:** Cloud-free backup-encrypted synchronization of search history between local devices.
 
-### 6.5 Transaction Results List Card
-* **Purpose:** Primary item card presenting matched transaction metadata.
-* **Curvature & Outlines:** Curvature mapped to `bankyar.radius.lg` with thin boundary borders `bankyar.semantic.color.border.subtle`.
-* **Internal Spatial Grid & Fields (RTL Flow):**
-  ```
-  +--------------------------------------------------------------------------+
-  | (Right Edge)                                                (Left Edge)  |
-  | [Bank Logo Avatar]  Bank Name (Melli / Mellat)      Matched Cash Amount  |
-  |                     Transaction Type Indicator      and Currency Label   |
-  |                                                                          |
-  |  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  |
-  |                                                                          |
-  | [Security Icon] [Note Icon]  Date & Time Stamps      [Favorite Star Icon] |
-  +--------------------------------------------------------------------------+
-  ```
-  1. **Bank Logo Avatar:** Medium circular frame `bankyar.radius.full` positioned on the right (start) edge. Displays flat monochromatic bank symbols. Size matches `bankyar.icon.size.md`.
-  2. **Bank Name & Type Title:** Aligned adjacent to bank avatar. Persian text (e.g. "بانک ملی ایران") in bold title font `bankyar.semantic.typography.title.sm`. Directly underneath, the cash type indicator displays (e.g. "خرید پایانه", "کارت به کارت").
-  3. **Matched Cash Amount:** Large, bold numeric text positioned on the left (end) edge of the top row.
-     - **Inflow (Credit):** Mapped with positive sign `+` (e.g. "+۱۲۵,۰۰۰") in green success text `bankyar.semantic.color.status.success`.
-     - **Outflow (Debit):** Mapped with negative sign `-` (e.g. "-۴۵,۰۰۰") in standard primary text `bankyar.semantic.color.text.primary`.
-  4. **Monospace Currency Label:** Persian text "تومان" (Toman) or "ریال" (Rial) positioned next to or directly below the amount.
-  5. **Inner Divider:** Dashed border `bankyar.border.style.dashed` separating top info from bottom indicators.
-  6. **Security Shield Padlock Icon:** Positioned at the bottom start (right) corner to reassure the user of local security.
-  7. **User Note Indicator:** A custom notebook icon displayed next to the padlock icon if notes are written. Tapping this launches the Note Editor sheet.
-  8. **Date and Time Stamps:** Centered in the bottom row. Uses monospace numerals (e.g., "۱۴۰۲/۱۰/۱۲ - ۱۴:۳۲") in secondary text color `bankyar.semantic.color.text.secondary`.
-  9. **Favorite Indicator:** A filled star icon `bankyar.icon.star` positioned at the bottom-left (end) corner. Shows in active gold tint if transaction is starred, and outline grey if unstarred.
+### 6.4 Suggested Searches
+* **Purpose:** Proposes smart search shortcuts dynamically using frequent terms (e.g., utility bills, transport services).
+* **Visual Priority:** Low-Medium. Appears adjacent to Recent Searches when the field is focused.
+* **Placement:** Located directly under the Recent Searches block in Zone B.
+* **Spacing:** Items are arranged inside a wrapping row with standard spacing gaps `bankyar.space.xs`.
+* **Typography:** Persian characters in small size `bankyar.font.size.sm` and medium weight.
+* **Icons:** Subtle leading search keyword tag symbol `bankyar.icon.tag`.
+* **Elevation:** Low elevation chips matching `bankyar.elevation.level.one`.
+* **States:**
+  - **Loading:** Replaced by loading skeleton cards.
+  - **Disabled:** Chips ignore tap interactions and render in low contrast.
+  - **Empty:** Hidden if no smart suggestions are available.
+  - **Error:** Hidden.
+  - **Offline:** 100% operational based on local statistical indices.
+* **Accessibility:** Sized correctly to meet touch criteria. Announcements: *"پیشنهاد جستجو: [عبارت]"*.
+* **RTL Behaviour:** Chips flow from right to left, wrapping down to subsequent rows naturally.
+* **Animation:** Fast fade-in staggered layout using standard decelerating motion.
+* **Future Expansion:** Intelligent on-device machine learning suggesting contextual matches based on calendar schedules.
 
-### 6.6 Search Match Highlight Component
-* **Purpose:** Provides immediate visual feedback indicating **why** a transaction card was returned.
-* **Visual Execution:** Matching characters inside notes, transaction names, or bank references are highlighted using high-contrast, low-saturation yellow background tint.
-* **Typography:** Bold character weights apply to matched text, keeping reading lines clear and accessible.
+### 6.5 Filter Chips
+* **Purpose:** Allows instant, one-tap scoping of transaction queries directly from the active search viewport.
+* **Visual Priority:** High. Positioned immediately beneath the main search input.
+* **Placement:** Region 2 (Zone A), flowing horizontally below the persistent Search Field.
+* **Spacing:** Scrollable row with horizontal gaps bound to `bankyar.space.xs`. Height is set to `bankyar.space.lg`.
+* **Typography:** Label text mapped to `bankyar.font.size.sm` and bold weight when selected.
+* **Icons:** Checked chips show a leading checkmark icon `bankyar.icon.checkmark`.
+* **Elevation:** Blends with Zone A backgrounds when unselected; slightly elevated when selected.
+* **States:**
+  - **Loading:** Displayed in a semi-transparent shimmer state.
+  - **Disabled:** Grayed out container borders; ignores user touch inputs.
+  - **Empty:** Standard default unselected layout.
+  - **Error:** Shift outlines to red status color.
+  - **Offline:** Fully operational.
+* **Accessibility:** Focus moves horizontally. TalkBack verbalizes selection states clearly: *"فیلتر تراکنش‌های ورودی، انتخاب شده"*.
+* **RTL Behaviour:** Horizontal scroll starts at the right screen margin and flows leftwards.
+* **Animation:** Horizontal sliding motion with translucent edge fade. Tapping a chip triggers an instant bounce scaling.
+* **Future Expansion:** Custom user-defined smart filter chips pinned to the persistent row.
 
----
+### 6.6 Advanced Filter Panel
+* **Purpose:** Triggers the comprehensive Bottom Filter Sheet for detailed transaction scoping.
+* **Visual Priority:** High. Serves as the primary operational gateway for complex queries.
+* **Placement:** Pinned strictly to the right (logical start) of the Horizontal Quick Filter row.
+* **Spacing:** Circle container with height and width set to `bankyar.space.lg` (with an expanded touch target envelope of 48 units).
+* **Typography:** None directly on the button. Modal sheet text uses subtitle weights.
+* **Icons:** Tuning icon matching `bankyar.icon.filter`.
+* **Elevation:** Level one elevation with a light border outline.
+* **States:**
+  - **Loading:** Shows a subtle rotating outline segment.
+  - **Disabled:** Opacity fades to `bankyar.opacity.medium`. Taps are ignored.
+  - **Empty:** Default idle appearance.
+  - **Error:** Button outline flashes red on failure.
+  - **Offline:** Active. Performs queries on the encrypted SQLite database.
+* **Accessibility:** High contrast focus outlines apply. Accessibility label reads: *"دکمه فیلترهای پیشرفته تراکنش"*.
+* **RTL Behaviour:** Positioned logically on the far right. Mirrored icon layout applies.
+* **Animation:** Rotates the internal tuning icon slightly on click; sheet slides up from the bottom.
+* **Future Expansion:** Dynamic AI-generated filter recommendations appearing as prominent header tags.
 
-## 7. Advanced Bottom Filter Sheet Specification
+### 6.7 Search Result Summary
+* **Purpose:** Reports the exact match count and displays sorting controls.
+* **Visual Priority:** Medium. Keeps the user oriented during high-volume query matches.
+* **Placement:** Positioned at the top of Region 3 (Zone B) directly preceding the result list.
+* **Spacing:** Vertical height `bankyar.space.md`. Symmetrical margin offsets.
+* **Typography:** Monospace numeric characters `bankyar.semantic.typography.monospace.standard` in bold.
+* **Icons:** Sort trigger displays leading directional arrow symbol `bankyar.icon.sort`.
+* **Elevation:** Flat surface integrated with the background.
+* **States:**
+  - **Loading:** Text fades to low opacity.
+  - **Disabled:** Read-only mode; sort triggers are deactivated.
+  - **Empty:** Text reads: "نتایجی یافت نشد".
+  - **Error:** Replaced by inline error warnings.
+  - **Offline:** Active.
+* **Accessibility:** Reads match counts instantly upon query updates. Grouped as a single semantic focus node.
+* **RTL Behaviour:** Result text is right-aligned, sort selector is left-aligned.
+* **Animation:** Numerical increment ticks use rolling transitions.
+* **Future Expansion:** Dynamic summary charts of matched values rendering directly below.
 
-To preserve physical comfort, advanced filtering is handled via a modal sheet expanding upwards from Zone C. This sheet restricts its maximum vertical coverage to 75% of active viewport heights, utilizing standard scrollbars.
+### 6.8 Transaction Result List
+* **Purpose:** Displays the matched transaction cards in chronological order.
+* **Visual Priority:** Critical. Represents the primary data presentation layer.
+* **Placement:** Located in Zone B, below the Search Result Summary.
+* **Spacing:** Continuous vertical list with card gaps set to `bankyar.space.md`.
+* **Typography:** Main headers use standard text sizing. Cash amounts use bold headline sizes.
+* **Icons:** Star indicators, padlock encryption symbols, and note indicators.
+* **Elevation:** Level one rounded cards with thin borders.
+* **States:**
+  - **Loading:** Replaced by shimmering block skeletons.
+  - **Disabled:** Ignores selection actions.
+  - **Empty:** Shows a clean Empty state screen.
+  - **Error:** Displays system error messages with retry buttons.
+  - **Offline:** Standard performance.
+* **Accessibility:** Grouped cards allow reading of all elements in a single sequential block. Numbers are formatted clearly for screen readers.
+* **RTL Behaviour:** Flows from top to bottom. Bank icons align right; cash amounts align left.
+* **Animation:** Fluid scrolling performance (60fps+) with sliding transition effects on load.
+* **Future Expansion:** Batch selection and multi-item categorizations.
 
-```
-+-------------------------------------------------------------------------+
-| Bottom Sheet Header Container Zone C Slide Up                           |
-|                   === [ Drag Handle bar ] ===                            |
-|                                                                         |
-|  [Close Drawer Button]    { Advanced Filters Title }     [Reset All Actions]|
-|  +-------------------------------------------------------------------+  |
-+-------------------------------------------------------------------------+
-| Scrollable Filtering Grid Workspace                                      |
-|                                                                         |
-|  [1. Bank Source Grid]                                                  |
-|     (X) Bank Melli      ( ) Bank Mellat     ( ) Bank Saderat            |
-|                                                                         |
-|  [2. Transaction Flow Selection]                                        |
-|     [Income Chip]    [Expense Chip]   [Purchase Chip]    [ATM Chip]     |
-|     [Transfer Chip]  [Cash Withdrawal Chip]                             |
-|                                                                         |
-|  [3. Custom Date Range Options]                                         |
-|     [Start Hijri Date Selector Input]  <->  [End Hijri Date Selector]   |
-|                                                                         |
-|  [4. Secure Amount Boundaries Slider & Monospace Inputs]                |
-|     Min: [  10,000 Toman ]  <====== Slider ======>  Max: [ 5,000,000 ]  |
-|                                                                         |
-|  [5. Financial Metadata Filters]                                        |
-|     [ ] Favorites Only  [ ] Has Custom Notes  [ ] No Custom Notes       |
-|     [ ] Verified (Local SMS Source)   [ ] Heuristic (Warning Status)     |
-|                                                                         |
-+-------------------------------------------------------------------------+
-| Sticky Operational Footer Container                                      |
-|                                                                         |
-|  [ Apply Search Filter (Filled Button) ]  -  [ Cancel (Bordered Btn) ]  |
-+-------------------------------------------------------------------------+
-```
+### 6.9 Quick Actions
+* **Purpose:** Provides instantaneous inline shortcuts (e.g. adding a note, toggling favorites) directly on each transaction item.
+* **Visual Priority:** Medium-Low. Unveiled dynamically via touch actions or nested within card frames.
+* **Placement:** Nested inside the Transaction Results List Card logical container.
+* **Spacing:** Sized to touch target limits with gaps set to `bankyar.space.sm`.
+* **Typography:** Captions match `bankyar.font.size.xs` in regular weight.
+* **Icons:** Notebook edit indicator and favorite star.
+* **Elevation:** Low elevation offsets to prevent visual clutter.
+* **States:**
+  - **Loading:** Disabled during state saves.
+  - **Disabled:** Buttons ignore pointer inputs.
+  - **Empty:** Default unselected style.
+  - **Error:** Outlines flash red on local write failures.
+  - **Offline:** Active. Saves records instantly to local storage.
+* **Accessibility:** Clear descriptive names provided for screen readers. Minimum touch zones enforced.
+* **RTL Behaviour:** Swiping left on a card reveals quick actions on the right side.
+* **Animation:** Smooth horizontal swipe slide-in using standard decelerating curves.
+* **Future Expansion:** Quick export shortcuts to share specific transactions offline via QR codes.
 
-### 7.1 Drag Handle Bar
-* **Visual Style:** Rounded capsule bar centered horizontally at the top sheet edge. curvs are bound to `bankyar.radius.full` and colored in light-gray outline. Signals downward gestural swipe dismissals.
+### 6.10 Empty Search State
+* **Purpose:** Encourages the user to start searching when the screen is opened.
+* **Visual Priority:** Medium. Helps guide onboarding.
+* **Placement:** Center of Zone B, displayed only before search inputs are entered.
+* **Spacing:** Vertical layout centered with top and bottom margins set to `bankyar.space.xxl`.
+* **Typography:** Main title uses subtitle sizing; descriptions use standard body sizes.
+* **Icons:** Medium-sized illustration matching `bankyar.icon.search.empty`.
+* **Elevation:** Flat visual canvas.
+* **States:**
+  - **Loading:** Hidden behind loaders.
+  - **Disabled:** Interactive guides are deactivated.
+  - **Empty:** Active state.
+  - **Error:** Hidden behind error states.
+  - **Offline:** Fully operational.
+* **Accessibility:** Reads onboarding text instantly. Focus centers on the main instructions.
+* **RTL Behaviour:** Symmetrical alignment centering text and elements.
+* **Animation:** Fade-in transition using linear curve.
+* **Future Expansion:** Dynamic onboarding tutorials matching user spending patterns.
 
-### 7.2 Sheet Header Actions
-* **RTL Composition:**
-  - **Logical Start Edge (Right):** "انصراف" (Cancel/Close) icon button `bankyar.icon.close` to abort sheet inputs without state mutation.
-  - **Center:** Title "فیلترهای پیشرفته" (Advanced Filters) styled with bold subtitle typography `bankyar.semantic.typography.title.sm`.
-  - **Logical End Edge (Left):** Action text "پاک کردن همه" (Clear All) in secondary text, letting users reset filter fields in a single tap.
+### 6.11 No Result State
+* **Purpose:** Explains search misses and offers actionable recovery options.
+* **Visual Priority:** High. Reassures users when queries return empty.
+* **Placement:** Center of Zone B, displayed only when active queries match zero records.
+* **Spacing:** Centered layout with vertical gaps set to `bankyar.space.xl`.
+* **Typography:** Persian characters in large and readable fonts.
+* **Icons:** Large empty search symbol.
+* **Elevation:** Flat visual canvas.
+* **States:**
+  - **Loading:** Hidden behind loading skeletons.
+  - **Disabled:** Recovery buttons are deactivated.
+  - **Empty:** Active state.
+  - **Error:** Replaced by system error screens.
+  - **Offline:** Operational.
+* **Accessibility:** Screen readers announce: *"تراکنشی با این مشخصات یافت نشد، دکمه پاک کردن فیلترها"*.
+* **RTL Behaviour:** Center-aligned.
+* **Animation:** Scale-in illustration on entry.
+* **Future Expansion:** Intelligent fuzzy search suggestions for similar terms.
 
-### 7.3 Filter Group 1: Bank Selector
-* **Purpose:** Restricts search to specific card issuers.
-* **Visual Grid:** Responsive double-column grid of radio selection buttons inside a flat card surface.
-* **Options:** "بانک ملی ایران" (Melli Bank), "بانک ملت" (Mellat Bank), "بانک تجارت" (Tejarat Bank), "بانک صادرات" (Saderat Bank), "سایر بانک‌ها" (Other banks).
+### 6.12 Loading State
+* **Purpose:** Communicates active search result compilation without causing interface stutter.
+* **Visual Priority:** High. Keeps users oriented during local storage reads.
+* **Placement:** Spans the entire Zone B workspace.
+* **Spacing:** Matches the spacing layout of standard result lists.
+* **Typography:** Unaltered; labels are grayed out.
+* **Icons:** Spinning progress indicators and shimmering vectors.
+* **Elevation:** Identical to standard result layouts.
+* **States:**
+  - **Loading:** Active state.
+  - **Disabled:** Ignores touch interactions.
+  - **Empty:** Replaced by empty views on completion.
+  - **Error:** Toggles immediately to error views on failure.
+  - **Offline:** Operational.
+* **Accessibility:** Reads: *"در حال بارگذاری تراکنش‌ها..."*. Screen readers are updated when loading completes.
+* **RTL Behaviour:** Shimmer overlays sweep from right to left natively.
+* **Animation:** Continuous opacity shimmering.
+* **Future Expansion:** Predictive pre-fetching of records based on user usage habits.
 
-### 7.4 Filter Group 2: Transaction Type
-* **Purpose:** Restricts query to active cashflow classes.
-* **Layout Sizing:** Horizontally wrapping row of choice chips with standard spaces `bankyar.space.xs`.
-* **Options:**
-  - **Income (درآمد):** Credit events. Mapped with success green outlines.
-  - **Expense (هزینه):** Debit events. Mapped with standard red outlines.
-  - **Purchase (خرید فروشگاهی):** Matched store purchases.
-  - **Transfer (کارت به کارت):** P2P transfer events.
-  - **Cash Withdrawal (برداشت وجه):** Cash extractions.
-  - **ATM (خودپرداز):** Physical machine interactions.
-
-### 7.5 Filter Group 3: Custom Date Range Selector
-* **Purpose:** Scopes transactions to a custom chronological interval.
-* **Visual Layout:** Double-column row of input textfields styled with calendar icons.
-* **Options:**
-  - **Start Date Input:** Solar Hijri calendar picker (e.g. "۱۴۰۲/۱۰/۰۱").
-  - **End Date Input:** Solar Hijri calendar picker (e.g. "۱۴۰۲/۱۰/۳۰").
-* **Behavior:** Tapping a field opens an on-screen Shamsi month calendar selector modal.
-
-### 7.6 Filter Group 4: Custom Amount Boundaries
-* **Purpose:** Restricts search to precise transaction values.
-* **Visual Components:** Dual slider controls accompanied by companion monospace textboxes.
-  - **Min Amount Field:** Captures lower bound (e.g., "۱۰,۰۰۰ تومان"). Uses `bankyar.semantic.typography.monospace.standard`.
-  - **Max Amount Field:** Captures upper bound (e.g., "۵,۰۰۰,۰۰۰ تومان").
-  - **Currency Selector:** Dropdown menu showing "تومان" (Toman) and "ریال" (Rial).
-
-### 7.7 Filter Group 5: Annotation & Security Status
-* **Purpose:** Advanced searching based on ledger attributes.
-* **Visual Layout:** List of checkboxes aligned to the right (logical start).
-* **Options:**
-  - **Favorites:** Starred items only.
-  - **Has Notes:** Transactions containing user comments.
-  - **No Notes:** Transactions without annotations.
-  - **Verified SMS Source:** High-confidence decrypted SMS texts.
-  - **Heuristic Warning:** Unverified parser guesses requiring review.
-
-### 7.8 Filter Group 6: Future Infrastructure Slots
-* **Purpose:** Preallocated slots reserved for upcoming capabilities.
-* **Visual Layout:** Hidden or dashed outlines indicating "Tags" (دسته‌ب بندی‌ها) and "AI Smart Categories" (دسته‌بندی هوش مصنوعی) to preserve layout scalability without shifting components.
-
-### 7.9 Sticky Operational Footer Row
-* **Purpose:** Confirms or discards advanced filtering settings.
-* **RTL Layout Flow:**
-  - **Logical Start Edge (Right):** Primary prominent filled button "اعمال فیلتر" (Apply Filters), displaying the active criteria count (e.g., "اعمال فیلتر (۳ فیلتر)").
-  - **Logical End Edge (Left):** Bordered button "لغو" (Cancel).
-* **Touch Target:** Sized to full touch envelope width for easy thumb interaction.
-
----
-
-## 8. Sorting Menu Specifications
-
-* **Purpose:** Reorders matching records.
-* **Trigger:** Text dropdown link inline with Results Counter in Region 3.
-* **Visual Layout:** Small flat dropdown card popping up underneath the trigger. Sized to comfortable container boundaries.
-* **Supported Options (Ordered Scale):**
-  1. **Newest First (جدیدترین‌ها):** Chronological descending order (default).
-  2. **Oldest First (قدیمی‌ترین‌ها):** Chronological ascending order.
-  3. **Highest Amount (بیشترین مبلغ):** Numerical descending.
-  4. **Lowest Amount (کمترین مبلغ):** Numerical ascending.
-  5. **Alphabetical - Merchant (الفبا - پذیرنده):** Alphabetical order of matched merchants.
-  6. **Bank Name (نام بانک):** Alphabetical grouping of financial sources.
-  7. **Most Recent Update (آخرین بروزرسانی):** Sorts based on last local modification timestamp.
-
----
-
-## 9. Search Experience & Intelligent Retrieval
-
-To deliver an instantaneous, smart retrieval experience, the search engine utilizes several local heuristics:
-
-### 9.1 Instant & Incremental Search
-Queries are processed instantly on each keystroke. Results are calculated on the secure local SQLite database using fast indices, updating the active ledger list in real-time.
-
-### 9.2 Debounced Inputs
-Typing inputs are debounced by 200 milliseconds (`bankyar.motion.duration.fast`). This prevents unnecessary database queries during rapid text input, keeping the rendering thread highly responsive.
-
-### 9.3 Suggestion Ranking & History
-When the search input field is focused but empty, Region 4 displays:
-* **Recent Searches (تاریخچه جستجو):** List of 5 most recent queries with a leading clock icon and a trailing clear button. Ranked based on chronological selection.
-* **Saved Searches (جستجوهای ذخیره‌شده):** Quick links to frequently used filters (e.g. "خریدهای بالای ۱۰۰ هزار تومان بانک ملی") with a leading star icon.
-* **Search Suggestions (پیشنهادات هوشمند):** Smart suggestions that adapt based on frequent terms (e.g., "اسنپ", "قبض آب").
-
-### 9.4 Search Recovery
-If the app process is closed or backgrounded during an active search, the state manager caches the active query string and filters. On return, the search results are restored instantly to prevent lost progress.
-
----
-
-## 10. Interactive States Visual Mapping
-
-The Search and Filter interface adapts its visual layers dynamically based on system states:
-
-| Interactive State | UI Component Visual Representation | Transition Curve & Speed | Accessibility Action |
-| :--- | :--- | :--- | :--- |
-| **Default (Idle)** | Persistent search field centered with label text "جستجو در تراکنش‌ها، یادداشت‌ها...". Recent search list displayed below. | Instant transition | TalkBack announces: *"جستجو، کادر ویرایش. برای شروع نوشتن ضربه بزنید."* |
-| **Typing** | Displays close cross icon in search input. Typing completion suggestions overlay the workspace. | Fast easing `bankyar.motion.curve.decelerate` | Read suggestions sequentially on Tab sweeps. |
-| **Searching** | Small, non-intrusive circular progress ring spinning on the left edge of the input container. | Smooth continuous animation | Screen reader verbalizes: *"در حال جستجوی تراکنش‌ها..."* |
-| **Loading Search** | Visual skeleton blocks replace ledger cards, shimmering smoothly from right to left (RTL). | Linear opacity loop | Screen reader announces: *"در حال بارگذاری نتایج تراکنش‌ها."* |
-| **Empty Search View**| Standard default layout presenting Recent and Saved search blocks. | Smooth fade-in | Focuses automatically on the first Recent Search chip. |
-| **No Results View** | Displays an illustration of an empty magnifying glass pointing to a blank line. Shows text "تراکنشی با این مشخصات یافت نشد". Primary button "پاک کردن فیلترها" is centered below. | Scale-in illustration | Screen reader announces: *"هیچ نتیجه‌ای یافت نشد. دکمه پاک کردن فیلترها."* |
-| **Offline State** | Normal application state. Green status badge remains active in the App Bar header, confirming data privacy. | Static display | TalkBack announces: *"وضعیت آفلاین و امن فعال است."* |
-| **Error State** | Outline borders turn red. Inline warning banner shows text: "خطایی در خواندن اطلاعات محلی رخ داده است". Primary retry button is centered below. | Shake animation on horizontal axis | High-priority screen reader announcement. |
-| **Filter Applied** | Quick Filter chips highlight in active green/blue accent. Advanced Filter Button displays count badge (e.g. "+3"). | Fast fade-in | Read active filter count to screen reader. |
-| **Sorting Applied** | Sort dropdown trigger updates text to match selected sort key. Recent transaction feed reorders. | Decelerated smooth shift | Announce: *"ترتیب نتایج تغییر کرد."* |
-| **Search Cleared** | Search field string clears. suggestions collapse, restoring default idle layout instantly. | Instant transition | TalkBack announces: *"کادر جستجو پاک شد."* |
-| **Background Multitasking**| Sensitive numbers, amounts, and note strings are blurred with secure visual masks. | Standard scale change | Mute screen reader announcements. |
-
----
-
-## 11. Responsive Design & Adaptive Viewports
-
-The Search and Filter layout adapts dynamically to different device sizes:
-
-* **Compact Phone:** Vertical stacking. Standard margins applied. Advanced Filter Button opens a full-screen Bottom Sheet modal. Persistent Bottom Navigation remains visible in Zone C.
-* **Large Phone (Foldable folded):** Standard mobile layout. Expanded padding applied to category chips to support physical comfort.
-* **Tablet Viewport (Unfolded / Landscape):** Transforms into a double-column split layout:
-  - **Right Panel (Logical Start - 40%):** Persistent Search Input with a list of recent and saved searches. Horizontal Quick Filter Chips row.
-  - **Left Panel (Logical End - 60%):** Detailed Advanced Filters grid layout. Displays results feed side-by-side with filter controls, removing the need for a modal bottom sheet.
-  - **Navigation:** Bottom Navigation transitions into a lateral Navigation Rail on the right edge.
-* **Landscape Orientation:** Compacts vertical app bar heights. Arranges the advanced filter options row horizontally to maximize screen real estate.
-
----
-
-## 12. Accessibility & Inclusive Design Integration
-
-To ensure the search experience is accessible to everyone, the interface incorporates strict accessibility features:
-
-* **RTL Persian Layout native flow:** All horizontal sequences, back chevrons, text fields, and list layouts proceed from right to left. Swipe gestures are mirrored naturally.
-* **Screen Reader Support (WCAG SC 1.1.1, 1.3.1):**
-  - Search results are grouped into single semantic nodes, letting TalkBack read each transaction card as a single focus block (e.g., "بانک ملی، پرداخت موفق، مبلغ منفی چهل و پنج هزار تومان، دوازدهم دی ماه، دارای یادداشت").
-  - Matches highlighted in text blocks are announced clearly (e.g., "عبارت انطباق‌یافته: اسنپ").
-* **Keyboard Navigation (WCAG SC 2.1.1):**
-  - Fully navigable using standard keyboard arrow and Tab keys.
-  - Pressing `Escape` instantly clears active search inputs, closes sorting dropdowns, or dismisses bottom sheets.
-* **Large Fonts & Dynamic Scaling (WCAG SC 1.4.4):**
-  - Standard text cards adapt to system dynamic font magnification up to 200% without clipping or layout shifts.
-  - Horizontal components (e.g. metadata rows) wrap vertically into single columns to prevent horizontal overflow.
-* **Minimum Touch Target 48-unit bounds (WCAG SC 2.5.5):**
-  - Small elements (like the advanced filter button and textfield close icons) expand their touch targets invisibly to meet the 48-unit physical target minimum, preventing accidental taps.
-* **Accessible Search Suggestions & Filter Controls (WCAG SC 3.3.2):**
-  - Form filters have permanent visible labels positioned outside the input container, avoiding floating text inside fields.
-  - Interactive selection checkmarks are announced clearly to screen readers.
+### 6.13 Offline State
+* **Purpose:** Confirms 100% on-device secure operations.
+* **Visual Priority:** Low-Medium. Built-in reassurance status.
+* **Placement:** Pinned strictly to Zone C at the centered baseline coordinate.
+* **Spacing:** Integrated seamlessly with system margins.
+* **Typography:** Monospace characters in small font sizes.
+* **Icons:** Small padlock encryption emblem.
+* **Elevation:** Level zero elevation.
+* **States:**
+  - **Loading:** Unaltered.
+  - **Disabled:** Unaffected.
+  - **Empty:** Unaffected.
+  - **Error:** Shifts colors to high-priority alert tones.
+  - **Offline:** Active.
+* **Accessibility:** Screen readers read: *"وضعیت امن آفلاین، ذخیره اطلاعات روی دستگاه"*.
+* **RTL Behaviour:** Centered.
+* **Animation:** Fades out when the app multitasking switcher is focused.
+* **Future Expansion:** Real-time on-device security audit indicators.
 
 ---
 
-## 13. Future-Ready Expansion Hooks
+## 7. The 12 Official Visual & Interaction Deliverables
 
-* **Natural Language Search:** Space reserved in the search indexer to support offline conversational queries (e.g., "خریدهای هفته گذشته بالای ۵۰ هزار تومان").
-* **AI Search Assistant:** Designated slot at the top of suggestions to display smart summaries parsed on-device.
-* **Voice Search:** Active temporary icon prepared to integrate local speech-to-text engines.
-* **OCR Receipt & Image Search:** Reserved metadata tags inside transaction schemas to support searching parsed receipt text.
-* **Semantic Search:** Index structures prepared to support offline vector database embeddings.
-* **Smart Filter Recommendations:** Local ML engine prepared to suggest filters based on user habits (e.g., "آخر ماه است، نمایش هزینه‌های مسکن؟").
+### Deliverable 1: Complete Screen Layout
+The complete layout utilizes a structured three-zone grid system matching Material Design 3 guidelines:
+* **Zone A (Sticky App Bar & Filter Bar):** Pinned to the top viewport boundary. Spans a fixed height of `bankyar.space.xxl`, hosting the search field, back chevron, and quick-filter scrolling rows.
+* **Zone B (Scrollable Content Workspace):** Dynamic scrolling area spanning the central screen space. It hosts empty illustrations, typing suggestion lists, or transaction cards.
+* **Zone C (Sticky System Navigation & Diagnostics):** Pinned to the bottom viewport boundary. It houses system bottom bars and the persistent offline security badge.
 
----
+### Deliverable 2: Information Hierarchy
+Visual priority is structured into three logical vertical layers:
+1. **Critical Focus Layer:** Main Search Field and active search string inputs.
+2. **Operational Layer:** Horizontal quick filter chips and result sort triggers.
+3. **Data Layer:** Chronological transaction list cards, cash amounts, and annotations.
 
-## 14. Governance & Validation Rules
+### Deliverable 3: Search Flow
+The step-by-step search interaction is managed completely on-device:
+1. **Focus:** User taps the persistent search field. Zone B transitions from the default feed to the Empty Search View (Recent & Saved searches).
+2. **Keystroke:** User types. Input is debounced by 200 milliseconds to avoid UI lag. Smart completion overlays appear in real-time.
+3. **Execution:** Database indexes query the encrypted SQLCipher local vault instantly.
+4. **Resolution:** Search Result summary updates, matching text is highlighted, and the matched transaction cards list is rendered in Zone B.
 
-1. **Strict Design Token Adherence:** Custom style adjustments inside components are prohibited. Every visual attribute must reference an active design token.
-2. **Deterministic Destructive Flow:** Clearing search history or resetting active filters must always trigger a non-disruptive, auto-saved undo banner.
-3. **No Network Operations:** All elements must function offline. Incorporating external assets or third-party web dependencies is strictly prohibited.
-4. **Data Privacy Masking:** Financial values and search queries must be masked with secure visual overlays when the app transitions to the multitasking switcher.
+### Deliverable 4: Filter Flow
+Deep filtering is simplified through progressive disclosures:
+1. **Trigger:** User taps the Advanced Filter button next to the horizontal chip row.
+2. **Disclosure:** Bottom Filter Sheet slides up from Zone C, covering up to 75% of the active viewport.
+3. **Selection:** User adjusts parameters (banks, transaction type, amount range, custom dates).
+4. **Validation:** Active counts update in real-time on the sticky apply button.
+5. **Dismissal:** Tapping "Apply" closes the sheet and updates the result list instantly.
+
+### Deliverable 5: Component Placement
+Specific horizontal coordinate mappings are established:
+* **Start Margin (Right):** Back buttons, bank avatars, group category titles, checkboxes, and input labels.
+* **End Margin (Left):** Close/clear buttons, cash amounts, favorite stars, and dropdown triggers.
+* **Symmetrical Grid:** Centered titles, empty state illustrations, and bottom offline security badges.
+
+### Deliverable 6: Result Layout
+Each matched transaction card follows a standard vertical grid layout:
+* **Top Row:** Bank logo and bank name align right; matched transaction cash amount and currency label align left.
+* **Divider:** Thin dashed line separating top metadata from lower indicators.
+* **Bottom Row:** Padlock security emblem and note indicator align right; date/time stamps center; favorite star indicator aligns left.
+
+### Deliverable 7: Interaction Flow
+All gesture mappings utilize standard, comfortable physical reach zones:
+* **Horizontal Scroll:** Sweeping across the quick filter chips row from right to left.
+* **Vertical Scroll:** Infinite pagination down the matched transaction cards feed.
+* **Swipe Left:** Swiping left on any list item card reveals quick inline actions (notebook edits, favorite toggles).
+* **Swipe Down:** Dismisses the Advanced Bottom Filter Sheet dynamically.
+
+### Deliverable 8: Empty States
+Two distinct empty visual designs prevent system dead-ends:
+* **Empty Search State:** Shows an onboarding illustration with text: "برای شروع، عبارت مورد نظر را وارد کنید" and a list of helpful search tips.
+* **No Result State:** Displays an empty magnifying glass vector with text: "تراکنشی با این مشخصات یافت نشد" and a clear primary button: "پاک کردن همه فیلترها".
+
+### Deliverable 9: Error States
+When database access or query calculations encounter faults, the layout adapts instantly:
+* **Visual Highlight:** Card borders flash with standard error accent lines.
+* **Inline Warning:** A high-contrast warning banner displays: "خطایی در خواندن اطلاعات محلی رخ داده است".
+* **Recovery Action:** A prominent button "تلاش مجدد" (Retry Query) is centered below the warning.
+
+### Deliverable 10: Accessibility Review
+A detailed checklist ensures compliance with WCAG 2.1 guidelines:
+* **Focus Nodes:** Matched transaction cards are grouped into single semantic entities for TalkBack screen readers.
+* **Touch Target Size:** Small elements (e.g. close buttons, advanced filter icons) expand their touch targets invisibly to meet the 48-unit physical minimum.
+* **Dynamic Scaling:** Layout elements wrap vertically to prevent horizontal screen overflow when text is scaled up to 200%.
+* **Clear Inputs:** Input controls utilize permanent visible labels outside text boxes rather than floating text placeholders.
+
+### Deliverable 11: RTL Review
+Native Persian flows are verified across all components:
+* **Reading Path:** Visual layouts proceed logically from right (logical start) to left (logical end).
+* **Gestures:** Swiping, carousel scrolling, and drawer dismissals mirror natively.
+* **Directional Icons:** Arrows, back chevrons, and sort indicators mirror their alignment.
+
+### Deliverable 12: UX Validation Checklist
+The product architecture conforms to strict governance rules:
+1. **Design Token Adherence:** Every color, layout gap, radius, and elevation level maps to an active design token. No hardcoded styles are used.
+2. **No Network Access:** Operating with exactly zero bytes of network transmission. All assets and libraries function completely offline.
+3. **Data Security Masking:** Sensitive numbers and transaction cash amounts are blurred with secure visual masks when the app transitions to the system multitasking switcher.
 
 ---
 **End of Search & Advanced Filter Screen Specification**
