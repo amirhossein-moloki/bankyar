@@ -21,7 +21,7 @@ abstract class Failure {
   final bool isUserAlertRequired;
 
   @override
-  String toString() => 'Failure(code: $code, message: $message)';
+  String toString() => '$runtimeType(code: $code, message: $message)';
 }
 
 /// Represents infrastructure-level failures (e.g. Database, storage, IO, file locks).
@@ -82,4 +82,113 @@ class UnknownFailure extends Failure {
     required super.message,
     super.isUserAlertRequired = true,
   });
+}
+
+// Concrete Infrastructure Failures
+class DatabaseCorruptionFailure extends InfrastructureFailure {
+  const DatabaseCorruptionFailure({
+    super.code = 'BY_INF_DB_CORRUPTED',
+    super.message = 'The secure database file appears to be corrupted.',
+  }) : super(isUserAlertRequired: true);
+}
+
+class StorageDiskFullFailure extends InfrastructureFailure {
+  const StorageDiskFullFailure({
+    super.code = 'BY_INF_STORAGE_FULL',
+    super.message = 'Device storage is full. Cannot write database files.',
+  }) : super(isUserAlertRequired: true);
+}
+
+class KeystoreLostFailure extends InfrastructureFailure {
+  const KeystoreLostFailure({
+    super.code = 'BY_INF_KEYSTORE_LOST',
+    super.message = 'Cryptographic keys could not be retrieved from secure enclave.',
+  }) : super(isUserAlertRequired: true);
+}
+
+class FileAccessFailure extends InfrastructureFailure {
+  const FileAccessFailure({
+    required super.code,
+    required super.message,
+  }) : super(isUserAlertRequired: true);
+}
+
+// Concrete Security Failures
+class BiometricMismatchFailure extends SecurityFailure {
+  const BiometricMismatchFailure({
+    super.code = 'BY_SEC_BIOMETRIC_MISMATCH',
+    super.message = 'Biometric authentication failed.',
+  }) : super(isUserAlertRequired: true);
+}
+
+class SessionTimeoutFailure extends SecurityFailure {
+  const SessionTimeoutFailure({
+    super.code = 'BY_SEC_SESSION_TIMEOUT',
+    super.message = 'Session expired due to inactivity.',
+  }) : super(isUserAlertRequired: true);
+}
+
+class UserLockoutFailure extends SecurityFailure {
+  const UserLockoutFailure({
+    super.code = 'BY_SEC_PIN_LOCKOUT',
+    super.message = 'Too many failed PIN attempts. Access locked temporarily.',
+  }) : super(isUserAlertRequired: true);
+}
+
+// Concrete Domain Failures
+class TransactionInvariantsFailure extends DomainFailure {
+  const TransactionInvariantsFailure({
+    required super.code,
+    required super.message,
+  }) : super(isUserAlertRequired: true);
+}
+
+class DeduplicationMatchFailure extends DomainFailure {
+  const DeduplicationMatchFailure({
+    super.code = 'BY_DOM_DEDUPLICATION_MATCH',
+    super.message = 'Duplicate SMS or transaction already captured.',
+  }) : super(isUserAlertRequired: false);
+}
+
+class RuleCollisionsFailure extends DomainFailure {
+  const RuleCollisionsFailure({
+    required super.code,
+    required super.message,
+  }) : super(isUserAlertRequired: true);
+}
+
+class CategoryNotFoundFailure extends DomainFailure {
+  const CategoryNotFoundFailure({
+    super.code = 'BY_DOM_CATEGORY_NOT_FOUND',
+    super.message = 'Selected category does not exist.',
+  }) : super(isUserAlertRequired: true);
+}
+
+// Concrete Validation Failures
+class InvalidMonetaryValue extends ValidationFailure {
+  const InvalidMonetaryValue({
+    required super.code,
+    required super.message,
+  }) : super();
+}
+
+class FormatDriftMismatch extends ValidationFailure {
+  const FormatDriftMismatch({
+    required super.code,
+    required super.message,
+  }) : super();
+}
+
+class InvalidPINHash extends ValidationFailure {
+  const InvalidPINHash({
+    required super.code,
+    required super.message,
+  }) : super();
+}
+
+class CorruptedCSVFormat extends ValidationFailure {
+  const CorruptedCSVFormat({
+    required super.code,
+    required super.message,
+  }) : super();
 }
