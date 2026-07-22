@@ -1,0 +1,22 @@
+{
+  "appTitle": "BankYar",
+  "@appTitle": {
+    "description": "The title of the application"
+  },
+  "loading": "Loading...",
+  "@loading": {
+    "description": "A generic loading text"
+  },
+  "errorOccurred": "An error occurred",
+  "@errorOccurred": {
+    "description": "A generic error message"
+  },
+  "lockScreenTitle": "Unlock BankYar",
+  "@lockScreenTitle": {
+    "description": "The title displayed on the security lock screen"
+  },
+  "unparsedTxAlert": "Unparsed transaction detected",
+  "@unparsedTxAlert": {
+    "description": "Alert text for when SMS parsing fails and defaults to unparsed"
+  }
+}
