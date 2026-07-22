@@ -1,67 +1,33 @@
-# BankYar Notification Center & Experience Specification (v1.0.0)
+# BankYar Notification Center & Smart Notification Experience Specification (v2.0.0)
 ## Enterprise-Grade Screen & Interaction Specification for Offline-First Secure Financial Applications
 
 **Project Name:** BankYar
 **Framework Target:** Flutter (Platform-Agnostic Design Blueprint)
-**Platform Target:** Android (RTL-Native Layouts with Android System Integration)
+**Platform Target:** Android & iOS (RTL-Native Layouts with Hardware-Level Security)
 **Visual Style:** Material Design 3 (MD3)
 **Primary Language & Locale:** Persian (RTL, Solar Hijri Calendar)
 **Classification:** Enterprise Design System Specification
-**Document Version:** 1.0.0
+**Document Version:** 2.0.0
 **Status:** Approved / Core Specification Blueprint
 
 ---
 
 ## 1. Executive Summary
 
-This document establishes the absolute visual, spatial, and interaction design specifications for the **Notification Center & Experience System** in the BankYar ecosystem. In an offline-first, privacy-first personal finance platform, notifications are not merely alert banners—they represent the primary, highly secure, real-time feedback loop between on-device automation (such as SMS interception) and active user awareness.
+This document establishes the absolute visual, spatial, and interaction design specifications for the **Notification Center and Smart Notification Experience** in the BankYar ecosystem. In a secure, offline-first personal finance platform with zero internet access and 100% on-device cryptography, notifications are not merely passive alerts—they represent the primary feedback loop between real-time background SMS interception and active user awareness.
 
-Operating with zero internet access and 100% on-device cryptography, BankYar’s notifications must feel premium, trustworthy, incredibly lightweight, and completely unobtrusive. This specification covers both **In-App Notifications (Notification Center, History, and Details)** and **System Notifications (Android Status Bar, Lock Screen, and Heads-Up Alerts)**, providing a cohesive, seamless journey.
-
-In strict compliance with BankYar’s Level 0 Engineering and Visual Design Constitutions:
+Operating strictly within BankYar's Level 0 Engineering and Visual Design Constitutions:
 - **Zero Framework Code:** All layouts, sequences, and structures are platform-independent, with zero Flutter/Dart implementation details.
-- **Zero Raw Styling Metrics:** Hardcoded dimensions (pixels, dp, sp, milliseconds) are strictly prohibited. All dimensions and spatial gaps map directly to abstract design tokens (`bankyar.space.*`, `bankyar.radius.*`, etc.).
-- **Zero Hardcoded Colors:** No raw HEX color codes are permitted. Every visual surface, status indicator, and typography layer references semantic tokens that adapt dynamically between Light, Dark, and High-Contrast modes.
-- **RTL-First Structure:** Horizontal reading paths, vertical grids, swipe gestures, and transitions mirror natively to support Persian RTL workflows from the logical start edge (right) to the logical end edge (left).
-- **No Development Markers:** Absolutely no incomplete tags, temporary draft marks, or un-resolved sections exist. All details are fully specified and production-ready.
+- **Zero Raw Styling Metrics:** Hardcoded dimensions (pixels, dp, sp, milliseconds) are strictly prohibited. All dimensions, offsets, and gaps map directly to abstract design tokens (`bankyar.space.*`, `bankyar.radius.*`, etc.).
+- **Zero Hardcoded Colors:** No raw HEX color codes are permitted. Every surface, text, and indicator layer references semantic tokens that adapt dynamically between Light, Dark, and High-Contrast modes.
+- **RTL-First Structure:** Horizontal reading paths, vertical grids, swipe gestures, and transition curves mirror natively to support Persian RTL workflows from the logical start edge (right) to the logical end edge (left).
+- **No Development Markers:** No draft markers, incomplete sections, or temporary development items exist. Every parameter is fully specified and production-ready.
 
 ---
 
-## 2. Design Philosophy & Vision
+## 2. Screen Blueprint & Spatial Scaffolding
 
-The BankYar Notification system is engineered to deliver a calm, precise, and empowering financial assistant directly in the user's pocket, minimizing financial anxiety while protecting absolute privacy.
-
-* **Information Clarity & Stoic Beauty:** Consistent with `DESIGN_PHILOSOPHY.md`, notifications utilize a clean, highly structured, minimal style. They prioritize clear typographical hierarchies and comfortable white space to allow instant scanning of numerical and technical alerts.
-* **Calm & Unobtrusive Interactions:** Financial events can occur at any time. The system classifies alerts strictly into priority-based buckets, ensuring that daily transaction monitoring remains silent and lightweight, while security anomalies instantly capture attention.
-* **Psychological Trust & Security:** In an offline architecture, user trust is the primary asset. By implementing an uncompromising local-only data privacy shield (blurring sensitive values, hiding amounts on the lock screen, and requiring local authentication before viewing), BankYar guarantees that financial secrets are kept strictly private on the physical device.
-* **Frictionless Actionability:** Notifications are highly functional. Rather than being passive messages, they provide instant on-device actions (e.g., adding a note, starring a transaction, or retrying a parsing template) directly from the drawer, removing the need to launch the full application.
-
----
-
-## 3. Spatial Rhythm & Grid Architecture
-
-All visual configurations inside the Notification Center and on-device alert templates conform strictly to the BankYar dynamic 8-unit spatial layout grid, guaranteeing geometric alignment, vertical continuity, and physical comfort.
-
-### 3.1 Horizontal Grid System
-- **Compact Viewport (Smartphones):** 4 columns. Symmetrical outer margins are mapped to `bankyar.responsive.margin` (resolving to `bankyar.space.lg` on mobile). Inter-column gutters are bound to `bankyar.responsive.gutter` (`bankyar.space.md`).
-- **Medium Viewport (Tablets / Foldables):** 8 columns. Master-detail horizontal splitting. Symmetrical margins scale up to `bankyar.space.xl` and gutters to `bankyar.space.lg`.
-- **Expanded Viewport (Landscape / Large Tablets):** 12 columns. Content columns are constrained to `bankyar.responsive.container.width.max` to prevent uncomfortably wide, stretched cards.
-
-### 3.2 Vertical Baseline Rhythm
-Every component height, list margin, inner padding, and typographical leading is an exact integer multiple of the baseline spatial multiplier token `bankyar.global.space.base`.
-- `bankyar.space.xxs` (0.25x base unit, for subtle status dots, unread indicators, and badge alignments)
-- `bankyar.space.xs` (0.5x base unit, for tight inline spacings, icons next to text labels, and action labels)
-- `bankyar.space.sm` (1x base unit, for field labels, section titles, and minor component gaps)
-- `bankyar.space.md` (2x base unit, for default internal card padding and vertical list gaps)
-- `bankyar.space.lg` (3x base unit, for outer screen margins, screen divisions, and section headers)
-- `bankyar.space.xl` (4x base unit, for primary action buttons, bottom navigations, and custom touch heights)
-- `bankyar.space.xxl` (6x base unit, for empty state illustrations and large vertical offsets)
-
----
-
-## 4. Layout Zones & Structural Layout
-
-The in-app Notification Center is constructed using the logical three-zone vertical layout model, ensuring that system navigation, scrolling history feeds, and persistent diagnostic statuses remain perfectly separated.
+The Notification Center is built using BankYar's logical three-zone vertical layout model, ensuring that system control bars, scrollable history feeds, and persistent diagnostic markers remain perfectly separated.
 
 ```
 +-------------------------------------------------------------------------+
@@ -70,7 +36,12 @@ The in-app Notification Center is constructed using the logical three-zone verti
 |  [ZONE A: STICKY NOTIFICATION CENTER HEADER & CONTROL BAR]              |
 |  +-------------------------------------------------------------------+  |
 |  | [Clear All Trigger]      { Notification Center }      [Back Chevron]|  |
-|  | [Scrollable RTL Grouping & Filter Chips Row]                      |  |
+|  |                                                                   |  |
+|  | [ Unread: ۴ ] [ Smart Categories:  (واریز)  (برداشت)  (سیستم) ]     |  |
+|  |                                                                   |  |
+|  | [ Search: "بانک ملی" ...                                       ]  |  |
+|  |                                                                   |  |
+|  | [ Filter: [همه]  [امروز]  [تراکنش]  [امنیت]  [پین شده] ]             |  |
 |  +-------------------------------------------------------------------+  |
 +-------------------------------------------------------------------------+
 |  [ZONE B: SCROLLABLE NOTIFICATION WORKSPACE & HISTORY]                  |
@@ -81,15 +52,21 @@ The in-app Notification Center is constructed using the logical three-zone verti
 |  |     | Pinned Icon | Security Alert: Root detected!          |     |  |
 |  |     +-------------------------------------------------------+     |  |
 |  |                                                                   |  |
-|  |  [Region 2: Active / Unread Notifications Feed (Grouped)]         |  |
-|  |     [Section Header: Today / Bank Melli]                          |  |
-|  |     - Transaction Expense Card (Unread, amount high-contrast)     |  |
-|  |     - Transaction Income Card (Unread, success colored)           |  |
+|  |  [Region 2: Today's Notifications Timeline]                       |  |
+|  |     [Section Header: امروز (Today) - ۱۲ دی ۱۴۰۲]                   |  |
+|  |     - Deposit Notification Card (Unread, success colored)         |  |
+|  |     - Withdrawal Notification Card (Read, muted metadata)         |  |
+|  |     - Failed Parsing Card (Unread, showing retry trigger)         |  |
 |  |                                                                   |  |
-|  |  [Region 3: Notification History Feed (Read / Archived)]          |  |
-|  |     [Section Header: Yesterday / Older]                           |  |
+|  |  [Region 3: Yesterday's Notifications Timeline]                   |  |
+|  |     [Section Header: دیروز (Yesterday) - ۱۱ دی ۱۴۰۲]               |  |
+|  |     - Purchase Card (Read, showing notes tag)                     |  |
+|  |     - Transfer Card (Read, showing share receipt trigger)         |  |
+|  |                                                                   |  |
+|  |  [Region 4: Older Notifications Timeline]                         |  |
+|  |     [Section Header: قدیمی‌تر (Older)]                            |  |
 |  |     - Backup Completed Card (Read, muted metadata)                |  |
-|  |     - Failed Parsing Card (Read, showing retry trigger)           |  |
+|  |     - Permission Reminder Card (Read, persistent check)           |  |
 |  |                                                                   |  |
 |  +-------------------------------------------------------------------+  |
 +-------------------------------------------------------------------------+
@@ -97,6 +74,7 @@ The in-app Notification Center is constructed using the logical three-zone verti
 |  +-------------------------------------------------------------------+  |
 |  | [Offline Privacy Status Badge: "آفلاین و امن - بدون اتصال شبکه"]  |  |
 |  | [Shell Bottom Navigation Bar]                                     |  |
+|  | [داشبورد]             [تحلیل‌ها]             [قوانین]   [تنظیمات]* |  |
 |  +-------------------------------------------------------------------+  |
 +-------------------------------------------------------------------------+
 |                         SYSTEM GESTURE NAV BAR                          |
@@ -105,381 +83,513 @@ The in-app Notification Center is constructed using the logical three-zone verti
 
 ---
 
-## 5. Screen Regions & Spatial Scaffolding
+## 3. Core Spatial Principles & Grid System
 
-### 5.1 Zone A: Sticky Notification Center Header & Controls
-- **Visual Presentation:** Stays pinned at the top of the viewport. Standard background blends with the canvas background in its default state, showing a thin separator line `bankyar.semantic.color.border.subtle` when scrolling content moves underneath.
-- **RTL Composition:**
-  - **Logical Start Edge (Right):** Native back chevron icon `bankyar.icon.back.rtl` directing the user back to the Home Dashboard.
-  - **Center Block:** Page title "مرکز اعلان‌ها" (Notification Center) styled with `bankyar.semantic.typography.title.sm` in high-contrast primary text color.
-  - **Logical End Edge (Left):** Contextual "پاک کردن همه" (Clear All) text button styled in secondary text color, letting users dismiss or mark all readable notifications as read in a single tap.
-- **Region 2: Horizontal Grouping & Filter Row (RTL Flow):**
-  - Horizontally scrollable row of choice selection chips positioned directly beneath the header title.
-  - **RTL Flow:** Flows from right to left, fading smoothly into the logical end (left) edge using a translucent gradient overlay.
-  - **Filter Chips:** Pinned "فیلتر پیشرفته" (Advanced Filter) icon chip on the right, followed by "همه" (All), "خوانده نشده" (Unread), "تراکنش‌ها" (Transactions), "پشتیبان‌گیری" (Backup), "امنیتی" (Security), and "سیستم" (System).
+All structural elements, padding configurations, interactive cards, and action rows align strictly with BankYar's dynamic 8-unit spatial layout grid, guaranteeing geometric consistency and vertical rhythm.
 
-### 5.2 Zone B: Scrollable Notification Workspace & History
-- **Visual Presentation:** Dynamic vertically scrollable viewport that displays active notifications, chronological history, or a beautiful empty state.
-- **Region 1: Pinned Notifications & Active Warnings:**
-  - Placed at the top of Zone B, separated from Zone A by `bankyar.space.md`.
-  - Displays high-priority, pinned system notifications (e.g., active permission locks, root security warnings, or running background sync tasks).
-- **Region 2: Grouped Notification Feed:**
-  - Chronological grouped sections separated by `bankyar.space.lg`.
-  - Supports logical double-column master-detail splitting on wide displays.
-- **Region 3: Historical Archives:**
-  - Separated from active alerts by a clean horizontal divider. Displays read or archived alerts in a highly muted visual presentation.
+### 3.1 Grid Layout Metrics
+- **Compact Viewport (Smartphones):** 4 columns. Symmetrical outer margins are mapped to the token `bankyar.responsive.margin` (resolving to `bankyar.space.lg` on mobile). Inter-column gutters are bound to `bankyar.responsive.gutter` (`bankyar.space.md`).
+- **Medium Viewport (Tablets / Foldables):** 8 columns. Master-detail horizontal splitting. Symmetrical margins are bound to `bankyar.space.xl` and gutters to `bankyar.space.lg`.
+- **Expanded Viewport (Landscape / Large Tablets):** 12 columns. Content columns are constrained to `bankyar.responsive.container.width.max` to prevent uncomfortably stretched cards.
 
-### 5.3 Zone C: Persistent Navigation & System Diagnostics
-- **Visual Presentation:** Stays pinned at the bottom of the screen.
-- **Core Elements:**
-  - **Offline Diagnostics Status:** Centered small label "آفلاین و امن - رمزنگاری شده در دستگاه" (Offline & Secure - Encrypted on device) demonstrating 100% network-free operation.
-  - **Shell Bottom Navigation Bar:** Symmetrical 4-tab navigation bar providing rapid routing back to Dashboard, Analytics, Rules, and Settings.
+### 3.2 Vertical Baseline Rhythm
+Every component height, list margin, inner padding, and typographical leading is an exact integer multiple of the baseline spatial multiplier token `bankyar.global.space.base`.
+- `bankyar.space.xxs` (0.25x base unit, for subtle badges, status dots, and unread indicators)
+- `bankyar.space.xs` (0.5x base unit, for tight inline spacings and icons next to text labels)
+- `bankyar.space.sm` (1x base unit, for field labels, section titles, and minor component gaps)
+- `bankyar.space.md` (2x base unit, for default internal card padding and vertical list gaps)
+- `bankyar.space.lg` (3x base unit, for outer screen margins, screen divisions, and section headers)
+- `bankyar.space.xl` (4x base unit, for primary action buttons, bottom bars, and custom touch heights)
+- `bankyar.space.xxl` (6x base unit, for empty state illustrations and large vertical offsets)
 
 ---
 
-## 6. Detailed Component Specifications
+## 4. Detailed Component Specifications
 
-### 6.1 Interactive Notification Card Component
-The primary container card displaying structured notification metadata inside the app or inside system drawers.
+For every core element in the Notification Center interface, the design attributes must conform strictly to the following 17-point parameters. No element may use raw or hardcoded properties.
 
-```
-+--------------------------------------------------------------------------+
-| (Right Edge - Start)                                  (Left Edge - End)  |
-| [Unread Indicator]  [Bank/Category Icon]  Bank Name      Timestamp       |
-|                     Notification Title String             [Pin Icon]     |
-|                                                                          |
-|                     Notification Message Text Content                    |
-|                     Amount Display (Credit/Debit)                        |
-|                                                                          |
-|  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  |
-|                                                                          |
-| [Action Button 1 (RTL)]              [Action Button 2 (RTL)]             |
-+--------------------------------------------------------------------------+
-```
-
-1. **Unread Indicator Dot:** Centered vertically on the right (start) edge of the card. A small circular dot styled with primary brand accent `bankyar.semantic.color.status.error` and radius `bankyar.radius.full`, measuring `bankyar.space.xxs` in size. Removed instantly when marked as read.
-2. **Bank / Category Icon Frame:** Sized to `bankyar.icon.size.md` inside a flat circular container using `bankyar.radius.full`. Shows flat, high-contrast symbols representing the bank or notification class.
-3. **Sender / Source Name Title:** Aligned adjacent to the icon. Persian text (e.g. "بانک ملی ایران" or "پشتیبان سیستم") in bold title font `bankyar.semantic.typography.title.xs` using primary text token.
-4. **Timestamp Block:** Aligned to the logical end (left) edge. Renders Persian monospace characters (e.g., "۱۴:۳۲" or "دیروز") in low-contrast secondary text color.
-5. **Notification Title String:** Bold headline text situated below the top meta row. Styled with standard subtitle typography `bankyar.semantic.typography.body.md` using `bankyar.font.weight.bold`.
-6. **Notification Message Body:** Multi-line text block describing the event in clear, supportive language. Styled in standard body font `bankyar.semantic.typography.body.sm` in secondary text color, with line-height set to `bankyar.font.leading.loose` for readability.
-7. **Amount Display Label:** Bold numeric text representing financial values, positioned on the logical start (right) or logical end (left) depending on layout density.
-   - **Credit (Inflow):** Positive sign `+` (e.g. "+۱۲۵,۰۰۰ تومان") styled in success green `bankyar.semantic.color.status.success`.
-   - **Debit (Outflow):** Negative sign `-` (e.g. "-۴۵,۰۰۰ تومان") styled in standard primary text color `bankyar.semantic.color.text.primary`.
-8. **Inner Separator:** Symmetrical dashed border `bankyar.border.style.dashed` separating card content from quick actions row.
-9. **Quick Action Buttons Row:** Interactive, low-height text buttons aligned to the right (logical start). Sized to meet standard touch boundaries without overlapping.
-
-### 6.2 Grouped Notification Capsule
-- **Purpose:** Compresses multiple related notifications from the same sender or date into a single, clean visual stack.
-- **Visual Presentation:** Displays the primary (latest) notification card on top, overlaid with overlapping, offset border frames beneath, simulating a physical pile of cards.
-- **Interactions:** Tapping the stack triggers a smooth expand animation `bankyar.motion.curve.standard` spreading the nested cards vertically with standard gap spacings.
-
-### 6.3 Pinned Notification Alert Panel
-- **Purpose:** Displays high-priority system alerts (such as security warnings or active background optimizations) that cannot be dismissed until resolved.
-- **Visual Style:** Rounded rectangle container using `bankyar.radius.medium` with thick boundary strokes `bankyar.border.width.thick` colored in semantic warning or error status tokens.
-- **Accent Strip:** A solid vertical indicator strip positioned strictly at the right (logical start) border edge, matching the alert's severity level.
+### 4.1 Notification Summary & Unread Counter Component
+1. **Purpose:** Displays an aggregated status of unread notifications, giving users immediate visual feedback on pending events.
+2. **Business Value:** Prevents user anxiety by structuring unhandled events, leading to a calm and controlled financial management experience.
+3. **Visual Priority:** High priority in Zone A. Styled using prominent, high-contrast text.
+4. **Placement:** Pinned on the right (logical start) edge of the summary control row.
+5. **Spacing:** Inner margin is bound to `bankyar.space.xs`. Symmetrical outer padding is `bankyar.space.sm`.
+6. **Typography:** Numbers use the monospace typeface `bankyar.global.font.family.mono` styled with `bankyar.semantic.typography.title.sm` using `bankyar.font.weight.bold`.
+7. **Icons:** Red circular unread indicator dot `bankyar.semantic.color.status.error` sized to `bankyar.space.xxs`.
+8. **Elevation:** Elevation level zero `bankyar.elevation.level.zero`. Sits flat on the header background.
+9. **Interaction:** Tapping the summary triggers a filter toggle, focusing the list on unread notifications only.
+10. **Loading:** Replaced by a small, rounded shimmering capsule of width `bankyar.space.xl`.
+11. **Disabled:** Contrast opacity is reduced to `bankyar.opacity.medium` with touch triggers deactivated.
+12. **Error:** Outlined in error crimson `bankyar.semantic.color.status.error` if database fetching fails.
+13. **Success:** Transition animation triggers when all items are marked read, fading the indicator to zero opacity.
+14. **Accessibility:** TalkBack announces: *"۴ اعلان جدید خوانده نشده وجود دارد. جهت مشاهده ضربه بزنید."*
+15. **RTL Behaviour:** Placed at the logical right start, and reading direction is right-to-left.
+16. **Animation:** Fades out using standard curve `bankyar.motion.curve.standard` and fast duration `bankyar.motion.duration.fast`.
+17. **Future Expansion:** Prepared to display breakdown categories (e.g., "۳ واریزی، ۱ سیستم").
 
 ---
 
-## 7. Notification Templates Catalog
+### 4.2 Notification Search Input Component
+1. **Purpose:** Allows users to query notifications by bank name, transaction amounts, note text, or tags.
+2. **Business Value:** Provides rapid access to historical records, critical for resolving bank discrepancy disputes quickly.
+3. **Visual Priority:** Medium priority in Zone A.
+4. **Placement:** Positioned below the main summary title, spanning 100% of the active layout columns.
+5. **Spacing:** Top and bottom margins use `bankyar.space.sm`. Horizontal outer padding is `bankyar.space.md`.
+6. **Typography:** Default input prompt text uses `bankyar.semantic.typography.body.md` with muted contrast `bankyar.semantic.color.text.secondary`.
+7. **Icons:** Leading search glass icon `bankyar.icon.search` and trailing filter icon `bankyar.icon.filter`.
+8. **Elevation:** Elevation level one `bankyar.elevation.level.one` inside a soft background container.
+9. **Interaction:** Tapping opens keyboard focus. Typing updates the scrollable history feed in real time.
+10. **Loading:** Standard shimmering border line cycling along the boundary container.
+11. **Disabled:** Container background shifts to `bankyar.semantic.color.interactive.disabled` with input blocked.
+12. **Error:** Outlines in soft warning yellow `bankyar.semantic.color.status.error` when search returns zero results.
+13. **Success:** Active border shifts to primary accent `bankyar.semantic.color.border.active` when matches are found.
+14. **Accessibility:** Features a descriptive accessibility label: *"فیلد جستجوی اعلان‌ها. متنی برای جستجوی نام بانک یا مبالغ وارد کنید."*
+15. **RTL Behaviour:** Leading search icon is placed on the logical right (start). Text input flows from right to left.
+16. **Animation:** Keyboard activation pushes Zone B down smoothly using standard motion curve `bankyar.motion.curve.standard`.
+17. **Future Expansion:** Reserved space to store local, offline recent search queries.
 
-To guarantee visual consistency, accessibility, and clean architecture boundaries, the Notification system implements fifteen (15) distinct, pre-designed templates covering every potential system event.
+---
 
-### 7.1 New Bank Transaction Template
-- **Category:** Transaction
-- **Priority:** Silent (In-app Center) / Default (System Drawer)
-- **RTL Typography Mappings:**
-  - Title: "تراکنش بانکی جدید" (New Bank Transaction)
-  - Body: "تراکنش بانکی جدید از پیامک دریافتی شناسایی شد."
-- **Visual Styling & Icons:** Displays the generic bank card outline icon `icon_financial_card_default.svg`. Card border is standard subtle.
-- **Action Triggers:** `View Details` (مشاهده جزئیات), `Add Note` (افزودن یادداشت).
+### 4.3 Advanced Filter Choice Chips Row Component
+1. **Purpose:** Offers rapid horizontal switching of timeline filters (All, Unread, Today, This Week, Bank, Transaction Type, Security, Favorites, Pinned).
+2. **Business Value:** Minimizes user task execution times when locating specific alert types under stress.
+3. **Visual Priority:** Medium priority in Zone A.
+4. **Placement:** Horizontally scrollable row situated directly beneath the search input.
+5. **Spacing:** Standard spacing gap between chips is `bankyar.space.xs`. Outer row margins are `bankyar.space.md`.
+6. **Typography:** Chip labels use caption font `bankyar.semantic.typography.body.sm` with regular weight.
+7. **Icons:** Custom leading icons (e.g., star icon `bankyar.icon.favorite` for Favorites, pin icon `bankyar.icon.pin` for Pinned).
+8. **Elevation:** Sits flat on the canvas at elevation level zero `bankyar.elevation.level.zero`.
+9. **Interaction:** Single-select toggle behavior. Tapping an inactive chip highlights it and filters the feed immediately.
+10. **Loading:** Replaced by multiple shimmering rounded capsules.
+11. **Disabled:** Chips are visually greyed out and untouchable during database migrations.
+12. **Error:** Border flashes red if selected category filter fails to load query.
+13. **Success:** Active chip switches fill to primary accent `bankyar.semantic.color.interactive.default` with high-contrast text.
+14. **Accessibility:** TalkBack reads: *"دکمه فیلتر تراکنش‌های واریزی. غیرفعال. دو بار ضربه بزنید تا فعال شود."*
+15. **RTL Behaviour:** Row scrolls from logical right to logical left. Standard selection flows right-to-left.
+16. **Animation:** Horizontal sliding inertia is smooth, fading into the edge with a linear opacity gradient block.
+17. **Future Expansion:** Reserved database tags to support custom user-defined filter rules.
 
-### 7.2 Income (Credit) Template
+---
+
+### 4.4 Smart Category Capsules Component
+1. **Purpose:** Intelligent aggregated category chips (e.g., Income, Expenses, System, Warnings) dynamically created based on local metadata.
+2. **Business Value:** Automatically segments chaotic system events, helping users spot unusual cash flow fluctuations immediately.
+3. **Visual Priority:** High priority in Zone A.
+4. **Placement:** Placed above the search bar, adjacent to the unread summary count.
+5. **Spacing:** Internal margin uses `bankyar.space.xxs`. Horizontal capsule gaps are `bankyar.space.xs`.
+6. **Typography:** Styled with micro typography `bankyar.font.size.xs` in semi-bold weight.
+7. **Icons:** Mini trend indicators (e.g., up arrow for income, down arrow for expense) sized to `bankyar.icon.size.sm`.
+8. **Elevation:** Elevation level one `bankyar.elevation.level.one`.
+9. **Interaction:** Clicking updates category totals in-app. Long-press displays a quick summary sheet.
+10. **Loading:** Shows shimmering circular capsules of width matching active labels.
+11. **Disabled:** Visual contrast is reduced to 38% opacity.
+12. **Error:** Displays broken icon indicator if categorizer engine encounters a processing exception.
+13. **Success:** Smooth color flash when matching transactions are added to the active category bucket.
+14. **Accessibility:** TalkBack reads: *"دسته بندی هوشمند واریزها. شامل سه اعلان جدید."*
+15. **RTL Behaviour:** Layout aligns to logical right (start), scrolling towards left.
+16. **Animation:** Expand/collapse transition uses standard ease curve `bankyar.motion.curve.standard`.
+17. **Future Expansion:** Hooked to local on-device machine learning models for automated category sorting.
+
+---
+
+### 4.5 Standard Notification Card Component
+1. **Purpose:** Renders critical structured parameters of an individual alert.
+2. **Business Value:** Standardizes scattered multi-bank SMS structures into an easily readable ledger card.
+3. **Visual Priority:** Core high-priority interactive element in Zone B.
+4. **Placement:** Vertical rows within scrollable sections of Zone B.
+5. **Spacing:** Internal card padding is bound to `bankyar.space.md`. External card gap is `bankyar.space.sm`.
+6. **Typography:** Sender title uses bold subtitle `bankyar.semantic.typography.body.md` with high contrast. Message uses `bankyar.semantic.typography.body.sm` with standard spacing line leading.
+7. **Icons:** Bank logo container frame sized to `bankyar.icon.size.md` enclosed in `bankyar.radius.full`.
+8. **Elevation:** Flat background fill `bankyar.semantic.color.surface.flat` with a thin boundary stroke `bankyar.semantic.color.border.subtle`.
+9. **Interaction:** Tapping anywhere on the container card triggers a smooth detail expansion. Horizontal swipes reveal quick actions.
+10. **Loading:** Replaced by a high-fidelity shimmering skeleton structure mapping exactly to text rows.
+11. **Disabled:** Faded out to 38% opacity, and swipe listeners are deactivated.
+12. **Error:** Card border highlights in warning yellow `bankyar.semantic.color.status.error` when parsing errors are detected.
+13. **Success:** Green outline highlight flashes momentarily when a parsing error is resolved and saved.
+14. **Accessibility:** Read as a unified semantic node: *"بانک ملی ایران. برداشت وجه موفق. مبلغ منفی چهل و پنج هزار تومان. ساعت چهارده و سی و دو دقیقه."*
+15. **RTL Behaviour:** Bank icon is on the logical right start edge. Timestamp is on the logical left end edge. Texts read right-to-left.
+16. **Animation:** Swipe dismissal slides the card on the horizontal axis while fading container opacity to zero.
+17. **Future Expansion:** Ready to incorporate personalized sub-categorization tags and notes tags directly on the card face.
+
+---
+
+### 4.6 Grouped Notification Stack Component
+1. **Purpose:** Groups multiple related notifications from the same financial source into an overlapping stacked pile.
+2. **Business Value:** Prevents screen clutter when high-frequency transactions occur, reducing visual overwhelm.
+3. **Visual Priority:** Medium priority in Zone B.
+4. **Placement:** Interspersed within chronological lists.
+5. **Spacing:** Offset pile stacking uses vertical gaps bound to `bankyar.space.xxs`.
+6. **Typography:** Styled with identical standards as parent cards, showing count label "۳ پیام جدید" in micro-font.
+7. **Icons:** Overlapping stacked file outlines or double chevron indicator icons.
+8. **Elevation:** Stacked offset lines use elevation level one `bankyar.elevation.level.one`.
+9. **Interaction:** Tapping the stack triggers an accordion expansion, spreading nested cards vertically.
+10. **Loading:** Replaced by standard multi-layered shimmering outlines.
+11. **Disabled:** Accompanying controls are frozen with visual opacity desaturated.
+12. **Error:** Outlined in error status outline if database sub-queries fail.
+13. **Success:** Seamless expansion when unread child cards are resolved.
+14. **Accessibility:** TalkBack reads: *"گروه اعلان‌های بانک صادرات. شامل سه پیام جدید تایید نشده. جهت باز کردن دو بار ضربه بزنید."*
+15. **RTL Behaviour:** Mirroring matches the primary card layout, stacking cards with leftward and downward offsets.
+16. **Animation:** Accordion vertical expansion is powered by the natural easing curve `bankyar.motion.curve.standard`.
+17. **Future Expansion:** Space prepared to support nested "Clear Group" swipe commands.
+
+---
+
+### 4.7 Pinned System Warning Panel Component
+1. **Purpose:** Persistent banners for critical system states (e.g., background service limitations, database decryption issues).
+2. **Business Value:** Guarantees absolute reliability by ensuring critical system constraints are immediately visible and resolved.
+3. **Visual Priority:** Maximum priority in Zone B.
+4. **Placement:** Fixed at the top of Zone B, above all chronological lists.
+5. **Spacing:** Inner padding is `bankyar.space.md`. External margin is `bankyar.space.lg` to separate it from other content.
+6. **Typography:** Bold warning title using `bankyar.semantic.typography.body.md` with high-contrast text.
+7. **Icons:** Solid warning padlock or shield icon styled with amber status warning tokens.
+8. **Elevation:** Elevated surface tint overlay using elevation level two `bankyar.elevation.level.two`.
+9. **Interaction:** Tapping launches the localized diagnostic tutorial or permission settings screen. Non-dismissible until resolved.
+10. **Loading:** Replaced by a high-priority shimmering alert card.
+11. **Disabled:** Visual interactivity is locked when background resolution is running.
+12. **Error:** Outlines flash red during verification failure.
+13. **Success:** Panel slides upward off-screen and disappears once permissions are granted.
+14. **Accessibility:** High-priority TalkBack alert: *"هشدار سیستم! دسترسی پیامک صادر نشده است. جهت اصلاح ضربه بزنید."*
+15. **RTL Behaviour:** Icon aligns to logical right start. Close action (if available) aligns to logical left end.
+16. **Animation:** Slide-down transition on launch uses fast decelerate curve `bankyar.motion.curve.decelerate`.
+17. **Future Expansion:** Ready to integrate local device hardware diagnostics status.
+
+---
+
+### 4.8 Quick Action Interactive Button Row Component
+1. **Purpose:** Low-height row of interactive quick action buttons positioned on expanded cards or bottom sheets.
+2. **Business Value:** Increases transactional speed, letting users categorize, tag, or write annotations in seconds.
+3. **Visual Priority:** Medium priority.
+4. **Placement:** Embedded within the bottom edge of an expanded notification card container.
+5. **Spacing:** Symmetrical horizontal margin is `bankyar.space.md`. Vertical gaps are `bankyar.space.xs`.
+6. **Typography:** Styled with micro typography labels `bankyar.semantic.typography.body.sm` in medium weight.
+7. **Icons:** Inline functional symbols (e.g., note icon `bankyar.icon.note`, edit icon `bankyar.icon.edit`, trash icon `bankyar.icon.delete`).
+8. **Elevation:** Zero elevation `bankyar.elevation.level.zero`. Sits flat inside the card.
+9. **Interaction:** Tapping triggers action modals immediately. Press triggers scale compression of 0.98x.
+10. **Loading:** Text labels are replaced by small centered spinning circular progress rings.
+11. **Disabled:** Blocked with 38% opacity mask, preventing double-taps during active processes.
+12. **Error:** Button borders flash red if action (e.g., file write) fails.
+13. **Success:** Green indicator flash with checkmark upon successful transaction modification.
+14. **Accessibility:** Buttons have custom labels: *"دکمه افزودن یادداشت به تراکنش بانک ملی ایران. دو بار ضربه بزنید."*
+15. **RTL Behaviour:** Actions flow from right to left, matching standard reading paths.
+16. **Animation:** Row slides down smoothly from the card fold during card expansion.
+17. **Future Expansion:** Customizable quick actions based on user-defined priority settings.
+
+---
+
+### 4.9 Persistent Offline Diagnostics Badge Component
+1. **Purpose:** A clean visual status badge verifying secure, connection-free database operation.
+2. **Business Value:** Reassures privacy-focused users that their financial records are kept 100% local and secure.
+3. **Visual Priority:** Muted priority in Zone C.
+4. **Placement:** Centered horizontally directly above the bottom navigation shell bar.
+5. **Spacing:** Symmetrical margins are bound to `bankyar.space.xs`.
+6. **Typography:** Micro caption text using monospace font styled with regular weight.
+7. **Icons:** An active green status dot `bankyar.semantic.color.status.success` with size `bankyar.space.xxs`.
+8. **Elevation:** Flat background fill elevation zero `bankyar.elevation.level.zero`.
+9. **Interaction:** Tapping displays a secure overlay outlining the application's zero-network parameters.
+10. **Loading:** Constant status, no loading state needed.
+11. **Disabled:** Locked in offline-only state. Unaffected by system status.
+12. **Error:** Dot flashes red if local database integrity diagnostics fail.
+13. **Success:** Constant steady green glow, reassuring the user.
+14. **Accessibility:** TalkBack reads: *"پایگاه داده آفلاین و رمزنگاری شده فعال است. برنامه هیچگونه دسترسی به اینترنت ندارد."*
+15. **RTL Behaviour:** Mirrored layout places the green status dot to the logical right (start) of the label.
+16. **Animation:** Gentle pulse cycle on startup, stabilizing to static display.
+17. **Future Expansion:** Ready to display real-time local file system size readouts.
+
+---
+
+## 5. Notification Templates Catalog
+
+To ensure complete visual consistency, the system provides eleven (11) pre-designed templates covering every potential system event.
+
+```
++--------------------------------------------------------------------------+
+|  Template Visual Signatures Overview (RTL Flow)                          |
+|                                                                          |
+|  [واریز وجه (Deposit)]     --> Frame: Soft Green Circle    --> Amount: Green (+۱۰۰,۰۰۰) |
+|  [برداشت وجه (Debit)]     --> Frame: Neutral Gray Circle  --> Amount: Standard (-۵۰,۰۰۰) |
+|  [خطای پردازش (Failed)]   --> Frame: Warning Amber Outline--> Actions: Retry (تلاش مجدد) |
+|  [امنیت سیستم (Security)] --> Frame: Critical Red Border  --> Status: Non-Dismissible |
++--------------------------------------------------------------------------+
+```
+
+### 5.1 Deposit Notification Template
 - **Category:** Financial Inflow
-- **Priority:** Default (System Tray) / High (Biometric Lock Override if Amount is high)
+- **Priority:** Default (System Tray) / High (Lock Screen biometric challenge if amount is high)
 - **RTL Typography Mappings:**
   - Title: "واریز وجه موفق" (Successful Deposit)
   - Body: "مبلغ مشخص شده به حساب شما واریز گردید."
-- **Visual Styling & Icons:** Left-pointing arrow icon `icon_financial_income_default.svg` enclosed in a soft green container circle. The cash value utilizes success green text color.
-- **Action Triggers:** `View Details` (مشاهده جزئیات), `Mark Favorite` (نشان‌گذاری).
+- **Visual Styling & Icons:** Soft green circular container enclosing a left-pointing arrow icon `icon_financial_income_default.svg`. Transaction amounts use success green text color.
+- **Action Triggers:** `Open Transaction` (مشاهده جزئیات), `Add Note` (افزودن یادداشت).
 
-### 7.3 Expense (Debit) Template
+### 5.2 Withdrawal Notification Template
 - **Category:** Financial Outflow
 - **Priority:** Default (System Tray)
 - **RTL Typography Mappings:**
   - Title: "برداشت وجه موفق" (Successful Withdrawal)
   - Body: "مبلغ مشخص شده از حساب شما برداشت گردید."
-- **Visual Styling & Icons:** Right-pointing arrow icon `icon_financial_expense_default.svg` in a neutral gray container circle. Cash value uses standard primary text color.
-- **Action Triggers:** `View Details` (مشاهده جزئیات), `Add Note` (افزودن یادداشت).
+- **Visual Styling & Icons:** Neutral gray circular container enclosing a right-pointing arrow icon `icon_financial_expense_default.svg`. Amounts use standard high-contrast text color.
+- **Action Triggers:** `Open Transaction` (مشاهده جزئیات), `Add Note` (افزودن یادداشت).
 
-### 7.4 Transfer (P2P Card-to-Card) Template
-- **Category:** Transaction Transfer
-- **Priority:** Default (System Tray)
-- **RTL Typography Mappings:**
-  - Title: "کارت به کارت موفق" (Successful P2P Transfer)
-  - Body: "انتقال وجه بین بانکی با موفقیت ثبت شد."
-- **Visual Styling & Icons:** Reciprocal double horizontal arrows icon `icon_financial_transfer_default.svg`. Uses standard card outlines.
-- **Action Triggers:** `View Details` (مشاهده جزئیات), `Share Receipt` (اشتراک‌گذاری).
-
-### 7.5 ATM Withdrawal Template
-- **Category:** Physical Cash
-- **Priority:** Silent (System Tray)
-- **RTL Typography Mappings:**
-  - Title: "برداشت نقدی از خودپرداز" (ATM Cash Withdrawal)
-  - Body: "برداشت نقدی فیزیکی از دستگاه خودپرداز شناسایی شد."
-- **Visual Styling & Icons:** Cash stack/ATM machine icon `icon_financial_atm_default.svg`. Card styling is neutral flat.
-- **Action Triggers:** `View Details` (مشاهده جزئیات), `Add Note` (افزودن یادداشت).
-
-### 7.6 Card Purchase Template
+### 5.3 Purchase Notification Template
 - **Category:** Store Transaction
 - **Priority:** Default (System Tray)
 - **RTL Typography Mappings:**
   - Title: "خرید فروشگاهی" (Store Purchase)
   - Body: "پرداخت موفق روی پایانه فروشگاهی (POS)."
-- **Visual Styling & Icons:** POS terminal or shopping bag outline icon `icon_financial_purchase_default.svg`. Standard semantic border subtle.
-- **Action Triggers:** `View Details` (مشاهده جزئیات), `Add Note` (افزودن یادداشت), `Mark Favorite` (نشان‌گذاری).
+- **Visual Styling & Icons:** Shopping bag outline icon `icon_financial_purchase_default.svg` inside a standard gray container. Standard subtle borders.
+- **Action Triggers:** `Open Transaction` (مشاهده جزئیات), `Add Note` (افزودن یادداشت), `Pin Notification` (سنجاق کردن).
 
-### 7.7 Failed Parsing Template
-- **Category:** System Alert (Low Priority Warning)
+### 5.4 Transfer Notification Template
+- **Category:** Transaction Transfer
+- **Priority:** Default (System Tray)
+- **RTL Typography Mappings:**
+  - Title: "کارت به کارت موفق" (Successful P2P Transfer)
+  - Body: "انتقال وجه بین بانکی با موفقیت ثبت شد."
+- **Visual Styling & Icons:** Reciprocal double horizontal arrows icon `icon_financial_transfer_default.svg`. Card layout uses standard subtle outline.
+- **Action Triggers:** `Open Transaction` (مشاهده جزئیات), `View Bank Details` (اطلاعات بانک).
+
+### 5.5 ATM Notification Template
+- **Category:** Physical Cash
+- **Priority:** Silent (System Tray)
+- **RTL Typography Mappings:**
+  - Title: "برداشت نقدی از خودپرداز" (ATM Cash Withdrawal)
+  - Body: "برداشت نقدی فیزیکی از دستگاه خودپرداز شناسایی شد."
+- **Visual Styling & Icons:** Cash stack/ATM machine icon `icon_financial_atm_default.svg`. Styling uses neutral flat colors.
+- **Action Triggers:** `Open Transaction` (مشاهده جزئیات), `Add Note` (افزودن یادداشت).
+
+### 5.6 Failed Transaction Template
+- **Category:** Financial Failure
+- **Priority:** High (In-app Warning Feed)
+- **RTL Typography Mappings:**
+  - Title: "تراکنش ناموفق" (Failed Transaction)
+  - Body: "تراکنش بانکی به دلیل موجودی ناکافی یا خطای سامانه انجام نشد."
+- **Visual Styling & Icons:** Red exclamation triangle icon `icon_status_failed_default.svg`. Card highlights in soft red outline.
+- **Action Triggers:** `Open Transaction` (مشاهده جزئیات), `Dismiss` (رد کردن).
+
+### 5.7 Unknown Transaction Template
+- **Category:** Parsing Alert (Low Confidence Match)
 - **Priority:** High (In-app Warning Feed)
 - **RTL Typography Mappings:**
   - Title: "خطا در خواندن پیامک" (SMS Parsing Error)
   - Body: "یک پیامک بانکی دریافت شد اما ساختار آن توسط الگوهای فعلی شناسایی نگردید. جهت تکمیل اطلاعات ضربه بزنید."
-- **Visual Styling & Icons:** Broken magnifying glass outline icon `icon_status_failed_default.svg` in low-saturation warning yellow. Card border highlights in soft warning yellow outline.
+- **Visual Styling & Icons:** Broken magnifying glass icon `icon_status_failed_default.svg` in warning yellow. Outlined in soft warning yellow.
 - **Action Triggers:** `Retry Parsing` (تلاش مجدد), `Add Note` (افزودن دستی).
 
-### 7.8 Duplicate SMS Template
-- **Category:** Deduplication Filter (Silent)
-- **Priority:** Silent (No status bar alert, logged in In-app Notification History)
+### 5.8 Security Alert Template
+- **Category:** Critical System Threat
+- **Priority:** High (Heads-up alert with device vibration pattern, pinned alert panel)
 - **RTL Typography Mappings:**
-  - Title: "پیامک تکراری نادیده گرفته شد" (Duplicate SMS Ignored)
-  - Body: "یک پیامک با مشخصات و هش یکسان دریافت و جهت جلوگیری از تکرار اطلاعات، فیلتر گردید."
-- **Visual Styling & Icons:** Double overlapping files icon `icon_status_duplicate_default.svg` in highly muted gray opacity.
-- **Action Triggers:** `Dismiss` (رد کردن).
+  - Title: "هشدار امنیتی سیستم" (Critical Security System Alert)
+  - Body: "احتمال دسترسی غیرمجاز یا تغییر در ساختار امنیتی دستگاه شناسایی شد. دسترسی محلی موقتاً محدود می‌گردد."
+- **Visual Styling & Icons:** Solid warning padlock icon `icon_security_lock_default.svg` in high-contrast error red. Card highlights in thick red border.
+- **Action Triggers:** `View Bank Details` (مرکز امنیت), `Dismiss` (بستن).
 
-### 7.9 Backup Completed Template
-- **Category:** Data Protection Success
-- **Priority:** Default (System Tray) / Silent (In-app History)
-- **RTL Typography Mappings:**
-  - Title: "پشتیبان‌گیری موفق" (Backup Completed Successfully)
-  - Body: "فایل پشتیبان جدید دیتابیس محلی با موفقیت ایجاد و رمزگذاری گردید."
-- **Visual Styling & Icons:** Secure document shield checkmark icon `icon_security_shield_default.svg` in success green.
-- **Action Triggers:** `View Details` (مشاهده جزئیات), `Dismiss` (بستن).
-
-### 7.10 Backup Failed Template
-- **Category:** Data Protection Warning (High Severity)
+### 5.9 Backup Reminder Template
+- **Category:** Data Protection Warning
 - **Priority:** High (System heads-up alert, persistent in in-app warning tray)
 - **RTL Typography Mappings:**
   - Title: "پشتیبان‌گیری ناموفق" (Backup Failed)
   - Body: "فضای ذخیره‌سازی محلی دستگاه پر است. لطفاً جهت جلوگیری از خطر از دست رفتن اطلاعات، فضا خالی کنید."
 - **Visual Styling & Icons:** Solid warning shield exclamation icon `icon_status_warning_default.svg` in semantic error red.
-- **Action Triggers:** `Backup Now` (پشتیبان‌گیری مجدد), `View Logs` (مشاهده گزارش خطا).
+- **Action Triggers:** `Open Transaction` (پشتیبان‌گیری مجدد).
 
-### 7.11 Security Warning Template
-- **Category:** System Threat (Critical Severity)
-- **Priority:** High (Heads-up alert with device vibration pattern, pinned alert panel)
-- **RTL Typography Mappings:**
-  - Title: "هشدار امنیتی سیستم" (Critical Security System Alert)
-  - Body: "احتمال دسترسی غیرمجاز یا تغییر در ساختار امنیتی دستگاه شناسایی شد. دسترسی محلی موقتاً محدود می‌گردد."
-- **Visual Styling & Icons:** Solid warning padlock padlock icon `icon_security_lock_default.svg` in high-contrast error red.
-- **Action Triggers:** `Security Center` (مرکز امنیت), `Dismiss` (بستن).
-
-### 7.12 Permission Missing Template
-- **Category:** System Requirement (High Severity)
+### 5.10 Permission Reminder Template
+- **Category:** System Requirement
 - **Priority:** High (Pinned app-header banner, non-dismissible)
 - **RTL Typography Mappings:**
   - Title: "دسترسی پیامک صادر نشده است" (SMS Permission Missing)
   - Body: "بدون دسترسی خواندن پیامک، امکان دریافت و پردازش خودکار تراکنش‌ها وجود ندارد. جهت صدور دسترسی ضربه بزنید."
 - **Visual Styling & Icons:** Empty envelope next to a small security key icon `icon_status_warning_default.svg` in warning yellow.
-- **Action Triggers:** `Grant Permission` (صدور دسترسی), `Open Settings` (تنظیمات گوشی).
+- **Action Triggers:** `Open Transaction` (صدور دسترسی).
 
-### 7.13 Battery Optimization Warning Template
-- **Category:** Background Service Health (Medium Severity)
-- **Priority:** High (In-app Warning Panel, persistent)
-- **RTL Typography Mappings:**
-  - Title: "محدودیت مصرف باتری فعال است" (Battery Optimization Restricting Ingestion)
-  - Body: "تنظیمات بهینه‌سازی باتری سیستم‌عامل ممکن است باعث بسته شدن سرویس پیش‌زمینه و حذف برخی تراکنش‌ها گردد."
-- **Visual Styling & Icons:** Empty battery silhouette with an overlay key icon `icon_status_warning_default.svg` in warning yellow.
-- **Action Triggers:** `Ignore Optimization` (غیرفعال‌سازی محدودیت), `Help Guide` (راهنمای گام‌به‌گام).
-
-### 7.14 Database Error Template
-- **Category:** Storage Resilience (Critical Severity)
-- **Priority:** High (Blocking alert, launches Disaster Recovery Screen)
-- **RTL Typography Mappings:**
-  - Title: "خطا در خواندن پایگاه داده" (Database Read/Write Error)
-  - Body: "ساختار پایگاه داده محلی با مشکل مواجه شده است. لطفاً آخرین فایل پشتیبان امن خود را بارگذاری کنید."
-- **Visual Styling & Icons:** Fragmented database cylinder icon `icon_error_database.svg` in high-contrast error red.
-- **Action Triggers:** `Restore Backup` (بازیابی پشتیبان), `Retry Repair` (تعمیر خودکار).
-
-### 7.15 Application Update (Future Ready Template)
-- **Category:** Software Lifecycle (Silent)
+### 5.11 Application Update (Future) Template
+- **Category:** Software Lifecycle
 - **Priority:** Silent (No system status bar interruption, logged in Settings & Help Center)
 - **RTL Typography Mappings:**
   - Title: "به‌روزرسانی جدید بانکیار" (New Application Version Available)
   - Body: "نسخه جدید بانکیار شامل الگوهای جدید شناسایی بانک‌ها منتشر شد. به‌روزرسانی کاملاً آفلاین و امن است."
-- **Visual Styling & Icons:** Clockwise dynamic circular arrow surrounding a package outline `icon_nav_settings_default.svg` in subtle primary brand accent.
-- **Action Triggers:** `Go to Download` (دانلود نسخه جدید), `Dismiss` (بستن).
+- **Visual Styling & Icons:** Clockwise circular arrow surrounding a package outline `icon_nav_settings_default.svg` in subtle primary brand accent.
+- **Action Triggers:** `Open Transaction` (دانلود نسخه جدید), `Dismiss` (بستن).
 
 ---
 
-## 8. Quick Actions Architecture
+## 6. Smart Actions Architecture
 
-To maximize interaction speed, each notification card provides a standardized row of Quick Action Buttons. Quick Actions conform strictly to physical usability guidelines, with zero hardcoded code and absolute pixel density adaptability.
+Each notification card provides a standardized row of Quick Action Buttons. To maximize interaction speed, each button maps to a standardized action type.
 
-### 8.1 List of Quick Actions & Mappings
-1. **View Details (مشاهده جزئیات):** Directs the user to the full Transaction Detail Viewer, loading the raw SMS text, extracted metadata fields, notes, and relational tags.
+### 6.1 Action Type Definitions & Mechanics
+1. **Open Transaction (مشاهده جزئیات):** Directs the user to the full Transaction Detail Viewer, loading the raw SMS text, extracted metadata fields, notes, and relational tags.
 2. **Add Note (افزودن یادداشت):** Instantly displays a contextual, lightweight bottom sheet overlay featuring a text input field, enabling users to write annotations without leaving the active drawer.
-3. **Mark Favorite (نشان‌گذاری):** Toggles the transaction's favorite status. Tapping this fills the star icon instantly using a Gold semantic status color.
-4. **Share (اشتراک‌گذاری):** Compiles the extracted transaction parameters into a beautifully structured, plaintext financial statement and launches the native Android Share Sheet, letting the user safely save or send the text.
-5. **Dismiss (رد کردن):** Instantly fades the active notification card out of the feed, deleting it from active unread lists.
-6. **Open Dashboard (ورود به برنامه):** Launches the application, initiating a biometric challenge and displaying the dashboard.
-7. **Retry Parsing (تلاش مجدد):** Re-runs the custom SMS parser templates against the underlying raw SMS body text, updating metadata records in the encrypted SQLite database on a successful match.
-8. **Backup Now (پشتیبان‌گیری):** Immediately triggers the local-only database backup pipeline, prompting the user for a password to output an encrypted `.bankyar` file.
-
-### 8.2 Touch Target Compliance
-Every action button maintains an invisible physical boundary that meets or exceeds the minimum accessible touch target threshold of **48 dynamic units**, mapped to `bankyar.space.xl` bounds, protecting users with motor impairments.
+3. **Edit Note (ویرایش یادداشت):** Opens the same bottom sheet overlay pre-filled with the existing text, allowing quick modifications.
+4. **Mark as Read (علامت‌گذاری به عنوان خوانده شده):** Fades the unread indicator dot out, updates database status, and reduces container opacity by one step.
+5. **Mark as Unread (علامت‌گذاری به عنوان خوانده نشده):** Restores the red unread indicator dot and returns the card to high-contrast styling.
+6. **Pin Notification (سنجاق کردن اعلان):** Pins the notification card to the top of the feed under the Pinned section. Tapping this fills the pin icon instantly.
+7. **Delete Notification (حذف اعلان):** Removes the active card from the feed, displaying an "Undo Delete" trigger bar at the bottom of the screen.
+8. **Mute Similar Notifications (بی‌صدا کردن موارد مشابه):** Opens a dialog prompting the user to silence future alerts from this specific sender or bank category.
+9. **View Bank Details (اطلاعات بانک):** Displays a localized summary overlay showing account numbers, recent cash flow totals, and associated parsing templates.
 
 ---
 
-## 9. Multi-Criteria Grouping Models
+## 7. Filter Rules & Multi-Criteria Grouping Models
 
-To keep high-volume alerts structured and easy to scan, the Notification Center supports five (5) programmatic grouping methods. Grouping is processed locally on the encrypted SQLite database using fast indices.
+To keep high-volume alerts structured and easy to scan, the Notification Center supports nine (9) chronological and structural filtering models.
 
-```
-+-------------------------------------------------------------------------+
-| SELECT GROUPING TYPE:                                                   |
-| [Date (تاریخ)]    [Bank (بانک)]    [Type (نوع)]   [Priority (اولویت)]   |
-+-------------------------------------------------------------------------+
-|  Example Result (Grouped by Bank):                                      |
-|  ▼ بانک ملی ایران (Melli Bank Group - 3 Alerts)                          |
-|    - -۱۲۵,۰۰۰ تومان (Debit Transaction Card)                            |
-|    - +۴۵,۰۰۰ تومان  (Credit Transaction Card)                            |
-|  ▼ بانک ملت (Mellat Bank Group - 1 Alert)                                |
-|    - -۲,۰۰۰ تومان   (Debit Transaction Card)                            |
-+-------------------------------------------------------------------------+
-```
-
-### 9.1 Grouping Categories
-1. **Date (تاریخ):** Chronological categorization dividing notifications into logical time buckets (e.g., "امروز" - Today, "دیروز" - Yesterday, "هفته گذشته" - Last Week).
-2. **Bank (بانک):** Groups alerts by the issuing financial source (e.g., "بانک ملی", "بانک ملت", "بانک صادرات"). Perfect for verifying spending patterns on specific cards.
-3. **Transaction Type (نوع تراکنش):** Separates notifications based on cashflow direction, organizing cards into "واریزها" (Deposits/Income), "برداشت‌ها" (Withdrawals/Expenses), and "غیره" (Non-financial system alerts).
-4. **Priority (سطح اولویت):** Categorizes notifications by severity: "مهم" (High-priority warnings, root alerts, backup failures) and "عادی" (Silent transactions, background optimizations).
-5. **Unread (خوانده نشده):** Groups alerts by read status, placing unread notifications at the top of the feed and collapsing read notifications into a secondary historical list.
+### 7.1 Filter Segment Definitions
+- **All (همه):** Default view. Displays all parsed and system notifications in reverse-chronological order.
+- **Unread (خوانده نشده):** Filters the feed to show only notifications with active unread indicator dots.
+- **Today (امروز):** Filters the feed to show only notifications with timestamps matching the current Solar Hijri calendar date.
+- **This Week (این هفته):** Filters the feed to show notifications received within the last 7 calendar days.
+- **Bank (بانک):** Groups alerts by the issuing financial source (e.g., Bank Melli, Bank Mellat), helping users verify spending patterns on specific cards.
+- **Transaction Type (نوع تراکنش):** Organizes cards into Deposits (Income), Withdrawals (Expenses), or non-financial system alerts.
+- **Security (امنیت):** Filters the feed to show only security warnings, database error alerts, or root detection panels.
+- **Favorites (نشان‌شده‌ها):** Displays only notification cards that have been starred by the user.
+- **Pinned (سنجاق‌شده‌ها):** Filters the feed to show only pinned system alerts or pinned user notifications.
 
 ---
 
-## 10. Privacy-First Shield Engine
-
-Operating as a secure, offline-first personal finance platform, BankYar implements a robust **Privacy Shield Engine** to prevent local financial exposure on shared devices.
-
-### 10.1 Lock Screen Privacy Options
-- **Hide Amount on Lock Screen (مخفی‌سازی مبالغ):** Replaces exact transaction numbers with generic masks on the lock screen (e.g., "-۴۵,۰۰۰ تومان" becomes "-***,*** تومان"). Detailed cash values are only displayed once the device is unlocked.
-- **Hide Balance (مخفی‌سازی مانده حساب):** Masks the remaining account balance on system notifications, protecting the user's overall net worth from shoulder surfing.
-- **Hide Sensitive Content (مخفی‌سازی اطلاعات حساس):** Replaces detailed bank names and merchant details with neutral, generic text on the lock screen (e.g., "برداشت ۱۲۰,۰۰۰ تومان از بانک ملت" is masked to "تراکنش بانکی ثبت شد").
-- **Private Notification Mode (اعلان خصوصی):** A high-security setting that strips all transactional metadata from system notifications, showing only a reassuring, neutral message (e.g., "بانکیار: تراکنش جدید شناسایی شد. جهت مشاهده، برنامه را باز کنید").
-- **Unlock Before Viewing (تایید هویت قبل از ورود):** Tapping any system notification requires successful biometric or PIN verification before launching the target screen, protecting local financial files.
-
----
-
-## 11. Deep-Link Routing Matrix
-
-Deep-link navigation defines the precise, secure routing pathways from notifications to core application sections, wrapping all transitions in biometric challenges to prevent unauthorized local access.
-
-```
-                  [System Status Bar / Lock Screen Alert]
-                                    │
-                                    ▼
-                         [User Taps Notification]
-                                    │
-                                    ▼
-                [Active Biometric / PIN Challenge Gate]
-                                    │
-                                    ├──► (Fails / Cancelled) ──► Lockout / Exit App
-                                    │
-                                    └──► (Success)
-                                          │
-                                          ▼
-                         [Deep Link Routing Decider]
-                                    │
-         ┌──────────────────┼──────────────────┼──────────────────┐
-         ▼                  ▼                  ▼                  ▼
-   [Dashboard]    [Transaction Details] [Backup Center]   [Security Center]
-```
-
-### 11.1 Target Routing Paths
-- **Dashboard (داشبورد):** Routed from generic transaction notifications or application update logs. Launches the main cashflow summary feed.
-- **Transaction Details (جزئیات تراکنش):** Routed from successful income or expense notifications. Launches the Transaction Detail inspector directly, displaying full metadata, the raw SMS text, and annotation options.
-- **Backup Center (مرکز پشتیبان‌گیری):** Routed from Backup Completed or Backup Failed alerts. Directs the user to the backup status card and device storage progress displays.
-- **Security Center (مرکز امنیت):** Routed from security warnings, root detections, or environment alerts. Launches the centralized Security & Privacy Center to help the user resolve issues.
-- **Settings (تنظیمات):** Routed from missing permissions or battery optimization warnings, directing the user to the relevant settings card to resolve the issue.
-
----
-
-## 12. Dynamic Interaction States Mapping
+## 8. Screen States Experience System
 
 Components adjust their visual layers dynamically based on system states, supporting seamless transitions and providing clear visual feedback:
 
-| Interactive State | UI Component Visual Representation | Transition Curve & Speed | Accessibility Action (TalkBack Map) |
-| :--- | :--- | :--- | :--- |
-| **Unread (خوانده نشده)** | High-contrast card borders. A red status dot is displayed on the logical start (right) edge. Title text is bold. | Default loaded state | TalkBack announces: *"اعلان خوانده نشده. [محتوای پیام]."* |
-| **Read (خوانده شده)** | Status dot fades out. Background container opacity desaturates by -1 step. Typography shifts to secondary contrast. | Smooth fade `bankyar.motion.duration.fast` | TalkBack announces: *"اعلان خوانده شده. [محتوای پیام]."* |
-| **Pinned (سنجاق شده)** | Card borders highlight with thick warning outlines. Displays a pinned pin icon `icon_nav_star_active.svg` at the top edge. Dismiss swipe gestures are blocked. | Instant load | TalkBack announces: *"اعلان سنجاق شده سیستم. غیرقابل حذف."* |
-| **Archived (بایگانی شده)**| Removed from the active unread list and collapsed into a secondary history list below. Card contrast is minimized. | Slide-down transition `bankyar.motion.duration.medium` | TalkBack announces: *"به بایگانی منتقل شد."* |
-| **Dismissed (حذف شده)**| Card sweeps off the screen on the horizontal axis (RTL swipe flows right to left) and fades to zero opacity. | Decelerated sweep `bankyar.motion.duration.fast` | TalkBack announces: *"اعلان حذف شد."* |
-| **Loading (بارگذاری)**| Transaction cards are replaced by shimmering skeleton blocks, sweeping from right to left (RTL) inline with regional reading habits. | Continuous linear shimmer loop | TalkBack announces: *"در حال بارگذاری مرکز اعلان‌ها..."* |
-| **Offline (آفلاین)** | A green status badge remains active in the sticky footer, confirming secure connection-free database operation. | Static display | TalkBack announces: *"وضعیت آفلاین و امن فعال است."* |
-| **Error (خطا)** | Card borders turn red. Shows warning icon `icon_status_failed_default.svg` with red alert subtext. | Horizontal axis shake on launch | High-priority TalkBack alert: *"خطا در اجرای فرآیند."* |
-| **Permission Missing**| Action buttons display a yellow warning icon with helper text, prompting the user to grant permissions. | Fast slide-down | Prominent warning is read immediately to screen readers. |
+```
++-------------------------------------------------------------------------+
+| Screen States Experience Flow                                           |
+|                                                                         |
+|  [Loading State]        --> Continuous linear shimmer from right-to-left|
+|  [Empty State]          --> Centered illustration with clear action button|
+|  [Offline State]        --> Green status badge active, no-network warning|
+|  [Error State]          --> Red border glow, retry trigger button active|
++-------------------------------------------------------------------------+
+```
+
+### 8.1 Loading State (Shimmer Skeleton)
+- **Visual Representation:** When opening the Notification Center, standard cards are replaced by shimmering skeleton blocks.
+- **Shimmer Flow:** Shimmer sweeps continuously from right to left (RTL), inline with regional reading habits.
+- **Design Token Mapping:** Shimmer background uses `bankyar.semantic.color.background` with overlay gradient opacity.
+
+### 8.2 Empty State Layout
+- **Visual Representation:** Centered layout displaying a clean, minimal vector illustration of a quiet, empty mailbox.
+- **Copy Mapping:**
+  - Main Label: "مرکز اعلان‌های شما خالی است" (Your Notification Center is Empty) styled with `bankyar.semantic.typography.title.sm`.
+  - Subtext: "پس از دریافت اولین پیامک بانکی، تراکنش‌های شما به صورت خودکار در این قسمت سازماندهی خواهند شد."
+- **Action Trigger:** A prominent, flat action button "شبیه‌سازی دریافت پیامک" (Simulate SMS Ingestion) centered below to help first-time users test the system.
+
+### 8.3 Offline-First Security State
+- **Visual Representation:** An active green status dot `bankyar.semantic.color.status.success` is displayed next to a centered small label "اتصال شبکه قطع است - اطلاعات ۱۰۰٪ روی گوشی شماست" (Network disconnected - data is 100% on your phone).
+- **Aesthetics:** High-contrast text on a flat background fill, confirming complete offline operations.
+
+### 8.4 Error State Layout
+- **Visual Representation:** Displayed if local database queries fail. Outline borders turn red, accompanied by an amber alert icon and helpful subtext.
+- **Copy Mapping:**
+  - Error Copy: "خطا در بارگذاری تاریخچه اعلان‌ها. پایگاه داده رمزنگاری شده قفل شده یا با مشکل مواجه گردیده است."
+- **Action Triggers:** "تلاش مجدد" (Retry load) and "تعمیر پایگاه داده" (Database Repair Tool) styled with error crimson borders.
 
 ---
 
-## 13. Responsive Form Factors & Viewport Configurations
+## 9. Dialogue Specifications & Overlays
 
-The Notification Center and alert templates adapt dynamically to preserve visual balance across different device sizes:
+To handle critical actions securely, the system defines six (6) standardized dialog panels. Dialogs conform to Material Design 3 spacing and vertical rhythms.
 
-### 13.1 Phone Viewport
-- **Visual Grid:** Single-column layout. Standard margins and paddings are applied to maximize readable area.
-- **Interactive Sheets:** Quick Actions (such as "Add Note") open a bottom modal sheet spanning 100% of horizontal columns. Persistent Bottom Navigation remains visible in Zone C.
+### 9.1 Dialog 1: Delete Notification Dialog
+- **Purpose:** Requests confirmation before permanently deleting a notification from the local database.
+- **RTL Copy Mapping:**
+  - Title: "حذف دائم اعلان؟" (Delete Notification Permanently?)
+  - Body: "این عملیات قابل بازگشت نیست. آیا از حذف این اعلان مطمئن هستید؟"
+- **Action Buttons (RTL Flow):**
+  - Logical Start (Right): High-priority filled button "بله، حذف شود" styled with destructive error crimson tokens.
+  - Logical End (Left): Neutral border button "انصراف" (Cancel).
 
-### 13.2 Large Phone Viewport
-- **Visual Grid:** Expanded spacing between cards and sections. Card padding is slightly increased to support comfortable touch targets.
-- **Interactive Sheets:** Bottom modal sheets restrict their maximum width to 480 dynamic units to prevent excessive stretching.
+### 9.2 Dialog 2: Delete All Dialog
+- **Purpose:** Confirmation warning before clearing the entire notification history database.
+- **RTL Copy Mapping:**
+  - Title: "پاک کردن کل تاریخچه؟" (Clear All History?)
+  - Body: "با این کار تمام تاریخچه اعلان‌های دریافتی شما به طور دائمی حذف خواهد شد. یادداشت‌ها و تراکنش‌های ثبت شده در دفترچه مالی شما بدون تغییر باقی می‌مانند."
+- **Action Buttons (RTL Flow):**
+  - Logical Start (Right): Destructive solid button "تایید و پاک‌سازی کل تاریخچه".
+  - Logical End (Left): "انصراف" (Cancel).
 
-### 13.3 Tablet Viewport (Split Pane View)
-- **Layout Architecture:** Splits the screen into a balanced, dual-pane layout:
-  - **Right Panel (Logical Start - 40%):** Sticky Filter Bar, Grouping categories, and Notification summary cards.
-  - **Left Panel (Logical End - 60%):** Full Notification Detail inspector and direct Settings toggles side-by-side, removing the need for a modal bottom sheet.
-- **Navigation:** Persistent Bottom Navigation is replaced with a lateral Navigation Rail on the right edge.
+### 9.3 Dialog 3: Mute Notifications Dialog
+- **Purpose:** Silences future alerts from a specific sender or bank pattern.
+- **RTL Copy Mapping:**
+  - Title: "بی‌صدا کردن بانک ملی؟" (Silence Bank Melli Notifications?)
+  - Body: "با بی‌صدا کردن این بانک، تراکنش‌های آینده کماکان پردازش شده و به دفترچه اضافه می‌شوند، اما هیچگونه اعلان صوتی یا لرزشی دریافت نخواهید کرد."
+- **Action Buttons (RTL Flow):**
+  - Logical Start (Right): "بله، بی‌صدا شود" (Confirm).
+  - Logical End (Left): "انصراف" (Cancel).
 
-### 13.4 Foldable Viewport (Hinge Aware)
-- **Layout Architecture:** Detects physical hinge coordinates:
-  - **Folded State:** Displays standard compact single-column phone layout.
-  - **Unfolded State:** Automatically splits the layout, displaying the grouped notification feed on the right fold, and details or quick actions on the left fold.
+### 9.4 Dialog 4: Permission Required Dialog
+- **Purpose:** Prompts the user to grant necessary OS permissions to run background SMS listening.
+- **RTL Copy Mapping:**
+  - Title: "دسترسی پیامک مورد نیاز است" (SMS Permission Required)
+  - Body: "برای خواندن و پردازش خودکار تراکنش‌ها، بانکیار به دسترسی خواندن پیامک‌های دستگاه نیاز دارد. داده‌های شما هرگز از گوشی خارج نمی‌شوند."
+- **Action Buttons (RTL Flow):**
+  - Logical Start (Right): "صدور دسترسی" (Grant Permission).
+  - Logical End (Left): "انصراف" (Cancel).
 
-### 13.5 Landscape Viewport
-- **Layout Architecture:** Vertical header and app bar heights are compacted to maximize vertical space. Quick Actions row is arranged horizontally next to the message body.
+### 9.5 Dialog 5: Security Alert Dialog
+- **Purpose:** Warns users when operating system tampering or root access is detected, threatening local database security.
+- **RTL Copy Mapping:**
+  - Title: "هشدار امنیتی: تغییر در ساختار دستگاه" (Security Alert: OS Tampering Detected)
+  - Body: "دستگاه شما روت شده یا دارای آسیب‌پذیری‌های امنیتی جدی است. پایگاه داده محلی بانکیار برای محافظت از اطلاعات مالی شما موقتاً قفل گردیده است."
+- **Action Buttons (RTL Flow):**
+  - Logical Start (Right): "ورود به مرکز امنیت" (Security Center).
+  - Logical End (Left): "بستن برنامه" (Exit App).
+
+### 9.6 Dialog 6: Unknown Transaction Dialog
+- **Purpose:** Prompts users to manually structure transaction details when parsing templates fail to recognize an incoming banking SMS.
+- **RTL Copy Mapping:**
+  - Title: "قالب پیامک ناشناخته" (Unknown SMS Format Detected)
+  - Body: "ساختار پیامک دریافتی توسط الگوهای خودکار بانکیار شناسایی نشد. برای جلوگیری از خطا، می‌توانید اطلاعات تراکنش را به صورت دستی وارد کنید."
+- **Action Buttons (RTL Flow):**
+  - Logical Start (Right): "افزودن دستی" (Add Manually).
+  - Logical End (Left): "رد کردن" (Ignore).
 
 ---
 
-## 14. Accessibility & Inclusive Design Integration
+## 10. Complete Notification Experience & Interaction Flows
 
-To ensure the notification experience is accessible to everyone, the interface incorporates strict accessibility features:
+This section defines the precise, secure interaction pathways, mapping gesture inputs and system triggers.
 
-- **Native RTL Layout Flow:** All horizontal layouts, progress bars, back chevrons, and transitions proceed naturally from right to left (RTL). Swipe gestures are mirrored naturally.
+### 10.1 Flow 1: Incoming Notification & Processing Flow
+1. **SMS Arrival:** Device receives a standard SMS broadcast from a verified bank sender ID.
+2. **Background Processing:** Background service intercepts raw text and processes it locally using deterministic regular expression templates in under 200 milliseconds.
+3. **Database Write:** Extracted transaction metadata is securely saved to the encrypted SQLCipher local database in under 100 milliseconds.
+4. **Active UI Update:** Active views inside the application refresh automatically, sliding the new transaction card into Zone B with a fast slide-down animation.
+
+### 10.2 Flow 2: Notification Card Expansion & Notes Annotation
+1. **User Action:** User taps any standard notification card inside the chronological history feed.
+2. **Card Animation:** Standard card expands vertically, revealing hidden transaction metadata (e.g., account balance, card ID) and showing the quick action button row.
+3. **User Note Action:** User taps the "Add Note" button on the quick action row.
+4. **Modal Bottom Sheet:** A modal bottom sheet slides up, showing a secure text field with auto-focused keyboard input.
+5. **Persistence:** Typing an annotation and tapping "Save" updates the database record instantly, displaying a small note tag on the card face.
+
+### 10.3 Flow 3: Horizontal Swipe Actions & Dismissal Flow
+1. **Swipe Gesture:** User swipes a notification card horizontally. Swiping from right to left (logical start to end in RTL Persian) reveals hidden command buttons.
+2. **Visual Feedback:** Swiping reveals an error-red background trash icon on the logical right, and a gold favorite star icon on the logical left.
+3. **Dismiss Command:** Swiping past 60% of horizontal columns sweeps the card off-screen, deleting it from the active unread history feed.
+4. **Undo Undo Trigger:** A persistent feedback banner (Snackbar) slides up from Zone C, showing copy "اعلان حذف شد" with action "بازگرداندن" (Undo). Tapping "Undo" restores the card to its original position.
+
+---
+
+## 11. Comprehensive Accessibility (A11y) & Native RTL Review
+
+BankYar enforces absolute accessible design parameters across all platforms:
+
+- **Native RTL Layout Mirroring:** Horizontal layouts, timeline progress bars, back chevrons, and sliding gestures mirror natively to match Persian RTL reading habits.
 - **Screen Reader Support (TalkBack):**
-  - Transaction notifications are grouped into single semantic nodes, letting TalkBack read each card as a single focus block (e.g., "بانک ملی، پرداخت موفق، مبلغ منفی چهل و پنج هزار تومان، دوازدهم دی ماه، دارای یادداشت").
-  - Interaction buttons have permanent, descriptive labels positioned outside the container, ensuring screen readers can announce their purpose clearly.
+  - Every transaction card is grouped as a single semantic focus block, reading parameters sequentially without requiring separate taps on micro-texts.
+  - Descriptive, localized accessibility labels exist on all quick action buttons, ensuring screen readers announce their function clearly.
 - **Minimum Touch Target Envelope:** All interactive buttons, chips, and list tiles maintain a minimum clickable area of **48 x 48 dynamic units**, protecting users with motor impairments.
 - **Large Fonts & Dynamic Scaling:** Text blocks wrap automatically, and cards expand vertically to support up to 200% system-level text magnification without overlapping or clipping text.
 - **Accessible Progress Indicators:** Progress percentage readouts are rendered using high-contrast Persian monospace numerals (e.g., "۴۵٪") with adjacent descriptive text labels.
 
 ---
 
-## 15. Future-Ready Expansion Roadmap
+## 12. Future-Ready Expansion Roadmap
 
-The notification architecture is built to scale, reserving specific layout coordinates for upcoming capabilities without restructuring existing views:
+The notification experience architecture is built to scale, reserving specific layout coordinates for upcoming capabilities without restructuring existing views:
 
-- **Notification Categories:** Reserved settings subpanels to let users toggle system notifications for specific categories (e.g. keeping Security alerts high-priority while silencing small retail store purchases).
+- **Notification Categories:** Reserved settings subpanels to let users toggle system notifications for specific categories (e.g., keeping Security alerts high-priority while silencing small retail store purchases).
 - **Smart Notification Scheduling:** Layout slot prepared to support scheduling non-urgent, silent notifications to be delivered as a single digest at specific times of the day (e.g., 8:00 PM).
 - **AI Priority Detection:** Space reserved in the local database to support on-device machine-learning models, automatically identifying critical cash flow shifts and highlighting them in the feed.
 - **Notification Digest:** Layout prepared to compile a single daily financial digest, summarizing cash flow trends and category totals without cluttering the system drawer.
@@ -489,37 +599,45 @@ The notification architecture is built to scale, reserving specific layout coord
 
 ---
 
-## 16. Design Token Mapping Reference
+## 13. Design Token Mapping Reference
 
 Every visual property specified in this document maps directly to an active design token, preserving consistency and white-label portability:
 
-| UI Element | Visual Attribute | Design Token Path |
+| Screen Element | Visual Attribute | Design Token Path |
 | :--- | :--- | :--- |
 | Canvas Background | Base Background Fill | `bankyar.semantic.color.background` |
 | Primary Container Card| Card Background Fill | `bankyar.semantic.color.surface.flat` |
-| Notification Title Text | High Contrast Text Font | `bankyar.semantic.color.text.primary` |
-| Metadata & Timestamps | Medium Contrast Text | `bankyar.semantic.color.text.secondary` |
+| Primary Headlines | High Contrast Text Font | `bankyar.semantic.color.text.primary` |
+| Supporting Metadata | Medium Contrast Subtitle | `bankyar.semantic.color.text.secondary` |
 | Row Separators & Dividers| Stroke Divider Line | `bankyar.semantic.color.border.subtle` |
 | Active Highlight Borders| Active Ring Color | `bankyar.semantic.color.border.active` |
-| Success Status Text | Success Accent Color | `bankyar.semantic.color.status.success` |
-| Warning / Error Indicators | Error Accent Color | `bankyar.semantic.color.status.error` |
-| Icon Standard Sizing | Icon Sizing Scale | `bankyar.icon.size.md` |
-| Screen Outer Margin | Outer Spacing Factor | `bankyar.responsive.margin` |
+| Progress Bar Active Fill| Primary Accent Color | `bankyar.semantic.color.interactive.default` |
+| Healthy Status Badges | Success Accent Color | `bankyar.semantic.color.status.success` |
+| Alert Warning Icons | Warning Accent Color | `bankyar.semantic.color.status.error` |
+| Sizing Spacing Factor | Sizing Spacing Factor | `bankyar.space.xl` |
+| Outer Screen Margin | Responsive Margins | `bankyar.responsive.margin` |
 | Standard Corner Radius | Card Corner Curves | `bankyar.radius.medium` |
-| Sheet Corner Radius | Sheet Corner Curves | `bankyar.radius.large` |
-| Base Spacing Increment | Base Spacing Increment | `bankyar.global.space.base` |
+| Large Corner Radius | Sheet Corner Curves | `bankyar.radius.large` |
 
 ---
 
-## 17. Governance & Quality Rules Validation Checklist
+## 14. Governance & Verification Checklists
 
-Before releasing any layout or screen iteration, developers must verify compliance against this checklist:
+Before releasing any layout or screen iteration, developers must verify compliance against these checklists:
 
+### 14.1 Notification UX Checklist
+- [ ] **One-Hand Accessibility:** Ensure all high-frequency controls, search buttons, and quick actions reside within comfortable thumb-reach mapping (lower 60% of the screen height).
+- [ ] **Lock Screen Privacy Shield:** Confirm that sensitive transaction values, bank accounts, and overall balance metrics are replaced with secure masked values (`-***,*** تومان`) on lock screen views.
+- [ ] **Deduplication Active:** Confirm cellular SMS retransmission filters are active, preventing duplicate database entries of identical transaction hashes.
+- [ ] **Zero-Telemetry Integrity:** Verify that exactly zero bytes of analytical, behavioral, or performance log tracking are initialized.
+- [ ] **No Internet Permissions:** Ensure the final compiled build contains exactly zero internet permissions, verifying complete network-free database isolation.
+
+### 14.2 UI Validation Checklist
 - [ ] **100% Token Compliance:** Confirm that every color, margin, padding, border width, and corner curve maps directly to an active design token, with zero hardcoded values.
 - [ ] **No Forbidden Patterns:** Ensure that absolutely no HEX color codes, physical pixel units, sp typography units, dp spacing units, or Flutter component names exist in the specification.
 - [ ] **RTL-First Interface:** Verify that list flows, text fields, back chevrons, and transitions proceed naturally from right to left (RTL).
-- [ ] **Security Masking Active:** Confirm that all transaction numbers, bank card IDs, and financial totals are masked with secure overlays when lock screen privacy features are enabled.
-- [ ] **Minimum Touch Target Met:** Confirm all interactive quick action buttons have active touch heights of at least `bankyar.space.xl`.
+- [ ] **Security Masking Active:** Confirm that all settings lists, database summaries, and diagnostic logs mask sensitive values when the app is backgrounded.
+- [ ] **Minimum Touch Target Met:** Confirm all interactive settings rows and buttons have active touch heights of at least `bankyar.space.xl`.
 
 ---
 **End of Specification Document**
