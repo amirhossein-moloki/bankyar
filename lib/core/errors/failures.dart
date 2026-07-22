@@ -102,15 +102,14 @@ class StorageDiskFullFailure extends InfrastructureFailure {
 class KeystoreLostFailure extends InfrastructureFailure {
   const KeystoreLostFailure({
     super.code = 'BY_INF_KEYSTORE_LOST',
-    super.message = 'Cryptographic keys could not be retrieved from secure enclave.',
+    super.message =
+        'Cryptographic keys could not be retrieved from secure enclave.',
   }) : super(isUserAlertRequired: true);
 }
 
 class FileAccessFailure extends InfrastructureFailure {
-  const FileAccessFailure({
-    required super.code,
-    required super.message,
-  }) : super(isUserAlertRequired: true);
+  const FileAccessFailure({required super.code, required super.message})
+    : super(isUserAlertRequired: true);
 }
 
 // Concrete Security Failures
@@ -151,10 +150,8 @@ class DeduplicationMatchFailure extends DomainFailure {
 }
 
 class RuleCollisionsFailure extends DomainFailure {
-  const RuleCollisionsFailure({
-    required super.code,
-    required super.message,
-  }) : super(isUserAlertRequired: true);
+  const RuleCollisionsFailure({required super.code, required super.message})
+    : super(isUserAlertRequired: true);
 }
 
 class CategoryNotFoundFailure extends DomainFailure {
@@ -166,29 +163,20 @@ class CategoryNotFoundFailure extends DomainFailure {
 
 // Concrete Validation Failures
 class InvalidMonetaryValue extends ValidationFailure {
-  const InvalidMonetaryValue({
-    required super.code,
-    required super.message,
-  }) : super();
+  const InvalidMonetaryValue({required super.code, required super.message})
+    : super();
 }
 
 class FormatDriftMismatch extends ValidationFailure {
-  const FormatDriftMismatch({
-    required super.code,
-    required super.message,
-  }) : super();
+  const FormatDriftMismatch({required super.code, required super.message})
+    : super();
 }
 
 class InvalidPINHash extends ValidationFailure {
-  const InvalidPINHash({
-    required super.code,
-    required super.message,
-  }) : super();
+  const InvalidPINHash({required super.code, required super.message}) : super();
 }
 
 class CorruptedCSVFormat extends ValidationFailure {
-  const CorruptedCSVFormat({
-    required super.code,
-    required super.message,
-  }) : super();
+  const CorruptedCSVFormat({required super.code, required super.message})
+    : super();
 }

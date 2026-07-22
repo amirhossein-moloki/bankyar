@@ -44,84 +44,113 @@ void main() {
       expect(uuidRegex.hasMatch(uuid1), isTrue);
     });
 
-    test('SystemPlatformService and SystemConnectivityService execute cleanly', () async {
-      const platform = SystemPlatformService();
-      expect(platform.isWeb, isFalse);
-      expect(platform.isAndroid || platform.isIos || true, isTrue);
+    test(
+      'SystemPlatformService and SystemConnectivityService execute cleanly',
+      () async {
+        const platform = SystemPlatformService();
+        expect(platform.isWeb, isFalse);
+        expect(platform.isAndroid || platform.isIos || true, isTrue);
 
-      const connectivity = SystemConnectivityService();
-      expect(await connectivity.isOnline, isFalse);
+        const connectivity = SystemConnectivityService();
+        expect(await connectivity.isOnline, isFalse);
 
-      final status = await connectivity.onConnectivityChanged.first;
-      expect(status, equals(ConnectivityStatus.offline));
-    });
+        final status = await connectivity.onConnectivityChanged.first;
+        expect(status, equals(ConnectivityStatus.offline));
+      },
+    );
 
-    test('SystemSecureStorage interacts with FlutterSecureStorage correctly', () async {
-      final mockStorage = MockFlutterSecureStorage();
-      final secureStorage = SystemSecureStorage(mockStorage);
+    test(
+      'SystemSecureStorage interacts with FlutterSecureStorage correctly',
+      () async {
+        final mockStorage = MockFlutterSecureStorage();
+        final secureStorage = SystemSecureStorage(mockStorage);
 
-      when(() => mockStorage.read(key: 'my_key')).thenAnswer((_) => Future.value('my_value'));
-      when(() => mockStorage.write(key: 'my_key', value: 'my_value')).thenAnswer((_) => Future.value());
-      when(() => mockStorage.delete(key: 'my_key')).thenAnswer((_) => Future.value());
-      when(() => mockStorage.deleteAll()).thenAnswer((_) => Future.value());
+        when(
+          () => mockStorage.read(key: 'my_key'),
+        ).thenAnswer((_) => Future.value('my_value'));
+        when(
+          () => mockStorage.write(key: 'my_key', value: 'my_value'),
+        ).thenAnswer((_) => Future.value());
+        when(
+          () => mockStorage.delete(key: 'my_key'),
+        ).thenAnswer((_) => Future.value());
+        when(() => mockStorage.deleteAll()).thenAnswer((_) => Future.value());
 
-      final val = await secureStorage.read('my_key');
-      expect(val, equals('my_value'));
+        final val = await secureStorage.read('my_key');
+        expect(val, equals('my_value'));
 
-      await secureStorage.write(key: 'my_key', value: 'my_value');
-      await secureStorage.delete('my_key');
-      await secureStorage.deleteAll();
+        await secureStorage.write(key: 'my_key', value: 'my_value');
+        await secureStorage.delete('my_key');
+        await secureStorage.deleteAll();
 
-      verify(() => mockStorage.read(key: 'my_key')).called(1);
-      verify(() => mockStorage.write(key: 'my_key', value: 'my_value')).called(1);
-      verify(() => mockStorage.delete(key: 'my_key')).called(1);
-      verify(() => mockStorage.deleteAll()).called(1);
-    });
+        verify(() => mockStorage.read(key: 'my_key')).called(1);
+        verify(
+          () => mockStorage.write(key: 'my_key', value: 'my_value'),
+        ).called(1);
+        verify(() => mockStorage.delete(key: 'my_key')).called(1);
+        verify(() => mockStorage.deleteAll()).called(1);
+      },
+    );
 
     test('SystemPermissionService returns granted statuses', () async {
       const permission = SystemPermissionService();
-      expect(await permission.checkStatus(AppPermission.smsReceive), equals(PermissionStatus.granted));
-      expect(await permission.request(AppPermission.localFiles), equals(PermissionStatus.granted));
+      expect(
+        await permission.checkStatus(AppPermission.smsReceive),
+        equals(PermissionStatus.granted),
+      );
+      expect(
+        await permission.request(AppPermission.localFiles),
+        equals(PermissionStatus.granted),
+      );
     });
 
-    test('SystemFileStorage reads, writes, and deletes files successfully', () async {
-      const fileStorage = SystemFileStorage();
-      final tempDir = io.Directory.systemTemp.createTempSync();
-      final tempFilePath = '${tempDir.path}/test_file.txt';
+    test(
+      'SystemFileStorage reads, writes, and deletes files successfully',
+      () async {
+        const fileStorage = SystemFileStorage();
+        final tempDir = io.Directory.systemTemp.createTempSync();
+        final tempFilePath = '${tempDir.path}/test_file.txt';
 
-      expect(await fileStorage.exists(tempFilePath), isFalse);
+        expect(await fileStorage.exists(tempFilePath), isFalse);
 
-      await fileStorage.writeString(tempFilePath, 'BankYar Secure Content');
-      expect(await fileStorage.exists(tempFilePath), isTrue);
+        await fileStorage.writeString(tempFilePath, 'BankYar Secure Content');
+        expect(await fileStorage.exists(tempFilePath), isTrue);
 
-      final content = await fileStorage.readString(tempFilePath);
-      expect(content, equals('BankYar Secure Content'));
+        final content = await fileStorage.readString(tempFilePath);
+        expect(content, equals('BankYar Secure Content'));
 
-      await fileStorage.delete(tempFilePath);
-      expect(await fileStorage.exists(tempFilePath), isFalse);
+        await fileStorage.delete(tempFilePath);
+        expect(await fileStorage.exists(tempFilePath), isFalse);
 
-      tempDir.deleteSync(recursive: true);
-    });
+        tempDir.deleteSync(recursive: true);
+      },
+    );
 
-    test('SystemAppLifecycleService registers and broadcasts state transitions', () async {
-      final service = SystemAppLifecycleService();
-      expect(service.currentState, equals(AppLifecycleState.resumed));
+    test(
+      'SystemAppLifecycleService registers and broadcasts state transitions',
+      () async {
+        final service = SystemAppLifecycleService();
+        expect(service.currentState, equals(AppLifecycleState.resumed));
 
-      // Simulate an OS state transition to paused and detached
-      final statesFuture = service.onStateChanged.take(3).toList();
+        // Simulate an OS state transition to paused and detached
+        final statesFuture = service.onStateChanged.take(3).toList();
 
-      service.didChangeAppLifecycleState(widgets.AppLifecycleState.paused);
-      service.didChangeAppLifecycleState(widgets.AppLifecycleState.inactive);
-      service.didChangeAppLifecycleState(widgets.AppLifecycleState.detached);
+        service.didChangeAppLifecycleState(widgets.AppLifecycleState.paused);
+        service.didChangeAppLifecycleState(widgets.AppLifecycleState.inactive);
+        service.didChangeAppLifecycleState(widgets.AppLifecycleState.detached);
 
-      final list = await statesFuture;
-      expect(list, equals([
-        AppLifecycleState.paused,
-        AppLifecycleState.inactive,
-        AppLifecycleState.detached,
-      ]));
+        final list = await statesFuture;
+        expect(
+          list,
+          equals([
+            AppLifecycleState.paused,
+            AppLifecycleState.inactive,
+            AppLifecycleState.detached,
+          ]),
+        );
 
-      service.dispose();
-    });
+        service.dispose();
+      },
+    );
   });
 }

@@ -11,16 +11,28 @@ abstract class CurrencyFormatter {
   }
 
   /// Formats a monetary value to Rial currency (e.g., "۱۵۰,۰۰۰ ریال").
-  static String formatRial(double amount, {bool usePersianDigits = true, bool appendSymbol = true}) {
+  static String formatRial(
+    double amount, {
+    bool usePersianDigits = true,
+    bool appendSymbol = true,
+  }) {
     final formatted = format(amount, locale: 'en'); // get english commas first
-    final withDigits = usePersianDigits ? DateFormatter.toPersianDigits(formatted) : formatted;
+    final withDigits = usePersianDigits
+        ? DateFormatter.toPersianDigits(formatted)
+        : formatted;
     return appendSymbol ? '$withDigits ریال' : withDigits;
   }
 
   /// Formats a monetary value to Toman currency (e.g., "۱۵,۰۰۰ تومان").
-  static String formatToman(double amount, {bool usePersianDigits = true, bool appendSymbol = true}) {
+  static String formatToman(
+    double amount, {
+    bool usePersianDigits = true,
+    bool appendSymbol = true,
+  }) {
     final formatted = format(amount, locale: 'en'); // get english commas first
-    final withDigits = usePersianDigits ? DateFormatter.toPersianDigits(formatted) : formatted;
+    final withDigits = usePersianDigits
+        ? DateFormatter.toPersianDigits(formatted)
+        : formatted;
     return appendSymbol ? '$withDigits تومان' : withDigits;
   }
 }

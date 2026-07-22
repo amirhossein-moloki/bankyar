@@ -4,7 +4,11 @@ import 'package:intl/intl.dart';
 /// Supports both Gregorian and Persian localization contexts out-of-the-box.
 abstract class DateFormatter {
   /// Formats a standard Gregorian [DateTime] to a localized string using [intl].
-  static String format(DateTime date, {String pattern = 'yyyy/MM/dd', String locale = 'fa'}) {
+  static String format(
+    DateTime date, {
+    String pattern = 'yyyy/MM/dd',
+    String locale = 'fa',
+  }) {
     return DateFormat(pattern, locale).format(date);
   }
 

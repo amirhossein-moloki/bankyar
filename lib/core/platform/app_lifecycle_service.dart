@@ -27,7 +27,8 @@ abstract class AppLifecycleService {
 }
 
 /// Concrete implementation of [AppLifecycleService] binding to Flutter's Widgets Binding system.
-class SystemAppLifecycleService extends widgets.WidgetsBindingObserver implements AppLifecycleService {
+class SystemAppLifecycleService extends widgets.WidgetsBindingObserver
+    implements AppLifecycleService {
   /// Constructor registering widgets binding observers.
   SystemAppLifecycleService() {
     widgets.WidgetsBinding.instance.addObserver(this);

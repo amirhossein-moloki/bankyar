@@ -31,10 +31,7 @@ class PaginatedList<T> {
 /// Parameters defining traditional limit-offset pagination.
 class OffsetPaginationParams {
   /// Constructor for offset parameters.
-  const OffsetPaginationParams({
-    required this.limit,
-    required this.offset,
-  });
+  const OffsetPaginationParams({required this.limit, required this.offset});
 
   /// The maximum number of records to return.
   final int limit;

@@ -18,10 +18,7 @@ class FilterCriteria {
 
   /// Creates a copy of this criteria with updated filter parameters.
   FilterCriteria copyWith(Map<String, dynamic> updatedFilters) {
-    return FilterCriteria({
-      ...filters,
-      ...updatedFilters,
-    });
+    return FilterCriteria({...filters, ...updatedFilters});
   }
 
   /// Returns a clean copy with a specific filter key removed.
