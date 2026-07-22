@@ -6,7 +6,10 @@ abstract class RtlHelpers {
   /// Returns true if the provided [locale] corresponds to an RTL language (like Farsi).
   static bool isRtl(String locale) {
     final normalized = locale.toLowerCase();
-    return normalized == 'fa' || normalized.startsWith('fa_') || normalized == 'ar' || normalized.startsWith('ar_');
+    return normalized == 'fa' ||
+        normalized.startsWith('fa_') ||
+        normalized == 'ar' ||
+        normalized.startsWith('ar_');
   }
 
   /// Returns [TextDirection.rtl] for RTL locales, and [TextDirection.ltr] for LTR locales.

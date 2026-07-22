@@ -41,7 +41,9 @@ void main() {
       expect(mapped, isA<Right<String, int>>());
       expect(mapped.right, equals(84));
 
-      final flatMapped = either.flatMap((r) => Right<String, String>('Value: $r'));
+      final flatMapped = either.flatMap(
+        (r) => Right<String, String>('Value: $r'),
+      );
       expect(flatMapped, isA<Right<String, String>>());
       expect(flatMapped.right, equals('Value: 42'));
     });
@@ -75,7 +77,9 @@ void main() {
       expect(success.dataOrNull, equals(100));
       expect(success.failureOrNull, isNull);
 
-      const Result<int> failure = FailureResult(UnknownFailure(code: 'BY_ERR', message: 'Err'));
+      const Result<int> failure = FailureResult(
+        UnknownFailure(code: 'BY_ERR', message: 'Err'),
+      );
       expect(failure.isSuccess, isFalse);
       expect(failure.isFailure, isTrue);
       expect(failure.isLoading, isFalse);
@@ -106,7 +110,9 @@ void main() {
       expect(flatMapped, isA<Success<String>>());
       expect(flatMapped.dataOrNull, equals('FlatValue: 5'));
 
-      const Result<int> failure = FailureResult(UnknownFailure(code: 'BY_ERR', message: 'Err'));
+      const Result<int> failure = FailureResult(
+        UnknownFailure(code: 'BY_ERR', message: 'Err'),
+      );
       final mappedFailure = failure.map((data) => 'Value: $data');
       expect(mappedFailure, isA<FailureResult<String>>());
       expect(mappedFailure.failureOrNull!.code, equals('BY_ERR'));
@@ -119,7 +125,9 @@ void main() {
       expect(mapped, isA<Success<int>>());
       expect(mapped.dataOrNull, equals(30));
 
-      final flatMapped = await asyncSuccess.flatMapAsync((data) => Future.value(Success('Val: $data')));
+      final flatMapped = await asyncSuccess.flatMapAsync(
+        (data) => Future.value(Success('Val: $data')),
+      );
       expect(flatMapped, isA<Success<String>>());
       expect(flatMapped.dataOrNull, equals('Val: 10'));
 

@@ -14,15 +14,15 @@ abstract class Either<L, R> {
 
   /// Returns the Left value, or throws if this is a Right.
   L get left => when(
-        onLeft: (l) => l,
-        onRight: (_) => throw StateError('Called left on a Right Either'),
-      );
+    onLeft: (l) => l,
+    onRight: (_) => throw StateError('Called left on a Right Either'),
+  );
 
   /// Returns the Right value, or throws if this is a Left.
   R get right => when(
-        onLeft: (_) => throw StateError('Called right on a Left Either'),
-        onRight: (r) => r,
-      );
+    onLeft: (_) => throw StateError('Called right on a Left Either'),
+    onRight: (r) => r,
+  );
 
   /// Pattern matching on [Either].
   T when<T>({
@@ -37,18 +37,12 @@ abstract class Either<L, R> {
 
   /// Maps the right value of this [Either] to a new type.
   Either<L, R2> map<R2>(R2 Function(R right) fn) {
-    return fold(
-      (l) => Left<L, R2>(l),
-      (r) => Right<L, R2>(fn(r)),
-    );
+    return fold((l) => Left<L, R2>(l), (r) => Right<L, R2>(fn(r)));
   }
 
   /// Chains another [Either] operation.
   Either<L, R2> flatMap<R2>(Either<L, R2> Function(R right) fn) {
-    return fold(
-      (l) => Left<L, R2>(l),
-      (r) => fn(r),
-    );
+    return fold((l) => Left<L, R2>(l), (r) => fn(r));
   }
 }
 

@@ -51,7 +51,9 @@ void main() {
         equals('Success: 123'),
       );
 
-      final UiState<int> error = const UiState.error(UnknownFailure(code: 'BY_ERR', message: 'Fail'));
+      final UiState<int> error = const UiState.error(
+        UnknownFailure(code: 'BY_ERR', message: 'Fail'),
+      );
       expect(
         error.when(
           initial: () => 'Initial',
@@ -68,7 +70,9 @@ void main() {
       final asyncSuccess = resSuccess.toAsyncValue();
       expect(asyncSuccess.asData!.value, equals(42));
 
-      const Result<int> resFail = FailureResult(UnknownFailure(code: 'BY_ERR', message: 'Err'));
+      const Result<int> resFail = FailureResult(
+        UnknownFailure(code: 'BY_ERR', message: 'Err'),
+      );
       final asyncFail = resFail.toAsyncValue();
       expect(asyncFail.hasError, isTrue);
       expect((asyncFail.error as Failure).code, equals('BY_ERR'));
@@ -80,23 +84,35 @@ void main() {
       final container = ProviderContainer();
       addTearDown(container.dispose);
 
-      final notifierProvider = StateNotifierProvider<MyUiNotifier, UiState<int>>((ref) {
-        return MyUiNotifier();
-      });
+      final notifierProvider =
+          StateNotifierProvider<MyUiNotifier, UiState<int>>((ref) {
+            return MyUiNotifier();
+          });
 
       expect(container.read(notifierProvider), isA<UiInitial<int>>());
 
       container.read(notifierProvider.notifier).triggerLoading(progress: 0.5);
       expect(container.read(notifierProvider), isA<UiLoading<int>>());
-      expect((container.read(notifierProvider) as UiLoading<int>).progress, equals(0.5));
+      expect(
+        (container.read(notifierProvider) as UiLoading<int>).progress,
+        equals(0.5),
+      );
 
       container.read(notifierProvider.notifier).triggerSuccess(99);
       expect(container.read(notifierProvider), isA<UiSuccess<int>>());
-      expect((container.read(notifierProvider) as UiSuccess<int>).data, equals(99));
+      expect(
+        (container.read(notifierProvider) as UiSuccess<int>).data,
+        equals(99),
+      );
 
-      container.read(notifierProvider.notifier).triggerError(const UnknownFailure(code: 'BY_FAIL', message: 'Fail'));
+      container
+          .read(notifierProvider.notifier)
+          .triggerError(const UnknownFailure(code: 'BY_FAIL', message: 'Fail'));
       expect(container.read(notifierProvider), isA<UiError<int>>());
-      expect((container.read(notifierProvider) as UiError<int>).failure.code, equals('BY_FAIL'));
+      expect(
+        (container.read(notifierProvider) as UiError<int>).failure.code,
+        equals('BY_FAIL'),
+      );
 
       container.read(notifierProvider.notifier).triggerInitial();
       expect(container.read(notifierProvider), isA<UiInitial<int>>());
@@ -104,13 +120,16 @@ void main() {
   });
 
   group('AppProviderObserver Lifecycle Tracking Tests', () {
-    test('AppProviderObserver writes diagnostics correctly on add, update, and dispose', () {
-      final mockLogger = MockLogger();
-      final observer = AppProviderObserver(mockLogger);
+    test(
+      'AppProviderObserver writes diagnostics correctly on add, update, and dispose',
+      () {
+        final mockLogger = MockLogger();
+        final observer = AppProviderObserver(mockLogger);
 
-      registerFallbackValue(LogLevel.trace);
+        registerFallbackValue(LogLevel.trace);
 
-      when(() => mockLogger.log(
+        when(
+          () => mockLogger.log(
             any(),
             any(),
             any(),
@@ -118,47 +137,55 @@ void main() {
             metadata: any(named: 'metadata'),
             error: any(named: 'error'),
             stackTrace: any(named: 'stackTrace'),
-          )).thenAnswer((_) {});
+          ),
+        ).thenAnswer((_) {});
 
-      final container = ProviderContainer(observers: [observer]);
+        final container = ProviderContainer(observers: [observer]);
 
-      final dummyProvider = StateProvider<String>((ref) => 'initial-value');
+        final dummyProvider = StateProvider<String>((ref) => 'initial-value');
 
-      // 1. Trigger didAddProvider
-      final val1 = container.read(dummyProvider);
-      expect(val1, equals('initial-value'));
+        // 1. Trigger didAddProvider
+        final val1 = container.read(dummyProvider);
+        expect(val1, equals('initial-value'));
 
-      // 2. Trigger didUpdateProvider
-      container.read(dummyProvider.notifier).state = 'updated-value';
-      final val2 = container.read(dummyProvider);
-      expect(val2, equals('updated-value'));
+        // 2. Trigger didUpdateProvider
+        container.read(dummyProvider.notifier).state = 'updated-value';
+        final val2 = container.read(dummyProvider);
+        expect(val2, equals('updated-value'));
 
-      // 3. Trigger didDisposeProvider
-      container.dispose();
+        // 3. Trigger didDisposeProvider
+        container.dispose();
 
-      // Verify that all 3 lifecycle logging calls were invoked with trace level and taxonomy codes
-      verify(() => mockLogger.log(
+        // Verify that all 3 lifecycle logging calls were invoked with trace level and taxonomy codes
+        verify(
+          () => mockLogger.log(
             LogLevel.trace,
             'STATE_MANAGEMENT',
             'BY_STATE_ADD',
             any(),
             metadata: any(named: 'metadata'),
-          )).called(1);
+          ),
+        ).called(1);
 
-      verify(() => mockLogger.log(
+        verify(
+          () => mockLogger.log(
             LogLevel.trace,
             'STATE_MANAGEMENT',
             'BY_STATE_UPDATE',
             any(),
             metadata: any(named: 'metadata'),
-          )).called(1);
+          ),
+        ).called(1);
 
-      verify(() => mockLogger.log(
+        verify(
+          () => mockLogger.log(
             LogLevel.trace,
             'STATE_MANAGEMENT',
             'BY_STATE_DISPOSE',
             any(),
-          )).called(1);
-    });
+          ),
+        ).called(1);
+      },
+    );
   });
 }

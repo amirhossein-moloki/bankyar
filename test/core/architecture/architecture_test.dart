@@ -46,7 +46,9 @@ class MyValidator implements Validator<String> {
   @override
   Result<void> validate(String value) {
     if (value.isEmpty) {
-      return const Result.failure(UnknownFailure(code: 'BY_EMPTY', message: 'Empty string'));
+      return const Result.failure(
+        UnknownFailure(code: 'BY_EMPTY', message: 'Empty string'),
+      );
     }
     return const Result.success(null);
   }
@@ -59,13 +61,17 @@ class MyUseCase implements UseCase<int, String> {
       final value = int.parse(params);
       return Result.success(value);
     } catch (e) {
-      return Result.failure(UnknownFailure(code: 'BY_PARSE_ERR', message: e.toString()));
+      return Result.failure(
+        UnknownFailure(code: 'BY_PARSE_ERR', message: e.toString()),
+      );
     }
   }
 }
 
 class MyRepository extends Repository {}
+
 class MyLocalDataSource extends LocalDataSource {}
+
 class MyRemoteDataSource extends RemoteDataSource {}
 
 void main() {
@@ -162,36 +168,49 @@ void main() {
       expect(offsetParams.limit, equals(10));
       expect(offsetParams.offset, equals(20));
 
-      const keysetParams = KeysetPaginationParams(limit: 15, anchorValue: 'time', anchorId: 'uuid');
+      const keysetParams = KeysetPaginationParams(
+        limit: 15,
+        anchorValue: 'time',
+        anchorId: 'uuid',
+      );
       expect(keysetParams.limit, equals(15));
       expect(keysetParams.anchorValue, equals('time'));
       expect(keysetParams.anchorId, equals('uuid'));
     });
 
-    test('FilterCriteria manages parameters and computes hashCode/equality correctly', () {
-      const criteria1 = FilterCriteria({'category': 'food', 'minAmount': 100});
-      expect(criteria1.isEmpty, isFalse);
-      expect(criteria1.getValue<String>('category'), equals('food'));
-      expect(criteria1.getValue<int>('minAmount'), equals(100));
+    test(
+      'FilterCriteria manages parameters and computes hashCode/equality correctly',
+      () {
+        const criteria1 = FilterCriteria({
+          'category': 'food',
+          'minAmount': 100,
+        });
+        expect(criteria1.isEmpty, isFalse);
+        expect(criteria1.getValue<String>('category'), equals('food'));
+        expect(criteria1.getValue<int>('minAmount'), equals(100));
 
-      final criteria2 = criteria1.copyWith({'maxAmount': 500});
-      expect(criteria2.getValue<int>('maxAmount'), equals(500));
-      expect(criteria2.getValue<String>('category'), equals('food'));
+        final criteria2 = criteria1.copyWith({'maxAmount': 500});
+        expect(criteria2.getValue<int>('maxAmount'), equals(500));
+        expect(criteria2.getValue<String>('category'), equals('food'));
 
-      final criteria3 = criteria2.remove('category');
-      expect(criteria3.getValue<String>('category'), isNull);
-      expect(criteria3.getValue<int>('maxAmount'), equals(500));
+        final criteria3 = criteria2.remove('category');
+        expect(criteria3.getValue<String>('category'), isNull);
+        expect(criteria3.getValue<int>('maxAmount'), equals(500));
 
-      const c1 = FilterCriteria({'category': 'food'});
-      const c2 = FilterCriteria({'category': 'food'});
-      const c3 = FilterCriteria({'category': 'other'});
-      expect(c1, equals(c2));
-      expect(c1, isNot(equals(c3)));
-      expect(c1.toString(), contains('category: food'));
-    });
+        const c1 = FilterCriteria({'category': 'food'});
+        const c2 = FilterCriteria({'category': 'food'});
+        const c3 = FilterCriteria({'category': 'other'});
+        expect(c1, equals(c2));
+        expect(c1, isNot(equals(c3)));
+        expect(c1.toString(), contains('category: food'));
+      },
+    );
 
     test('SortCriteria constructs and manages parameters correctly', () {
-      const sort1 = SortCriteria(field: 'timestamp', direction: SortDirection.descending);
+      const sort1 = SortCriteria(
+        field: 'timestamp',
+        direction: SortDirection.descending,
+      );
       expect(sort1.field, equals('timestamp'));
       expect(sort1.direction, equals(SortDirection.descending));
       expect(sort1.isDescending, isTrue);
@@ -202,7 +221,10 @@ void main() {
 
       const s1 = SortCriteria(field: 'amount');
       const s2 = SortCriteria(field: 'amount');
-      const s3 = SortCriteria(field: 'amount', direction: SortDirection.ascending);
+      const s3 = SortCriteria(
+        field: 'amount',
+        direction: SortDirection.ascending,
+      );
       expect(s1, equals(s2));
       expect(s1, isNot(equals(s3)));
       expect(s1.hashCode, equals(s2.hashCode));

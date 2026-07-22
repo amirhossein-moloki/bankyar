@@ -79,7 +79,9 @@ extension AsyncResultExtensions<T> on Future<Result<T>> {
   }
 
   /// FlatMaps success states asynchronously.
-  Future<Result<R>> flatMapAsync<R>(Future<Result<R>> Function(T data) fn) async {
+  Future<Result<R>> flatMapAsync<R>(
+    Future<Result<R>> Function(T data) fn,
+  ) async {
     final result = await this;
     if (result is Success<T>) {
       return fn(result.data);

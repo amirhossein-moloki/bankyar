@@ -29,10 +29,7 @@ class SortCriteria {
   bool get isDescending => direction == SortDirection.descending;
 
   /// Creates a copy of this sorting criteria with updated parameters.
-  SortCriteria copyWith({
-    String? field,
-    SortDirection? direction,
-  }) {
+  SortCriteria copyWith({String? field, SortDirection? direction}) {
     return SortCriteria(
       field: field ?? this.field,
       direction: direction ?? this.direction,
@@ -51,5 +48,6 @@ class SortCriteria {
   int get hashCode => field.hashCode ^ direction.hashCode;
 
   @override
-  String toString() => 'SortCriteria(field: $field, direction: ${direction.name})';
+  String toString() =>
+      'SortCriteria(field: $field, direction: ${direction.name})';
 }

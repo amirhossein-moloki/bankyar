@@ -19,7 +19,11 @@ void main() async {
   group('Date and Currency Formatter Tests', () {
     test('DateFormatter converts Gregorian and to Persian digits', () {
       final date = DateTime(2024, 2, 15);
-      final formatted = DateFormatter.format(date, pattern: 'yyyy-MM-dd', locale: 'en');
+      final formatted = DateFormatter.format(
+        date,
+        pattern: 'yyyy-MM-dd',
+        locale: 'en',
+      );
       expect(formatted, equals('2024-02-15'));
 
       final friendly = DateFormatter.formatFriendly(date, locale: 'en');
@@ -29,14 +33,25 @@ void main() async {
       expect(persianDigits, equals('۲۰۲۴-۰۲-۱۵'));
     });
 
-    test('CurrencyFormatter formats Rial and Toman with commas and symbols', () {
-      const amount = 150000.00;
-      final formattedRial = CurrencyFormatter.formatRial(amount, usePersianDigits: false, appendSymbol: true);
-      expect(formattedRial, equals('150,000 ریال'));
+    test(
+      'CurrencyFormatter formats Rial and Toman with commas and symbols',
+      () {
+        const amount = 150000.00;
+        final formattedRial = CurrencyFormatter.formatRial(
+          amount,
+          usePersianDigits: false,
+          appendSymbol: true,
+        );
+        expect(formattedRial, equals('150,000 ریال'));
 
-      final formattedToman = CurrencyFormatter.formatToman(amount, usePersianDigits: true, appendSymbol: true);
-      expect(formattedToman, equals('۱۵۰,۰۰۰ تومان'));
-    });
+        final formattedToman = CurrencyFormatter.formatToman(
+          amount,
+          usePersianDigits: true,
+          appendSymbol: true,
+        );
+        expect(formattedToman, equals('۱۵۰,۰۰۰ تومان'));
+      },
+    );
   });
 
   group('RTL and Localization Helpers Tests', () {
@@ -55,56 +70,55 @@ void main() async {
       expect(RtlHelpers.directionalAlignment('en'), equals(Alignment.topLeft));
     });
 
-    testWidgets('LocalizationHelpers resolves and selects correctly based on active locale', (WidgetTester tester) async {
-      await tester.pumpWidget(
-        Localizations(
-          locale: const Locale('fa'),
-          delegates: const [
-            DefaultWidgetsLocalizations.delegate,
-          ],
-          child: Builder(
-            builder: (context) {
-              final localeCode = LocalizationHelpers.getLocaleCode(context);
-              expect(localeCode, equals('fa'));
+    testWidgets(
+      'LocalizationHelpers resolves and selects correctly based on active locale',
+      (WidgetTester tester) async {
+        await tester.pumpWidget(
+          Localizations(
+            locale: const Locale('fa'),
+            delegates: const [DefaultWidgetsLocalizations.delegate],
+            child: Builder(
+              builder: (context) {
+                final localeCode = LocalizationHelpers.getLocaleCode(context);
+                expect(localeCode, equals('fa'));
 
-              final selected = LocalizationHelpers.select(
-                context,
-                farsi: 'سیب',
-                english: 'apple',
-              );
-              expect(selected, equals('سیب'));
+                final selected = LocalizationHelpers.select(
+                  context,
+                  farsi: 'سیب',
+                  english: 'apple',
+                );
+                expect(selected, equals('سیب'));
 
-              return const SizedBox();
-            },
+                return const SizedBox();
+              },
+            ),
           ),
-        ),
-      );
+        );
 
-      // Now pump with LTR English locale
-      await tester.pumpWidget(
-        Localizations(
-          locale: const Locale('en'),
-          delegates: const [
-            DefaultWidgetsLocalizations.delegate,
-          ],
-          child: Builder(
-            builder: (context) {
-              final localeCode = LocalizationHelpers.getLocaleCode(context);
-              expect(localeCode, equals('en'));
+        // Now pump with LTR English locale
+        await tester.pumpWidget(
+          Localizations(
+            locale: const Locale('en'),
+            delegates: const [DefaultWidgetsLocalizations.delegate],
+            child: Builder(
+              builder: (context) {
+                final localeCode = LocalizationHelpers.getLocaleCode(context);
+                expect(localeCode, equals('en'));
 
-              final selected = LocalizationHelpers.select(
-                context,
-                farsi: 'سیب',
-                english: 'apple',
-              );
-              expect(selected, equals('apple'));
+                final selected = LocalizationHelpers.select(
+                  context,
+                  farsi: 'سیب',
+                  english: 'apple',
+                );
+                expect(selected, equals('apple'));
 
-              return const SizedBox();
-            },
+                return const SizedBox();
+              },
+            ),
           ),
-        ),
-      );
-    });
+        );
+      },
+    );
   });
 
   group('InputValidators Tests', () {
@@ -167,13 +181,20 @@ void main() async {
 
   group('RetryPolicy Tests', () {
     test('RetryPolicy retries on recoverable exceptions', () async {
-      const retry = RetryPolicy(maxAttempts: 3, baseDelayMs: 10, maxDelayMs: 50);
+      const retry = RetryPolicy(
+        maxAttempts: 3,
+        baseDelayMs: 10,
+        maxDelayMs: 50,
+      );
       int runs = 0;
 
       final val = await retry.execute(() async {
         runs++;
         if (runs < 3) {
-          throw const DatabaseException(code: 'BY_INF_DB_LOCK', message: 'Locked');
+          throw const DatabaseException(
+            code: 'BY_INF_DB_LOCK',
+            message: 'Locked',
+          );
         }
         return 42;
       });
@@ -183,13 +204,20 @@ void main() async {
     });
 
     test('RetryPolicy immediately fails on security exceptions', () async {
-      const retry = RetryPolicy(maxAttempts: 3, baseDelayMs: 10, maxDelayMs: 50);
+      const retry = RetryPolicy(
+        maxAttempts: 3,
+        baseDelayMs: 10,
+        maxDelayMs: 50,
+      );
       int runs = 0;
 
       expect(
         () => retry.execute(() async {
           runs++;
-          throw const SecurityException(code: 'BY_SEC_PIN_LOCKOUT', message: 'Locked');
+          throw const SecurityException(
+            code: 'BY_SEC_PIN_LOCKOUT',
+            message: 'Locked',
+          );
         }),
         throwsA(isA<SecurityException>()),
       );
