@@ -49,12 +49,7 @@ class CheckboxWidget extends StatelessWidget {
                 activeColor: theme.colorScheme.primary,
               ),
               SizedBox(width: spacing.xs),
-              Expanded(
-                child: Text(
-                  label,
-                  style: theme.textTheme.bodyMedium,
-                ),
-              ),
+              Expanded(child: Text(label, style: theme.textTheme.bodyMedium)),
             ],
           ),
         ),

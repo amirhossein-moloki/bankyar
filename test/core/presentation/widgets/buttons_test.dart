@@ -16,14 +16,13 @@ void main() {
   }
 
   group('Shared Buttons Tests', () {
-    testWidgets('PrimaryButton renders label and triggers callback', (tester) async {
+    testWidgets('PrimaryButton renders label and triggers callback', (
+      tester,
+    ) async {
       var pressed = false;
       await tester.pumpWidget(
         buildTestableWidget(
-          PrimaryButton(
-            label: 'Confirm',
-            onPressed: () => pressed = true,
-          ),
+          PrimaryButton(label: 'Confirm', onPressed: () => pressed = true),
         ),
       );
 
@@ -35,25 +34,20 @@ void main() {
     testWidgets('PrimaryButton displays loading indicator', (tester) async {
       await tester.pumpWidget(
         buildTestableWidget(
-          PrimaryButton(
-            label: 'Confirm',
-            onPressed: () {},
-            isLoading: true,
-          ),
+          PrimaryButton(label: 'Confirm', onPressed: () {}, isLoading: true),
         ),
       );
 
       expect(find.byType(CircularProgressIndicator), findsOneWidget);
     });
 
-    testWidgets('SecondaryButton renders label and triggers callback', (tester) async {
+    testWidgets('SecondaryButton renders label and triggers callback', (
+      tester,
+    ) async {
       var pressed = false;
       await tester.pumpWidget(
         buildTestableWidget(
-          SecondaryButton(
-            label: 'Cancel',
-            onPressed: () => pressed = true,
-          ),
+          SecondaryButton(label: 'Cancel', onPressed: () => pressed = true),
         ),
       );
 
@@ -62,14 +56,13 @@ void main() {
       expect(pressed, isTrue);
     });
 
-    testWidgets('TextButtonWidget renders label and triggers callback', (tester) async {
+    testWidgets('TextButtonWidget renders label and triggers callback', (
+      tester,
+    ) async {
       var pressed = false;
       await tester.pumpWidget(
         buildTestableWidget(
-          TextButtonWidget(
-            label: 'Edit',
-            onPressed: () => pressed = true,
-          ),
+          TextButtonWidget(label: 'Edit', onPressed: () => pressed = true),
         ),
       );
 
@@ -95,7 +88,9 @@ void main() {
       expect(pressed, isTrue);
     });
 
-    testWidgets('FabButton renders standard and extended variants', (tester) async {
+    testWidgets('FabButton renders standard and extended variants', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         buildTestableWidget(
           FabButton(

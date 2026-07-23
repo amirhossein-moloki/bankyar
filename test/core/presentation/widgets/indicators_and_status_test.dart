@@ -31,9 +31,7 @@ void main() {
 
     testWidgets('LinearProgress displays caption message', (tester) async {
       await tester.pumpWidget(
-        buildTestableWidget(
-          const LinearProgress(message: 'Generating key'),
-        ),
+        buildTestableWidget(const LinearProgress(message: 'Generating key')),
       );
 
       expect(find.text('Generating key'), findsOneWidget);
@@ -41,9 +39,7 @@ void main() {
 
     testWidgets('SkeletonLoader renders correctly', (tester) async {
       await tester.pumpWidget(
-        buildTestableWidget(
-          const SkeletonLoader(width: 100.0, height: 20.0),
-        ),
+        buildTestableWidget(const SkeletonLoader(width: 100.0, height: 20.0)),
       );
 
       expect(find.byType(SkeletonLoader), findsOneWidget);
@@ -84,7 +80,9 @@ void main() {
       expect(triggered, isTrue);
     });
 
-    testWidgets('ErrorState exhibits message and triggers retry', (tester) async {
+    testWidgets('ErrorState exhibits message and triggers retry', (
+      tester,
+    ) async {
       var retried = false;
       await tester.pumpWidget(
         buildTestableWidget(

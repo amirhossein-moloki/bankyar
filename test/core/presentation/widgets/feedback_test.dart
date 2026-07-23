@@ -39,7 +39,9 @@ void main() {
       expect(find.text('Decryption succeeded'), findsOneWidget);
     });
 
-    testWidgets('CustomBanner exhibits message and triggers callback', (tester) async {
+    testWidgets('CustomBanner exhibits message and triggers callback', (
+      tester,
+    ) async {
       var triggered = false;
       await tester.pumpWidget(
         buildTestableWidget(

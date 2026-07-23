@@ -37,11 +37,7 @@ void main() {
     });
 
     testWidgets('CustomDivider renders correctly', (tester) async {
-      await tester.pumpWidget(
-        buildTestableWidget(
-          const CustomDivider(),
-        ),
-      );
+      await tester.pumpWidget(buildTestableWidget(const CustomDivider()));
 
       expect(find.byType(CustomDivider), findsOneWidget);
     });
@@ -101,23 +97,17 @@ void main() {
       expect(find.text('3'), findsOneWidget);
     });
 
-    testWidgets('CustomAvatar displays initials or center icon', (tester) async {
+    testWidgets('CustomAvatar displays initials or center icon', (
+      tester,
+    ) async {
       await tester.pumpWidget(
-        buildTestableWidget(
-          const CustomAvatar(
-            initials: 'BY',
-          ),
-        ),
+        buildTestableWidget(const CustomAvatar(initials: 'BY')),
       );
 
       expect(find.text('BY'), findsOneWidget);
 
       await tester.pumpWidget(
-        buildTestableWidget(
-          const CustomAvatar(
-            icon: Icon(Icons.person),
-          ),
-        ),
+        buildTestableWidget(const CustomAvatar(icon: Icon(Icons.person))),
       );
 
       expect(find.byIcon(Icons.person), findsOneWidget);

@@ -31,39 +31,44 @@ void main() {
       expect(tapped, isTrue);
     });
 
-    testWidgets('TransactionCard exhibits ledger amounts correctly for credit and debit', (tester) async {
-      await tester.pumpWidget(
-        buildTestableWidget(
-          const TransactionCard(
-            amount: '500,000',
-            timestamp: '1402/07/15',
-            category: 'Salary',
-            accountLabel: 'Melli',
-            isCredit: true,
+    testWidgets(
+      'TransactionCard exhibits ledger amounts correctly for credit and debit',
+      (tester) async {
+        await tester.pumpWidget(
+          buildTestableWidget(
+            const TransactionCard(
+              amount: '500,000',
+              timestamp: '1402/07/15',
+              category: 'Salary',
+              accountLabel: 'Melli',
+              isCredit: true,
+            ),
           ),
-        ),
-      );
+        );
 
-      expect(find.text('Salary'), findsOneWidget);
-      expect(find.text('+500,000'), findsOneWidget);
+        expect(find.text('Salary'), findsOneWidget);
+        expect(find.text('+500,000'), findsOneWidget);
 
-      await tester.pumpWidget(
-        buildTestableWidget(
-          const TransactionCard(
-            amount: '120,000',
-            timestamp: '1402/07/16',
-            category: 'Groceries',
-            accountLabel: 'Melli',
-            isCredit: false,
+        await tester.pumpWidget(
+          buildTestableWidget(
+            const TransactionCard(
+              amount: '120,000',
+              timestamp: '1402/07/16',
+              category: 'Groceries',
+              accountLabel: 'Melli',
+              isCredit: false,
+            ),
           ),
-        ),
-      );
+        );
 
-      expect(find.text('Groceries'), findsOneWidget);
-      expect(find.text('-120,000'), findsOneWidget);
-    });
+        expect(find.text('Groceries'), findsOneWidget);
+        expect(find.text('-120,000'), findsOneWidget);
+      },
+    );
 
-    testWidgets('StatisticCard displays financial totals with arrow trends', (tester) async {
+    testWidgets('StatisticCard displays financial totals with arrow trends', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         buildTestableWidget(
           const StatisticCard(
@@ -94,7 +99,9 @@ void main() {
       expect(find.byIcon(Icons.arrow_downward), findsOneWidget);
     });
 
-    testWidgets('InfoCard exhibits messages based on semantic type', (tester) async {
+    testWidgets('InfoCard exhibits messages based on semantic type', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         buildTestableWidget(
           const InfoCard(

@@ -19,7 +19,9 @@ void main() {
   }
 
   group('Shared Inputs Tests', () {
-    testWidgets('TextInputField enters text and shows validation error', (tester) async {
+    testWidgets('TextInputField enters text and shows validation error', (
+      tester,
+    ) async {
       final controller = TextEditingController();
       await tester.pumpWidget(
         buildTestableWidget(
@@ -38,7 +40,9 @@ void main() {
       expect(controller.text, equals('Test Comment'));
     });
 
-    testWidgets('SearchInputField updates value and clears search query', (tester) async {
+    testWidgets('SearchInputField updates value and clears search query', (
+      tester,
+    ) async {
       final controller = TextEditingController();
       var query = '';
       await tester.pumpWidget(
@@ -66,10 +70,7 @@ void main() {
       var completedPin = '';
       await tester.pumpWidget(
         buildTestableWidget(
-          PinInputField(
-            length: 4,
-            onCompleted: (val) => completedPin = val,
-          ),
+          PinInputField(length: 4, onCompleted: (val) => completedPin = val),
         ),
       );
 
@@ -84,26 +85,31 @@ void main() {
       expect(completedPin, equals('1234'));
     });
 
-    testWidgets('AmountInputField enters financial values with currency suffix', (tester) async {
-      final controller = TextEditingController();
-      await tester.pumpWidget(
-        buildTestableWidget(
-          AmountInputField(
-            label: 'Amount',
-            controller: controller,
-            currencySymbol: 'Toman',
+    testWidgets(
+      'AmountInputField enters financial values with currency suffix',
+      (tester) async {
+        final controller = TextEditingController();
+        await tester.pumpWidget(
+          buildTestableWidget(
+            AmountInputField(
+              label: 'Amount',
+              controller: controller,
+              currencySymbol: 'Toman',
+            ),
           ),
-        ),
-      );
+        );
 
-      expect(find.text('Amount'), findsOneWidget);
-      expect(find.text('Toman'), findsOneWidget);
+        expect(find.text('Amount'), findsOneWidget);
+        expect(find.text('Toman'), findsOneWidget);
 
-      await tester.enterText(find.byType(TextFormField), '15,000');
-      expect(controller.text, equals('15,000'));
-    });
+        await tester.enterText(find.byType(TextFormField), '15,000');
+        expect(controller.text, equals('15,000'));
+      },
+    );
 
-    testWidgets('DropdownField displays label and selected item value', (tester) async {
+    testWidgets('DropdownField displays label and selected item value', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         buildTestableWidget(
           DropdownField<String>(
