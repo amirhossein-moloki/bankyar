@@ -4,11 +4,7 @@ import 'package:flutter/material.dart';
 /// Follows BankYar design tokens and accessibility guidelines.
 class CircularProgress extends StatelessWidget {
   /// Constructor for CircularProgress.
-  const CircularProgress({
-    super.key,
-    this.value,
-    this.message,
-  });
+  const CircularProgress({super.key, this.value, this.message});
 
   /// Optional specific progress percentage (from 0.0 to 1.0).
   final double? value;
@@ -26,10 +22,7 @@ class CircularProgress extends StatelessWidget {
     );
 
     if (message == null) {
-      return Semantics(
-        label: 'Progress indicator',
-        child: indicator,
-      );
+      return Semantics(label: 'Progress indicator', child: indicator);
     }
 
     return Semantics(

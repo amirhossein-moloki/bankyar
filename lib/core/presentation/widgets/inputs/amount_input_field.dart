@@ -42,9 +42,7 @@ class AmountInputField extends StatelessWidget {
         controller: controller,
         onChanged: onChanged,
         keyboardType: const TextInputType.numberWithOptions(decimal: true),
-        style: theme.textTheme.bodyLarge?.copyWith(
-          fontWeight: FontWeight.bold,
-        ),
+        style: theme.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
         inputFormatters: [
           FilteringTextInputFormatter.allow(RegExp(r'[0-9,.]')),
         ],

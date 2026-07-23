@@ -20,44 +20,50 @@ void main() {
     testWidgets('CustomAppBar displays title', (tester) async {
       await tester.pumpWidget(
         buildTestableWidget(
-          const CustomAppBar(
-            title: 'Overview Ledger',
-            showBackButton: false,
-          ),
+          const CustomAppBar(title: 'Overview Ledger', showBackButton: false),
         ),
       );
 
       expect(find.text('Overview Ledger'), findsOneWidget);
     });
 
-    testWidgets('CustomBottomNavigation displays options and triggers selection', (tester) async {
-      var activeIndex = 0;
-      final destinations = const [
-        NavigationDestinationItem(label: 'Home', icon: Icon(Icons.home)),
-        NavigationDestinationItem(label: 'Ledger', icon: Icon(Icons.list_alt)),
-      ];
-
-      await tester.pumpWidget(
-        buildTestableWidget(
-          CustomBottomNavigation(
-            currentIndex: activeIndex,
-            items: destinations,
-            onTap: (index) => activeIndex = index,
+    testWidgets(
+      'CustomBottomNavigation displays options and triggers selection',
+      (tester) async {
+        var activeIndex = 0;
+        final destinations = const [
+          NavigationDestinationItem(label: 'Home', icon: Icon(Icons.home)),
+          NavigationDestinationItem(
+            label: 'Ledger',
+            icon: Icon(Icons.list_alt),
           ),
-        ),
-      );
+        ];
 
-      expect(find.text('Home'), findsOneWidget);
-      expect(find.text('Ledger'), findsOneWidget);
+        await tester.pumpWidget(
+          buildTestableWidget(
+            CustomBottomNavigation(
+              currentIndex: activeIndex,
+              items: destinations,
+              onTap: (index) => activeIndex = index,
+            ),
+          ),
+        );
 
-      await tester.tap(find.text('Ledger'));
-      expect(activeIndex, equals(1));
-    });
+        expect(find.text('Home'), findsOneWidget);
+        expect(find.text('Ledger'), findsOneWidget);
+
+        await tester.tap(find.text('Ledger'));
+        expect(activeIndex, equals(1));
+      },
+    );
 
     testWidgets('CustomNavigationRail displays options', (tester) async {
       final destinations = const [
         NavigationDestinationItem(label: 'Home', icon: Icon(Icons.home)),
-        NavigationDestinationItem(label: 'Settings', icon: Icon(Icons.settings)),
+        NavigationDestinationItem(
+          label: 'Settings',
+          icon: Icon(Icons.settings),
+        ),
       ];
 
       await tester.pumpWidget(
@@ -89,10 +95,7 @@ void main() {
 
       await tester.pumpWidget(
         buildTestableWidget(
-          CustomDrawer(
-            header: const Text('BankYar User'),
-            items: items,
-          ),
+          CustomDrawer(header: const Text('BankYar User'), items: items),
         ),
       );
 
