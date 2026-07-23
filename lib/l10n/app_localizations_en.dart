@@ -22,4 +22,41 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get unparsedTxAlert => 'Unparsed transaction detected';
+
+  @override
+  String get greetingTitle => 'Hello, dear Sohrab';
+
+  @override
+  String get greetingSubtitle => 'Your financial vault is secure and updated';
+
+  @override
+  String get totalBalanceLabel => 'Total Vault Assets';
+
+  @override
+  String get monthlyIncomeLabel => 'Monthly Inflow';
+
+  @override
+  String get monthlyExpenseLabel => 'Monthly Outflow';
+
+  @override
+  String get recentTransactionsTitle => 'Recent Transactions';
+
+  @override
+  String get emptyTransactionsTitle => 'No Transactions Found';
+
+  @override
+  String get emptyTransactionsMessage =>
+      'No transaction records exist in your vault yet.';
+
+  @override
+  String get logManualAction => 'Log Manual';
+
+  @override
+  String get bankStatusTitle => 'Bank Status';
+
+  @override
+  String get fullyOfflineBadge => 'Fully Offline';
+
+  @override
+  String get retryAction => 'Retry';
 }

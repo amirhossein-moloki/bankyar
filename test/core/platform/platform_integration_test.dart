@@ -17,9 +17,13 @@ import 'package:bankyar/features/sms_detection/domain/usecases/process_incoming_
 
 // Mocks
 class MockAppLogger extends Mock implements AppLogger {}
+
 class MockPermissionService extends Mock implements PermissionService {}
+
 class MockPreferencesStorage extends Mock implements PreferencesStorage {}
-class MockProcessIncomingSmsUseCase extends Mock implements ProcessIncomingSmsUseCase {}
+
+class MockProcessIncomingSmsUseCase extends Mock
+    implements ProcessIncomingSmsUseCase {}
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -33,11 +37,9 @@ void main() {
 
   setUpAll(() {
     registerFallbackValue(LogLevel.info);
-    registerFallbackValue(const ProcessIncomingSmsParams(
-      rawText: '',
-      senderId: '',
-      receivedAt: 0,
-    ));
+    registerFallbackValue(
+      const ProcessIncomingSmsParams(rawText: '', senderId: '', receivedAt: 0),
+    );
   });
 
   setUp(() {
@@ -47,15 +49,17 @@ void main() {
     mockProcessUseCase = MockProcessIncomingSmsUseCase();
 
     // Setup default logger mock behavior
-    when(() => mockLogger.log(
-      any(),
-      any(),
-      any(),
-      any(),
-      metadata: any(named: 'metadata'),
-      error: any(named: 'error'),
-      stackTrace: any(named: 'stackTrace'),
-    )).thenReturn(null);
+    when(
+      () => mockLogger.log(
+        any(),
+        any(),
+        any(),
+        any(),
+        metadata: any(named: 'metadata'),
+        error: any(named: 'error'),
+        stackTrace: any(named: 'stackTrace'),
+      ),
+    ).thenReturn(null);
   });
 
   tearDown(() {
@@ -101,7 +105,10 @@ void main() {
 
     test('request permission stays permanentlyDenied', () async {
       final service = SystemPermissionService();
-      service.setMockStatus(AppPermission.smsRead, PermissionStatus.permanentlyDenied);
+      service.setMockStatus(
+        AppPermission.smsRead,
+        PermissionStatus.permanentlyDenied,
+      );
 
       final status = await service.request(AppPermission.smsRead);
       expect(status, PermissionStatus.permanentlyDenied);
@@ -119,17 +126,17 @@ void main() {
     test('getAndroidInfo queries platform and parses correctly', () async {
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
           .setMockMethodCallHandler(channel, (MethodCall call) async {
-        if (call.method == 'getDeviceInfo') {
-          return {
-            'manufacturer': 'Xiaomi',
-            'model': 'Redmi Note 10',
-            'brand': 'POCO',
-            'sdkVersion': 31,
-            'releaseVersion': '12',
-          };
-        }
-        return null;
-      });
+            if (call.method == 'getDeviceInfo') {
+              return {
+                'manufacturer': 'Xiaomi',
+                'model': 'Redmi Note 10',
+                'brand': 'POCO',
+                'sdkVersion': 31,
+                'releaseVersion': '12',
+              };
+            }
+            return null;
+          });
 
       final service = AndroidDeviceInfoService();
       final info = await service.getAndroidInfo();
@@ -144,8 +151,8 @@ void main() {
     test('getAndroidInfo falls back gracefully on error', () async {
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
           .setMockMethodCallHandler(channel, (MethodCall call) async {
-        throw PlatformException(code: 'ERROR');
-      });
+            throw PlatformException(code: 'ERROR');
+          });
 
       final service = AndroidDeviceInfoService();
       final info = await service.getAndroidInfo();
@@ -174,18 +181,9 @@ void main() {
         contains('بهینه‌سازی باتری'),
       );
 
-      expect(
-        service.getManufacturerSettingsIntent('Xiaomi'),
-        isNotNull,
-      );
-      expect(
-        service.getManufacturerSettingsIntent('Huawei'),
-        isNotNull,
-      );
-      expect(
-        service.getManufacturerSettingsIntent('Google'),
-        isNull,
-      );
+      expect(service.getManufacturerSettingsIntent('Xiaomi'), isNotNull);
+      expect(service.getManufacturerSettingsIntent('Huawei'), isNotNull);
+      expect(service.getManufacturerSettingsIntent('Google'), isNull);
     });
   });
 
@@ -193,8 +191,9 @@ void main() {
     const smsChannel = EventChannel('com.bankyar.app/sms_events');
 
     test('Cannot start listening if permission is denied', () async {
-      when(() => mockPermissionService.checkStatus(AppPermission.smsReceive))
-          .thenAnswer((_) async => PermissionStatus.denied);
+      when(
+        () => mockPermissionService.checkStatus(AppPermission.smsReceive),
+      ).thenAnswer((_) async => PermissionStatus.denied);
 
       final service = AndroidSmsReceiverService(
         permissionService: mockPermissionService,
@@ -203,25 +202,31 @@ void main() {
 
       await service.startListening();
 
-      verify(() => mockLogger.log(
-        any(),
-        any(),
-        any(),
-        any(),
-        metadata: any(named: 'metadata'),
-        error: any(named: 'error'),
-        stackTrace: any(named: 'stackTrace'),
-      )).called(2); // First start attempt, second log for denied error
+      verify(
+        () => mockLogger.log(
+          any(),
+          any(),
+          any(),
+          any(),
+          metadata: any(named: 'metadata'),
+          error: any(named: 'error'),
+          stackTrace: any(named: 'stackTrace'),
+        ),
+      ).called(2); // First start attempt, second log for denied error
     });
 
     test('Listen captures and validates SMS broadcasts correctly', () async {
-      when(() => mockPermissionService.checkStatus(AppPermission.smsReceive))
-          .thenAnswer((_) async => PermissionStatus.granted);
+      when(
+        () => mockPermissionService.checkStatus(AppPermission.smsReceive),
+      ).thenAnswer((_) async => PermissionStatus.granted);
 
       final controller = StreamController<dynamic>();
 
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-          .setMockStreamHandler(smsChannel, MockSmsStreamHandler(controller.stream));
+          .setMockStreamHandler(
+            smsChannel,
+            MockSmsStreamHandler(controller.stream),
+          );
 
       final service = AndroidSmsReceiverService(
         permissionService: mockPermissionService,
@@ -265,8 +270,9 @@ void main() {
 
   group('AndroidSmsHistoryImporter Tests', () {
     test('Returns 0 and logs error if smsRead permission is denied', () async {
-      when(() => mockPermissionService.checkStatus(AppPermission.smsRead))
-          .thenAnswer((_) async => PermissionStatus.denied);
+      when(
+        () => mockPermissionService.checkStatus(AppPermission.smsRead),
+      ).thenAnswer((_) async => PermissionStatus.denied);
 
       final importer = AndroidSmsHistoryImporter(
         permissionService: mockPermissionService,
@@ -275,131 +281,162 @@ void main() {
         logger: mockLogger,
       );
 
-      final count = await importer.synchronizeInbox(forceSinceTimestamp: 1697360400000);
+      final count = await importer.synchronizeInbox(
+        forceSinceTimestamp: 1697360400000,
+      );
       expect(count, 0);
-      verify(() => mockLogger.log(
-        any(),
-        any(),
-        any(),
-        any(),
-        metadata: any(named: 'metadata'),
-        error: any(named: 'error'),
-        stackTrace: any(named: 'stackTrace'),
-      )).called(2);
+      verify(
+        () => mockLogger.log(
+          any(),
+          any(),
+          any(),
+          any(),
+          metadata: any(named: 'metadata'),
+          error: any(named: 'error'),
+          stackTrace: any(named: 'stackTrace'),
+        ),
+      ).called(2);
     });
 
-    test('Queries historical SMS inbox and processes new messages cleanly', () async {
-      when(() => mockPermissionService.checkStatus(AppPermission.smsRead))
-          .thenAnswer((_) async => PermissionStatus.granted);
+    test(
+      'Queries historical SMS inbox and processes new messages cleanly',
+      () async {
+        when(
+          () => mockPermissionService.checkStatus(AppPermission.smsRead),
+        ).thenAnswer((_) async => PermissionStatus.granted);
 
-      when(() => mockPreferencesStorage.setInt(any(), any()))
-          .thenAnswer((_) async => {});
+        when(
+          () => mockPreferencesStorage.setInt(any(), any()),
+        ).thenAnswer((_) async => {});
 
-      when(() => mockProcessUseCase.call(any()))
-          .thenAnswer((_) async => const Result.success(ParsedTransaction(
-                id: 'tx-1',
-                amount: 1000.0,
-                currency: 'IRR',
-                transactionType: SmsTransactionType.credit,
-                rawMerchant: 'Melli',
-                normalizedMerchant: 'Melli',
-                confidenceScore: 1.0,
-                parsingMethod: 'deterministic',
-                createdAt: 1697360400000,
-                updatedAt: 1697360400000,
-                timestamp: 1697360400000,
-              )));
+        when(() => mockProcessUseCase.call(any())).thenAnswer(
+          (_) async => const Result.success(
+            ParsedTransaction(
+              id: 'tx-1',
+              amount: 1000.0,
+              currency: 'IRR',
+              transactionType: SmsTransactionType.credit,
+              rawMerchant: 'Melli',
+              normalizedMerchant: 'Melli',
+              confidenceScore: 1.0,
+              parsingMethod: 'deterministic',
+              createdAt: 1697360400000,
+              updatedAt: 1697360400000,
+              timestamp: 1697360400000,
+            ),
+          ),
+        );
 
-      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-          .setMockMethodCallHandler(channel, (MethodCall call) async {
-        if (call.method == 'queryHistoricalSms') {
-          return [
-            {
-              'sender': 'Melli',
-              'body': 'واریز ۱,۰۰۰ ریال',
-              'timestamp': 1697360400000,
-            }
-          ];
-        }
-        return null;
-      });
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .setMockMethodCallHandler(channel, (MethodCall call) async {
+              if (call.method == 'queryHistoricalSms') {
+                return [
+                  {
+                    'sender': 'Melli',
+                    'body': 'واریز ۱,۰۰۰ ریال',
+                    'timestamp': 1697360400000,
+                  },
+                ];
+              }
+              return null;
+            });
 
-      final importer = AndroidSmsHistoryImporter(
-        permissionService: mockPermissionService,
-        preferencesStorage: mockPreferencesStorage,
-        processUseCase: mockProcessUseCase,
-        logger: mockLogger,
-      );
+        final importer = AndroidSmsHistoryImporter(
+          permissionService: mockPermissionService,
+          preferencesStorage: mockPreferencesStorage,
+          processUseCase: mockProcessUseCase,
+          logger: mockLogger,
+        );
 
-      final count = await importer.synchronizeInbox(forceSinceTimestamp: 1697360300000);
-      expect(count, 1);
+        final count = await importer.synchronizeInbox(
+          forceSinceTimestamp: 1697360300000,
+        );
+        expect(count, 1);
 
-      verify(() => mockProcessUseCase.call(any())).called(1);
-      verify(() => mockPreferencesStorage.setInt(
+        verify(() => mockProcessUseCase.call(any())).called(1);
+        verify(
+          () => mockPreferencesStorage.setInt(
             'bankyar.sms_history.last_sync_timestamp',
             1697360400001,
-          )).called(1);
-    });
+          ),
+        ).called(1);
+      },
+    );
 
-    test('performIncrementalSync fetches correct state and runs correctly', () async {
-      when(() => mockPermissionService.checkStatus(AppPermission.smsRead))
-          .thenAnswer((_) async => PermissionStatus.granted);
+    test(
+      'performIncrementalSync fetches correct state and runs correctly',
+      () async {
+        when(
+          () => mockPermissionService.checkStatus(AppPermission.smsRead),
+        ).thenAnswer((_) async => PermissionStatus.granted);
 
-      when(() => mockPreferencesStorage.getInt('bankyar.sms_history.last_sync_timestamp'))
-          .thenAnswer((_) async => 1697360400000);
+        when(
+          () => mockPreferencesStorage.getInt(
+            'bankyar.sms_history.last_sync_timestamp',
+          ),
+        ).thenAnswer((_) async => 1697360400000);
 
-      when(() => mockPreferencesStorage.setInt(any(), any()))
-          .thenAnswer((_) async => {});
+        when(
+          () => mockPreferencesStorage.setInt(any(), any()),
+        ).thenAnswer((_) async => {});
 
-      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-          .setMockMethodCallHandler(channel, (MethodCall call) async {
-        return []; // No new messages
-      });
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .setMockMethodCallHandler(channel, (MethodCall call) async {
+              return []; // No new messages
+            });
 
-      final importer = AndroidSmsHistoryImporter(
-        permissionService: mockPermissionService,
-        preferencesStorage: mockPreferencesStorage,
-        processUseCase: mockProcessUseCase,
-        logger: mockLogger,
-      );
+        final importer = AndroidSmsHistoryImporter(
+          permissionService: mockPermissionService,
+          preferencesStorage: mockPreferencesStorage,
+          processUseCase: mockProcessUseCase,
+          logger: mockLogger,
+        );
 
-      final count = await importer.performIncrementalSync();
-      expect(count, 0);
-    });
+        final count = await importer.performIncrementalSync();
+        expect(count, 0);
+      },
+    );
 
-    test('performIncrementalSync falls back to 3 days ago if key is null', () async {
-      when(() => mockPermissionService.checkStatus(AppPermission.smsRead))
-          .thenAnswer((_) async => PermissionStatus.granted);
+    test(
+      'performIncrementalSync falls back to 3 days ago if key is null',
+      () async {
+        when(
+          () => mockPermissionService.checkStatus(AppPermission.smsRead),
+        ).thenAnswer((_) async => PermissionStatus.granted);
 
-      when(() => mockPreferencesStorage.getInt('bankyar.sms_history.last_sync_timestamp'))
-          .thenAnswer((_) async => null);
+        when(
+          () => mockPreferencesStorage.getInt(
+            'bankyar.sms_history.last_sync_timestamp',
+          ),
+        ).thenAnswer((_) async => null);
 
-      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-          .setMockMethodCallHandler(channel, (MethodCall call) async {
-        return [];
-      });
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .setMockMethodCallHandler(channel, (MethodCall call) async {
+              return [];
+            });
 
-      final importer = AndroidSmsHistoryImporter(
-        permissionService: mockPermissionService,
-        preferencesStorage: mockPreferencesStorage,
-        processUseCase: mockProcessUseCase,
-        logger: mockLogger,
-      );
+        final importer = AndroidSmsHistoryImporter(
+          permissionService: mockPermissionService,
+          preferencesStorage: mockPreferencesStorage,
+          processUseCase: mockProcessUseCase,
+          logger: mockLogger,
+        );
 
-      final count = await importer.performIncrementalSync();
-      expect(count, 0);
-    });
+        final count = await importer.performIncrementalSync();
+        expect(count, 0);
+      },
+    );
   });
 
   group('AndroidBackgroundServiceManager Tests', () {
     test('startService executes MethodChannel and updates status', () async {
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
           .setMockMethodCallHandler(channel, (MethodCall call) async {
-        if (call.method == 'startBackgroundService') {
-          return true;
-        }
-        return null;
-      });
+            if (call.method == 'startBackgroundService') {
+              return true;
+            }
+            return null;
+          });
 
       final manager = AndroidBackgroundServiceManager(logger: mockLogger);
       expect(await manager.isServiceRunning(), isFalse);
@@ -412,11 +449,12 @@ void main() {
     test('stopService executes MethodChannel and updates status', () async {
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
           .setMockMethodCallHandler(channel, (MethodCall call) async {
-        if (call.method == 'startBackgroundService' || call.method == 'stopBackgroundService') {
-          return true;
-        }
-        return null;
-      });
+            if (call.method == 'startBackgroundService' ||
+                call.method == 'stopBackgroundService') {
+              return true;
+            }
+            return null;
+          });
 
       final manager = AndroidBackgroundServiceManager(logger: mockLogger);
       await manager.startService();
@@ -430,11 +468,11 @@ void main() {
     test('ensureResilience restarts background service if stopped', () async {
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
           .setMockMethodCallHandler(channel, (MethodCall call) async {
-        if (call.method == 'startBackgroundService') {
-          return true;
-        }
-        return null;
-      });
+            if (call.method == 'startBackgroundService') {
+              return true;
+            }
+            return null;
+          });
 
       final manager = AndroidBackgroundServiceManager(logger: mockLogger);
       expect(await manager.isServiceRunning(), isFalse);
@@ -445,39 +483,42 @@ void main() {
   });
 
   group('AndroidWorkSchedulingService Tests', () {
-    test('schedulePeriodicSync passes arguments to platform and returns success', () async {
-      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-          .setMockMethodCallHandler(channel, (MethodCall call) async {
-        if (call.method == 'scheduleWork') {
-          expect(call.arguments['taskName'], 'SyncTask');
-          expect(call.arguments['intervalMinutes'], 15);
-          expect(call.arguments['requiresCharging'], isFalse);
-          expect(call.arguments['backoffPolicy'], 'exponential');
-          return true;
-        }
-        return null;
-      });
+    test(
+      'schedulePeriodicSync passes arguments to platform and returns success',
+      () async {
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .setMockMethodCallHandler(channel, (MethodCall call) async {
+              if (call.method == 'scheduleWork') {
+                expect(call.arguments['taskName'], 'SyncTask');
+                expect(call.arguments['intervalMinutes'], 15);
+                expect(call.arguments['requiresCharging'], isFalse);
+                expect(call.arguments['backoffPolicy'], 'exponential');
+                return true;
+              }
+              return null;
+            });
 
-      final service = AndroidWorkSchedulingService(logger: mockLogger);
-      final success = await service.schedulePeriodicSync(
-        taskName: 'SyncTask',
-        interval: const Duration(minutes: 15),
-        constraints: const WorkConstraints(),
-        backoffPolicy: WorkBackoffPolicy.exponential,
-        backoffDelay: const Duration(seconds: 30),
-      );
+        final service = AndroidWorkSchedulingService(logger: mockLogger);
+        final success = await service.schedulePeriodicSync(
+          taskName: 'SyncTask',
+          interval: const Duration(minutes: 15),
+          constraints: const WorkConstraints(),
+          backoffPolicy: WorkBackoffPolicy.exponential,
+          backoffDelay: const Duration(seconds: 30),
+        );
 
-      expect(success, isTrue);
-    });
+        expect(success, isTrue);
+      },
+    );
 
     test('cancelAllTasks cancels active tasks and returns success', () async {
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
           .setMockMethodCallHandler(channel, (MethodCall call) async {
-        if (call.method == 'cancelAllTasks') {
-          return true;
-        }
-        return null;
-      });
+            if (call.method == 'cancelAllTasks') {
+              return true;
+            }
+            return null;
+          });
 
       final service = AndroidWorkSchedulingService(logger: mockLogger);
       final success = await service.cancelAllTasks();
@@ -495,7 +536,8 @@ class MockSmsStreamHandler extends MockStreamHandler {
   void onListen(dynamic arguments, MockStreamHandlerEventSink events) {
     _subscription = stream.listen(
       (data) => events.success(data),
-      onError: (Object err) => events.error(code: 'ERROR', message: err.toString()),
+      onError: (Object err) =>
+          events.error(code: 'ERROR', message: err.toString()),
       onDone: () => events.endOfStream(),
     );
   }

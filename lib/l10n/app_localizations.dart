@@ -127,6 +127,78 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Unparsed transaction detected'**
   String get unparsedTxAlert;
+
+  /// Greeting displayed on the dashboard
+  ///
+  /// In en, this message translates to:
+  /// **'Hello, dear Sohrab'**
+  String get greetingTitle;
+
+  /// Subtitle displayed below the greeting
+  ///
+  /// In en, this message translates to:
+  /// **'Your financial vault is secure and updated'**
+  String get greetingSubtitle;
+
+  /// Label for the total balance card
+  ///
+  /// In en, this message translates to:
+  /// **'Total Vault Assets'**
+  String get totalBalanceLabel;
+
+  /// Label for monthly income card
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly Inflow'**
+  String get monthlyIncomeLabel;
+
+  /// Label for monthly expense card
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly Outflow'**
+  String get monthlyExpenseLabel;
+
+  /// Title for transactions feed section
+  ///
+  /// In en, this message translates to:
+  /// **'Recent Transactions'**
+  String get recentTransactionsTitle;
+
+  /// Title when transactions list is empty
+  ///
+  /// In en, this message translates to:
+  /// **'No Transactions Found'**
+  String get emptyTransactionsTitle;
+
+  /// Message when transactions list is empty
+  ///
+  /// In en, this message translates to:
+  /// **'No transaction records exist in your vault yet.'**
+  String get emptyTransactionsMessage;
+
+  /// Action label to manually log a transaction
+  ///
+  /// In en, this message translates to:
+  /// **'Log Manual'**
+  String get logManualAction;
+
+  /// Title for bank status indicator section
+  ///
+  /// In en, this message translates to:
+  /// **'Bank Status'**
+  String get bankStatusTitle;
+
+  /// Status badge showing fully secure offline state
+  ///
+  /// In en, this message translates to:
+  /// **'Fully Offline'**
+  String get fullyOfflineBadge;
+
+  /// Label for retry buttons
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get retryAction;
 }
 
 class _AppLocalizationsDelegate

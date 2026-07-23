@@ -41,15 +41,17 @@ class AndroidSmsReceiverService implements SmsReceiverService {
     required PermissionService permissionService,
     required AppLogger logger,
     EventChannel? eventChannel,
-  })  : _permissionService = permissionService,
-        _logger = logger,
-        _eventChannel = eventChannel ?? const EventChannel('com.bankyar.app/sms_events');
+  }) : _permissionService = permissionService,
+       _logger = logger,
+       _eventChannel =
+           eventChannel ?? const EventChannel('com.bankyar.app/sms_events');
 
   final PermissionService _permissionService;
   final AppLogger _logger;
   final EventChannel _eventChannel;
 
-  final StreamController<SmsMessage> _controller = StreamController<SmsMessage>.broadcast();
+  final StreamController<SmsMessage> _controller =
+      StreamController<SmsMessage>.broadcast();
   StreamSubscription<dynamic>? _subscription;
 
   @override
@@ -65,7 +67,9 @@ class AndroidSmsReceiverService implements SmsReceiverService {
     );
 
     // Verify SMS permission is granted before starting stream listeners
-    final status = await _permissionService.checkStatus(AppPermission.smsReceive);
+    final status = await _permissionService.checkStatus(
+      AppPermission.smsReceive,
+    );
     if (status != PermissionStatus.granted) {
       _logger.log(
         LogLevel.error,
@@ -108,7 +112,8 @@ class AndroidSmsReceiverService implements SmsReceiverService {
     if (data is Map<dynamic, dynamic>) {
       final sender = (data['sender'] as String?) ?? '';
       final body = (data['body'] as String?) ?? '';
-      final timestamp = (data['timestamp'] as int?) ?? DateTime.now().millisecondsSinceEpoch;
+      final timestamp =
+          (data['timestamp'] as int?) ?? DateTime.now().millisecondsSinceEpoch;
 
       // Security Check 1: SMS Source validation
       if (!_validateSmsSource(sender, body)) {
@@ -134,12 +139,14 @@ class AndroidSmsReceiverService implements SmsReceiverService {
     final senderLower = sender.toLowerCase();
 
     // Ignore personal or promotional cellular numbers if they don't look like short codes or textual masks
-    final isCellularNumber = RegExp(r'^\+?989\d{9}$').hasMatch(senderLower) ||
+    final isCellularNumber =
+        RegExp(r'^\+?989\d{9}$').hasMatch(senderLower) ||
         RegExp(r'^09\d{9}$').hasMatch(senderLower);
 
     // If it's a typical mobile phone number, it's highly likely spam or personal chat, unless it contains distinct financial markers
     if (isCellularNumber) {
-      final hasFinancialKeywords = body.contains('بانک') ||
+      final hasFinancialKeywords =
+          body.contains('بانک') ||
           body.contains('واریز') ||
           body.contains('برداشت') ||
           body.contains('حساب') ||

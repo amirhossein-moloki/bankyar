@@ -3,5 +3,17 @@
   "loading": "در حال بارگذاری...",
   "errorOccurred": "خطایی رخ داده است",
   "lockScreenTitle": "قفل‌گشایی بانک‌یار",
-  "unparsedTxAlert": "تراکنش تجزیه‌نشده شناسایی شد"
+  "unparsedTxAlert": "تراکنش تجزیه‌نشده شناسایی شد",
+  "greetingTitle": "سلام، سهراب عزیز",
+  "greetingSubtitle": "صندوقچه مالی شما امن و به‌روز است",
+  "totalBalanceLabel": "دارایی کل صندوقچه",
+  "monthlyIncomeLabel": "ورودی این ماه",
+  "monthlyExpenseLabel": "خروجی این ماه",
+  "recentTransactionsTitle": "تراکنش‌های اخیر",
+  "emptyTransactionsTitle": "تراکنشی یافت نشد",
+  "emptyTransactionsMessage": "هیچ تراکنشی در صندوقچه شما ثبت نشده است.",
+  "logManualAction": "ثبت دستی",
+  "bankStatusTitle": "وضعیت بانک‌ها",
+  "fullyOfflineBadge": "کاملاً آفلاین",
+  "retryAction": "تلاش مجدد"
 }

@@ -50,8 +50,8 @@ class AndroidWorkSchedulingService implements WorkSchedulingService {
   AndroidWorkSchedulingService({
     required AppLogger logger,
     MethodChannel? channel,
-  })  : _logger = logger,
-        _channel = channel ?? const MethodChannel('com.bankyar.app/platform');
+  }) : _logger = logger,
+       _channel = channel ?? const MethodChannel('com.bankyar.app/platform');
 
   final AppLogger _logger;
   final MethodChannel _channel;
@@ -72,18 +72,15 @@ class AndroidWorkSchedulingService implements WorkSchedulingService {
     );
 
     try {
-      final success = await _channel.invokeMethod<bool>(
-        'scheduleWork',
-        {
-          'taskName': taskName,
-          'intervalMinutes': interval.inMinutes,
-          'requiresCharging': constraints.requiresCharging,
-          'requiresDeviceIdle': constraints.requiresDeviceIdle,
-          'requiresBatteryNotLow': constraints.requiresBatteryNotLow,
-          'backoffPolicy': backoffPolicy.name,
-          'backoffDelaySeconds': backoffDelay.inSeconds,
-        },
-      );
+      final success = await _channel.invokeMethod<bool>('scheduleWork', {
+        'taskName': taskName,
+        'intervalMinutes': interval.inMinutes,
+        'requiresCharging': constraints.requiresCharging,
+        'requiresDeviceIdle': constraints.requiresDeviceIdle,
+        'requiresBatteryNotLow': constraints.requiresBatteryNotLow,
+        'backoffPolicy': backoffPolicy.name,
+        'backoffDelaySeconds': backoffDelay.inSeconds,
+      });
       return success == true;
     } catch (e) {
       _logger.log(

@@ -22,8 +22,8 @@ class AndroidBackgroundServiceManager implements BackgroundServiceManager {
   AndroidBackgroundServiceManager({
     required AppLogger logger,
     MethodChannel? channel,
-  })  : _logger = logger,
-        _channel = channel ?? const MethodChannel('com.bankyar.app/platform');
+  }) : _logger = logger,
+       _channel = channel ?? const MethodChannel('com.bankyar.app/platform');
 
   final AppLogger _logger;
   final MethodChannel _channel;
@@ -40,7 +40,9 @@ class AndroidBackgroundServiceManager implements BackgroundServiceManager {
     );
 
     try {
-      final success = await _channel.invokeMethod<bool>('startBackgroundService');
+      final success = await _channel.invokeMethod<bool>(
+        'startBackgroundService',
+      );
       if (success == true) {
         _isLocallyRunning = true;
         _logger.log(
@@ -73,7 +75,9 @@ class AndroidBackgroundServiceManager implements BackgroundServiceManager {
     );
 
     try {
-      final success = await _channel.invokeMethod<bool>('stopBackgroundService');
+      final success = await _channel.invokeMethod<bool>(
+        'stopBackgroundService',
+      );
       if (success == true) {
         _isLocallyRunning = false;
         _logger.log(

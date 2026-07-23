@@ -56,12 +56,13 @@ abstract class PermissionService {
 class SystemPermissionService implements PermissionService {
   /// Constructor constructing permission service.
   SystemPermissionService({MethodChannel? channel})
-      : _channel = channel ?? const MethodChannel('com.bankyar.app/platform') {
+    : _channel = channel ?? const MethodChannel('com.bankyar.app/platform') {
     _emitCurrent();
   }
 
   final MethodChannel _channel;
-  final _controller = StreamController<Map<AppPermission, PermissionStatus>>.broadcast();
+  final _controller =
+      StreamController<Map<AppPermission, PermissionStatus>>.broadcast();
 
   final Map<AppPermission, PermissionStatus> _statuses = {
     AppPermission.smsRead: PermissionStatus.granted,
@@ -83,10 +84,9 @@ class SystemPermissionService implements PermissionService {
     // If executing on Android, invoke actual platform channels to query permission
     if (defaultTargetPlatform == TargetPlatform.android) {
       try {
-        final result = await _channel.invokeMethod<String>(
-          'checkPermission',
-          {'permission': permission.name},
-        );
+        final result = await _channel.invokeMethod<String>('checkPermission', {
+          'permission': permission.name,
+        });
         if (result != null) {
           final mapped = _mapStatusString(result);
           _statuses[permission] = mapped;
@@ -136,7 +136,8 @@ class SystemPermissionService implements PermissionService {
   }
 
   @override
-  Stream<Map<AppPermission, PermissionStatus>> get onStatusesChanged => _controller.stream;
+  Stream<Map<AppPermission, PermissionStatus>> get onStatusesChanged =>
+      _controller.stream;
 
   @override
   Future<void> openSettings() async {

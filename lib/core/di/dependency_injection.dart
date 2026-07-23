@@ -112,7 +112,9 @@ final smsReceiverServiceProvider = Provider<SmsReceiverService>((ref) {
 });
 
 /// Provider exposing the BackgroundServiceManager to control foreground syncing daemons.
-final backgroundServiceManagerProvider = Provider<BackgroundServiceManager>((ref) {
+final backgroundServiceManagerProvider = Provider<BackgroundServiceManager>((
+  ref,
+) {
   final logger = ref.watch(loggerProvider);
   return AndroidBackgroundServiceManager(logger: logger);
 });

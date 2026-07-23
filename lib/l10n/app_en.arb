@@ -18,5 +18,53 @@
   "unparsedTxAlert": "Unparsed transaction detected",
   "@unparsedTxAlert": {
     "description": "Alert text for when SMS parsing fails and defaults to unparsed"
+  },
+  "greetingTitle": "Hello, dear Sohrab",
+  "@greetingTitle": {
+    "description": "Greeting displayed on the dashboard"
+  },
+  "greetingSubtitle": "Your financial vault is secure and updated",
+  "@greetingSubtitle": {
+    "description": "Subtitle displayed below the greeting"
+  },
+  "totalBalanceLabel": "Total Vault Assets",
+  "@totalBalanceLabel": {
+    "description": "Label for the total balance card"
+  },
+  "monthlyIncomeLabel": "Monthly Inflow",
+  "@monthlyIncomeLabel": {
+    "description": "Label for monthly income card"
+  },
+  "monthlyExpenseLabel": "Monthly Outflow",
+  "@monthlyExpenseLabel": {
+    "description": "Label for monthly expense card"
+  },
+  "recentTransactionsTitle": "Recent Transactions",
+  "@recentTransactionsTitle": {
+    "description": "Title for transactions feed section"
+  },
+  "emptyTransactionsTitle": "No Transactions Found",
+  "@emptyTransactionsTitle": {
+    "description": "Title when transactions list is empty"
+  },
+  "emptyTransactionsMessage": "No transaction records exist in your vault yet.",
+  "@emptyTransactionsMessage": {
+    "description": "Message when transactions list is empty"
+  },
+  "logManualAction": "Log Manual",
+  "@logManualAction": {
+    "description": "Action label to manually log a transaction"
+  },
+  "bankStatusTitle": "Bank Status",
+  "@bankStatusTitle": {
+    "description": "Title for bank status indicator section"
+  },
+  "fullyOfflineBadge": "Fully Offline",
+  "@fullyOfflineBadge": {
+    "description": "Status badge showing fully secure offline state"
+  },
+  "retryAction": "Retry",
+  "@retryAction": {
+    "description": "Label for retry buttons"
   }
 }
