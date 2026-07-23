@@ -93,7 +93,7 @@ void main() {
     );
 
     test('SystemPermissionService returns granted statuses', () async {
-      const permission = SystemPermissionService();
+      final permission = SystemPermissionService();
       expect(
         await permission.checkStatus(AppPermission.smsReceive),
         equals(PermissionStatus.granted),
@@ -102,6 +102,7 @@ void main() {
         await permission.request(AppPermission.localFiles),
         equals(PermissionStatus.granted),
       );
+      permission.dispose();
     });
 
     test(

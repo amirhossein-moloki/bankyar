@@ -11,6 +11,11 @@ import '../platform/secure_storage.dart';
 import '../platform/file_storage.dart';
 import '../platform/permission.dart';
 import '../platform/app_lifecycle_service.dart';
+import '../platform/device_info_service.dart';
+import '../platform/sms_receiver_service.dart';
+import '../platform/background_service_manager.dart';
+import '../platform/work_scheduling_service.dart';
+import '../storage/preferences_storage.dart';
 
 /// Provider exposing the active application execution environment.
 /// Loaded lazily from Dart defines on launch.
@@ -51,7 +56,7 @@ final fileStorageProvider = Provider<FileStorage>((ref) {
 
 /// Provider exposing system permissions authorization service.
 final permissionServiceProvider = Provider<PermissionService>((ref) {
-  return const SystemPermissionService();
+  return SystemPermissionService();
 });
 
 /// Provider exposing application lifecycle state transitions.
@@ -82,4 +87,38 @@ final databaseServiceProvider = Provider<DatabaseService>((ref) {
   throw UnimplementedError(
     'databaseServiceProvider must be explicitly overridden inside ProviderScope.',
   );
+});
+
+/// Provider exposing the secure PreferencesStorage manager.
+final preferencesStorageProvider = Provider<PreferencesStorage>((ref) {
+  final secureStorage = ref.watch(secureStorageServiceProvider);
+  final logger = ref.watch(loggerProvider);
+  return PreferencesStorage(secureStorage, logger);
+});
+
+/// Provider exposing the native hardware DeviceInfoService.
+final deviceInfoServiceProvider = Provider<DeviceInfoService>((ref) {
+  return AndroidDeviceInfoService();
+});
+
+/// Provider exposing the secure, real-time incoming SmsReceiverService.
+final smsReceiverServiceProvider = Provider<SmsReceiverService>((ref) {
+  final permissionService = ref.watch(permissionServiceProvider);
+  final logger = ref.watch(loggerProvider);
+  return AndroidSmsReceiverService(
+    permissionService: permissionService,
+    logger: logger,
+  );
+});
+
+/// Provider exposing the BackgroundServiceManager to control foreground syncing daemons.
+final backgroundServiceManagerProvider = Provider<BackgroundServiceManager>((ref) {
+  final logger = ref.watch(loggerProvider);
+  return AndroidBackgroundServiceManager(logger: logger);
+});
+
+/// Provider exposing the WorkSchedulingService to orchestrate background tasks using WorkManager.
+final workSchedulingServiceProvider = Provider<WorkSchedulingService>((ref) {
+  final logger = ref.watch(loggerProvider);
+  return AndroidWorkSchedulingService(logger: logger);
 });
