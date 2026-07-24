@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import '../../../../core/di/dependency_injection.dart';
 import '../../../../core/theme/spacing_tokens.dart';
 import '../../../../core/theme/radius_tokens.dart';
@@ -435,6 +436,16 @@ class _SecurityDashboardScreenState extends ConsumerState<SecurityDashboardScree
                 label: Text('${authState.session.failedAttempts} تلاش'),
                 backgroundColor: theme.colorScheme.errorContainer.withOpacity(0.3),
               ),
+            ),
+            const Divider(),
+            ListTile(
+              leading: Icon(Icons.backup_outlined, color: theme.colorScheme.primary),
+              title: const Text('پشتیبان‌گیری و بازیابی اطلاعات'),
+              subtitle: const Text('مدیریت خروجی‌های رمزنگاری‌ شده و بازنشانی دیتابیس'),
+              trailing: const Icon(Icons.chevron_left_outlined),
+              onTap: () {
+                context.push('/backup');
+              },
             ),
           ],
         ),
