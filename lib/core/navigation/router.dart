@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../features/search/presentation/screens/search_screen.dart';
+import '../../features/secure_auth/presentation/screens/security_dashboard_screen.dart';
+import '../../features/secure_auth/presentation/screens/unlock_screen.dart';
 import '../../features/transactions/presentation/screens/home_screen.dart';
 import '../../features/transactions/presentation/screens/transaction_details_screen.dart';
 import '../../features/transactions/presentation/screens/transactions_screen.dart';
@@ -23,13 +25,16 @@ abstract class AppRouter {
   /// Unique route path for the advanced search & filter screen.
   static const String searchRoute = '/search';
 
+  /// Unique route path for the security & privacy center dashboard.
+  static const String securityRoute = '/security';
+
   /// Declares the central routing graph.
   static final GoRouter router = GoRouter(
     initialLocation: homeRoute,
     routes: [
       GoRoute(
         path: lockRoute,
-        builder: (context, state) => const _PlaceholderLockScreen(),
+        builder: (context, state) => const UnlockScreen(),
       ),
       GoRoute(path: homeRoute, builder: (context, state) => const HomeScreen()),
       GoRoute(
@@ -39,6 +44,10 @@ abstract class AppRouter {
       GoRoute(
         path: searchRoute,
         builder: (context, state) => const SearchScreen(),
+      ),
+      GoRoute(
+        path: securityRoute,
+        builder: (context, state) => const SecurityDashboardScreen(),
       ),
       GoRoute(
         path: transactionDetailsRoute,
@@ -54,16 +63,4 @@ abstract class AppRouter {
       ),
     ],
   );
-}
-
-/// Lightweight private placeholder lock screen for routing configuration.
-class _PlaceholderLockScreen extends StatelessWidget {
-  const _PlaceholderLockScreen();
-
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(child: Text('Unlock BankYar (Security Locked Placeholder)')),
-    );
-  }
 }
