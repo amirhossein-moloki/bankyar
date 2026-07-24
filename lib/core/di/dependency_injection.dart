@@ -16,6 +16,13 @@ import '../platform/sms_receiver_service.dart';
 import '../platform/background_service_manager.dart';
 import '../platform/work_scheduling_service.dart';
 import '../storage/preferences_storage.dart';
+import '../database/backup_portability.dart';
+
+/// Provider exposing the AES encrypted database backup and restore portability service.
+final backupPortabilityProvider = Provider<BackupPortability>((ref) {
+  final logger = ref.watch(loggerProvider);
+  return BackupPortabilityImpl(logger);
+});
 
 /// Provider exposing the active application execution environment.
 /// Loaded lazily from Dart defines on launch.
