@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../../features/transactions/presentation/screens/home_screen.dart';
 
 /// Central declarative router mapping paths to lightweight route screens.
 /// Conforms to BankYar NAVIGATION_ARCHITECTURE.md specifications.
@@ -12,16 +13,13 @@ abstract class AppRouter {
 
   /// Declares the central routing graph.
   static final GoRouter router = GoRouter(
-    initialLocation: lockRoute,
+    initialLocation: homeRoute,
     routes: [
       GoRoute(
         path: lockRoute,
         builder: (context, state) => const _PlaceholderLockScreen(),
       ),
-      GoRoute(
-        path: homeRoute,
-        builder: (context, state) => const _PlaceholderHomeScreen(),
-      ),
+      GoRoute(path: homeRoute, builder: (context, state) => const HomeScreen()),
     ],
   );
 }
@@ -34,20 +32,6 @@ class _PlaceholderLockScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Scaffold(
       body: Center(child: Text('Unlock BankYar (Security Locked Placeholder)')),
-    );
-  }
-}
-
-/// Lightweight private placeholder home screen for routing configuration.
-class _PlaceholderHomeScreen extends StatelessWidget {
-  const _PlaceholderHomeScreen();
-
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
-        child: Text('BankYar Transactions Ledger Dashboard (Placeholder)'),
-      ),
     );
   }
 }

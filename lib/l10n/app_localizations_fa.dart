@@ -22,4 +22,41 @@ class AppLocalizationsFa extends AppLocalizations {
 
   @override
   String get unparsedTxAlert => 'تراکنش تجزیه‌نشده شناسایی شد';
+
+  @override
+  String get greetingTitle => 'سلام، سهراب عزیز';
+
+  @override
+  String get greetingSubtitle => 'صندوقچه مالی شما امن و به‌روز است';
+
+  @override
+  String get totalBalanceLabel => 'دارایی کل صندوقچه';
+
+  @override
+  String get monthlyIncomeLabel => 'ورودی این ماه';
+
+  @override
+  String get monthlyExpenseLabel => 'خروجی این ماه';
+
+  @override
+  String get recentTransactionsTitle => 'تراکنش‌های اخیر';
+
+  @override
+  String get emptyTransactionsTitle => 'تراکنشی یافت نشد';
+
+  @override
+  String get emptyTransactionsMessage =>
+      'هیچ تراکنشی در صندوقچه شما ثبت نشده است.';
+
+  @override
+  String get logManualAction => 'ثبت دستی';
+
+  @override
+  String get bankStatusTitle => 'وضعیت بانک‌ها';
+
+  @override
+  String get fullyOfflineBadge => 'کاملاً آفلاین';
+
+  @override
+  String get retryAction => 'تلاش مجدد';
 }

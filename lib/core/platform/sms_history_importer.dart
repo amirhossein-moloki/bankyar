@@ -24,11 +24,11 @@ class AndroidSmsHistoryImporter implements SmsHistoryImporter {
     required ProcessIncomingSmsUseCase processUseCase,
     required AppLogger logger,
     MethodChannel? channel,
-  })  : _permissionService = permissionService,
-        _preferencesStorage = preferencesStorage,
-        _processUseCase = processUseCase,
-        _logger = logger,
-        _channel = channel ?? const MethodChannel('com.bankyar.app/platform');
+  }) : _permissionService = permissionService,
+       _preferencesStorage = preferencesStorage,
+       _processUseCase = processUseCase,
+       _logger = logger,
+       _channel = channel ?? const MethodChannel('com.bankyar.app/platform');
 
   final PermissionService _permissionService;
   final PreferencesStorage _preferencesStorage;
@@ -60,10 +60,10 @@ class AndroidSmsHistoryImporter implements SmsHistoryImporter {
     }
 
     try {
-      final List<dynamic>? rawMessages = await _channel.invokeMethod<List<dynamic>>(
-        'queryHistoricalSms',
-        {'since': forceSinceTimestamp},
-      );
+      final List<dynamic>? rawMessages = await _channel
+          .invokeMethod<List<dynamic>>('queryHistoricalSms', {
+            'since': forceSinceTimestamp,
+          });
 
       if (rawMessages == null || rawMessages.isEmpty) {
         _logger.log(
@@ -145,7 +145,9 @@ class AndroidSmsHistoryImporter implements SmsHistoryImporter {
   Future<int> performIncrementalSync() async {
     final lastSyncVal = await _preferencesStorage.getInt(_lastSyncKey);
     // Default fallback starting point is 3 days ago if no historical logs exist
-    final threeDaysAgo = DateTime.now().subtract(const Duration(days: 3)).millisecondsSinceEpoch;
+    final threeDaysAgo = DateTime.now()
+        .subtract(const Duration(days: 3))
+        .millisecondsSinceEpoch;
     final startingTimestamp = lastSyncVal ?? threeDaysAgo;
 
     return synchronizeInbox(forceSinceTimestamp: startingTimestamp);

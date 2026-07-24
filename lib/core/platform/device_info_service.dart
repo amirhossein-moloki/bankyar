@@ -44,15 +44,15 @@ abstract class DeviceInfoService {
 class AndroidDeviceInfoService implements DeviceInfoService {
   /// Constructor injecting standard MethodChannel.
   AndroidDeviceInfoService({MethodChannel? channel})
-      : _channel = channel ?? const MethodChannel('com.bankyar.app/platform');
+    : _channel = channel ?? const MethodChannel('com.bankyar.app/platform');
 
   final MethodChannel _channel;
 
   @override
   Future<AndroidDeviceInfo> getAndroidInfo() async {
     try {
-      final Map<dynamic, dynamic>? result =
-          await _channel.invokeMethod<Map<dynamic, dynamic>>('getDeviceInfo');
+      final Map<dynamic, dynamic>? result = await _channel
+          .invokeMethod<Map<dynamic, dynamic>>('getDeviceInfo');
 
       if (result != null) {
         return AndroidDeviceInfo(
@@ -79,7 +79,9 @@ class AndroidDeviceInfoService implements DeviceInfoService {
   @override
   String getManufacturerTroubleshootingGuide(String manufacturer) {
     final lower = manufacturer.toLowerCase();
-    if (lower.contains('xiaomi') || lower.contains('redmi') || lower.contains('poco')) {
+    if (lower.contains('xiaomi') ||
+        lower.contains('redmi') ||
+        lower.contains('poco')) {
       return 'در گوشی‌های شیائومی، برای جلوگیری از توقف تحلیل خودکار، به بخش «مدیریت برنامه‌ها»، بانک‌یار، رفته و گزینه «شروع خودکار (Autostart)» را فعال کنید و حالت ذخیره باتری را روی «بدون محدودیت» قرار دهید.';
     }
     if (lower.contains('huawei') || lower.contains('honor')) {
@@ -94,7 +96,9 @@ class AndroidDeviceInfoService implements DeviceInfoService {
   @override
   String? getManufacturerSettingsIntent(String manufacturer) {
     final lower = manufacturer.toLowerCase();
-    if (lower.contains('xiaomi') || lower.contains('redmi') || lower.contains('poco')) {
+    if (lower.contains('xiaomi') ||
+        lower.contains('redmi') ||
+        lower.contains('poco')) {
       return 'com.miui.securitycenter/com.miui.permcenter.autostart.AutoStartManagementActivity';
     }
     if (lower.contains('huawei') || lower.contains('honor')) {
