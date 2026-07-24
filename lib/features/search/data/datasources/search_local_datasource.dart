@@ -27,9 +27,9 @@ class SearchLocalDataSourceImpl implements SearchLocalDataSource {
     required DatabaseServiceImpl dbService,
     required PreferencesStorage preferencesStorage,
     required AppLogger logger,
-  })  : _dbService = dbService,
-        _preferences = preferencesStorage,
-        _logger = logger;
+  }) : _dbService = dbService,
+       _preferences = preferencesStorage,
+       _logger = logger;
 
   final DatabaseServiceImpl _dbService;
   final PreferencesStorage _preferences;
@@ -75,7 +75,9 @@ class SearchLocalDataSourceImpl implements SearchLocalDataSource {
     }
 
     // 4. Bank
-    if (filters.bank != null && filters.bank != 'All' && filters.bank!.isNotEmpty) {
+    if (filters.bank != null &&
+        filters.bank != 'All' &&
+        filters.bank!.isNotEmpty) {
       whereClauses.add(
         '(t.card_identifier = ? OR t.normalized_merchant LIKE ? OR t.raw_merchant LIKE ?)',
       );
@@ -115,7 +117,8 @@ class SearchLocalDataSourceImpl implements SearchLocalDataSource {
 
       // We use standard LIKE clauses combined with FTS5 table references for high confidence matches.
       // Since FTS5 index contains merchant_name, note_text, and tag_labels, we can query it:
-      final String ftsClause = 't.id IN (SELECT transaction_id FROM fts_transactions_search WHERE fts_transactions_search MATCH ?)';
+      final String ftsClause =
+          't.id IN (SELECT transaction_id FROM fts_transactions_search WHERE fts_transactions_search MATCH ?)';
 
       whereClauses.add(
         '($ftsClause OR t.normalized_merchant LIKE ? OR t.raw_merchant LIKE ? OR n.note_text LIKE ? OR c.name LIKE ? OR bm.raw_text LIKE ? OR t.card_identifier LIKE ?)',
@@ -156,7 +159,8 @@ class SearchLocalDataSourceImpl implements SearchLocalDataSource {
 
     final String direction = query.sort.descending ? 'DESC' : 'ASC';
 
-    final String sql = '''
+    final String sql =
+        '''
       SELECT DISTINCT t.* FROM transactions t
       LEFT JOIN notes n ON t.id = n.transaction_id
       LEFT JOIN categories c ON t.category_id = c.id

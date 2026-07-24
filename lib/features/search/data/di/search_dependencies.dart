@@ -25,7 +25,9 @@ final searchRepositoryProvider = Provider<SearchRepository>((ref) {
 });
 
 /// Provider exposing the [SearchTransactionsUseCase] instance.
-final searchTransactionsUseCaseProvider = Provider<SearchTransactionsUseCase>((ref) {
+final searchTransactionsUseCaseProvider = Provider<SearchTransactionsUseCase>((
+  ref,
+) {
   final repository = ref.watch(searchRepositoryProvider);
   return SearchTransactionsUseCase(repository);
 });

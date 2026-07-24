@@ -1,13 +1,7 @@
 import '../../../sms_detection/domain/entities/parsed_transaction.dart';
 
 /// Represents the sorting options for search results.
-enum SearchSortField {
-  date,
-  amount,
-  alphabetical,
-  bank,
-  category,
-}
+enum SearchSortField { date, amount, alphabetical, bank, category }
 
 /// Model encapsulating all filter configurations.
 class SearchFilters {
@@ -94,18 +88,12 @@ class SearchFilters {
 
 /// Model for the sort configuration.
 class SearchSort {
-  const SearchSort({
-    this.field = SearchSortField.date,
-    this.descending = true,
-  });
+  const SearchSort({this.field = SearchSortField.date, this.descending = true});
 
   final SearchSortField field;
   final bool descending;
 
-  SearchSort copyWith({
-    SearchSortField? field,
-    bool? descending,
-  }) {
+  SearchSort copyWith({SearchSortField? field, bool? descending}) {
     return SearchSort(
       field: field ?? this.field,
       descending: descending ?? this.descending,
