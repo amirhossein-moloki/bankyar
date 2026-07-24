@@ -34,6 +34,22 @@ extension ResultExtensions<T> on Result<T> {
     return null;
   }
 
+  /// Returns the parsed data if successful, otherwise throws a StateError.
+  T get successOrCrash {
+    if (this is Success<T>) {
+      return (this as Success<T>).data;
+    }
+    throw StateError('Attempted to retrieve success data on a non-Success result: $this');
+  }
+
+  /// Returns the underlying failure if failed, otherwise throws a StateError.
+  Failure get failureOrCrash {
+    if (this is FailureResult<T>) {
+      return (this as FailureResult<T>).failure;
+    }
+    throw StateError('Attempted to retrieve failure on a non-Failure result: $this');
+  }
+
   /// Evaluates state and transforms successful result payloads.
   Result<R> map<R>(R Function(T data) fn) {
     return when(
