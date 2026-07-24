@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../../features/analytics/presentation/screens/statistics_dashboard_screen.dart';
 import '../../features/search/presentation/screens/search_screen.dart';
 import '../../features/transactions/presentation/screens/home_screen.dart';
 import '../../features/transactions/presentation/screens/transaction_details_screen.dart';
@@ -23,6 +24,9 @@ abstract class AppRouter {
   /// Unique route path for the advanced search & filter screen.
   static const String searchRoute = '/search';
 
+  /// Unique route path for the statistics & analytics screen.
+  static const String analyticsRoute = '/analytics';
+
   /// Declares the central routing graph.
   static final GoRouter router = GoRouter(
     initialLocation: homeRoute,
@@ -39,6 +43,10 @@ abstract class AppRouter {
       GoRoute(
         path: searchRoute,
         builder: (context, state) => const SearchScreen(),
+      ),
+      GoRoute(
+        path: analyticsRoute,
+        builder: (context, state) => const StatisticsDashboardScreen(),
       ),
       GoRoute(
         path: transactionDetailsRoute,
