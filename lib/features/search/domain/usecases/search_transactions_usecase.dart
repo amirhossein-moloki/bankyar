@@ -5,7 +5,8 @@ import '../entities/search_models.dart';
 import '../repository/search_repository.dart';
 
 /// Use case that runs advanced searching and filtering on the ledger dataset.
-class SearchTransactionsUseCase implements UseCase<List<ParsedTransaction>, SearchQuery> {
+class SearchTransactionsUseCase
+    implements UseCase<List<ParsedTransaction>, SearchQuery> {
   const SearchTransactionsUseCase(this._repository);
 
   final SearchRepository _repository;

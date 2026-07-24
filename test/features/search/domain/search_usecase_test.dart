@@ -35,23 +35,27 @@ void main() {
     updatedAt: 1697360400000,
   );
 
-  test('SearchTransactionsUseCase invokes searchTransactions on repository with correct params', () async {
-    final query = SearchQuery(
-      text: 'Snapp',
-      filters: SearchFilters.empty(),
-      sort: const SearchSort(),
-    );
+  test(
+    'SearchTransactionsUseCase invokes searchTransactions on repository with correct params',
+    () async {
+      final query = SearchQuery(
+        text: 'Snapp',
+        filters: SearchFilters.empty(),
+        sort: const SearchSort(),
+      );
 
-    when(() => mockRepository.searchTransactions(any()))
-        .thenAnswer((_) async => const Result.success([tx1]));
+      when(
+        () => mockRepository.searchTransactions(any()),
+      ).thenAnswer((_) async => const Result.success([tx1]));
 
-    final result = await useCase(query);
+      final result = await useCase(query);
 
-    expect(result, isA<Success<List<ParsedTransaction>>>());
-    final list = (result as Success<List<ParsedTransaction>>).data;
-    expect(list.length, 1);
-    expect(list.first.id, 'tx-1');
+      expect(result, isA<Success<List<ParsedTransaction>>>());
+      final list = (result as Success<List<ParsedTransaction>>).data;
+      expect(list.length, 1);
+      expect(list.first.id, 'tx-1');
 
-    verify(() => mockRepository.searchTransactions(query)).called(1);
-  });
+      verify(() => mockRepository.searchTransactions(query)).called(1);
+    },
+  );
 }

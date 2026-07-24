@@ -12,7 +12,9 @@ class SearchRepositoryImpl extends BaseRepository implements SearchRepository {
   final SearchLocalDataSource _dataSource;
 
   @override
-  Future<Result<List<ParsedTransaction>>> searchTransactions(SearchQuery query) {
+  Future<Result<List<ParsedTransaction>>> searchTransactions(
+    SearchQuery query,
+  ) {
     return executeSafe(() async {
       return await _dataSource.search(query);
     });

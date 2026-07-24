@@ -58,8 +58,12 @@ class _FilterBottomSheetState extends ConsumerState<FilterBottomSheet> {
   Future<void> _selectDateRange(BuildContext context) async {
     final DateTimeRange? picked = await showDateRangePicker(
       context: context,
-      initialDateRange: _tempFilters.startDate != null && _tempFilters.endDate != null
-          ? DateTimeRange(start: _tempFilters.startDate!, end: _tempFilters.endDate!)
+      initialDateRange:
+          _tempFilters.startDate != null && _tempFilters.endDate != null
+          ? DateTimeRange(
+              start: _tempFilters.startDate!,
+              end: _tempFilters.endDate!,
+            )
           : null,
       firstDate: DateTime(2000),
       lastDate: DateTime(2100),
@@ -99,7 +103,9 @@ class _FilterBottomSheetState extends ConsumerState<FilterBottomSheet> {
           // 1. Transaction Type Choice Chips
           Text(
             'نوع تراکنش',
-            style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
+            style: theme.textTheme.titleSmall?.copyWith(
+              fontWeight: FontWeight.bold,
+            ),
           ),
           SizedBox(height: spacing.xs),
           Row(
@@ -110,7 +116,9 @@ class _FilterBottomSheetState extends ConsumerState<FilterBottomSheet> {
                 onSelected: (selected) {
                   if (selected) {
                     setState(() {
-                      _tempFilters = _tempFilters.copyWith(transactionType: 'All');
+                      _tempFilters = _tempFilters.copyWith(
+                        transactionType: 'All',
+                      );
                     });
                   }
                 },
@@ -122,7 +130,9 @@ class _FilterBottomSheetState extends ConsumerState<FilterBottomSheet> {
                 onSelected: (selected) {
                   if (selected) {
                     setState(() {
-                      _tempFilters = _tempFilters.copyWith(transactionType: 'Credit');
+                      _tempFilters = _tempFilters.copyWith(
+                        transactionType: 'Credit',
+                      );
                     });
                   }
                 },
@@ -134,7 +144,9 @@ class _FilterBottomSheetState extends ConsumerState<FilterBottomSheet> {
                 onSelected: (selected) {
                   if (selected) {
                     setState(() {
-                      _tempFilters = _tempFilters.copyWith(transactionType: 'Debit');
+                      _tempFilters = _tempFilters.copyWith(
+                        transactionType: 'Debit',
+                      );
                     });
                   }
                 },
@@ -200,7 +212,9 @@ class _FilterBottomSheetState extends ConsumerState<FilterBottomSheet> {
           // 4. Amount Range inputs
           Text(
             'محدوده مبلغ (ریال)',
-            style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
+            style: theme.textTheme.titleSmall?.copyWith(
+              fontWeight: FontWeight.bold,
+            ),
           ),
           SizedBox(height: spacing.xs),
           Row(
@@ -239,14 +253,18 @@ class _FilterBottomSheetState extends ConsumerState<FilterBottomSheet> {
           // 5. Date Range Selector
           Text(
             'محدوده تاریخ',
-            style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
+            style: theme.textTheme.titleSmall?.copyWith(
+              fontWeight: FontWeight.bold,
+            ),
           ),
           SizedBox(height: spacing.xs),
           Row(
             children: [
               Expanded(
                 child: PrimaryButton(
-                  label: _tempFilters.startDate != null && _tempFilters.endDate != null
+                  label:
+                      _tempFilters.startDate != null &&
+                          _tempFilters.endDate != null
                       ? 'انتخاب شده'
                       : 'انتخاب تاریخ...',
                   onPressed: () => _selectDateRange(context),

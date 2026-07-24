@@ -13,7 +13,9 @@ import 'search_state.dart';
 
 /// Provider exposing the [SearchNotifier] view model state.
 final searchViewModelProvider =
-    StateNotifierProvider.autoDispose<SearchNotifier, UiState<SearchState>>((ref) {
+    StateNotifierProvider.autoDispose<SearchNotifier, UiState<SearchState>>((
+      ref,
+    ) {
       final searchUseCase = ref.watch(searchTransactionsUseCaseProvider);
       final repository = ref.watch(searchRepositoryProvider);
       final logger = ref.watch(loggerProvider);
@@ -31,10 +33,10 @@ class SearchNotifier extends BaseUiNotifier<SearchState> {
     required SearchTransactionsUseCase searchUseCase,
     required SearchRepository repository,
     required AppLogger logger,
-  })  : _searchUseCase = searchUseCase,
-        _repository = repository,
-        _logger = logger,
-        _debouncer = Debouncer(milliseconds: 250);
+  }) : _searchUseCase = searchUseCase,
+       _repository = repository,
+       _logger = logger,
+       _debouncer = Debouncer(milliseconds: 250);
 
   final SearchTransactionsUseCase _searchUseCase;
   final SearchRepository _repository;
@@ -70,10 +72,7 @@ class SearchNotifier extends BaseUiNotifier<SearchState> {
         final current = _getCurrentState();
         if (current != null) {
           setSuccess(
-            current.copyWith(
-              history: historyList,
-              isLoadingHistory: false,
-            ),
+            current.copyWith(history: historyList, isLoadingHistory: false),
           );
         }
       },
@@ -94,12 +93,7 @@ class SearchNotifier extends BaseUiNotifier<SearchState> {
       empty: () {
         final current = _getCurrentState();
         if (current != null) {
-          setSuccess(
-            current.copyWith(
-              history: [],
-              isLoadingHistory: false,
-            ),
-          );
+          setSuccess(current.copyWith(history: [], isLoadingHistory: false));
         }
       },
     );

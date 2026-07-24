@@ -35,7 +35,11 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
     super.dispose();
   }
 
-  void _showFilterBottomSheet(BuildContext context, SearchFilters currentFilters, SearchNotifier notifier) {
+  void _showFilterBottomSheet(
+    BuildContext context,
+    SearchFilters currentFilters,
+    SearchNotifier notifier,
+  ) {
     showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
@@ -49,7 +53,11 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
     );
   }
 
-  void _showSortDialog(BuildContext context, SearchSort currentSort, SearchNotifier notifier) {
+  void _showSortDialog(
+    BuildContext context,
+    SearchSort currentSort,
+    SearchNotifier notifier,
+  ) {
     showDialog<void>(
       context: context,
       builder: (context) {
@@ -110,7 +118,8 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                               ? theme.colorScheme.primaryContainer
                               : theme.colorScheme.surfaceVariant,
                         ),
-                        onPressed: () => _showFilterBottomSheet(context, filters, notifier),
+                        onPressed: () =>
+                            _showFilterBottomSheet(context, filters, notifier),
                       ),
                     ),
                     SizedBox(width: spacing.xs),
@@ -121,7 +130,8 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                         style: IconButton.styleFrom(
                           backgroundColor: theme.colorScheme.surfaceVariant,
                         ),
-                        onPressed: () => _showSortDialog(context, query.sort, notifier),
+                        onPressed: () =>
+                            _showSortDialog(context, query.sort, notifier),
                       ),
                     ),
                   ],
@@ -136,7 +146,9 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                   children: [
                     ChoiceChip(
                       label: const Text('همه'),
-                      selected: filters.transactionType == 'All' && !filters.isAnyActive,
+                      selected:
+                          filters.transactionType == 'All' &&
+                          !filters.isAnyActive,
                       onSelected: (selected) {
                         if (selected) notifier.resetFilters();
                       },
@@ -147,7 +159,9 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                       selected: filters.transactionType == 'Credit',
                       onSelected: (selected) {
                         notifier.updateFilters(
-                          filters.copyWith(transactionType: selected ? 'Credit' : 'All'),
+                          filters.copyWith(
+                            transactionType: selected ? 'Credit' : 'All',
+                          ),
                         );
                       },
                     ),
@@ -157,7 +171,9 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                       selected: filters.transactionType == 'Debit',
                       onSelected: (selected) {
                         notifier.updateFilters(
-                          filters.copyWith(transactionType: selected ? 'Debit' : 'All'),
+                          filters.copyWith(
+                            transactionType: selected ? 'Debit' : 'All',
+                          ),
                         );
                       },
                     ),
@@ -167,7 +183,9 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                       selected: filters.hasNote == true,
                       onSelected: (selected) {
                         notifier.updateFilters(
-                          filters.copyWith(hasNote: () => selected ? true : null),
+                          filters.copyWith(
+                            hasNote: () => selected ? true : null,
+                          ),
                         );
                       },
                     ),
@@ -186,38 +204,54 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                     children: [
                       if (filters.transactionType != 'All')
                         InputChip(
-                          label: Text(filters.transactionType == 'Credit' ? 'فقط واریزها' : 'فقط برداشت‌ها'),
+                          label: Text(
+                            filters.transactionType == 'Credit'
+                                ? 'فقط واریزها'
+                                : 'فقط برداشت‌ها',
+                          ),
                           onDeleted: () {
-                            notifier.updateFilters(filters.copyWith(transactionType: 'All'));
+                            notifier.updateFilters(
+                              filters.copyWith(transactionType: 'All'),
+                            );
                           },
                         ),
                       if (filters.bank != null)
                         InputChip(
                           label: Text('بانک: ${filters.bank}'),
                           onDeleted: () {
-                            notifier.updateFilters(filters.copyWith(bank: () => null));
+                            notifier.updateFilters(
+                              filters.copyWith(bank: () => null),
+                            );
                           },
                         ),
                       if (filters.categoryId != null)
                         InputChip(
                           label: const Text('فیلتر دسته‌بندی'),
                           onDeleted: () {
-                            notifier.updateFilters(filters.copyWith(categoryId: () => null));
+                            notifier.updateFilters(
+                              filters.copyWith(categoryId: () => null),
+                            );
                           },
                         ),
                       if (filters.hasNote == true)
                         InputChip(
                           label: const Text('یادداشت‌دار'),
                           onDeleted: () {
-                            notifier.updateFilters(filters.copyWith(hasNote: () => null));
+                            notifier.updateFilters(
+                              filters.copyWith(hasNote: () => null),
+                            );
                           },
                         ),
-                      if (filters.minAmount != null || filters.maxAmount != null)
+                      if (filters.minAmount != null ||
+                          filters.maxAmount != null)
                         InputChip(
                           label: const Text('محدوده مبلغ'),
                           onDeleted: () {
                             notifier.updateFilters(
-                              filters.copyWith(minAmount: () => null, maxAmount: () => null),
+                              filters.copyWith(
+                                minAmount: () => null,
+                                maxAmount: () => null,
+                              ),
                             );
                           },
                         ),
@@ -245,13 +279,17 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                       Icon(
                         Icons.security,
                         size: 14,
-                        color: theme.colorScheme.onSurfaceVariant.withOpacity(0.6),
+                        color: theme.colorScheme.onSurfaceVariant.withOpacity(
+                          0.6,
+                        ),
                       ),
                       SizedBox(width: spacing.xs),
                       Text(
                         'آفلاین و امن - رمزنگاری شده در دستگاه',
                         style: theme.textTheme.bodySmall?.copyWith(
-                          color: theme.colorScheme.onSurfaceVariant.withOpacity(0.6),
+                          color: theme.colorScheme.onSurfaceVariant.withOpacity(
+                            0.6,
+                          ),
                           fontSize: 10,
                         ),
                       ),
@@ -280,13 +318,18 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
         children: [
           if (data.history.isNotEmpty) ...[
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: spacing.m, vertical: spacing.s),
+              padding: EdgeInsets.symmetric(
+                horizontal: spacing.m,
+                vertical: spacing.s,
+              ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
                     'جستجوهای اخیر',
-                    style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
+                    style: theme.textTheme.titleSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   TextButton(
                     onPressed: notifier.clearHistory,
@@ -319,7 +362,8 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                   padding: EdgeInsets.all(spacing.xl),
                   child: const EmptyState(
                     title: 'آماده جستجو',
-                    message: 'عبارت مورد نظر خود را برای جستجو در تراکنش‌ها وارد کنید یا فیلترهای پیشرفته را اعمال نمایید.',
+                    message:
+                        'عبارت مورد نظر خود را برای جستجو در تراکنش‌ها وارد کنید یا فیلترهای پیشرفته را اعمال نمایید.',
                   ),
                 ),
               ),
@@ -336,7 +380,8 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
           padding: EdgeInsets.all(spacing.xl),
           child: EmptyState(
             title: 'تراکنشی یافت نشد',
-            message: 'هیچ تراکنشی متناسب با مشخصات جستجو یا فیلترهای اعمال شده پیدا نشد.',
+            message:
+                'هیچ تراکنشی متناسب با مشخصات جستجو یا فیلترهای اعمال شده پیدا نشد.',
             actionLabel: 'پاک کردن فیلترها',
             onActionPressed: () {
               _searchController.clear();
@@ -348,12 +393,17 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
     }
 
     // Stage C: Active Results Ledger List
-    final countText = DateFormatter.toPersianDigits(data.transactions.length.toString());
+    final countText = DateFormatter.toPersianDigits(
+      data.transactions.length.toString(),
+    );
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: spacing.m, vertical: spacing.s),
+          padding: EdgeInsets.symmetric(
+            horizontal: spacing.m,
+            vertical: spacing.s,
+          ),
           child: Text(
             'تعداد نتایج: $countText تراکنش',
             style: theme.textTheme.bodySmall?.copyWith(
@@ -378,7 +428,9 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                 child: TransactionCard(
                   amount: formattedAmount,
                   timestamp: formattedDate,
-                  category: tx.normalizedMerchant.isNotEmpty ? tx.normalizedMerchant : 'پذیرنده نامشخص',
+                  category: tx.normalizedMerchant.isNotEmpty
+                      ? tx.normalizedMerchant
+                      : 'پذیرنده نامشخص',
                   accountLabel: tx.cardIdentifier ?? 'حساب بانکی',
                   isCredit: isCredit,
                   onTap: () {
