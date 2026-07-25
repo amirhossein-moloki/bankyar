@@ -3,6 +3,18 @@ import '../errors/failures.dart';
 /// Standard, type-safe representation of asynchronous or business operation results.
 /// Conforms to BankYar ERROR_HANDLING_ARCHITECTURE.md specifications.
 abstract class Result<T> {
+
+  /// Construct a [Success] result.
+  const factory Result.success(T data) = Success<T>;
+
+  /// Construct a [FailureResult] result.
+  const factory Result.failure(Failure failure) = FailureResult<T>;
+
+  /// Construct a [Loading] result.
+  const factory Result.loading({double? progress}) = Loading<T>;
+
+  /// Construct an [Empty] result.
+  const factory Result.empty() = Empty<T>;
   const Result();
 
   /// Utility constructor for executing a closure safely and wrapping its return in [Result].
@@ -16,18 +28,6 @@ abstract class Result<T> {
       );
     }
   }
-
-  /// Construct a [Success] result.
-  const factory Result.success(T data) = Success<T>;
-
-  /// Construct a [FailureResult] result.
-  const factory Result.failure(Failure failure) = FailureResult<T>;
-
-  /// Construct a [Loading] result.
-  const factory Result.loading({double? progress}) = Loading<T>;
-
-  /// Construct an [Empty] result.
-  const factory Result.empty() = Empty<T>;
 
   /// Pattern matching utility for resolving result states cleanly.
   R when<R>({

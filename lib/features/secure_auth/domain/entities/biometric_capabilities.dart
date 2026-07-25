@@ -1,13 +1,5 @@
 /// Model representing the biometric hardware status on the active device.
 class BiometricCapabilities {
-  /// Whether the device has biometric scanning hardware available.
-  final bool isHardwareAvailable;
-
-  /// Whether the user has registered fingerprints or face data inside their system settings.
-  final bool isEnrolled;
-
-  /// Whether biometric fast unlock is enabled inside this application.
-  final bool isEnabled;
 
   /// Constructor.
   const BiometricCapabilities({
@@ -22,4 +14,12 @@ class BiometricCapabilities {
     isEnrolled: false,
     isEnabled: false,
   );
+  /// Whether the device has biometric scanning hardware available.
+  final bool isHardwareAvailable;
+
+  /// Whether the user has registered fingerprints or face data inside their system settings.
+  final bool isEnrolled;
+
+  /// Whether biometric fast unlock is enabled inside this application.
+  final bool isEnabled;
 }

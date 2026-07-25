@@ -205,7 +205,7 @@ class _FilterBottomSheetState extends ConsumerState<FilterBottomSheet> {
               );
             },
             loading: () => const Center(child: CircularProgressIndicator()),
-            error: (_, __) => const Text('خطا در دریافت دسته‌بندی‌ها'),
+            error: (_, _) => const Text('خطا در دریافت دسته‌بندی‌ها'),
           ),
           SizedBox(height: spacing.m),
 

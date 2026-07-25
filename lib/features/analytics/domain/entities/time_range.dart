@@ -13,18 +13,6 @@ enum TimeRangePreset {
 
 /// Domain Value Object encapsulating start and end date bounds for reporting.
 class TimeRange extends ValueObject<TimeRangePreset> {
-  /// Constructor defining concrete chronological bounds.
-  const TimeRange(
-    super.value, {
-    required this.startDate,
-    required this.endDate,
-  });
-
-  /// The start boundary of the report window.
-  final DateTime startDate;
-
-  /// The end boundary of the report window.
-  final DateTime endDate;
 
   /// Helper factory to generate predefined ranges based on a given time anchor.
   factory TimeRange.fromPreset(TimeRangePreset preset, DateTime anchor) {
@@ -112,6 +100,18 @@ class TimeRange extends ValueObject<TimeRangePreset> {
         );
     }
   }
+  /// Constructor defining concrete chronological bounds.
+  const TimeRange(
+    super.value, {
+    required this.startDate,
+    required this.endDate,
+  });
+
+  /// The start boundary of the report window.
+  final DateTime startDate;
+
+  /// The end boundary of the report window.
+  final DateTime endDate;
 
   /// Check if a specific timestamp falls inside this time range.
   bool contains(DateTime date) {

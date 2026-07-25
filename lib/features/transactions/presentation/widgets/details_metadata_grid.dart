@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../../../../core/presentation/widgets/widgets.dart';
 import '../../../../core/theme/spacing_tokens.dart';
 import '../../../../core/utils/date_formatter.dart';
 import '../../../sms_detection/domain/entities/parsed_transaction.dart';

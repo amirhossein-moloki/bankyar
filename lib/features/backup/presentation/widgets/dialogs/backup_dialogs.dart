@@ -293,7 +293,7 @@ abstract class BackupDialogs {
                       Container(
                         padding: EdgeInsets.all(spacing.s),
                         decoration: BoxDecoration(
-                          color: theme.colorScheme.surfaceVariant.withOpacity(
+                          color: theme.colorScheme.surfaceContainerHighest.withOpacity(
                             0.4,
                           ),
                           borderRadius: BorderRadius.circular(radius.s),
@@ -303,10 +303,10 @@ abstract class BackupDialogs {
                         ),
                         child: Column(
                           children: [
-                            Row(
+                            const Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                const Text(
+                                Text(
                                   'شاخص مقایسه',
                                   style: TextStyle(
                                     fontFamily: 'Vazirmatn',
@@ -314,7 +314,7 @@ abstract class BackupDialogs {
                                     fontSize: 11,
                                   ),
                                 ),
-                                const Text(
+                                Text(
                                   'دیتابیس فعلی',
                                   style: TextStyle(
                                     fontFamily: 'Vazirmatn',
@@ -322,7 +322,7 @@ abstract class BackupDialogs {
                                     fontSize: 11,
                                   ),
                                 ),
-                                const Text(
+                                Text(
                                   'فایل پشتیبان',
                                   style: TextStyle(
                                     fontFamily: 'Vazirmatn',

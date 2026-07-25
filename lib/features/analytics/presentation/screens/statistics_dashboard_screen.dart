@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/presentation/widgets/widgets.dart';
-import '../../../../core/theme/color_tokens.dart';
 import '../../../../core/theme/spacing_tokens.dart';
 import '../../../../core/utils/currency_formatter.dart';
 import '../../../../core/utils/date_formatter.dart';
-import '../../../../core/presentation/widgets/indicators/skeleton_loader.dart';
-import '../../../../l10n/app_localizations.dart';
-import '../../domain/entities/analytics_models.dart';
 import '../../domain/entities/time_range.dart';
 import '../state/analytics_notifier.dart';
 import '../state/analytics_state.dart';
@@ -577,7 +573,7 @@ class _ChartSegmentTab extends StatelessWidget {
         decoration: BoxDecoration(
           color: isActive
               ? theme.colorScheme.primary
-              : theme.colorScheme.surfaceVariant,
+              : theme.colorScheme.surfaceContainerHighest,
           borderRadius: BorderRadius.circular(100),
         ),
         child: Text(
@@ -612,15 +608,15 @@ class _LoadingSkeletonWorkspace extends StatelessWidget {
             SizedBox(height: spacing.m),
             Row(
               children: [
-                Expanded(
-                  child: const SkeletonLoader(
+                const Expanded(
+                  child: SkeletonLoader(
                     height: 100,
                     width: double.infinity,
                   ),
                 ),
                 SizedBox(width: spacing.s),
-                Expanded(
-                  child: const SkeletonLoader(
+                const Expanded(
+                  child: SkeletonLoader(
                     height: 100,
                     width: double.infinity,
                   ),
@@ -630,15 +626,15 @@ class _LoadingSkeletonWorkspace extends StatelessWidget {
             SizedBox(height: spacing.s),
             Row(
               children: [
-                Expanded(
-                  child: const SkeletonLoader(
+                const Expanded(
+                  child: SkeletonLoader(
                     height: 100,
                     width: double.infinity,
                   ),
                 ),
                 SizedBox(width: spacing.s),
-                Expanded(
-                  child: const SkeletonLoader(
+                const Expanded(
+                  child: SkeletonLoader(
                     height: 100,
                     width: double.infinity,
                   ),

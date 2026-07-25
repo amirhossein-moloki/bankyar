@@ -29,7 +29,7 @@ void main() {
       );
       expect(mapped, equals('Initial'));
 
-      final UiState<int> loading = const UiState.loading(progress: 0.75);
+      const UiState<int> loading = UiState.loading(progress: 0.75);
       expect(
         loading.when(
           initial: () => 'Initial',
@@ -40,7 +40,7 @@ void main() {
         equals('Loading: 0.75'),
       );
 
-      final UiState<int> success = const UiState.success(123);
+      const UiState<int> success = UiState.success(123);
       expect(
         success.when(
           initial: () => 'Initial',
@@ -51,7 +51,7 @@ void main() {
         equals('Success: 123'),
       );
 
-      final UiState<int> error = const UiState.error(
+      const UiState<int> error = UiState.error(
         UnknownFailure(code: 'BY_ERR', message: 'Fail'),
       );
       expect(

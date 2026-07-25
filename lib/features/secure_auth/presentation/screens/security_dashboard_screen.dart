@@ -26,10 +26,10 @@ class SecurityDashboardScreen extends ConsumerStatefulWidget {
 }
 
 class _UnlockHoldListener extends StatefulWidget {
-  final VoidCallback onHoldSuccess;
-  final Widget child;
 
   const _UnlockHoldListener({required this.onHoldSuccess, required this.child});
+  final VoidCallback onHoldSuccess;
+  final Widget child;
 
   @override
   State<_UnlockHoldListener> createState() => _UnlockHoldListenerState();
@@ -310,7 +310,7 @@ class _SecurityDashboardScreenState
           color: theme.colorScheme.outlineVariant.withOpacity(0.5),
         ),
       ),
-      color: theme.colorScheme.surfaceVariant.withOpacity(0.3),
+      color: theme.colorScheme.surfaceContainerHighest.withOpacity(0.3),
       child: Padding(
         padding: EdgeInsets.all(spacing.m),
         child: Column(
@@ -999,7 +999,7 @@ class _SecurityDashboardScreenState
             onTap: () async {
               final permService = ref.read(permissionServiceProvider);
               await permService.request(permission);
-              _loadPermissions();
+              await _loadPermissions();
             },
             child: Icon(
               isGranted ? Icons.check_circle : Icons.cancel_outlined,

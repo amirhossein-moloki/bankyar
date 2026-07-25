@@ -49,7 +49,7 @@ class HomeScreen extends ConsumerWidget {
             onRetry: () => ref.read(homeViewModelProvider.notifier).refresh(),
           ),
           success: (state) =>
-              _DashboardContentWidget(key: const ValueKey('content')),
+              const _DashboardContentWidget(key: ValueKey('content')),
         ),
       ),
       floatingActionButton: const ManualLogFab(),

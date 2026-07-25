@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/di/dependency_injection.dart';
 import '../../../../core/presentation/widgets/buttons/fab_button.dart';
-import '../../../../core/platform/uuid.dart';
-import '../../../../core/platform/clock.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../sms_detection/domain/entities/parsed_transaction.dart';
 import '../state/home_notifier.dart';

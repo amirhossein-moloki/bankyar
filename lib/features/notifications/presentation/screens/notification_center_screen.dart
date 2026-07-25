@@ -161,7 +161,7 @@ class NotificationCenterScreen extends ConsumerWidget {
                 child: Container(
                   height: 48.0,
                   decoration: BoxDecoration(
-                    color: theme.colorScheme.surfaceVariant.withOpacity(0.4),
+                    color: theme.colorScheme.surfaceContainerHighest.withOpacity(0.4),
                     borderRadius: const BorderRadius.all(
                       Radius.circular(RadiusTokens.m),
                     ),
@@ -615,23 +615,23 @@ class NotificationCenterScreen extends ConsumerWidget {
     return ListView.builder(
       padding: const EdgeInsets.all(SpacingTokens.l),
       itemCount: 4,
-      itemBuilder: (context, idx) => Padding(
-        padding: const EdgeInsets.only(bottom: SpacingTokens.m),
+      itemBuilder: (context, idx) => const Padding(
+        padding: EdgeInsets.only(bottom: SpacingTokens.m),
         child: Row(
           children: [
-            const SkeletonLoader(
+            SkeletonLoader(
               width: 36,
               height: 36,
               borderRadius: RadiusTokens.max,
             ),
-            const SizedBox(width: SpacingTokens.m),
+            SizedBox(width: SpacingTokens.m),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SkeletonLoader(width: 140, height: 16),
-                  const SizedBox(height: SpacingTokens.s),
-                  const SkeletonLoader(width: double.infinity, height: 12),
+                  SkeletonLoader(width: 140, height: 16),
+                  SizedBox(height: SpacingTokens.s),
+                  SkeletonLoader(width: double.infinity, height: 12),
                 ],
               ),
             ),

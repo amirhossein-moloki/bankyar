@@ -1,16 +1,5 @@
 /// Model representing overall security configuration parameters.
 class SecuritySettings {
-  /// Whether local PIN authentication is required to unlock the application.
-  final bool isPinEnabled;
-
-  /// Whether biometric fast-unlock has been granted and configured.
-  final bool isBiometricsEnabled;
-
-  /// Inactivity timeout duration before triggering auto-lock.
-  final Duration autoLockTimeout;
-
-  /// Whether privacy mode is enabled (obscures monetary balances and card numbers).
-  final bool isPrivacyModeEnabled;
 
   /// Constructor.
   const SecuritySettings({
@@ -27,6 +16,17 @@ class SecuritySettings {
     autoLockTimeout: Duration(minutes: 1),
     isPrivacyModeEnabled: false,
   );
+  /// Whether local PIN authentication is required to unlock the application.
+  final bool isPinEnabled;
+
+  /// Whether biometric fast-unlock has been granted and configured.
+  final bool isBiometricsEnabled;
+
+  /// Inactivity timeout duration before triggering auto-lock.
+  final Duration autoLockTimeout;
+
+  /// Whether privacy mode is enabled (obscures monetary balances and card numbers).
+  final bool isPrivacyModeEnabled;
 
   /// Helper to create a copy of the settings with modified fields.
   SecuritySettings copyWith({

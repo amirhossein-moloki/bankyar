@@ -110,7 +110,7 @@ class _NotificationCardState extends State<NotificationCard> {
                   ? theme.colorScheme.primaryContainer.withOpacity(0.12)
                   : (widget.item.isRead
                         ? theme.colorScheme.surface
-                        : theme.colorScheme.surfaceVariant.withOpacity(0.35)),
+                        : theme.colorScheme.surfaceContainerHighest.withOpacity(0.35)),
               borderRadius: const BorderRadius.all(
                 Radius.circular(RadiusTokens.m),
               ),

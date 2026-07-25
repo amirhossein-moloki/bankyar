@@ -6,7 +6,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:bankyar/core/database/backup_portability.dart';
-import 'package:bankyar/core/database/database_service.dart';
 import 'package:bankyar/core/database/database_service_impl.dart';
 import 'package:bankyar/core/di/dependency_injection.dart';
 import 'package:bankyar/core/errors/failures.dart';
@@ -15,12 +14,10 @@ import 'package:bankyar/core/platform/clock.dart';
 import 'package:bankyar/core/platform/uuid.dart';
 import 'package:bankyar/core/platform/file_storage.dart';
 import 'package:bankyar/core/storage/preferences_storage.dart';
-import 'package:bankyar/core/utils/result.dart';
 import 'package:bankyar/core/utils/result_extensions.dart';
 import 'package:bankyar/core/theme/app_theme.dart';
 import 'package:bankyar/l10n/app_localizations.dart';
 import 'package:bankyar/features/backup/domain/entities/backup_history_item.dart';
-import 'package:bankyar/features/backup/domain/entities/backup_metadata.dart';
 import 'package:bankyar/features/backup/data/di/backup_providers.dart';
 import 'package:bankyar/features/backup/presentation/screens/backup_restore_screen.dart';
 import 'package:bankyar/features/backup/presentation/state/backup_notifier.dart';
@@ -91,9 +88,9 @@ void main() {
 
     // Default Preferences mock
     when(() => mockPrefs.getString(any())).thenAnswer((_) async => '');
-    when(() => mockPrefs.setString(any(), any())).thenAnswer((_) async => null);
+    when(() => mockPrefs.setString(any(), any())).thenAnswer((_) async {});
     when(() => mockPrefs.getBool(any())).thenAnswer((_) async => false);
-    when(() => mockPrefs.setBool(any(), any())).thenAnswer((_) async => null);
+    when(() => mockPrefs.setBool(any(), any())).thenAnswer((_) async {});
 
     // Database raw counts mock
     when(
@@ -138,7 +135,7 @@ void main() {
 
         when(
           () => mockFileStorage.writeString(any(), any()),
-        ).thenAnswer((_) async => null);
+        ).thenAnswer((_) async {});
         when(() => mockFileStorage.exists(any())).thenAnswer((_) async => true);
 
         final container = ProviderContainer(

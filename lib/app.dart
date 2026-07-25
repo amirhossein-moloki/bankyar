@@ -66,11 +66,11 @@ class BankYarApp extends ConsumerWidget {
 
 /// Helper observer widget tracking user haptic interactions to delay auto-locks.
 class AppLifecycleObserver extends ConsumerWidget {
-  /// The nested UI child widget to render underneath.
-  final Widget child;
 
   /// Constructor.
   const AppLifecycleObserver({super.key, required this.child});
+  /// The nested UI child widget to render underneath.
+  final Widget child;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

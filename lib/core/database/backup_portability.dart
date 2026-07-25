@@ -30,7 +30,7 @@ class BackupPortabilityImpl implements BackupPortability {
 
   final AppLogger _logger;
 
-  static const String _backupHeaderMagic = "BANKYAR_BACKUP_V1";
+  static const String _backupHeaderMagic = 'BANKYAR_BACKUP_V1';
 
   @override
   Future<Result<List<int>>> exportBackup({
@@ -205,7 +205,7 @@ class BackupPortabilityImpl implements BackupPortability {
 
   /// Implements PBKDF2-equivalent hash stretching to derive a 32-byte key from password.
   List<int> _derive32ByteKey(String password) {
-    const String salt = "BankYar_Secure_Backup_Salt_V1";
+    const String salt = 'BankYar_Secure_Backup_Salt_V1';
     final seed = utf8.encode(password + salt);
 
     var hash = List<int>.from(seed);

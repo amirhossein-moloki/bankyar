@@ -13,6 +13,27 @@ import '../../data/di/backup_providers.dart';
 
 /// Combined UI state for the Backup & Restore Center screen.
 class BackupState {
+
+  /// Constructor.
+  const BackupState({
+    required this.metadata,
+    required this.history,
+    required this.isLoading,
+    required this.isActionLoading,
+    required this.isAutomaticReminderEnabled,
+    this.errorMessage,
+    this.successMessage,
+    this.previewMetrics,
+  });
+
+  /// Default initial state.
+  factory BackupState.initial() => BackupState(
+    metadata: BackupMetadata.initial(),
+    history: const [],
+    isLoading: false,
+    isActionLoading: false,
+    isAutomaticReminderEnabled: false,
+  );
   /// Localized database and filesystem security diagnostics.
   final BackupMetadata metadata;
 
@@ -36,27 +57,6 @@ class BackupState {
 
   /// Comparison row counts (local vs backup) loaded for restoration previews.
   final Map<String, int>? previewMetrics;
-
-  /// Constructor.
-  const BackupState({
-    required this.metadata,
-    required this.history,
-    required this.isLoading,
-    required this.isActionLoading,
-    required this.isAutomaticReminderEnabled,
-    this.errorMessage,
-    this.successMessage,
-    this.previewMetrics,
-  });
-
-  /// Default initial state.
-  factory BackupState.initial() => BackupState(
-    metadata: BackupMetadata.initial(),
-    history: const [],
-    isLoading: false,
-    isActionLoading: false,
-    isAutomaticReminderEnabled: false,
-  );
 
   /// Helper to duplicate state with optional parameter overrides.
   BackupState copyWith({
@@ -92,13 +92,6 @@ class BackupState {
 
 /// StateNotifier orchestrating screen rendering and backup business rules.
 class BackupNotifier extends StateNotifier<BackupState> {
-  final CreateBackupUseCase _createBackupUseCase;
-  final RestoreBackupUseCase _restoreBackupUseCase;
-  final GetBackupHistoryUseCase _getBackupHistoryUseCase;
-  final DeleteBackupUseCase _deleteBackupUseCase;
-  final VerifyBackupFileUseCase _verifyBackupFileUseCase;
-  final GetBackupMetadataUseCase _getBackupMetadataUseCase;
-  final Ref _ref;
 
   /// Constructor.
   BackupNotifier({
@@ -119,6 +112,13 @@ class BackupNotifier extends StateNotifier<BackupState> {
        super(BackupState.initial()) {
     loadInitialData();
   }
+  final CreateBackupUseCase _createBackupUseCase;
+  final RestoreBackupUseCase _restoreBackupUseCase;
+  final GetBackupHistoryUseCase _getBackupHistoryUseCase;
+  final DeleteBackupUseCase _deleteBackupUseCase;
+  final VerifyBackupFileUseCase _verifyBackupFileUseCase;
+  final GetBackupMetadataUseCase _getBackupMetadataUseCase;
+  final Ref _ref;
 
   /// Reloads metadata, history, and scheduled reminders configuration from repositories.
   Future<void> loadInitialData() async {

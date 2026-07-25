@@ -74,7 +74,7 @@ class _SearchInputFieldState extends State<SearchInputField> {
                 )
               : null,
           filled: true,
-          fillColor: theme.colorScheme.surfaceVariant.withOpacity(0.5),
+          fillColor: theme.colorScheme.surfaceContainerHighest.withOpacity(0.5),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(radius.xl),
             borderSide: BorderSide.none,

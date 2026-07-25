@@ -4,10 +4,10 @@ import '../repository/security_repository.dart';
 
 /// Use case to trigger device hardware-bound biometric scans.
 class VerifyBiometricsUseCase implements UseCase<bool, NoParams> {
-  final SecurityRepository _repository;
 
   /// Constructor.
   const VerifyBiometricsUseCase(this._repository);
+  final SecurityRepository _repository;
 
   @override
   AsyncResult<bool> call(NoParams params) {

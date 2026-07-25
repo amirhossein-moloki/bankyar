@@ -8,11 +8,11 @@ import '../widgets/pin_keypad.dart';
 
 /// Screen guiding the user to retype and confirm their proposed PIN code, completing setup.
 class ConfirmPinScreen extends ConsumerStatefulWidget {
-  /// Proposed PIN code to match against.
-  final String proposedPin;
 
   /// Constructor.
   const ConfirmPinScreen({super.key, required this.proposedPin});
+  /// Proposed PIN code to match against.
+  final String proposedPin;
 
   @override
   ConsumerState<ConfirmPinScreen> createState() => _ConfirmPinScreenState();

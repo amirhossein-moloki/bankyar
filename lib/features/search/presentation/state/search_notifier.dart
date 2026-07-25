@@ -106,7 +106,9 @@ class SearchNotifier extends BaseUiNotifier<SearchState> {
 
     final result = await _repository.saveSearchToHistory(trimmed);
     result.when(
-      success: (_) => loadHistory(),
+      success: (_) {
+        unawaited(loadHistory());
+      },
       failure: (f) {
         _logger.log(
           LogLevel.error,

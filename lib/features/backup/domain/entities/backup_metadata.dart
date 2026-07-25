@@ -1,29 +1,6 @@
 /// Represents dynamic state and security diagnostics of the offline backup vault.
 /// Conforms to BACKUP_RESTORE_SCREEN_SPECIFICATION.md Component definitions.
 class BackupMetadata {
-  /// Exact timestamp of the last successful backup.
-  final DateTime? lastBackupTime;
-
-  /// Schema version of the localized database file.
-  final int databaseVersion;
-
-  /// Cryptographic standard used to lock backups.
-  final String encryptionAlgorithm;
-
-  /// Raw byte size of the active on-device sqlite database.
-  final int databaseSizeBytes;
-
-  /// Compressed/encrypted byte size of the latest backup file.
-  final int backupSizeBytes;
-
-  /// Unified health and integrity score (0-100) of database and backups.
-  final int healthPercentage;
-
-  /// Remaining storage space available on the physical device.
-  final int deviceFreeSpaceBytes;
-
-  /// Total storage capacity of the physical device.
-  final int deviceTotalSpaceBytes;
 
   /// Constructor.
   const BackupMetadata({
@@ -50,6 +27,29 @@ class BackupMetadata {
       deviceTotalSpaceBytes: 16 * 1024 * 1024 * 1024, // 16 GB
     );
   }
+  /// Exact timestamp of the last successful backup.
+  final DateTime? lastBackupTime;
+
+  /// Schema version of the localized database file.
+  final int databaseVersion;
+
+  /// Cryptographic standard used to lock backups.
+  final String encryptionAlgorithm;
+
+  /// Raw byte size of the active on-device sqlite database.
+  final int databaseSizeBytes;
+
+  /// Compressed/encrypted byte size of the latest backup file.
+  final int backupSizeBytes;
+
+  /// Unified health and integrity score (0-100) of database and backups.
+  final int healthPercentage;
+
+  /// Remaining storage space available on the physical device.
+  final int deviceFreeSpaceBytes;
+
+  /// Total storage capacity of the physical device.
+  final int deviceTotalSpaceBytes;
 
   /// Calculates the free storage percentage (0 to 100).
   double get freeSpacePercentage {

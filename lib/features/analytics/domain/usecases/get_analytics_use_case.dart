@@ -1,5 +1,4 @@
 import '../../../../core/architecture/use_case.dart';
-import '../../../../core/utils/result.dart';
 import '../../../../core/utils/result_extensions.dart';
 import '../entities/analytics_models.dart';
 import '../repository/statistics_repository.dart';

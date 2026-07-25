@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../core/presentation/widgets/navigation/custom_app_bar.dart';
-import '../../../../core/presentation/widgets/cards/base_card.dart';
 import '../../../../core/presentation/widgets/widgets.dart';
 import '../../../../core/theme/color_tokens.dart';
 import '../../../../core/theme/elevation_tokens.dart';
 import '../../../../core/theme/radius_tokens.dart';
 import '../../../../core/theme/spacing_tokens.dart';
 import '../../../../core/utils/date_formatter.dart';
-import '../../../../core/utils/result_extensions.dart';
 import '../../domain/entities/backup_history_item.dart';
 import '../../data/di/backup_providers.dart';
 import '../state/backup_notifier.dart';
@@ -472,7 +469,7 @@ class _BackupRestoreScreenState extends ConsumerState<BackupRestoreScreen> {
               icon: Icons.cloud_download_outlined,
               title: 'بازیابی اطلاعات',
               subtitle: 'بارگذاری پشتیبان قدیمی',
-              onTap: () {
+              onTap: () async {
                 if (state.history.isEmpty) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
@@ -482,7 +479,7 @@ class _BackupRestoreScreenState extends ConsumerState<BackupRestoreScreen> {
                   return;
                 }
                 // Let user pick from history list or mock import
-                BackupDialogs.showRestoreWarning(
+                await BackupDialogs.showRestoreWarning(
                   context: context,
                   onConfirm: (password) async {
                     // Simulating reading from selected history item
@@ -499,7 +496,7 @@ class _BackupRestoreScreenState extends ConsumerState<BackupRestoreScreen> {
                         final metrics = ref
                             .read(backupNotifierProvider)
                             .previewMetrics!;
-                        BackupDialogs.showConflictResolution(
+                        await BackupDialogs.showConflictResolution(
                           context: context,
                           localTransactions: metrics['local_transactions'] ?? 0,
                           backupTransactions:
@@ -513,10 +510,10 @@ class _BackupRestoreScreenState extends ConsumerState<BackupRestoreScreen> {
                               forceReplace: forceReplace,
                             );
                             if (success && context.mounted) {
-                              BackupDialogs.showCreateConfirm(
+                              await BackupDialogs.showCreateConfirm(
                                 // Dummy/Success mock trigger
                                 context: context,
-                                onConfirm: (_, __) {},
+                                onConfirm: (_, _) {},
                               );
                             }
                           },

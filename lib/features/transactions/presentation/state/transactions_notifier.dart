@@ -5,7 +5,6 @@ import '../../../../core/logging/logger.dart';
 import '../../../../core/platform/sms_history_importer.dart';
 import '../../../../core/state_management/base_providers.dart';
 import '../../../../core/state_management/state_wrappers.dart';
-import '../../../../core/utils/result.dart';
 import '../../../sms_detection/presentation/state/sms_detection_providers.dart';
 import '../../domain/entities/transaction_category.dart';
 import '../../domain/repository/transaction_repository.dart';
