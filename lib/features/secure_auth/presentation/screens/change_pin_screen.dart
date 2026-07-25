@@ -19,7 +19,6 @@ class ChangePinScreen extends ConsumerStatefulWidget {
 
 class _ChangePinScreenState extends ConsumerState<ChangePinScreen> {
   int _step = 1; // 1: Old PIN, 2: New PIN, 3: Confirm New PIN
-  String _oldPin = '';
   String _newPin = '';
   String _buffer = '';
   String? _errorMessage;
@@ -39,7 +38,6 @@ class _ChangePinScreenState extends ConsumerState<ChangePinScreen> {
 
         if (verifyRes.isSuccess && verifyRes.successOrCrash) {
           setState(() {
-            _oldPin = _buffer;
             _buffer = '';
             _step = 2;
           });
@@ -93,7 +91,7 @@ class _ChangePinScreenState extends ConsumerState<ChangePinScreen> {
     final radius = theme.extension<RadiusExtension>()!;
     final spacing = theme.extension<SpacingExtension>()!;
 
-    showDialog(
+    showDialog<void>(
       context: context,
       barrierDismissible: false,
       builder: (context) => Directionality(

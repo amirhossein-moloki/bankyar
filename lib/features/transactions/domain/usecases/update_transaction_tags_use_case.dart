@@ -15,8 +15,7 @@ class UpdateTagsParams {
 }
 
 /// Use case to update/assign tags to a transaction.
-class UpdateTransactionTagsUseCase
-    extends UseCase<Result<void>, UpdateTagsParams> {
+class UpdateTransactionTagsUseCase extends UseCase<void, UpdateTagsParams> {
   /// Constructor.
   UpdateTransactionTagsUseCase(this._repository);
 

@@ -121,7 +121,7 @@ class TransactionDetailsScreen extends ConsumerWidget {
     BuildContext context,
     TransactionDetailsNotifier notifier,
   ) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('حذف تراکنش', textDirection: TextDirection.rtl),

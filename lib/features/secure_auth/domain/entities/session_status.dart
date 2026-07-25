@@ -1,3 +1,4 @@
+// ignore_for_file: constant_identifier_names
 /// Enum representing the local application session lifecycle state.
 enum SessionStatus {
   /// The application process has booted and initialized security.

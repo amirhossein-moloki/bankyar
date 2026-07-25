@@ -3,7 +3,6 @@ import '../../domain/entities/time_range.dart';
 
 /// Presentation state for the Statistics & Analytics Dashboard.
 class AnalyticsState {
-
   /// Factory creating initial state parameters.
   factory AnalyticsState.initial() {
     final now = DateTime.now();
@@ -14,6 +13,7 @@ class AnalyticsState {
       summary: AnalyticsSummary.empty(),
     );
   }
+
   /// Constructor.
   const AnalyticsState({
     required this.timeRange,

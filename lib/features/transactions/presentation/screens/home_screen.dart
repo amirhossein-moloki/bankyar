@@ -114,7 +114,7 @@ class _DashboardContentWidget extends ConsumerWidget {
     WidgetRef ref,
     ParsedTransaction tx,
   ) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('حذف تراکنش'),

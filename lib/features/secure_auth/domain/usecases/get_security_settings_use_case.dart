@@ -6,7 +6,6 @@ import '../repository/security_repository.dart';
 /// Use case to retrieve the active security and privacy configuration profile.
 class GetSecuritySettingsUseCase
     implements UseCase<SecuritySettings, NoParams> {
-
   /// Constructor.
   const GetSecuritySettingsUseCase(this._repository);
   final SecurityRepository _repository;

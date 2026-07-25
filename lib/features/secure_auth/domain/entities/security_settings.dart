@@ -1,6 +1,5 @@
 /// Model representing overall security configuration parameters.
 class SecuritySettings {
-
   /// Constructor.
   const SecuritySettings({
     required this.isPinEnabled,
@@ -16,6 +15,7 @@ class SecuritySettings {
     autoLockTimeout: Duration(minutes: 1),
     isPrivacyModeEnabled: false,
   );
+
   /// Whether local PIN authentication is required to unlock the application.
   final bool isPinEnabled;
 

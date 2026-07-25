@@ -152,7 +152,6 @@ class SearchLocalDataSourceImpl implements SearchLocalDataSource {
         orderBy = 'c.name';
         break;
       case SearchSortField.date:
-      default:
         orderBy = 't.timestamp';
         break;
     }

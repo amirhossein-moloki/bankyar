@@ -1,3 +1,4 @@
+// ignore_for_file: deprecated_member_use
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -128,7 +129,8 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                       child: IconButton(
                         icon: const Icon(Icons.sort),
                         style: IconButton.styleFrom(
-                          backgroundColor: theme.colorScheme.surfaceContainerHighest,
+                          backgroundColor:
+                              theme.colorScheme.surfaceContainerHighest,
                         ),
                         onPressed: () =>
                             _showSortDialog(context, query.sort, notifier),

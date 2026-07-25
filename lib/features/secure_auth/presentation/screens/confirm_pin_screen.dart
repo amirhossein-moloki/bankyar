@@ -8,9 +8,9 @@ import '../widgets/pin_keypad.dart';
 
 /// Screen guiding the user to retype and confirm their proposed PIN code, completing setup.
 class ConfirmPinScreen extends ConsumerStatefulWidget {
-
   /// Constructor.
   const ConfirmPinScreen({super.key, required this.proposedPin});
+
   /// Proposed PIN code to match against.
   final String proposedPin;
 
@@ -66,7 +66,7 @@ class _ConfirmPinScreenState extends ConsumerState<ConfirmPinScreen> {
     final radius = theme.extension<RadiusExtension>()!;
     final spacing = theme.extension<SpacingExtension>()!;
 
-    showDialog(
+    showDialog<void>(
       context: context,
       barrierDismissible: false,
       builder: (context) => Directionality(

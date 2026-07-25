@@ -16,7 +16,7 @@ class UpdateCategoryParams {
 
 /// Use case to assign/update a transaction's category.
 class UpdateTransactionCategoryUseCase
-    extends UseCase<Result<void>, UpdateCategoryParams> {
+    extends UseCase<void, UpdateCategoryParams> {
   /// Constructor.
   UpdateTransactionCategoryUseCase(this._repository);
 

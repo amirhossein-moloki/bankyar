@@ -118,7 +118,7 @@ class HomeNotifier extends BaseUiNotifier<HomeState> {
           empty: () => _publishEmpty(),
         );
       },
-      onError: (err, stack) {
+      onError: (Object err, StackTrace stack) {
         final failure = DatabaseCorruptionFailure(
           code: 'BY_HOME_STREAM_EXCEPTION',
           message: 'Stream encountered unhandled error: ${err.toString()}',

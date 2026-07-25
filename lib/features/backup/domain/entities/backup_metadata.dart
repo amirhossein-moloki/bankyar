@@ -1,7 +1,6 @@
 /// Represents dynamic state and security diagnostics of the offline backup vault.
 /// Conforms to BACKUP_RESTORE_SCREEN_SPECIFICATION.md Component definitions.
 class BackupMetadata {
-
   /// Constructor.
   const BackupMetadata({
     this.lastBackupTime,
@@ -27,6 +26,7 @@ class BackupMetadata {
       deviceTotalSpaceBytes: 16 * 1024 * 1024 * 1024, // 16 GB
     );
   }
+
   /// Exact timestamp of the last successful backup.
   final DateTime? lastBackupTime;
 

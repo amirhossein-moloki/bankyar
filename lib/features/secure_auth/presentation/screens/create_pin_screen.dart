@@ -30,7 +30,7 @@ class _CreatePinScreenState extends ConsumerState<CreatePinScreen> {
       });
       Navigator.push(
         context,
-        MaterialPageRoute(
+        MaterialPageRoute<void>(
           builder: (context) => ConfirmPinScreen(proposedPin: pin),
         ),
       );

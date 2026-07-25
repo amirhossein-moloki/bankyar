@@ -1,3 +1,4 @@
+// ignore_for_file: deprecated_member_use
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/presentation/widgets/indicators/skeleton_loader.dart';
@@ -161,7 +162,8 @@ class NotificationCenterScreen extends ConsumerWidget {
                 child: Container(
                   height: 48.0,
                   decoration: BoxDecoration(
-                    color: theme.colorScheme.surfaceContainerHighest.withOpacity(0.4),
+                    color: theme.colorScheme.surfaceContainerHighest
+                        .withOpacity(0.4),
                     borderRadius: const BorderRadius.all(
                       Radius.circular(RadiusTokens.m),
                     ),

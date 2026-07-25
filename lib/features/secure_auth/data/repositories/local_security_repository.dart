@@ -14,7 +14,6 @@ import '../models/security_hash_helper.dart';
 /// Concrete implementation of [SecurityRepository] managing persistence
 /// in secure storage and preferences storage, providing simulated biometrics.
 class LocalSecurityRepository implements SecurityRepository {
-
   /// Constructor.
   LocalSecurityRepository({
     required SecureStorage secureStorage,

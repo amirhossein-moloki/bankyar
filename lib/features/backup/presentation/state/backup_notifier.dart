@@ -13,7 +13,6 @@ import '../../data/di/backup_providers.dart';
 
 /// Combined UI state for the Backup & Restore Center screen.
 class BackupState {
-
   /// Constructor.
   const BackupState({
     required this.metadata,
@@ -34,6 +33,7 @@ class BackupState {
     isActionLoading: false,
     isAutomaticReminderEnabled: false,
   );
+
   /// Localized database and filesystem security diagnostics.
   final BackupMetadata metadata;
 
@@ -92,7 +92,6 @@ class BackupState {
 
 /// StateNotifier orchestrating screen rendering and backup business rules.
 class BackupNotifier extends StateNotifier<BackupState> {
-
   /// Constructor.
   BackupNotifier({
     required CreateBackupUseCase createBackupUseCase,

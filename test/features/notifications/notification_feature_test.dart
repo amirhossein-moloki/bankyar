@@ -494,9 +494,7 @@ void main() {
     });
 
     test('saveNote updates local notes map and commits persistence', () async {
-      when(
-        () => mockPrefs.setString(any(), any()),
-      ).thenAnswer((_) async {});
+      when(() => mockPrefs.setString(any(), any())).thenAnswer((_) async {});
 
       final notifier = NotificationNotifier(
         getNotifications: getNotifications,

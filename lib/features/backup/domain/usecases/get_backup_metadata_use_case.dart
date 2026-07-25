@@ -5,7 +5,6 @@ import '../repository/backup_repository.dart';
 
 /// Use case to retrieve the on-device system metadata, versions, and memory usage.
 class GetBackupMetadataUseCase implements UseCase<BackupMetadata, NoParams> {
-
   /// Constructor.
   GetBackupMetadataUseCase(this._repository);
   final BackupRepository _repository;

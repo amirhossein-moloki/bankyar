@@ -1,10 +1,8 @@
-
 /// Represents the sorting options for search results.
 enum SearchSortField { date, amount, alphabetical, bank, category }
 
 /// Model encapsulating all filter configurations.
 class SearchFilters {
-
   /// Factory for initial empty/default filters.
   factory SearchFilters.empty() => const SearchFilters();
   const SearchFilters({
@@ -102,7 +100,6 @@ class SearchSort {
 
 /// Consolidated query model passing text, filters, and sorting.
 class SearchQuery {
-
   /// Creates a blank query representation.
   factory SearchQuery.empty() {
     return SearchQuery(

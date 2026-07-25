@@ -85,7 +85,7 @@ class AndroidSmsReceiverService implements SmsReceiverService {
       (data) {
         _handleIncomingData(data);
       },
-      onError: (err) {
+      onError: (Object err) {
         _logger.log(
           LogLevel.error,
           LogCategories.platform,

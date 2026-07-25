@@ -15,8 +15,7 @@ class UpdateNoteParams {
 }
 
 /// Use case to save/update/delete a transaction's user note.
-class UpdateTransactionNoteUseCase
-    extends UseCase<Result<void>, UpdateNoteParams> {
+class UpdateTransactionNoteUseCase extends UseCase<void, UpdateNoteParams> {
   /// Constructor.
   UpdateTransactionNoteUseCase(this._repository);
 

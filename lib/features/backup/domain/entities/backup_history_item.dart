@@ -1,7 +1,6 @@
 /// Model representing a historical portable backup record stored on device.
 /// Conforms to BACKUP_RESTORE_SCREEN_SPECIFICATION.md Component 8 specs.
 class BackupHistoryItem {
-
   /// Constructor.
   const BackupHistoryItem({
     required this.id,
@@ -29,6 +28,7 @@ class BackupHistoryItem {
       encryptAlgorithm: json['encryptAlgorithm'] as String? ?? 'AES-256-CBC',
     );
   }
+
   /// Unique identifier of the backup item.
   final String id;
 

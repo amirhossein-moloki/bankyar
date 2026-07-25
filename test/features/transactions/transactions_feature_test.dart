@@ -31,7 +31,6 @@ class MockTransactionRepository extends Mock implements TransactionRepository {}
 
 void main() {
   late MockAppLogger mockLogger;
-  late MockPreferencesStorage mockPrefs;
   late MockSmsHistoryImporter mockImporter;
   late MockTransactionRepository mockRepository;
 
@@ -60,7 +59,6 @@ void main() {
 
   setUp(() {
     mockLogger = MockAppLogger();
-    mockPrefs = MockPreferencesStorage();
     mockImporter = MockSmsHistoryImporter();
     mockRepository = MockTransactionRepository();
 

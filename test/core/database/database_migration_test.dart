@@ -3,12 +3,9 @@ import 'package:mocktail/mocktail.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:bankyar/core/logging/logger.dart';
 
-class MockAppLogger extends Mock implements AppLogger {}
-
 class MockDatabase extends Mock implements Database {}
 
 void main() {
-  late MockAppLogger mockLogger;
   late MockDatabase mockDb;
 
   setUpAll(() {
@@ -16,7 +13,6 @@ void main() {
   });
 
   setUp(() {
-    mockLogger = MockAppLogger();
     mockDb = MockDatabase();
   });
 

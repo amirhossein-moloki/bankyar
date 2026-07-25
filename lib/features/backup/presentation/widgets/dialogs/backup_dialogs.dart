@@ -1,3 +1,4 @@
+// ignore_for_file: deprecated_member_use
 import 'package:flutter/material.dart';
 import 'package:bankyar/core/presentation/widgets/widgets.dart';
 import 'package:bankyar/core/theme/radius_tokens.dart';
@@ -14,7 +15,7 @@ abstract class BackupDialogs {
     final passwordController = TextEditingController();
     bool shareAutomatically = false;
 
-    await showDialog(
+    await showDialog<void>(
       context: context,
       builder: (dialogCtx) {
         final theme = Theme.of(context);
@@ -130,7 +131,7 @@ abstract class BackupDialogs {
     final passwordController = TextEditingController();
     bool understandConsequences = false;
 
-    await showDialog(
+    await showDialog<void>(
       context: context,
       builder: (dialogCtx) {
         final theme = Theme.of(context);
@@ -244,7 +245,7 @@ abstract class BackupDialogs {
     bool forceReplace =
         false; // default is false (Option A: Merge & Deduplicate)
 
-    await showDialog(
+    await showDialog<void>(
       context: context,
       builder: (dialogCtx) {
         final theme = Theme.of(context);
@@ -293,9 +294,8 @@ abstract class BackupDialogs {
                       Container(
                         padding: EdgeInsets.all(spacing.s),
                         decoration: BoxDecoration(
-                          color: theme.colorScheme.surfaceContainerHighest.withOpacity(
-                            0.4,
-                          ),
+                          color: theme.colorScheme.surfaceContainerHighest
+                              .withOpacity(0.4),
                           borderRadius: BorderRadius.circular(radius.s),
                           border: Border.all(
                             color: theme.colorScheme.outlineVariant,
@@ -454,7 +454,7 @@ abstract class BackupDialogs {
     required BuildContext context,
     required VoidCallback onDelete,
   }) async {
-    await showDialog(
+    await showDialog<void>(
       context: context,
       builder: (dialogCtx) {
         final theme = Theme.of(context);
@@ -528,7 +528,7 @@ abstract class BackupDialogs {
     required BuildContext context,
     required VoidCallback onVerifyAgain,
   }) async {
-    await showDialog(
+    await showDialog<void>(
       context: context,
       builder: (dialogCtx) {
         final theme = Theme.of(context);
@@ -592,7 +592,7 @@ abstract class BackupDialogs {
     required BuildContext context,
     required VoidCallback onRetry,
   }) async {
-    await showDialog(
+    await showDialog<void>(
       context: context,
       builder: (dialogCtx) {
         final theme = Theme.of(context);
@@ -663,7 +663,7 @@ abstract class BackupDialogs {
     required BuildContext context,
     required VoidCallback onSelectAnother,
   }) async {
-    await showDialog(
+    await showDialog<void>(
       context: context,
       builder: (dialogCtx) {
         final theme = Theme.of(context);
@@ -731,7 +731,7 @@ abstract class BackupDialogs {
     required int attemptsRemaining,
     required VoidCallback onReenter,
   }) async {
-    await showDialog(
+    await showDialog<void>(
       context: context,
       builder: (dialogCtx) {
         final theme = Theme.of(context);
@@ -798,7 +798,7 @@ abstract class BackupDialogs {
     required BuildContext context,
     required VoidCallback onRetry,
   }) async {
-    await showDialog(
+    await showDialog<void>(
       context: context,
       builder: (dialogCtx) {
         final theme = Theme.of(context);

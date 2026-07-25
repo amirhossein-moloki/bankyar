@@ -1,10 +1,10 @@
+// ignore_for_file: deprecated_member_use
 import 'package:flutter/material.dart';
 import '../../../../core/theme/spacing_tokens.dart';
 
 /// Highly accessible, Material Design 3 compliant PIN entry keypad supporting
 /// native RTL mirrored layouts, semantic screen-reader labels, and custom accessory actions.
 class PinKeypad extends StatelessWidget {
-
   /// Constructor.
   const PinKeypad({
     super.key,
@@ -13,6 +13,7 @@ class PinKeypad extends StatelessWidget {
     this.leftAccessory,
     this.rightAccessory,
   });
+
   /// Callback when a numeric digit is tapped.
   final ValueChanged<String> onDigitTap;
 
@@ -83,7 +84,6 @@ class PinKeypad extends StatelessWidget {
 }
 
 class _KeypadButton extends StatelessWidget {
-
   const _KeypadButton({required this.label, required this.onTap});
   final String label;
   final VoidCallback onTap;
@@ -122,7 +122,6 @@ class _KeypadButton extends StatelessWidget {
 }
 
 class _KeypadIconButton extends StatelessWidget {
-
   const _KeypadIconButton({
     required this.icon,
     required this.onTap,

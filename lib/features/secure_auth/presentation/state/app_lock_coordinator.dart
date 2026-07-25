@@ -14,7 +14,6 @@ import 'security_notifier.dart';
 /// Central application state governing global locks, PIN buffering,
 /// lockout timers, and localized session lifecycle stages.
 class AppLockState {
-
   /// Constructor.
   const AppLockState({
     required this.session,
@@ -34,6 +33,7 @@ class AppLockState {
     errorMessage: null,
     isPermanentLockout: false,
   );
+
   /// Active session properties (auth status, failed attempts, lockouts).
   final SessionModel session;
 
@@ -76,7 +76,6 @@ class AppLockState {
 /// OS lifecycles, preferences, and broadcasting atomic [SessionStatus] updates.
 class AppLockCoordinator extends StateNotifier<AppLockState>
     with WidgetsBindingObserver {
-
   /// Constructor bootstrapping lifecycle tracking and session restoration.
   AppLockCoordinator({
     required VerifyPinUseCase verifyPinUseCase,
@@ -383,9 +382,9 @@ class AppLockCoordinator extends StateNotifier<AppLockState>
   }
 
   @override
-  void didChangeAppLifecycleState(AppLifecycleState lifecycleState) {
+  void didChangeAppLifecycleState(AppLifecycleState state) {
     // React to resumed, inactive, paused, detached, and hidden states
-    unawaited(handleLifecycleTransition(lifecycleState));
+    unawaited(handleLifecycleTransition(state));
   }
 
   /// Public lifecycle state transition handler to allow synchronous awaits in tests.
@@ -470,7 +469,9 @@ class AppLockCoordinator extends StateNotifier<AppLockState>
       _lockoutTimer = Timer(duration, () {
         if (!mounted) return;
         final updatedSession = session.copyWith(lockoutUntil: null);
-        unawaited(_ref.read(securityRepositoryProvider).saveSession(updatedSession));
+        unawaited(
+          _ref.read(securityRepositoryProvider).saveSession(updatedSession),
+        );
         state = state.copyWith(session: updatedSession);
       });
     }
