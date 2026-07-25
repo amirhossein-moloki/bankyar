@@ -147,7 +147,7 @@ void main() {
 
   group('Pagination, Filtering, and Sorting Models Tests', () {
     test('PaginatedList maps items correctly', () {
-      final list = PaginatedList<String>(
+      const list = PaginatedList<String>(
         items: ['1', '2', '3'],
         nextPageAnchor: 'anchor-id',
         hasMore: true,

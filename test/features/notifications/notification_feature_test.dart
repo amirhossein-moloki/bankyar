@@ -17,7 +17,6 @@ import 'package:bankyar/core/utils/result.dart';
 import 'package:bankyar/core/utils/result_extensions.dart';
 import 'package:bankyar/core/errors/failures.dart';
 import 'package:bankyar/features/notifications/data/datasources/notification_dao.dart';
-import 'package:bankyar/features/notifications/data/di/notification_providers.dart';
 import 'package:bankyar/features/notifications/data/repositories/notification_repository_impl.dart';
 import 'package:bankyar/features/notifications/domain/entities/notification_item.dart';
 import 'package:bankyar/features/notifications/domain/repository/notification_repository.dart';
@@ -29,9 +28,7 @@ import 'package:bankyar/features/notifications/domain/usecases/mark_notification
 import 'package:bankyar/features/notifications/presentation/screens/notification_center_screen.dart';
 import 'package:bankyar/features/notifications/presentation/state/notification_notifier.dart';
 import 'package:bankyar/features/notifications/presentation/state/notification_state.dart';
-import 'package:bankyar/features/notifications/presentation/widgets/notification_card.dart';
 import 'package:bankyar/features/notifications/presentation/widgets/notification_details_dialog.dart';
-import 'package:bankyar/features/notifications/presentation/widgets/notification_dialogs.dart';
 import 'package:bankyar/l10n/app_localizations.dart';
 
 class MockAppLogger extends Mock implements AppLogger {}
@@ -499,7 +496,7 @@ void main() {
     test('saveNote updates local notes map and commits persistence', () async {
       when(
         () => mockPrefs.setString(any(), any()),
-      ).thenAnswer((_) async => null);
+      ).thenAnswer((_) async {});
 
       final notifier = NotificationNotifier(
         getNotifications: getNotifications,

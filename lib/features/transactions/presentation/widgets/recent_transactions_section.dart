@@ -28,8 +28,9 @@ class RecentTransactionsHeaderSliver extends ConsumerWidget {
       success: (d) => d.transactions,
     );
 
-    if (transactions.isEmpty)
+    if (transactions.isEmpty) {
       return const SliverToBoxAdapter(child: SizedBox.shrink());
+    }
 
     return SliverToBoxAdapter(
       child: Padding(

@@ -14,23 +14,6 @@ import 'security_notifier.dart';
 /// Central application state governing global locks, PIN buffering,
 /// lockout timers, and localized session lifecycle stages.
 class AppLockState {
-  /// Active session properties (auth status, failed attempts, lockouts).
-  final SessionModel session;
-
-  /// Current session status.
-  final SessionStatus sessionStatus;
-
-  /// Whether the app is currently unlocked and ready to display content.
-  final bool isAppUnlocked;
-
-  /// In-memory buffer for keypresses.
-  final String currentInputPin;
-
-  /// Error message to show on the lock screen.
-  final String? errorMessage;
-
-  /// Flag indicating if the user has triggered permanent brute-force lock.
-  final bool isPermanentLockout;
 
   /// Constructor.
   const AppLockState({
@@ -51,6 +34,23 @@ class AppLockState {
     errorMessage: null,
     isPermanentLockout: false,
   );
+  /// Active session properties (auth status, failed attempts, lockouts).
+  final SessionModel session;
+
+  /// Current session status.
+  final SessionStatus sessionStatus;
+
+  /// Whether the app is currently unlocked and ready to display content.
+  final bool isAppUnlocked;
+
+  /// In-memory buffer for keypresses.
+  final String currentInputPin;
+
+  /// Error message to show on the lock screen.
+  final String? errorMessage;
+
+  /// Flag indicating if the user has triggered permanent brute-force lock.
+  final bool isPermanentLockout;
 
   /// Helper to duplicate state with option overrides.
   AppLockState copyWith({
@@ -76,12 +76,6 @@ class AppLockState {
 /// OS lifecycles, preferences, and broadcasting atomic [SessionStatus] updates.
 class AppLockCoordinator extends StateNotifier<AppLockState>
     with WidgetsBindingObserver {
-  final VerifyPinUseCase _verifyPinUseCase;
-  final VerifyBiometricsUseCase _verifyBiometricsUseCase;
-  final Ref _ref;
-
-  final _statusController = StreamController<SessionStatus>.broadcast();
-  Timer? _lockoutTimer;
 
   /// Constructor bootstrapping lifecycle tracking and session restoration.
   AppLockCoordinator({
@@ -95,6 +89,12 @@ class AppLockCoordinator extends StateNotifier<AppLockState>
     WidgetsBinding.instance.addObserver(this);
     _initSession();
   }
+  final VerifyPinUseCase _verifyPinUseCase;
+  final VerifyBiometricsUseCase _verifyBiometricsUseCase;
+  final Ref _ref;
+
+  final _statusController = StreamController<SessionStatus>.broadcast();
+  Timer? _lockoutTimer;
 
   @override
   void dispose() {
@@ -328,7 +328,7 @@ class AppLockCoordinator extends StateNotifier<AppLockState>
       // Safety check: reload settings only if the container's security notifier is still mounted
       final secNotifier = _ref.read(securityNotifierProvider.notifier);
       if (secNotifier.mounted) {
-        secNotifier.loadSettings();
+        await secNotifier.loadSettings();
       }
       return true;
     } else {
@@ -370,7 +370,7 @@ class AppLockCoordinator extends StateNotifier<AppLockState>
 
     final secNotifier = _ref.read(securityNotifierProvider.notifier);
     if (secNotifier.mounted) {
-      secNotifier.loadSettings();
+      await secNotifier.loadSettings();
     }
   }
 
@@ -385,7 +385,7 @@ class AppLockCoordinator extends StateNotifier<AppLockState>
   @override
   void didChangeAppLifecycleState(AppLifecycleState lifecycleState) {
     // React to resumed, inactive, paused, detached, and hidden states
-    handleLifecycleTransition(lifecycleState);
+    unawaited(handleLifecycleTransition(lifecycleState));
   }
 
   /// Public lifecycle state transition handler to allow synchronous awaits in tests.
@@ -470,7 +470,7 @@ class AppLockCoordinator extends StateNotifier<AppLockState>
       _lockoutTimer = Timer(duration, () {
         if (!mounted) return;
         final updatedSession = session.copyWith(lockoutUntil: null);
-        _ref.read(securityRepositoryProvider).saveSession(updatedSession);
+        unawaited(_ref.read(securityRepositoryProvider).saveSession(updatedSession));
         state = state.copyWith(session: updatedSession);
       });
     }

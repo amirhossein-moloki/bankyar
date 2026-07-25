@@ -35,15 +35,6 @@ abstract class LocalBackupDataSource {
 /// Concrete production-ready implementation of [LocalBackupDataSource]
 /// utilizing secure [FileStorage] and [PreferencesStorage].
 class LocalBackupDataSourceImpl implements LocalBackupDataSource {
-  final FileStorage _fileStorage;
-  final PreferencesStorage _preferencesStorage;
-  final AppLogger _logger;
-
-  /// Key for storing backup history in PreferencesStorage
-  static const String _historyKey = 'by_backup_history_list';
-
-  /// Key for storing the reminder preference in PreferencesStorage
-  static const String _reminderKey = 'by_backup_reminder_enabled';
 
   /// Constructor.
   LocalBackupDataSourceImpl({
@@ -53,6 +44,15 @@ class LocalBackupDataSourceImpl implements LocalBackupDataSource {
   }) : _fileStorage = fileStorage,
        _preferencesStorage = preferencesStorage,
        _logger = logger;
+  final FileStorage _fileStorage;
+  final PreferencesStorage _preferencesStorage;
+  final AppLogger _logger;
+
+  /// Key for storing backup history in PreferencesStorage
+  static const String _historyKey = 'by_backup_history_list';
+
+  /// Key for storing the reminder preference in PreferencesStorage
+  static const String _reminderKey = 'by_backup_reminder_enabled';
 
   @override
   Future<void> writeBackupFile(String filePath, List<int> backupBytes) async {

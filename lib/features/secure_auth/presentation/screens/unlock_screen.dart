@@ -109,7 +109,7 @@ class _UnlockScreenState extends ConsumerState<UnlockScreen> {
               fontWeight: FontWeight.bold,
               color: isLockedOut
                   ? theme.colorScheme.error
-                  : theme.colorScheme.onBackground,
+                  : theme.colorScheme.onSurface,
             ),
           ),
           SizedBox(height: spacing.s),

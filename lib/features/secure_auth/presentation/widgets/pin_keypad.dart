@@ -4,6 +4,15 @@ import '../../../../core/theme/spacing_tokens.dart';
 /// Highly accessible, Material Design 3 compliant PIN entry keypad supporting
 /// native RTL mirrored layouts, semantic screen-reader labels, and custom accessory actions.
 class PinKeypad extends StatelessWidget {
+
+  /// Constructor.
+  const PinKeypad({
+    super.key,
+    required this.onDigitTap,
+    required this.onBackspaceTap,
+    this.leftAccessory,
+    this.rightAccessory,
+  });
   /// Callback when a numeric digit is tapped.
   final ValueChanged<String> onDigitTap;
 
@@ -15,15 +24,6 @@ class PinKeypad extends StatelessWidget {
 
   /// Optional widget for the bottom-right accessory slot (e.g. confirm action).
   final Widget? rightAccessory;
-
-  /// Constructor.
-  const PinKeypad({
-    super.key,
-    required this.onDigitTap,
-    required this.onBackspaceTap,
-    this.leftAccessory,
-    this.rightAccessory,
-  });
 
   @override
   Widget build(BuildContext context) {
@@ -83,10 +83,10 @@ class PinKeypad extends StatelessWidget {
 }
 
 class _KeypadButton extends StatelessWidget {
-  final String label;
-  final VoidCallback onTap;
 
   const _KeypadButton({required this.label, required this.onTap});
+  final String label;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -122,15 +122,15 @@ class _KeypadButton extends StatelessWidget {
 }
 
 class _KeypadIconButton extends StatelessWidget {
-  final IconData icon;
-  final VoidCallback onTap;
-  final String semanticLabel;
 
   const _KeypadIconButton({
     required this.icon,
     required this.onTap,
     required this.semanticLabel,
   });
+  final IconData icon;
+  final VoidCallback onTap;
+  final String semanticLabel;
 
   @override
   Widget build(BuildContext context) {

@@ -71,6 +71,26 @@ class FinancialInsight extends Entity<String> {
 
 /// Comprehensive aggregate financial analytical summary for a date range.
 class AnalyticsSummary {
+
+  /// Factory creating empty summary state when no records exist.
+  factory AnalyticsSummary.empty() {
+    return const AnalyticsSummary(
+      totalIncome: 0.0,
+      totalExpenses: 0.0,
+      netBalance: 0.0,
+      transactionCount: 0,
+      averageTransaction: 0.0,
+      largestIncome: 0.0,
+      largestExpense: 0.0,
+      categoryTotals: {},
+      bankTotals: {},
+      tagStatistics: {},
+      dailyTrends: [],
+      weeklyTrends: [],
+      monthlyTrends: [],
+      recentInsights: [],
+    );
+  }
   /// Constructor.
   const AnalyticsSummary({
     required this.totalIncome,
@@ -130,24 +150,4 @@ class AnalyticsSummary {
 
   /// Highly prioritized smart insights generated on-device.
   final List<FinancialInsight> recentInsights;
-
-  /// Factory creating empty summary state when no records exist.
-  factory AnalyticsSummary.empty() {
-    return const AnalyticsSummary(
-      totalIncome: 0.0,
-      totalExpenses: 0.0,
-      netBalance: 0.0,
-      transactionCount: 0,
-      averageTransaction: 0.0,
-      largestIncome: 0.0,
-      largestExpense: 0.0,
-      categoryTotals: {},
-      bankTotals: {},
-      tagStatistics: {},
-      dailyTrends: [],
-      weeklyTrends: [],
-      monthlyTrends: [],
-      recentInsights: [],
-    );
-  }
 }

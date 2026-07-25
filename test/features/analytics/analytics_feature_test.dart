@@ -5,20 +5,16 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:bankyar/core/di/dependency_injection.dart';
 import 'package:bankyar/core/logging/logger.dart';
-import 'package:bankyar/core/state_management/state_wrappers.dart';
 import 'package:bankyar/core/utils/result.dart';
 import 'package:bankyar/core/presentation/widgets/indicators/skeleton_loader.dart';
 import 'package:bankyar/core/theme/app_theme.dart';
 import 'package:bankyar/l10n/app_localizations.dart';
-import 'package:bankyar/features/sms_detection/domain/entities/parsed_transaction.dart';
 import 'package:bankyar/features/analytics/domain/entities/analytics_models.dart';
 import 'package:bankyar/features/analytics/domain/entities/time_range.dart';
 import 'package:bankyar/features/analytics/domain/repository/statistics_repository.dart';
 import 'package:bankyar/features/analytics/data/di/analytics_dependencies.dart';
-import 'package:bankyar/features/analytics/domain/usecases/get_analytics_use_case.dart';
 import 'package:bankyar/features/analytics/presentation/screens/statistics_dashboard_screen.dart';
 import 'package:bankyar/features/analytics/presentation/state/analytics_notifier.dart';
-import 'package:bankyar/features/analytics/presentation/state/analytics_state.dart';
 import 'package:bankyar/features/analytics/presentation/widgets/custom_charts.dart';
 
 class MockAppLogger extends Mock implements AppLogger {}

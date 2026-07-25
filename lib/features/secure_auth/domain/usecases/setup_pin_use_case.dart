@@ -4,10 +4,10 @@ import '../repository/security_repository.dart';
 
 /// Use case to securely configure a new unlock PIN.
 class SetupPinUseCase implements UseCase<void, String> {
-  final SecurityRepository _repository;
 
   /// Constructor.
   const SetupPinUseCase(this._repository);
+  final SecurityRepository _repository;
 
   @override
   AsyncResult<void> call(String params) {

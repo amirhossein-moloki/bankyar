@@ -117,7 +117,7 @@ class SearchLocalDataSourceImpl implements SearchLocalDataSource {
 
       // We use standard LIKE clauses combined with FTS5 table references for high confidence matches.
       // Since FTS5 index contains merchant_name, note_text, and tag_labels, we can query it:
-      final String ftsClause =
+      const String ftsClause =
           't.id IN (SELECT transaction_id FROM fts_transactions_search WHERE fts_transactions_search MATCH ?)';
 
       whereClauses.add(

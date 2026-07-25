@@ -1,32 +1,6 @@
 /// Model representing a historical portable backup record stored on device.
 /// Conforms to BACKUP_RESTORE_SCREEN_SPECIFICATION.md Component 8 specs.
 class BackupHistoryItem {
-  /// Unique identifier of the backup item.
-  final String id;
-
-  /// Absolute file system path to the portable backup on disk.
-  final String filePath;
-
-  /// Localized user-friendly name of the backup file.
-  final String fileName;
-
-  /// Exact date and time when this backup was constructed.
-  final DateTime timestamp;
-
-  /// True if this was manually initiated; False if automated/scheduled.
-  final bool isManual;
-
-  /// File size of the encrypted .bankyar archive in bytes.
-  final int sizeBytes;
-
-  /// Validated status based on checksum self-audit signature.
-  final bool isHealthy;
-
-  /// Database schema version at the time of export.
-  final int dbVersion;
-
-  /// Cryptographic algorithm used to protect this portable file.
-  final String encryptAlgorithm;
 
   /// Constructor.
   const BackupHistoryItem({
@@ -55,6 +29,32 @@ class BackupHistoryItem {
       encryptAlgorithm: json['encryptAlgorithm'] as String? ?? 'AES-256-CBC',
     );
   }
+  /// Unique identifier of the backup item.
+  final String id;
+
+  /// Absolute file system path to the portable backup on disk.
+  final String filePath;
+
+  /// Localized user-friendly name of the backup file.
+  final String fileName;
+
+  /// Exact date and time when this backup was constructed.
+  final DateTime timestamp;
+
+  /// True if this was manually initiated; False if automated/scheduled.
+  final bool isManual;
+
+  /// File size of the encrypted .bankyar archive in bytes.
+  final int sizeBytes;
+
+  /// Validated status based on checksum self-audit signature.
+  final bool isHealthy;
+
+  /// Database schema version at the time of export.
+  final int dbVersion;
+
+  /// Cryptographic algorithm used to protect this portable file.
+  final String encryptAlgorithm;
 
   /// Converts this model to a JSON map for simple secure persistent caching.
   Map<String, dynamic> toJson() {

@@ -11,14 +11,6 @@ import '../../data/repositories/security_repository_provider.dart';
 
 /// Combined state representing the user's security configuration profile.
 class SecurityState {
-  /// The active security and privacy configuration options.
-  final SecuritySettings settings;
-
-  /// Hardware-bound biometric capabilities of the executing device.
-  final BiometricCapabilities biometricCapabilities;
-
-  /// Flag indicating if security operations are undergoing async load.
-  final bool isLoading;
 
   /// Constructor.
   const SecurityState({
@@ -33,6 +25,14 @@ class SecurityState {
     biometricCapabilities: BiometricCapabilities.initial(),
     isLoading: false,
   );
+  /// The active security and privacy configuration options.
+  final SecuritySettings settings;
+
+  /// Hardware-bound biometric capabilities of the executing device.
+  final BiometricCapabilities biometricCapabilities;
+
+  /// Flag indicating if security operations are undergoing async load.
+  final bool isLoading;
 
   /// Helper to duplicate state with option overrides.
   SecurityState copyWith({
@@ -51,11 +51,6 @@ class SecurityState {
 
 /// StateNotifier orchestrating preferences updates, biometrics checks, and settings toggle actions.
 class SecurityNotifier extends StateNotifier<SecurityState> {
-  final SetupPinUseCase _setupPinUseCase;
-  final GetSecuritySettingsUseCase _getSecuritySettingsUseCase;
-  final UpdateSecuritySettingsUseCase _updateSecuritySettingsUseCase;
-  final VerifyBiometricsUseCase _verifyBiometricsUseCase;
-  final Ref _ref;
 
   /// Constructor initiating automatic profile loading.
   SecurityNotifier({
@@ -72,6 +67,11 @@ class SecurityNotifier extends StateNotifier<SecurityState> {
        super(SecurityState.initial()) {
     loadSettings();
   }
+  final SetupPinUseCase _setupPinUseCase;
+  final GetSecuritySettingsUseCase _getSecuritySettingsUseCase;
+  final UpdateSecuritySettingsUseCase _updateSecuritySettingsUseCase;
+  final VerifyBiometricsUseCase _verifyBiometricsUseCase;
+  final Ref _ref;
 
   /// Retrieves current on-device preferences and capabilities.
   Future<void> loadSettings() async {

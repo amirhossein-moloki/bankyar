@@ -1,6 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/di/dependency_injection.dart';
-import '../../domain/repository/security_repository.dart';
 import '../../domain/usecases/change_pin_use_case.dart';
 import '../../domain/usecases/get_security_settings_use_case.dart';
 import '../../domain/usecases/purge_all_data_use_case.dart';

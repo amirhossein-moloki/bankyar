@@ -1,10 +1,12 @@
-import '../../../sms_detection/domain/entities/parsed_transaction.dart';
 
 /// Represents the sorting options for search results.
 enum SearchSortField { date, amount, alphabetical, bank, category }
 
 /// Model encapsulating all filter configurations.
 class SearchFilters {
+
+  /// Factory for initial empty/default filters.
+  factory SearchFilters.empty() => const SearchFilters();
   const SearchFilters({
     this.startDate,
     this.endDate,
@@ -43,9 +45,6 @@ class SearchFilters {
 
   /// Filter by presence of note text.
   final bool? hasNote;
-
-  /// Factory for initial empty/default filters.
-  factory SearchFilters.empty() => const SearchFilters();
 
   /// Determines if any custom filter is active.
   bool get isAnyActive {
@@ -103,6 +102,15 @@ class SearchSort {
 
 /// Consolidated query model passing text, filters, and sorting.
 class SearchQuery {
+
+  /// Creates a blank query representation.
+  factory SearchQuery.empty() {
+    return SearchQuery(
+      text: '',
+      filters: SearchFilters.empty(),
+      sort: const SearchSort(),
+    );
+  }
   const SearchQuery({
     required this.text,
     required this.filters,
@@ -117,15 +125,6 @@ class SearchQuery {
 
   /// The sort configuration.
   final SearchSort sort;
-
-  /// Creates a blank query representation.
-  factory SearchQuery.empty() {
-    return SearchQuery(
-      text: '',
-      filters: SearchFilters.empty(),
-      sort: const SearchSort(),
-    );
-  }
 
   SearchQuery copyWith({
     String? text,

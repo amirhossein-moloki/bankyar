@@ -1,14 +1,11 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:bankyar/core/logging/logger.dart';
-import 'package:bankyar/core/state_management/state_wrappers.dart';
 import 'package:bankyar/core/utils/result.dart';
-import 'package:bankyar/features/sms_detection/domain/entities/parsed_transaction.dart';
 import 'package:bankyar/features/search/domain/entities/search_models.dart';
 import 'package:bankyar/features/search/domain/repository/search_repository.dart';
 import 'package:bankyar/features/search/domain/usecases/search_transactions_usecase.dart';
 import 'package:bankyar/features/search/presentation/state/search_notifier.dart';
-import 'package:bankyar/features/search/presentation/state/search_state.dart';
 
 class MockAppLogger extends Mock implements AppLogger {}
 

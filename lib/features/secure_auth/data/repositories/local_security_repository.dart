@@ -14,16 +14,6 @@ import '../models/security_hash_helper.dart';
 /// Concrete implementation of [SecurityRepository] managing persistence
 /// in secure storage and preferences storage, providing simulated biometrics.
 class LocalSecurityRepository implements SecurityRepository {
-  final SecureStorage _secureStorage;
-  final PreferencesStorage _preferencesStorage;
-  final DatabaseService _databaseService;
-  final PermissionService _permissionService;
-
-  /// Control flag to simulate biometric authentication outcomes during testing.
-  bool simulateBiometricsSuccess = true;
-
-  /// Control flag to simulate biometric availability during testing.
-  bool simulateBiometricsHardwareAvailable = true;
 
   /// Constructor.
   LocalSecurityRepository({
@@ -35,6 +25,16 @@ class LocalSecurityRepository implements SecurityRepository {
        _preferencesStorage = preferencesStorage,
        _databaseService = databaseService,
        _permissionService = permissionService;
+  final SecureStorage _secureStorage;
+  final PreferencesStorage _preferencesStorage;
+  final DatabaseService _databaseService;
+  final PermissionService _permissionService;
+
+  /// Control flag to simulate biometric authentication outcomes during testing.
+  bool simulateBiometricsSuccess = true;
+
+  /// Control flag to simulate biometric availability during testing.
+  bool simulateBiometricsHardwareAvailable = true;
 
   static const String _pinHashKey = 'by_sec_pin_hash';
   static const String _pinSaltKey = 'by_sec_pin_salt';
@@ -55,7 +55,7 @@ class LocalSecurityRepository implements SecurityRepository {
       final hash = await _secureStorage.read(_pinHashKey);
       return Result.success(hash != null && hash.isNotEmpty);
     } catch (e) {
-      return Result.failure(
+      return const Result.failure(
         SecurityFailure(
           code: 'BY_SEC_STORAGE_ERROR',
           message: 'Could not read PIN status from secure storage.',
@@ -78,7 +78,7 @@ class LocalSecurityRepository implements SecurityRepository {
 
       return const Result.success(null);
     } catch (e) {
-      return Result.failure(
+      return const Result.failure(
         SecurityFailure(
           code: 'BY_SEC_STORAGE_ERROR',
           message: 'Could not write PIN configuration to secure storage.',
@@ -100,7 +100,7 @@ class LocalSecurityRepository implements SecurityRepository {
       final computedHash = SecurityHashHelper.hashPin(pin, salt);
       return Result.success(computedHash == hash);
     } catch (e) {
-      return Result.failure(
+      return const Result.failure(
         SecurityFailure(
           code: 'BY_SEC_VERIFICATION_ERROR',
           message: 'Could not execute secure PIN cryptographic matching.',
@@ -121,8 +121,8 @@ class LocalSecurityRepository implements SecurityRepository {
       }
 
       if (!verification.successOrCrash) {
-        return Result.failure(
-          const SecurityFailure(
+        return const Result.failure(
+          SecurityFailure(
             code: 'BY_SEC_PIN_MISMATCH',
             message: 'The old PIN entered is incorrect.',
           ),
@@ -131,7 +131,7 @@ class LocalSecurityRepository implements SecurityRepository {
 
       return savePin(newPin);
     } catch (e) {
-      return Result.failure(
+      return const Result.failure(
         SecurityFailure(
           code: 'BY_SEC_CHANGE_ERROR',
           message: 'Could not complete secure PIN rollover operation.',
@@ -190,7 +190,7 @@ class LocalSecurityRepository implements SecurityRepository {
 
       return const Result.success(null);
     } catch (e) {
-      return Result.failure(
+      return const Result.failure(
         SecurityFailure(
           code: 'BY_SEC_UPDATE_SETTINGS_ERROR',
           message: 'Could not persist active security preferences.',
@@ -230,7 +230,7 @@ class LocalSecurityRepository implements SecurityRepository {
       final caps = capsRes.successOrCrash;
 
       if (!caps.isHardwareAvailable || !caps.isEnrolled) {
-        return Result.failure(
+        return const Result.failure(
           SecurityFailure(
             code: 'BY_SEC_BIOMETRICS_UNAVAILABLE',
             message:
@@ -243,10 +243,10 @@ class LocalSecurityRepository implements SecurityRepository {
       if (simulateBiometricsSuccess) {
         return const Result.success(true);
       } else {
-        return Result.failure(const BiometricMismatchFailure());
+        return const Result.failure(BiometricMismatchFailure());
       }
     } catch (e) {
-      return Result.failure(const BiometricMismatchFailure());
+      return const Result.failure(BiometricMismatchFailure());
     }
   }
 
@@ -300,7 +300,7 @@ class LocalSecurityRepository implements SecurityRepository {
       }
       return const Result.success(null);
     } catch (e) {
-      return Result.failure(
+      return const Result.failure(
         SecurityFailure(
           code: 'BY_SEC_SESSION_SAVE_ERROR',
           message: 'Could not write active session properties.',
@@ -324,7 +324,7 @@ class LocalSecurityRepository implements SecurityRepository {
 
       return const Result.success(null);
     } catch (e) {
-      return Result.failure(
+      return const Result.failure(
         SecurityFailure(
           code: 'BY_SEC_PURGE_ERROR',
           message:

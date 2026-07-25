@@ -13,7 +13,7 @@ void main() {
     });
 
     test('sanitize redacts general monetary amounts from text inputs', () {
-      final input = 'Card debited with USD 150000.50 on 2023-10-15';
+      const input = 'Card debited with USD 150000.50 on 2023-10-15';
       final output = logger.sanitize(input);
 
       expect(output, isNot(contains('150000.50')));
@@ -23,7 +23,7 @@ void main() {
     test(
       'sanitize redacts card/account digits but preserves last 4 indices',
       () {
-        final input = 'Transaction completed using card 4111222233334444';
+        const input = 'Transaction completed using card 4111222233334444';
         final output = logger.sanitize(input);
 
         // Card must be masked

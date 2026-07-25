@@ -3,7 +3,6 @@ import '../../features/sms_detection/domain/usecases/process_incoming_sms_use_ca
 import '../logging/logger.dart';
 import '../storage/preferences_storage.dart';
 import 'permission.dart';
-import 'sms_receiver_service.dart';
 
 /// Abstraction managing historical banking SMS ingestion and incremental synchronization.
 abstract class SmsHistoryImporter {

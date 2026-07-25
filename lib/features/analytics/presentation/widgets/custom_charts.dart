@@ -80,16 +80,18 @@ class LineChart extends StatelessWidget {
         return SizedBox(
           height: height,
           width: constraints.maxWidth,
-          child: CustomPaint(
-            painter: _LineChartPainter(
-              points: points,
-              primaryLineColor: theme.colorScheme.primary,
-              secondaryLineColor: theme.colorScheme.tertiary,
-              gridColor: theme.colorScheme.outlineVariant,
-              textColor: theme.colorScheme.onSurfaceVariant,
-              successColor: semanticColor.success,
-              errorColor: semanticColor.error,
-              isRtl: true,
+          child: RepaintBoundary(
+            child: CustomPaint(
+              painter: _LineChartPainter(
+                points: points,
+                primaryLineColor: theme.colorScheme.primary,
+                secondaryLineColor: theme.colorScheme.tertiary,
+                gridColor: theme.colorScheme.outlineVariant,
+                textColor: theme.colorScheme.onSurfaceVariant,
+                successColor: semanticColor.success,
+                errorColor: semanticColor.error,
+                isRtl: true,
+              ),
             ),
           ),
         );
@@ -121,10 +123,10 @@ class _LineChartPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final double paddingLeft = 16.0;
-    final double paddingRight = 48.0;
-    final double paddingTop = 16.0;
-    final double paddingBottom = 24.0;
+    const double paddingLeft = 16.0;
+    const double paddingRight = 48.0;
+    const double paddingTop = 16.0;
+    const double paddingBottom = 24.0;
 
     final double drawWidth = size.width - paddingLeft - paddingRight;
     final double drawHeight = size.height - paddingTop - paddingBottom;
@@ -254,14 +256,16 @@ class BarChart extends StatelessWidget {
         return SizedBox(
           height: height,
           width: constraints.maxWidth,
-          child: CustomPaint(
-            painter: _BarChartPainter(
-              points: points,
-              gridColor: theme.colorScheme.outlineVariant,
-              textColor: theme.colorScheme.onSurfaceVariant,
-              incomeColor: semanticColor.success,
-              expenseColor: semanticColor.error,
-              isRtl: true,
+          child: RepaintBoundary(
+            child: CustomPaint(
+              painter: _BarChartPainter(
+                points: points,
+                gridColor: theme.colorScheme.outlineVariant,
+                textColor: theme.colorScheme.onSurfaceVariant,
+                incomeColor: semanticColor.success,
+                expenseColor: semanticColor.error,
+                isRtl: true,
+              ),
             ),
           ),
         );
@@ -289,10 +293,10 @@ class _BarChartPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final double paddingLeft = 16.0;
-    final double paddingRight = 48.0;
-    final double paddingTop = 16.0;
-    final double paddingBottom = 24.0;
+    const double paddingLeft = 16.0;
+    const double paddingRight = 48.0;
+    const double paddingTop = 16.0;
+    const double paddingBottom = 24.0;
 
     final double drawWidth = size.width - paddingLeft - paddingRight;
     final double drawHeight = size.height - paddingTop - paddingBottom;
@@ -337,7 +341,7 @@ class _BarChartPainter extends CustomPainter {
     final double totalBarGroups = points.length.toDouble();
     final double groupWidth = drawWidth / totalBarGroups;
     final double barWidth = (groupWidth * 0.3).clamp(4.0, 16.0);
-    final double barSpacing = 2.0;
+    const double barSpacing = 2.0;
 
     final incomePaint = Paint()
       ..color = incomeColor
@@ -506,12 +510,14 @@ class PieDonutChart extends StatelessWidget {
         SizedBox(
           width: height,
           height: height,
-          child: CustomPaint(
-            painter: _PieDonutPainter(
-              entries: sortedEntries,
-              totalSum: totalSum,
-              palette: palette,
-              surfaceColor: theme.colorScheme.surface,
+          child: RepaintBoundary(
+            child: CustomPaint(
+              painter: _PieDonutPainter(
+                entries: sortedEntries,
+                totalSum: totalSum,
+                palette: palette,
+                surfaceColor: theme.colorScheme.surface,
+              ),
             ),
           ),
         ),

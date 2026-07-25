@@ -31,7 +31,7 @@ void main() {
       'CustomBottomNavigation displays options and triggers selection',
       (tester) async {
         var activeIndex = 0;
-        final destinations = const [
+        const destinations = [
           NavigationDestinationItem(label: 'Home', icon: Icon(Icons.home)),
           NavigationDestinationItem(
             label: 'Ledger',
@@ -58,7 +58,7 @@ void main() {
     );
 
     testWidgets('CustomNavigationRail displays options', (tester) async {
-      final destinations = const [
+      const destinations = [
         NavigationDestinationItem(label: 'Home', icon: Icon(Icons.home)),
         NavigationDestinationItem(
           label: 'Settings',

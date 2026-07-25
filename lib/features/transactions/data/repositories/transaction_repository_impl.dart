@@ -3,7 +3,6 @@ import 'package:sqflite/sqflite.dart';
 import '../../../../core/architecture/base_repository.dart';
 import '../../../../core/errors/failures.dart';
 import '../../../../core/utils/result.dart';
-import '../../../sms_detection/domain/entities/bank_message_entity.dart';
 import '../../../sms_detection/domain/entities/parsed_transaction.dart';
 import '../../domain/entities/transaction_category.dart';
 import '../../domain/entities/transaction_details.dart';

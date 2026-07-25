@@ -4,10 +4,10 @@ import '../repository/security_repository.dart';
 
 /// Use case to verify whether an input PIN matches the stored credential.
 class VerifyPinUseCase implements UseCase<bool, String> {
-  final SecurityRepository _repository;
 
   /// Constructor.
   const VerifyPinUseCase(this._repository);
+  final SecurityRepository _repository;
 
   @override
   AsyncResult<bool> call(String params) {

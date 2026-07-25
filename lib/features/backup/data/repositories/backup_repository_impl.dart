@@ -16,6 +16,21 @@ import '../datasources/local_backup_data_source.dart';
 
 /// Production-ready implementation of [BackupRepository] managing table state serialization.
 class BackupRepositoryImpl implements BackupRepository {
+
+  /// Constructor.
+  BackupRepositoryImpl({
+    required LocalBackupDataSource localBackupDataSource,
+    required DatabaseService databaseService,
+    required BackupPortability backupPortability,
+    required Clock clock,
+    required UuidGenerator uuidGenerator,
+    required AppLogger logger,
+  }) : _localBackupDataSource = localBackupDataSource,
+       _databaseService = databaseService,
+       _backupPortability = backupPortability,
+       _clock = clock,
+       _uuidGenerator = uuidGenerator,
+       _logger = logger;
   final LocalBackupDataSource _localBackupDataSource;
   final DatabaseService _databaseService;
   final BackupPortability _backupPortability;
@@ -37,21 +52,6 @@ class BackupRepositoryImpl implements BackupRepository {
     'notifications',
     'audit_logs',
   ];
-
-  /// Constructor.
-  BackupRepositoryImpl({
-    required LocalBackupDataSource localBackupDataSource,
-    required DatabaseService databaseService,
-    required BackupPortability backupPortability,
-    required Clock clock,
-    required UuidGenerator uuidGenerator,
-    required AppLogger logger,
-  }) : _localBackupDataSource = localBackupDataSource,
-       _databaseService = databaseService,
-       _backupPortability = backupPortability,
-       _clock = clock,
-       _uuidGenerator = uuidGenerator,
-       _logger = logger;
 
   @override
   Future<Result<BackupHistoryItem>> createBackup({

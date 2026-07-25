@@ -116,7 +116,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                         style: IconButton.styleFrom(
                           backgroundColor: filters.isAnyActive
                               ? theme.colorScheme.primaryContainer
-                              : theme.colorScheme.surfaceVariant,
+                              : theme.colorScheme.surfaceContainerHighest,
                         ),
                         onPressed: () =>
                             _showFilterBottomSheet(context, filters, notifier),
@@ -128,7 +128,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                       child: IconButton(
                         icon: const Icon(Icons.sort),
                         style: IconButton.styleFrom(
-                          backgroundColor: theme.colorScheme.surfaceVariant,
+                          backgroundColor: theme.colorScheme.surfaceContainerHighest,
                         ),
                         onPressed: () =>
                             _showSortDialog(context, query.sort, notifier),

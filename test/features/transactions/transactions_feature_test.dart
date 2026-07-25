@@ -3,12 +3,10 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:sqflite/sqflite.dart';
 import 'package:bankyar/core/di/dependency_injection.dart';
 import 'package:bankyar/core/logging/logger.dart';
 import 'package:bankyar/core/platform/sms_history_importer.dart';
 import 'package:bankyar/core/storage/preferences_storage.dart';
-import 'package:bankyar/core/state_management/state_wrappers.dart';
 import 'package:bankyar/core/utils/result.dart';
 import 'package:bankyar/features/sms_detection/domain/entities/parsed_transaction.dart';
 import 'package:bankyar/features/sms_detection/presentation/state/sms_detection_providers.dart';
@@ -20,7 +18,6 @@ import 'package:bankyar/features/transactions/presentation/screens/transactions_
 import 'package:bankyar/features/transactions/presentation/state/home_notifier.dart';
 import 'package:bankyar/features/transactions/presentation/state/transaction_details_notifier.dart';
 import 'package:bankyar/features/transactions/presentation/state/transactions_notifier.dart';
-import 'package:bankyar/features/transactions/presentation/state/transactions_state.dart';
 import 'package:bankyar/core/theme/app_theme.dart';
 import 'package:bankyar/l10n/app_localizations.dart';
 
@@ -246,7 +243,7 @@ void main() {
 
         when(
           () => mockRepository.getTransactionDetails('tx-2'),
-        ).thenAnswer((_) async => Result.success(details));
+        ).thenAnswer((_) async => const Result.success(details));
         when(
           () => mockRepository.saveTransaction(any()),
         ).thenAnswer((_) async => const Result.success(null));
@@ -407,7 +404,7 @@ void main() {
 
         when(
           () => mockRepository.getTransactionDetails('tx-2'),
-        ).thenAnswer((_) async => Result.success(details));
+        ).thenAnswer((_) async => const Result.success(details));
 
         await tester.pumpWidget(
           buildTestableWidget(

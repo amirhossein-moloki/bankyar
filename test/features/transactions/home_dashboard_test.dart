@@ -9,8 +9,6 @@ import 'package:bankyar/core/database/database_service_impl.dart';
 import 'package:bankyar/core/di/dependency_injection.dart';
 import 'package:bankyar/core/architecture/use_case.dart';
 import 'package:bankyar/core/logging/logger.dart';
-import 'package:bankyar/core/platform/clock.dart';
-import 'package:bankyar/core/platform/uuid.dart';
 import 'package:bankyar/core/platform/sms_history_importer.dart';
 import 'package:bankyar/core/storage/preferences_storage.dart';
 import 'package:bankyar/core/state_management/state_wrappers.dart';
@@ -20,15 +18,11 @@ import 'package:bankyar/features/sms_detection/domain/entities/parsed_transactio
 import 'package:bankyar/features/sms_detection/presentation/state/sms_detection_providers.dart';
 import 'package:bankyar/features/transactions/data/datasources/transaction_dao.dart';
 import 'package:bankyar/features/transactions/data/repositories/transaction_repository_impl.dart';
-import 'package:bankyar/features/transactions/domain/repository/transaction_repository.dart';
 import 'package:bankyar/features/transactions/domain/usecases/get_transactions_use_case.dart';
-import 'package:bankyar/features/transactions/presentation/screens/home_screen.dart';
 import 'package:bankyar/features/transactions/presentation/state/home_notifier.dart';
 import 'package:bankyar/features/transactions/presentation/state/home_state.dart';
 import 'package:bankyar/features/transactions/presentation/widgets/greeting_section.dart';
 import 'package:bankyar/features/transactions/presentation/widgets/total_balance_card.dart';
-import 'package:bankyar/features/transactions/presentation/widgets/monthly_summary_card.dart';
-import 'package:bankyar/features/transactions/presentation/widgets/quick_actions_section.dart';
 import 'package:bankyar/features/transactions/presentation/widgets/recent_transactions_section.dart';
 import 'package:bankyar/core/theme/app_theme.dart';
 import 'package:bankyar/l10n/app_localizations.dart';
@@ -128,7 +122,7 @@ void main() {
 
     // Default mock behavior for secure storage preferences
     when(() => mockPrefs.getBool(any())).thenAnswer((_) async => false);
-    when(() => mockPrefs.setBool(any(), any())).thenAnswer((_) async => null);
+    when(() => mockPrefs.setBool(any(), any())).thenAnswer((_) async {});
     when(
       () => mockImporter.performIncrementalSync(),
     ).thenAnswer((_) async => 0);
@@ -247,7 +241,7 @@ void main() {
         );
 
         // Create a subscription to keep the autoDispose provider alive!
-        final sub = container.listen(homeViewModelProvider, (_, __) {});
+        final sub = container.listen(homeViewModelProvider, (_, _) {});
 
         // Wait for async load to finish
         await Future<void>.delayed(const Duration(milliseconds: 50));
@@ -317,7 +311,7 @@ void main() {
           ],
         );
 
-        final sub = container.listen(homeViewModelProvider, (_, __) {});
+        final sub = container.listen(homeViewModelProvider, (_, _) {});
         final notifier = container.read(homeViewModelProvider.notifier);
         await Future<void>.delayed(const Duration(milliseconds: 50));
 

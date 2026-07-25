@@ -8,7 +8,7 @@ void main() {
       const result = Result.success('test_payload');
 
       expect(result, isA<Success<String>>());
-      final Success<String> success = result as Success<String>;
+      const Success<String> success = result as Success<String>;
       expect(success.data, equals('test_payload'));
 
       final patternMatched = result.when(
@@ -28,7 +28,7 @@ void main() {
       const result = Result<String>.failure(failure);
 
       expect(result, isA<FailureResult<String>>());
-      final FailureResult<String> failResult = result as FailureResult<String>;
+      const FailureResult<String> failResult = result as FailureResult<String>;
       expect(failResult.failure.code, equals('BY_VAL_FAIL'));
 
       final patternMatched = result.when(
@@ -44,7 +44,7 @@ void main() {
       const result = Result<String>.loading(progress: 0.75);
 
       expect(result, isA<Loading<String>>());
-      final Loading<String> loading = result as Loading<String>;
+      const Loading<String> loading = result as Loading<String>;
       expect(loading.progress, equals(0.75));
     });
 
@@ -57,7 +57,7 @@ void main() {
     test('PartialSuccess preserves batch status metrics', () {
       const successItem = 'parsed_ok';
       const failure = ValidationFailure(code: 'err', message: 'fail');
-      final result = PartialSuccess<String>(
+      const result = PartialSuccess<String>(
         successfulRecords: [successItem],
         failedRecords: [MapEntry('bad_payload', failure)],
       );
