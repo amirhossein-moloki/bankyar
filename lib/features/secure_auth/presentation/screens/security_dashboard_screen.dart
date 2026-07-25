@@ -21,17 +21,15 @@ class SecurityDashboardScreen extends ConsumerStatefulWidget {
   const SecurityDashboardScreen({super.key});
 
   @override
-  ConsumerState<SecurityDashboardScreen> createState() => _SecurityDashboardScreenState();
+  ConsumerState<SecurityDashboardScreen> createState() =>
+      _SecurityDashboardScreenState();
 }
 
 class _UnlockHoldListener extends StatefulWidget {
   final VoidCallback onHoldSuccess;
   final Widget child;
 
-  const _UnlockHoldListener({
-    required this.onHoldSuccess,
-    required this.child,
-  });
+  const _UnlockHoldListener({required this.onHoldSuccess, required this.child});
 
   @override
   State<_UnlockHoldListener> createState() => _UnlockHoldListenerState();
@@ -124,7 +122,8 @@ class _UnlockHoldListenerState extends State<_UnlockHoldListener> {
   }
 }
 
-class _SecurityDashboardScreenState extends ConsumerState<SecurityDashboardScreen> {
+class _SecurityDashboardScreenState
+    extends ConsumerState<SecurityDashboardScreen> {
   final Map<AppPermission, PermissionStatus> _permissionStatuses = {};
   StreamSubscription? _permissionSubscription;
 
@@ -200,7 +199,13 @@ class _SecurityDashboardScreenState extends ConsumerState<SecurityDashboardScree
                     _buildDeviceTrustCard(theme, spacing, radius),
                     SizedBox(height: spacing.m),
 
-                    _buildSecurityControlsCard(secState, authState, theme, spacing, radius),
+                    _buildSecurityControlsCard(
+                      secState,
+                      authState,
+                      theme,
+                      spacing,
+                      radius,
+                    ),
                     SizedBox(height: spacing.m),
 
                     // Section II: Permissions Checklist
@@ -250,7 +255,8 @@ class _SecurityDashboardScreenState extends ConsumerState<SecurityDashboardScree
                     value: score / 100,
                     strokeWidth: 6,
                     color: scoreColor,
-                    backgroundColor: theme.colorScheme.outlineVariant.withOpacity(0.3),
+                    backgroundColor: theme.colorScheme.outlineVariant
+                        .withOpacity(0.3),
                   ),
                 ),
                 Text(
@@ -269,7 +275,9 @@ class _SecurityDashboardScreenState extends ConsumerState<SecurityDashboardScree
                 children: [
                   Text(
                     'امتیاز امنیت حساب کاربری',
-                    style: theme.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
+                    style: theme.textTheme.bodyLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   SizedBox(height: spacing.xxs),
                   Text(
@@ -289,12 +297,18 @@ class _SecurityDashboardScreenState extends ConsumerState<SecurityDashboardScree
     );
   }
 
-  Widget _buildDeviceTrustCard(ThemeData theme, SpacingExtension spacing, RadiusExtension radius) {
+  Widget _buildDeviceTrustCard(
+    ThemeData theme,
+    SpacingExtension spacing,
+    RadiusExtension radius,
+  ) {
     return Card(
       elevation: 0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(radius.m),
-        side: BorderSide(color: theme.colorScheme.outlineVariant.withOpacity(0.5)),
+        side: BorderSide(
+          color: theme.colorScheme.outlineVariant.withOpacity(0.5),
+        ),
       ),
       color: theme.colorScheme.surfaceVariant.withOpacity(0.3),
       child: Padding(
@@ -341,7 +355,9 @@ class _SecurityDashboardScreenState extends ConsumerState<SecurityDashboardScree
       elevation: 0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(radius.m),
-        side: BorderSide(color: theme.colorScheme.outlineVariant.withOpacity(0.5)),
+        side: BorderSide(
+          color: theme.colorScheme.outlineVariant.withOpacity(0.5),
+        ),
       ),
       child: Padding(
         padding: EdgeInsets.all(spacing.m),
@@ -350,11 +366,16 @@ class _SecurityDashboardScreenState extends ConsumerState<SecurityDashboardScree
           children: [
             Text(
               'تنظیمات امنیتی ورود',
-              style: theme.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
+              style: theme.textTheme.bodyLarge?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
             ),
             SizedBox(height: spacing.s),
             SwitchListTile(
-              secondary: Icon(Icons.password_outlined, color: theme.colorScheme.primary),
+              secondary: Icon(
+                Icons.password_outlined,
+                color: theme.colorScheme.primary,
+              ),
               title: const Text('ورود با پین‌کد'),
               subtitle: const Text('محافظت از کیف پول محلی با کد ۴ رقمی'),
               value: secState.settings.isPinEnabled,
@@ -362,7 +383,9 @@ class _SecurityDashboardScreenState extends ConsumerState<SecurityDashboardScree
                 if (val) {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const CreatePinScreen()),
+                    MaterialPageRoute(
+                      builder: (context) => const CreatePinScreen(),
+                    ),
                   );
                 } else {
                   _showDisablePinConfirmation();
@@ -372,13 +395,18 @@ class _SecurityDashboardScreenState extends ConsumerState<SecurityDashboardScree
             if (secState.settings.isPinEnabled) ...[
               const Divider(),
               ListTile(
-                leading: Icon(Icons.lock_reset_outlined, color: theme.colorScheme.primary),
+                leading: Icon(
+                  Icons.lock_reset_outlined,
+                  color: theme.colorScheme.primary,
+                ),
                 title: const Text('تغییر پین‌کد فعلی'),
                 trailing: const Icon(Icons.chevron_left_outlined),
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const ChangePinScreen()),
+                    MaterialPageRoute(
+                      builder: (context) => const ChangePinScreen(),
+                    ),
                   );
                 },
               ),
@@ -386,7 +414,10 @@ class _SecurityDashboardScreenState extends ConsumerState<SecurityDashboardScree
             if (secState.biometricCapabilities.isHardwareAvailable) ...[
               const Divider(),
               SwitchListTile(
-                secondary: Icon(Icons.fingerprint_outlined, color: theme.colorScheme.primary),
+                secondary: Icon(
+                  Icons.fingerprint_outlined,
+                  color: theme.colorScheme.primary,
+                ),
                 title: const Text('ورود سریع بیومتریک (اثر انگشت)'),
                 value: secState.settings.isBiometricsEnabled,
                 onChanged: secState.settings.isPinEnabled
@@ -397,9 +428,11 @@ class _SecurityDashboardScreenState extends ConsumerState<SecurityDashboardScree
                         if (success && mounted) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
-                              content: Text(val
-                                  ? 'ورود با اثر انگشت فعال شد.'
-                                  : 'ورود با اثر انگشت غیرفعال شد.'),
+                              content: Text(
+                                val
+                                    ? 'ورود با اثر انگشت فعال شد.'
+                                    : 'ورود با اثر انگشت غیرفعال شد.',
+                              ),
                             ),
                           );
                         }
@@ -409,7 +442,10 @@ class _SecurityDashboardScreenState extends ConsumerState<SecurityDashboardScree
             ],
             const Divider(),
             ListTile(
-              leading: Icon(Icons.timer_outlined, color: theme.colorScheme.primary),
+              leading: Icon(
+                Icons.timer_outlined,
+                color: theme.colorScheme.primary,
+              ),
               title: const Text('مدت زمان قفل خودکار'),
               trailing: DropdownButton<int>(
                 value: secState.settings.autoLockTimeout.inSeconds,
@@ -430,18 +466,28 @@ class _SecurityDashboardScreenState extends ConsumerState<SecurityDashboardScree
             ),
             const Divider(),
             ListTile(
-              leading: Icon(Icons.error_outline, color: theme.colorScheme.primary),
+              leading: Icon(
+                Icons.error_outline,
+                color: theme.colorScheme.primary,
+              ),
               title: const Text('دفعات تلاش ناموفق ورود'),
               trailing: Chip(
                 label: Text('${authState.session.failedAttempts} تلاش'),
-                backgroundColor: theme.colorScheme.errorContainer.withOpacity(0.3),
+                backgroundColor: theme.colorScheme.errorContainer.withOpacity(
+                  0.3,
+                ),
               ),
             ),
             const Divider(),
             ListTile(
-              leading: Icon(Icons.backup_outlined, color: theme.colorScheme.primary),
+              leading: Icon(
+                Icons.backup_outlined,
+                color: theme.colorScheme.primary,
+              ),
               title: const Text('پشتیبان‌گیری و بازیابی اطلاعات'),
-              subtitle: const Text('مدیریت خروجی‌های رمزنگاری‌ شده و بازنشانی دیتابیس'),
+              subtitle: const Text(
+                'مدیریت خروجی‌های رمزنگاری‌ شده و بازنشانی دیتابیس',
+              ),
               trailing: const Icon(Icons.chevron_left_outlined),
               onTap: () {
                 context.push('/backup');
@@ -453,12 +499,18 @@ class _SecurityDashboardScreenState extends ConsumerState<SecurityDashboardScree
     );
   }
 
-  Widget _buildPermissionsCard(ThemeData theme, SpacingExtension spacing, RadiusExtension radius) {
+  Widget _buildPermissionsCard(
+    ThemeData theme,
+    SpacingExtension spacing,
+    RadiusExtension radius,
+  ) {
     return Card(
       elevation: 0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(radius.m),
-        side: BorderSide(color: theme.colorScheme.outlineVariant.withOpacity(0.5)),
+        side: BorderSide(
+          color: theme.colorScheme.outlineVariant.withOpacity(0.5),
+        ),
       ),
       child: Padding(
         padding: EdgeInsets.all(spacing.m),
@@ -467,7 +519,9 @@ class _SecurityDashboardScreenState extends ConsumerState<SecurityDashboardScree
           children: [
             Text(
               'نمای کلی مجوزهای سیستمی',
-              style: theme.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
+              style: theme.textTheme.bodyLarge?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
             ),
             SizedBox(height: spacing.s),
             _buildPermissionCheckRow(
@@ -499,12 +553,18 @@ class _SecurityDashboardScreenState extends ConsumerState<SecurityDashboardScree
     );
   }
 
-  Widget _buildRecentEventsCard(ThemeData theme, SpacingExtension spacing, RadiusExtension radius) {
+  Widget _buildRecentEventsCard(
+    ThemeData theme,
+    SpacingExtension spacing,
+    RadiusExtension radius,
+  ) {
     return Card(
       elevation: 0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(radius.m),
-        side: BorderSide(color: theme.colorScheme.outlineVariant.withOpacity(0.5)),
+        side: BorderSide(
+          color: theme.colorScheme.outlineVariant.withOpacity(0.5),
+        ),
       ),
       child: Padding(
         padding: EdgeInsets.all(spacing.m),
@@ -513,7 +573,9 @@ class _SecurityDashboardScreenState extends ConsumerState<SecurityDashboardScree
           children: [
             Text(
               'رویدادهای امنیتی اخیر',
-              style: theme.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
+              style: theme.textTheme.bodyLarge?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
             ),
             SizedBox(height: spacing.s),
             _buildRecentEventRow(
@@ -547,7 +609,9 @@ class _SecurityDashboardScreenState extends ConsumerState<SecurityDashboardScree
       elevation: 0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(radius.m),
-        side: BorderSide(color: theme.colorScheme.outlineVariant.withOpacity(0.5)),
+        side: BorderSide(
+          color: theme.colorScheme.outlineVariant.withOpacity(0.5),
+        ),
       ),
       child: Padding(
         padding: EdgeInsets.all(spacing.m),
@@ -556,7 +620,9 @@ class _SecurityDashboardScreenState extends ConsumerState<SecurityDashboardScree
           children: [
             Text(
               'بخش حریم خصوصی و عدم دسترسی اینترنت',
-              style: theme.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
+              style: theme.textTheme.bodyLarge?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
             ),
             SizedBox(height: spacing.m),
 
@@ -569,11 +635,18 @@ class _SecurityDashboardScreenState extends ConsumerState<SecurityDashboardScree
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(radius.s),
                   color: Colors.green.withOpacity(0.12),
-                  border: Border.all(color: Colors.green.withOpacity(0.5), width: 1.5),
+                  border: Border.all(
+                    color: Colors.green.withOpacity(0.5),
+                    width: 1.5,
+                  ),
                 ),
                 child: Row(
                   children: [
-                    const Icon(Icons.portable_wifi_off_outlined, color: Colors.green, size: 36),
+                    const Icon(
+                      Icons.portable_wifi_off_outlined,
+                      color: Colors.green,
+                      size: 36,
+                    ),
                     SizedBox(width: spacing.m),
                     Expanded(
                       child: Column(
@@ -601,17 +674,27 @@ class _SecurityDashboardScreenState extends ConsumerState<SecurityDashboardScree
             SizedBox(height: spacing.m),
 
             SwitchListTile(
-              secondary: Icon(Icons.visibility_off_outlined, color: theme.colorScheme.primary),
+              secondary: Icon(
+                Icons.visibility_off_outlined,
+                color: theme.colorScheme.primary,
+              ),
               title: const Text('پنهان‌سازی اطلاعات حساس (Privacy Mode)'),
-              subtitle: const Text('موجودی کل صندوقچه و رقم تراکنش‌ها پنهان شود'),
+              subtitle: const Text(
+                'موجودی کل صندوقچه و رقم تراکنش‌ها پنهان شود',
+              ),
               value: secState.settings.isPrivacyModeEnabled,
               onChanged: (val) {
-                ref.read(securityNotifierProvider.notifier).togglePrivacyModeEnabled(val);
+                ref
+                    .read(securityNotifierProvider.notifier)
+                    .togglePrivacyModeEnabled(val);
               },
             ),
             const Divider(),
             ListTile(
-              leading: Icon(Icons.folder_shared_outlined, color: theme.colorScheme.primary),
+              leading: Icon(
+                Icons.folder_shared_outlined,
+                color: theme.colorScheme.primary,
+              ),
               title: const Text('خلاصه داده‌های جمع‌آوری شده'),
               subtitle: const Text('پیامک‌های بانکی و متادیتای تراکنش'),
               trailing: const Icon(Icons.info_outline),
@@ -621,7 +704,10 @@ class _SecurityDashboardScreenState extends ConsumerState<SecurityDashboardScree
             ),
             const Divider(),
             ListTile(
-              leading: Icon(Icons.insert_drive_file_outlined, color: theme.colorScheme.primary),
+              leading: Icon(
+                Icons.insert_drive_file_outlined,
+                color: theme.colorScheme.primary,
+              ),
               title: const Text('خروجی گزارش حسابرسی حریم خصوصی'),
               subtitle: const Text('بررسی سلامت و تایید آفلاین بودن کامل'),
               trailing: const Icon(Icons.file_download_outlined),
@@ -633,13 +719,20 @@ class _SecurityDashboardScreenState extends ConsumerState<SecurityDashboardScree
     );
   }
 
-  Widget _buildEmergencyActionsCard(ThemeData theme, SpacingExtension spacing, RadiusExtension radius) {
+  Widget _buildEmergencyActionsCard(
+    ThemeData theme,
+    SpacingExtension spacing,
+    RadiusExtension radius,
+  ) {
     return Card(
       color: theme.colorScheme.errorContainer.withOpacity(0.08),
       elevation: 0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(radius.m),
-        side: BorderSide(color: theme.colorScheme.error.withOpacity(0.5), width: 1.5),
+        side: BorderSide(
+          color: theme.colorScheme.error.withOpacity(0.5),
+          width: 1.5,
+        ),
       ),
       child: Padding(
         padding: EdgeInsets.all(spacing.m),
@@ -648,7 +741,10 @@ class _SecurityDashboardScreenState extends ConsumerState<SecurityDashboardScree
           children: [
             Row(
               children: [
-                Icon(Icons.warning_amber_outlined, color: theme.colorScheme.error),
+                Icon(
+                  Icons.warning_amber_outlined,
+                  color: theme.colorScheme.error,
+                ),
                 SizedBox(width: spacing.s),
                 Text(
                   'اقدامات اضطراری و دفاع شخصی',
@@ -694,10 +790,15 @@ class _SecurityDashboardScreenState extends ConsumerState<SecurityDashboardScree
           ),
           TextButton(
             onPressed: () {
-              ref.read(securityNotifierProvider.notifier).togglePinEnabled(false);
+              ref
+                  .read(securityNotifierProvider.notifier)
+                  .togglePinEnabled(false);
               Navigator.pop(context);
             },
-            child: const Text('بله، غیرفعال کن', style: TextStyle(color: Colors.red)),
+            child: const Text(
+              'بله، غیرفعال کن',
+              style: TextStyle(color: Colors.red),
+            ),
           ),
         ],
       ),
@@ -714,7 +815,11 @@ class _SecurityDashboardScreenState extends ConsumerState<SecurityDashboardScree
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Icon(Icons.security_outlined, size: 48, color: Colors.green),
+              const Icon(
+                Icons.security_outlined,
+                size: 48,
+                color: Colors.green,
+              ),
               const SizedBox(height: 16),
               const Text(
                 'حریم خصوصی کامل با معماری آفلاین',
@@ -776,7 +881,9 @@ class _SecurityDashboardScreenState extends ConsumerState<SecurityDashboardScree
     // Generate simple text report mimicking an audit file
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-        content: Text('گزارش ممیزی حریم خصوصی با موفقیت در پوشه اسناد ذخیره شد.'),
+        content: Text(
+          'گزارش ممیزی حریم خصوصی با موفقیت در پوشه اسناد ذخیره شد.',
+        ),
       ),
     );
   }
@@ -790,12 +897,16 @@ class _SecurityDashboardScreenState extends ConsumerState<SecurityDashboardScree
         child: _UnlockHoldListener(
           onHoldSuccess: () async {
             // Perform silent erasure
-            await ref.read(appLockCoordinatorProvider.notifier).triggerEmergencyPurge();
+            await ref
+                .read(appLockCoordinatorProvider.notifier)
+                .triggerEmergencyPurge();
             if (mounted) {
               Navigator.pop(dialogCtx); // pop dialog
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
-                  content: Text('تمامی اطلاعات با موفقیت و برای همیشه نابود شدند.'),
+                  content: Text(
+                    'تمامی اطلاعات با موفقیت و برای همیشه نابود شدند.',
+                  ),
                   backgroundColor: Colors.red,
                 ),
               );
@@ -821,7 +932,10 @@ class _SecurityDashboardScreenState extends ConsumerState<SecurityDashboardScree
                 onPressed: () {}, // Handled by gesture long-press hold listener
                 child: const Text(
                   'نگه‌داشتن برای حذف نهایی',
-                  style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                    color: Colors.red,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ],
@@ -847,12 +961,17 @@ class _SecurityDashboardScreenState extends ConsumerState<SecurityDashboardScree
           Expanded(
             child: Text(
               title,
-              style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
+              style: theme.textTheme.bodyMedium?.copyWith(
+                fontWeight: FontWeight.w500,
+              ),
             ),
           ),
           Text(
             value,
-            style: theme.textTheme.bodySmall?.copyWith(color: Colors.green, fontWeight: FontWeight.bold),
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: Colors.green,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ],
       ),
@@ -875,12 +994,7 @@ class _SecurityDashboardScreenState extends ConsumerState<SecurityDashboardScree
         children: [
           Icon(icon, size: 22, color: theme.colorScheme.onSurfaceVariant),
           SizedBox(width: spacing.s),
-          Expanded(
-            child: Text(
-              title,
-              style: theme.textTheme.bodyMedium,
-            ),
-          ),
+          Expanded(child: Text(title, style: theme.textTheme.bodyMedium)),
           InkWell(
             onTap: () async {
               final permService = ref.read(permissionServiceProvider);
@@ -910,15 +1024,12 @@ class _SecurityDashboardScreenState extends ConsumerState<SecurityDashboardScree
         children: [
           Icon(icon, size: 18, color: Colors.green),
           SizedBox(width: spacing.s),
-          Expanded(
-            child: Text(
-              title,
-              style: theme.textTheme.bodyMedium,
-            ),
-          ),
+          Expanded(child: Text(title, style: theme.textTheme.bodyMedium)),
           Text(
             time,
-            style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
           ),
         ],
       ),

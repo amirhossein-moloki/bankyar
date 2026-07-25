@@ -18,8 +18,8 @@ class BiometricCapabilities {
 
   /// Default initial capabilities.
   factory BiometricCapabilities.initial() => const BiometricCapabilities(
-        isHardwareAvailable: false,
-        isEnrolled: false,
-        isEnabled: false,
-      );
+    isHardwareAvailable: false,
+    isEnrolled: false,
+    isEnabled: false,
+  );
 }

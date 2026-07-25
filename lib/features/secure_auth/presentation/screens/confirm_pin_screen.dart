@@ -12,10 +12,7 @@ class ConfirmPinScreen extends ConsumerStatefulWidget {
   final String proposedPin;
 
   /// Constructor.
-  const ConfirmPinScreen({
-    super.key,
-    required this.proposedPin,
-  });
+  const ConfirmPinScreen({super.key, required this.proposedPin});
 
   @override
   ConsumerState<ConfirmPinScreen> createState() => _ConfirmPinScreenState();
@@ -80,7 +77,10 @@ class _ConfirmPinScreenState extends ConsumerState<ConfirmPinScreen> {
           ),
           title: Row(
             children: [
-              Icon(Icons.check_circle_outline, color: theme.colorScheme.primary),
+              Icon(
+                Icons.check_circle_outline,
+                color: theme.colorScheme.primary,
+              ),
               SizedBox(width: spacing.s),
               const Text('پین‌کد فعال شد'),
             ],
@@ -148,10 +148,7 @@ class _ConfirmPinScreenState extends ConsumerState<ConfirmPinScreen> {
             SizedBox(height: spacing.xl),
             _buildPinDots(_confirmBuffer, spacing, theme),
             const Spacer(),
-            PinKeypad(
-              onDigitTap: _onDigit,
-              onBackspaceTap: _onBackspace,
-            ),
+            PinKeypad(onDigitTap: _onDigit, onBackspaceTap: _onBackspace),
             SizedBox(height: spacing.xl),
           ],
         ),
@@ -171,11 +168,10 @@ class _ConfirmPinScreenState extends ConsumerState<ConfirmPinScreen> {
           height: 18,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: isFilled ? theme.colorScheme.primary : theme.colorScheme.outlineVariant,
-            border: Border.all(
-              color: theme.colorScheme.primary,
-              width: 1.5,
-            ),
+            color: isFilled
+                ? theme.colorScheme.primary
+                : theme.colorScheme.outlineVariant,
+            border: Border.all(color: theme.colorScheme.primary, width: 1.5),
           ),
         );
       }),

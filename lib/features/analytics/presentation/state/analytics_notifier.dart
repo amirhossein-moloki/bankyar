@@ -10,7 +10,10 @@ import 'analytics_state.dart';
 
 /// Provider exposing the [AnalyticsNotifier] view model as a reactive state holder.
 final analyticsViewModelProvider =
-    StateNotifierProvider.autoDispose<AnalyticsNotifier, UiState<AnalyticsState>>((ref) {
+    StateNotifierProvider.autoDispose<
+      AnalyticsNotifier,
+      UiState<AnalyticsState>
+    >((ref) {
       final getAnalyticsUseCase = ref.watch(getAnalyticsUseCaseProvider);
       final logger = ref.watch(loggerProvider);
       return AnalyticsNotifier(
@@ -88,7 +91,9 @@ class AnalyticsNotifier extends BaseUiNotifier<AnalyticsState> {
   /// Shift current timeframe window forward chronologically (e.g. next month).
   void shiftForward() {
     final currentRange = _state.timeRange;
-    final Duration diff = currentRange.endDate.difference(currentRange.startDate);
+    final Duration diff = currentRange.endDate.difference(
+      currentRange.startDate,
+    );
 
     final shiftDuration = Duration(milliseconds: diff.inMilliseconds + 1);
 
@@ -96,11 +101,7 @@ class AnalyticsNotifier extends BaseUiNotifier<AnalyticsState> {
     final end = currentRange.endDate.add(shiftDuration);
 
     _state = _state.copyWith(
-      timeRange: TimeRange(
-        currentRange.value,
-        startDate: start,
-        endDate: end,
-      ),
+      timeRange: TimeRange(currentRange.value, startDate: start, endDate: end),
     );
     loadAnalytics();
   }
@@ -108,7 +109,9 @@ class AnalyticsNotifier extends BaseUiNotifier<AnalyticsState> {
   /// Shift current timeframe window backward chronologically (e.g. previous month).
   void shiftBackward() {
     final currentRange = _state.timeRange;
-    final Duration diff = currentRange.endDate.difference(currentRange.startDate);
+    final Duration diff = currentRange.endDate.difference(
+      currentRange.startDate,
+    );
 
     final shiftDuration = Duration(milliseconds: diff.inMilliseconds + 1);
 
@@ -116,11 +119,7 @@ class AnalyticsNotifier extends BaseUiNotifier<AnalyticsState> {
     final end = currentRange.endDate.subtract(shiftDuration);
 
     _state = _state.copyWith(
-      timeRange: TimeRange(
-        currentRange.value,
-        startDate: start,
-        endDate: end,
-      ),
+      timeRange: TimeRange(currentRange.value, startDate: start, endDate: end),
     );
     loadAnalytics();
   }

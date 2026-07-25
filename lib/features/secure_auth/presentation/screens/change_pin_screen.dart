@@ -104,7 +104,10 @@ class _ChangePinScreenState extends ConsumerState<ChangePinScreen> {
           ),
           title: Row(
             children: [
-              Icon(Icons.check_circle_outline, color: theme.colorScheme.primary),
+              Icon(
+                Icons.check_circle_outline,
+                color: theme.colorScheme.primary,
+              ),
               SizedBox(width: spacing.s),
               const Text('پین‌کد تغییر یافت'),
             ],
@@ -196,10 +199,7 @@ class _ChangePinScreenState extends ConsumerState<ChangePinScreen> {
             SizedBox(height: spacing.xl),
             _buildPinDots(_buffer, spacing, theme),
             const Spacer(),
-            PinKeypad(
-              onDigitTap: _onDigit,
-              onBackspaceTap: _onBackspace,
-            ),
+            PinKeypad(onDigitTap: _onDigit, onBackspaceTap: _onBackspace),
             SizedBox(height: spacing.xl),
           ],
         ),
@@ -219,11 +219,10 @@ class _ChangePinScreenState extends ConsumerState<ChangePinScreen> {
           height: 18,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: isFilled ? theme.colorScheme.primary : theme.colorScheme.outlineVariant,
-            border: Border.all(
-              color: theme.colorScheme.primary,
-              width: 1.5,
-            ),
+            color: isFilled
+                ? theme.colorScheme.primary
+                : theme.colorScheme.outlineVariant,
+            border: Border.all(color: theme.colorScheme.primary, width: 1.5),
           ),
         );
       }),

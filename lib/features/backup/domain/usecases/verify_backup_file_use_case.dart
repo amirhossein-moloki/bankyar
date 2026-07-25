@@ -11,7 +11,10 @@ class VerifyBackupFileParams {
   final String password;
 
   /// Constructor.
-  const VerifyBackupFileParams({required this.filePath, required this.password});
+  const VerifyBackupFileParams({
+    required this.filePath,
+    required this.password,
+  });
 }
 
 /// Use case to run standard checksum and decryption checks on a backup archive.

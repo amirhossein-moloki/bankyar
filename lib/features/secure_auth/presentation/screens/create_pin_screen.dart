@@ -78,10 +78,7 @@ class _CreatePinScreenState extends ConsumerState<CreatePinScreen> {
             SizedBox(height: spacing.xl),
             _buildPinDots(_pinBuffer, spacing, theme),
             const Spacer(),
-            PinKeypad(
-              onDigitTap: _onDigit,
-              onBackspaceTap: _onBackspace,
-            ),
+            PinKeypad(onDigitTap: _onDigit, onBackspaceTap: _onBackspace),
             SizedBox(height: spacing.xl),
           ],
         ),
@@ -101,11 +98,10 @@ class _CreatePinScreenState extends ConsumerState<CreatePinScreen> {
           height: 18,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: isFilled ? theme.colorScheme.primary : theme.colorScheme.outlineVariant,
-            border: Border.all(
-              color: theme.colorScheme.primary,
-              width: 1.5,
-            ),
+            color: isFilled
+                ? theme.colorScheme.primary
+                : theme.colorScheme.outlineVariant,
+            border: Border.all(color: theme.colorScheme.primary, width: 1.5),
           ),
         );
       }),

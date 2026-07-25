@@ -76,7 +76,8 @@ class BackupMetadata {
       backupSizeBytes: backupSizeBytes ?? this.backupSizeBytes,
       healthPercentage: healthPercentage ?? this.healthPercentage,
       deviceFreeSpaceBytes: deviceFreeSpaceBytes ?? this.deviceFreeSpaceBytes,
-      deviceTotalSpaceBytes: deviceTotalSpaceBytes ?? this.deviceTotalSpaceBytes,
+      deviceTotalSpaceBytes:
+          deviceTotalSpaceBytes ?? this.deviceTotalSpaceBytes,
     );
   }
 }

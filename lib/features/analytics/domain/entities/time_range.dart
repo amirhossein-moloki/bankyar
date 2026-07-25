@@ -31,30 +31,74 @@ class TimeRange extends ValueObject<TimeRangePreset> {
     switch (preset) {
       case TimeRangePreset.today:
         final start = DateTime(anchor.year, anchor.month, anchor.day);
-        final end = DateTime(anchor.year, anchor.month, anchor.day, 23, 59, 59, 999);
+        final end = DateTime(
+          anchor.year,
+          anchor.month,
+          anchor.day,
+          23,
+          59,
+          59,
+          999,
+        );
         return TimeRange(preset, startDate: start, endDate: end);
 
       case TimeRangePreset.yesterday:
         final yesterday = anchor.subtract(const Duration(days: 1));
         final start = DateTime(yesterday.year, yesterday.month, yesterday.day);
-        final end = DateTime(yesterday.year, yesterday.month, yesterday.day, 23, 59, 59, 999);
+        final end = DateTime(
+          yesterday.year,
+          yesterday.month,
+          yesterday.day,
+          23,
+          59,
+          59,
+          999,
+        );
         return TimeRange(preset, startDate: start, endDate: end);
 
       case TimeRangePreset.thisWeek:
         int daysToSubtract = (anchor.weekday - DateTime.saturday) % 7;
         final startOfWeek = anchor.subtract(Duration(days: daysToSubtract));
-        final start = DateTime(startOfWeek.year, startOfWeek.month, startOfWeek.day);
-        final end = DateTime(anchor.year, anchor.month, anchor.day, 23, 59, 59, 999);
+        final start = DateTime(
+          startOfWeek.year,
+          startOfWeek.month,
+          startOfWeek.day,
+        );
+        final end = DateTime(
+          anchor.year,
+          anchor.month,
+          anchor.day,
+          23,
+          59,
+          59,
+          999,
+        );
         return TimeRange(preset, startDate: start, endDate: end);
 
       case TimeRangePreset.thisMonth:
         final start = DateTime(anchor.year, anchor.month, 1);
-        final end = DateTime(anchor.year, anchor.month, anchor.day, 23, 59, 59, 999);
+        final end = DateTime(
+          anchor.year,
+          anchor.month,
+          anchor.day,
+          23,
+          59,
+          59,
+          999,
+        );
         return TimeRange(preset, startDate: start, endDate: end);
 
       case TimeRangePreset.thisYear:
         final start = DateTime(anchor.year, 1, 1);
-        final end = DateTime(anchor.year, anchor.month, anchor.day, 23, 59, 59, 999);
+        final end = DateTime(
+          anchor.year,
+          anchor.month,
+          anchor.day,
+          23,
+          59,
+          59,
+          999,
+        );
         return TimeRange(preset, startDate: start, endDate: end);
 
       case TimeRangePreset.allTime:
@@ -63,7 +107,9 @@ class TimeRange extends ValueObject<TimeRangePreset> {
         return TimeRange(preset, startDate: start, endDate: end);
 
       case TimeRangePreset.custom:
-        throw ArgumentError('Custom TimeRangePreset requires explicit startDate and endDate.');
+        throw ArgumentError(
+          'Custom TimeRangePreset requires explicit startDate and endDate.',
+        );
     }
   }
 

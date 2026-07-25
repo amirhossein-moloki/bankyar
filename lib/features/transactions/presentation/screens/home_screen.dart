@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import '../../../../core/presentation/widgets/navigation/custom_app_bar.dart';
 import '../../../../core/presentation/widgets/status/error_state.dart';
 import '../../../../core/theme/spacing_tokens.dart';
@@ -26,7 +27,17 @@ class HomeScreen extends ConsumerWidget {
     final l10n = AppLocalizations.of(context);
 
     return Scaffold(
-      appBar: CustomAppBar(title: l10n.appTitle, showBackButton: false),
+      appBar: CustomAppBar(
+        title: l10n.appTitle,
+        showBackButton: false,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.notifications_outlined),
+            tooltip: 'مرکز اعلان‌ها',
+            onPressed: () => context.push('/notifications'),
+          ),
+        ],
+      ),
       body: AnimatedSwitcher(
         duration: const Duration(milliseconds: 300),
         child: uiState.when(

@@ -44,13 +44,13 @@ class AppLockState {
 
   /// Factory for standard starting configurations.
   factory AppLockState.initial() => AppLockState(
-        session: SessionModel.initial(),
-        sessionStatus: SessionStatus.SessionStarted,
-        isAppUnlocked: false,
-        currentInputPin: '',
-        errorMessage: null,
-        isPermanentLockout: false,
-      );
+    session: SessionModel.initial(),
+    sessionStatus: SessionStatus.SessionStarted,
+    isAppUnlocked: false,
+    currentInputPin: '',
+    errorMessage: null,
+    isPermanentLockout: false,
+  );
 
   /// Helper to duplicate state with option overrides.
   AppLockState copyWith({
@@ -74,7 +74,8 @@ class AppLockState {
 
 /// Central application-level Lock Coordinator observing active hardware,
 /// OS lifecycles, preferences, and broadcasting atomic [SessionStatus] updates.
-class AppLockCoordinator extends StateNotifier<AppLockState> with WidgetsBindingObserver {
+class AppLockCoordinator extends StateNotifier<AppLockState>
+    with WidgetsBindingObserver {
   final VerifyPinUseCase _verifyPinUseCase;
   final VerifyBiometricsUseCase _verifyBiometricsUseCase;
   final Ref _ref;
@@ -111,14 +112,18 @@ class AppLockCoordinator extends StateNotifier<AppLockState> with WidgetsBinding
     final sessionRes = await repository.getSession();
     final settingsRes = await repository.getSettings();
 
-    final session = sessionRes.isSuccess ? sessionRes.successOrCrash : SessionModel.initial();
+    final session = sessionRes.isSuccess
+        ? sessionRes.successOrCrash
+        : SessionModel.initial();
     final settings = settingsRes.isSuccess ? settingsRes.successOrCrash : null;
 
     final pinConfigured = settings?.isPinEnabled ?? false;
     _startLockoutTimerIfActive(session);
 
     final isUnlocked = !pinConfigured;
-    final initialStatus = isUnlocked ? SessionStatus.SessionUnlocked : SessionStatus.SessionLocked;
+    final initialStatus = isUnlocked
+        ? SessionStatus.SessionUnlocked
+        : SessionStatus.SessionLocked;
 
     if (!mounted) return;
 
@@ -303,10 +308,9 @@ class AppLockCoordinator extends StateNotifier<AppLockState> with WidgetsBinding
       final settingsRes = await repository.getSettings();
       if (settingsRes.isSuccess) {
         final settings = settingsRes.successOrCrash;
-        await repository.updateSettings(settings.copyWith(
-          isPinEnabled: false,
-          isBiometricsEnabled: false,
-        ));
+        await repository.updateSettings(
+          settings.copyWith(isPinEnabled: false, isBiometricsEnabled: false),
+        );
       }
 
       if (!mounted) return true;
@@ -329,7 +333,9 @@ class AppLockCoordinator extends StateNotifier<AppLockState> with WidgetsBinding
       return true;
     } else {
       if (!mounted) return false;
-      state = state.copyWith(errorMessage: 'کلمات بازیابی نامعتبر یا اشتباه هستند.');
+      state = state.copyWith(
+        errorMessage: 'کلمات بازیابی نامعتبر یا اشتباه هستند.',
+      );
       return false;
     }
   }
@@ -383,7 +389,9 @@ class AppLockCoordinator extends StateNotifier<AppLockState> with WidgetsBinding
   }
 
   /// Public lifecycle state transition handler to allow synchronous awaits in tests.
-  Future<void> handleLifecycleTransition(AppLifecycleState lifecycleState) async {
+  Future<void> handleLifecycleTransition(
+    AppLifecycleState lifecycleState,
+  ) async {
     final repository = _ref.read(securityRepositoryProvider);
     final clock = _ref.read(clockProvider);
     final settingsRes = await repository.getSettings();
@@ -433,7 +441,9 @@ class AppLockCoordinator extends StateNotifier<AppLockState> with WidgetsBinding
 
           _emitStatus(SessionStatus.SessionExpired);
         } else {
-          final updatedSession = savedSession.copyWith(lastActivity: clock.now());
+          final updatedSession = savedSession.copyWith(
+            lastActivity: clock.now(),
+          );
           await repository.saveSession(updatedSession);
           state = state.copyWith(session: updatedSession);
         }
@@ -474,13 +484,14 @@ class AppLockCoordinator extends StateNotifier<AppLockState> with WidgetsBinding
 }
 
 /// Provider exposing the global [AppLockCoordinator].
-final appLockCoordinatorProvider = StateNotifierProvider<AppLockCoordinator, AppLockState>((ref) {
-  final verifyPin = ref.watch(verifyPinUseCaseProvider);
-  final verifyBio = ref.watch(verifyBiometricsUseCaseProvider);
+final appLockCoordinatorProvider =
+    StateNotifierProvider<AppLockCoordinator, AppLockState>((ref) {
+      final verifyPin = ref.watch(verifyPinUseCaseProvider);
+      final verifyBio = ref.watch(verifyBiometricsUseCaseProvider);
 
-  return AppLockCoordinator(
-    verifyPinUseCase: verifyPin,
-    verifyBiometricsUseCase: verifyBio,
-    ref: ref,
-  );
-});
+      return AppLockCoordinator(
+        verifyPinUseCase: verifyPin,
+        verifyBiometricsUseCase: verifyBio,
+        ref: ref,
+      );
+    });

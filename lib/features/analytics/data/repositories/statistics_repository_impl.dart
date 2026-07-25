@@ -9,7 +9,8 @@ import '../../domain/repository/statistics_repository.dart';
 
 /// Concrete relational database implementation of [StatisticsRepository].
 /// Combines high-speed SQLite queries with localized calendar aggregates and smart on-device insights.
-class StatisticsRepositoryImpl extends BaseRepository implements StatisticsRepository {
+class StatisticsRepositoryImpl extends BaseRepository
+    implements StatisticsRepository {
   /// Constructor injecting standard secure DB Service and central logger.
   StatisticsRepositoryImpl(this._dbService, this._logger);
 
@@ -53,7 +54,8 @@ class StatisticsRepositoryImpl extends BaseRepository implements StatisticsRepos
       final String whereSection = 'WHERE ${whereClauses.join(' AND ')}';
 
       // 1. Query matching transactions with category details
-      final txQuery = '''
+      final txQuery =
+          '''
         SELECT t.*, c.name as category_name, c.color_hex as category_color
         FROM transactions t
         LEFT JOIN categories c ON t.category_id = c.id
@@ -68,7 +70,8 @@ class StatisticsRepositoryImpl extends BaseRepository implements StatisticsRepos
       }
 
       // 2. Query all matching tags in batch to avoid N+1 queries
-      final String tagsQuery = '''
+      final String tagsQuery =
+          '''
         SELECT tt.transaction_id, tg.label_text
         FROM transaction_tags tt
         INNER JOIN tags tg ON tt.tag_id = tg.id
@@ -106,7 +109,9 @@ class StatisticsRepositoryImpl extends BaseRepository implements StatisticsRepos
         final txId = row['id'] as String;
         final amount = row['amount'] as double;
         final txTypeStr = row['transaction_type'] as String;
-        final txType = txTypeStr == 'credit' ? SmsTransactionType.credit : SmsTransactionType.debit;
+        final txType = txTypeStr == 'credit'
+            ? SmsTransactionType.credit
+            : SmsTransactionType.debit;
         final cardId = row['card_identifier'] as String?;
         final merchant = row['normalized_merchant'] as String;
         final rawMerchant = row['raw_merchant'] as String;
@@ -171,7 +176,12 @@ class StatisticsRepositoryImpl extends BaseRepository implements StatisticsRepos
       final monthlyTrends = _calculateMonthlyTrends(txList);
 
       // 5. Calculate Smart Insights
-      final recentInsights = _generateInsights(txList, totalIncome, totalExpenses, bankTotals);
+      final recentInsights = _generateInsights(
+        txList,
+        totalIncome,
+        totalExpenses,
+        bankTotals,
+      );
 
       return AnalyticsSummary(
         totalIncome: totalIncome,
@@ -211,15 +221,19 @@ class StatisticsRepositoryImpl extends BaseRepository implements StatisticsRepos
           expense += tx.amount;
         }
       }
-      final anchorDate = DateTime.fromMillisecondsSinceEpoch(dayTxs.first.timestamp);
+      final anchorDate = DateTime.fromMillisecondsSinceEpoch(
+        dayTxs.first.timestamp,
+      );
       final label = DateFormat('d MMMM', 'fa').format(anchorDate);
 
-      points.add(TrendPoint(
-        label: label,
-        income: income,
-        expense: expense,
-        timestamp: anchorDate,
-      ));
+      points.add(
+        TrendPoint(
+          label: label,
+          income: income,
+          expense: expense,
+          timestamp: anchorDate,
+        ),
+      );
     });
 
     return points;
@@ -247,13 +261,17 @@ class StatisticsRepositoryImpl extends BaseRepository implements StatisticsRepos
           expense += tx.amount;
         }
       }
-      final anchorDate = DateTime.fromMillisecondsSinceEpoch(weekTxs.first.timestamp);
-      points.add(TrendPoint(
-        label: 'هفته $weekCounter',
-        income: income,
-        expense: expense,
-        timestamp: anchorDate,
-      ));
+      final anchorDate = DateTime.fromMillisecondsSinceEpoch(
+        weekTxs.first.timestamp,
+      );
+      points.add(
+        TrendPoint(
+          label: 'هفته $weekCounter',
+          income: income,
+          expense: expense,
+          timestamp: anchorDate,
+        ),
+      );
       weekCounter++;
     }
 
@@ -282,15 +300,19 @@ class StatisticsRepositoryImpl extends BaseRepository implements StatisticsRepos
           expense += tx.amount;
         }
       }
-      final anchorDate = DateTime.fromMillisecondsSinceEpoch(monthTxs.first.timestamp);
+      final anchorDate = DateTime.fromMillisecondsSinceEpoch(
+        monthTxs.first.timestamp,
+      );
       final label = DateFormat('MMMM yyyy', 'fa').format(anchorDate);
 
-      points.add(TrendPoint(
-        label: label,
-        income: income,
-        expense: expense,
-        timestamp: anchorDate,
-      ));
+      points.add(
+        TrendPoint(
+          label: label,
+          income: income,
+          expense: expense,
+          timestamp: anchorDate,
+        ),
+      );
     }
 
     return points;
@@ -315,7 +337,8 @@ class StatisticsRepositoryImpl extends BaseRepository implements StatisticsRepos
       final weekday = date.weekday;
 
       if (tx.transactionType == SmsTransactionType.credit) {
-        incomeByWeekday[weekday] = (incomeByWeekday[weekday] ?? 0.0) + tx.amount;
+        incomeByWeekday[weekday] =
+            (incomeByWeekday[weekday] ?? 0.0) + tx.amount;
         if (largestTxIncome == null || tx.amount > largestTxIncome.amount) {
           largestTxIncome = tx;
         }
@@ -328,63 +351,84 @@ class StatisticsRepositoryImpl extends BaseRepository implements StatisticsRepos
     }
 
     if (spendByWeekday.isNotEmpty) {
-      final topSpendDay = spendByWeekday.entries.reduce((a, b) => a.value > b.value ? a : b).key;
+      final topSpendDay = spendByWeekday.entries
+          .reduce((a, b) => a.value > b.value ? a : b)
+          .key;
       final weekdayName = _getFarsiWeekdayName(topSpendDay);
-      insights.add(FinancialInsight(
-        id: 'insight_top_spend_day',
-        type: InsightType.topSpendingDay,
-        title: 'بیشترین روز مخارج: $weekdayName',
-        description: 'در این دوره، بیشترین سهم از کل هزینه‌های شما متعلق به روز $weekdayName بوده است.',
-        value: spendByWeekday[topSpendDay]!,
-        isPositive: false,
-      ));
+      insights.add(
+        FinancialInsight(
+          id: 'insight_top_spend_day',
+          type: InsightType.topSpendingDay,
+          title: 'بیشترین روز مخارج: $weekdayName',
+          description:
+              'در این دوره، بیشترین سهم از کل هزینه‌های شما متعلق به روز $weekdayName بوده است.',
+          value: spendByWeekday[topSpendDay]!,
+          isPositive: false,
+        ),
+      );
     }
 
     if (incomeByWeekday.isNotEmpty) {
-      final topIncomeDay = incomeByWeekday.entries.reduce((a, b) => a.value > b.value ? a : b).key;
+      final topIncomeDay = incomeByWeekday.entries
+          .reduce((a, b) => a.value > b.value ? a : b)
+          .key;
       final weekdayName = _getFarsiWeekdayName(topIncomeDay);
-      insights.add(FinancialInsight(
-        id: 'insight_top_income_day',
-        type: InsightType.topIncomeDay,
-        title: 'بیشترین روز واریزی: $weekdayName',
-        description: 'در این بازه، بالاترین مجموع منابع مالی دریافتی شما در روز $weekdayName ثبت گردیده است.',
-        value: incomeByWeekday[topIncomeDay]!,
-        isPositive: true,
-      ));
+      insights.add(
+        FinancialInsight(
+          id: 'insight_top_income_day',
+          type: InsightType.topIncomeDay,
+          title: 'بیشترین روز واریزی: $weekdayName',
+          description:
+              'در این بازه، بالاترین مجموع منابع مالی دریافتی شما در روز $weekdayName ثبت گردیده است.',
+          value: incomeByWeekday[topIncomeDay]!,
+          isPositive: true,
+        ),
+      );
     }
 
     if (bankTotals.isNotEmpty) {
-      final topBank = bankTotals.entries.reduce((a, b) => a.value > b.value ? a : b).key;
-      insights.add(FinancialInsight(
-        id: 'insight_most_active_bank',
-        type: InsightType.mostActiveBank,
-        title: 'فعال‌ترین حساب: $topBank',
-        description: 'بیشترین گردش مالی از طریق کارت یا حساب بانکی با مشخصه $topBank انجام پذیرفته است.',
-        value: bankTotals[topBank]!,
-        isPositive: true,
-      ));
+      final topBank = bankTotals.entries
+          .reduce((a, b) => a.value > b.value ? a : b)
+          .key;
+      insights.add(
+        FinancialInsight(
+          id: 'insight_most_active_bank',
+          type: InsightType.mostActiveBank,
+          title: 'فعال‌ترین حساب: $topBank',
+          description:
+              'بیشترین گردش مالی از طریق کارت یا حساب بانکی با مشخصه $topBank انجام پذیرفته است.',
+          value: bankTotals[topBank]!,
+          isPositive: true,
+        ),
+      );
     }
 
     if (largestTxExpense != null) {
-      insights.add(FinancialInsight(
-        id: 'insight_largest_expense',
-        type: InsightType.largestExpense,
-        title: 'بزرگترین هزینه یکجا',
-        description: 'پرداخت بزرگترین تراکنش برداشت به مبلغ مشخص در پذیرنده ${largestTxExpense.normalizedMerchant} رخ داده است.',
-        value: largestTxExpense.amount,
-        isPositive: false,
-      ));
+      insights.add(
+        FinancialInsight(
+          id: 'insight_largest_expense',
+          type: InsightType.largestExpense,
+          title: 'بزرگترین هزینه یکجا',
+          description:
+              'پرداخت بزرگترین تراکنش برداشت به مبلغ مشخص در پذیرنده ${largestTxExpense.normalizedMerchant} رخ داده است.',
+          value: largestTxExpense.amount,
+          isPositive: false,
+        ),
+      );
     }
 
     if (largestTxIncome != null) {
-      insights.add(FinancialInsight(
-        id: 'insight_largest_income',
-        type: InsightType.largestIncome,
-        title: 'بزرگترین درآمد یکجا',
-        description: 'دریافت بزرگترین تراکنش واریز به حساب شما از فرستنده ${largestTxIncome.normalizedMerchant} ثبت گردیده است.',
-        value: largestTxIncome.amount,
-        isPositive: true,
-      ));
+      insights.add(
+        FinancialInsight(
+          id: 'insight_largest_income',
+          type: InsightType.largestIncome,
+          title: 'بزرگترین درآمد یکجا',
+          description:
+              'دریافت بزرگترین تراکنش واریز به حساب شما از فرستنده ${largestTxIncome.normalizedMerchant} ثبت گردیده است.',
+          value: largestTxIncome.amount,
+          isPositive: true,
+        ),
+      );
     }
 
     return insights;

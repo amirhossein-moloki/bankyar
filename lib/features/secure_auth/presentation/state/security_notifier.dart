@@ -29,10 +29,10 @@ class SecurityState {
 
   /// Default initial state.
   factory SecurityState.initial() => SecurityState(
-        settings: SecuritySettings.initial(),
-        biometricCapabilities: BiometricCapabilities.initial(),
-        isLoading: false,
-      );
+    settings: SecuritySettings.initial(),
+    biometricCapabilities: BiometricCapabilities.initial(),
+    isLoading: false,
+  );
 
   /// Helper to duplicate state with option overrides.
   SecurityState copyWith({
@@ -42,7 +42,8 @@ class SecurityState {
   }) {
     return SecurityState(
       settings: settings ?? this.settings,
-      biometricCapabilities: biometricCapabilities ?? this.biometricCapabilities,
+      biometricCapabilities:
+          biometricCapabilities ?? this.biometricCapabilities,
       isLoading: isLoading ?? this.isLoading,
     );
   }
@@ -82,8 +83,12 @@ class SecurityNotifier extends StateNotifier<SecurityState> {
 
     if (!mounted) return;
 
-    final settings = settingsRes.isSuccess ? settingsRes.successOrCrash : SecuritySettings.initial();
-    final bioCaps = bioCapsRes.isSuccess ? bioCapsRes.successOrCrash : BiometricCapabilities.initial();
+    final settings = settingsRes.isSuccess
+        ? settingsRes.successOrCrash
+        : SecuritySettings.initial();
+    final bioCaps = bioCapsRes.isSuccess
+        ? bioCapsRes.successOrCrash
+        : BiometricCapabilities.initial();
 
     state = SecurityState(
       settings: settings,
@@ -118,7 +123,8 @@ class SecurityNotifier extends StateNotifier<SecurityState> {
       state = state.copyWith(isLoading: true);
       final updatedSettings = state.settings.copyWith(
         isPinEnabled: false,
-        isBiometricsEnabled: false, // Biometrics must be disabled if PIN is disabled
+        isBiometricsEnabled:
+            false, // Biometrics must be disabled if PIN is disabled
       );
       await _updateSecuritySettingsUseCase(updatedSettings);
       await loadSettings();
@@ -129,7 +135,9 @@ class SecurityNotifier extends StateNotifier<SecurityState> {
   Future<bool> toggleBiometricsEnabled(bool enabled) async {
     if (!mounted) return false;
     state = state.copyWith(isLoading: true);
-    final updatedSettings = state.settings.copyWith(isBiometricsEnabled: enabled);
+    final updatedSettings = state.settings.copyWith(
+      isBiometricsEnabled: enabled,
+    );
     final res = await _updateSecuritySettingsUseCase(updatedSettings);
 
     if (res.isSuccess) {
@@ -155,24 +163,27 @@ class SecurityNotifier extends StateNotifier<SecurityState> {
   Future<void> togglePrivacyModeEnabled(bool enabled) async {
     if (!mounted) return;
     state = state.copyWith(isLoading: true);
-    final updatedSettings = state.settings.copyWith(isPrivacyModeEnabled: enabled);
+    final updatedSettings = state.settings.copyWith(
+      isPrivacyModeEnabled: enabled,
+    );
     await _updateSecuritySettingsUseCase(updatedSettings);
     await loadSettings();
   }
 }
 
 /// Provider exposing the [SecurityNotifier] view model state.
-final securityNotifierProvider = StateNotifierProvider<SecurityNotifier, SecurityState>((ref) {
-  final setupPin = ref.watch(setupPinUseCaseProvider);
-  final getSettings = ref.watch(getSecuritySettingsUseCaseProvider);
-  final updateSettings = ref.watch(updateSecuritySettingsUseCaseProvider);
-  final verifyBio = ref.watch(verifyBiometricsUseCaseProvider);
+final securityNotifierProvider =
+    StateNotifierProvider<SecurityNotifier, SecurityState>((ref) {
+      final setupPin = ref.watch(setupPinUseCaseProvider);
+      final getSettings = ref.watch(getSecuritySettingsUseCaseProvider);
+      final updateSettings = ref.watch(updateSecuritySettingsUseCaseProvider);
+      final verifyBio = ref.watch(verifyBiometricsUseCaseProvider);
 
-  return SecurityNotifier(
-    setupPinUseCase: setupPin,
-    getSecuritySettingsUseCase: getSettings,
-    updateSecuritySettingsUseCase: updateSettings,
-    verifyBiometricsUseCase: verifyBio,
-    ref: ref,
-  );
-});
+      return SecurityNotifier(
+        setupPinUseCase: setupPin,
+        getSecuritySettingsUseCase: getSettings,
+        updateSecuritySettingsUseCase: updateSettings,
+        verifyBiometricsUseCase: verifyBio,
+        ref: ref,
+      );
+    });

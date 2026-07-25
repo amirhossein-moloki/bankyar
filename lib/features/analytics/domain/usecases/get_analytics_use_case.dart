@@ -24,7 +24,8 @@ class GetAnalyticsParams {
 }
 
 /// Central business Use Case executing database aggregations for financial reports.
-class GetAnalyticsUseCase extends UseCase<AnalyticsSummary, GetAnalyticsParams> {
+class GetAnalyticsUseCase
+    extends UseCase<AnalyticsSummary, GetAnalyticsParams> {
   /// Constructor injecting standard interface contract.
   GetAnalyticsUseCase(this._repository);
 
