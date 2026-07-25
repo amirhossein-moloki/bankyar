@@ -21,7 +21,8 @@ class BackupRestoreScreen extends ConsumerStatefulWidget {
   const BackupRestoreScreen({super.key});
 
   @override
-  ConsumerState<BackupRestoreScreen> createState() => _BackupRestoreScreenState();
+  ConsumerState<BackupRestoreScreen> createState() =>
+      _BackupRestoreScreenState();
 }
 
 class _BackupRestoreScreenState extends ConsumerState<BackupRestoreScreen> {
@@ -91,23 +92,55 @@ class _BackupRestoreScreenState extends ConsumerState<BackupRestoreScreen> {
                         SizedBox(height: spacing.m),
 
                         // Region 2: Backup Status Overview Card
-                        _buildStatusOverviewCard(theme, spacing, radius, elevation, semanticColors, state),
+                        _buildStatusOverviewCard(
+                          theme,
+                          spacing,
+                          radius,
+                          elevation,
+                          semanticColors,
+                          state,
+                        ),
                         SizedBox(height: spacing.m),
 
                         // Region 3: Quick Actions Grid
-                        _buildQuickActionsGrid(context, theme, spacing, radius, state, notifier),
+                        _buildQuickActionsGrid(
+                          context,
+                          theme,
+                          spacing,
+                          radius,
+                          state,
+                          notifier,
+                        ),
                         SizedBox(height: spacing.m),
 
                         // Region 5: Advanced Options / Reminders
-                        _buildAdvancedOptionsCard(theme, spacing, radius, state, notifier),
+                        _buildAdvancedOptionsCard(
+                          theme,
+                          spacing,
+                          radius,
+                          state,
+                          notifier,
+                        ),
                         SizedBox(height: spacing.m),
 
                         // Region 4: Backup History List
-                        _buildBackupHistoryList(context, theme, spacing, radius, state, notifier),
+                        _buildBackupHistoryList(
+                          context,
+                          theme,
+                          spacing,
+                          radius,
+                          state,
+                          notifier,
+                        ),
                         SizedBox(height: spacing.m),
 
                         // Region 6: Recovery Info & Disaster Tips
-                        _buildRecoveryPhraseCard(context, theme, spacing, radius),
+                        _buildRecoveryPhraseCard(
+                          context,
+                          theme,
+                          spacing,
+                          radius,
+                        ),
                         SizedBox(height: spacing.m),
                         _buildDisasterTipsCard(theme, spacing, radius),
                         SizedBox(height: spacing.giant),
@@ -122,7 +155,9 @@ class _BackupRestoreScreenState extends ConsumerState<BackupRestoreScreen> {
                         color: Colors.black45,
                         child: Center(
                           child: Card(
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(radius.m)),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(radius.m),
+                            ),
                             child: Padding(
                               padding: EdgeInsets.all(spacing.l),
                               child: Column(
@@ -132,7 +167,10 @@ class _BackupRestoreScreenState extends ConsumerState<BackupRestoreScreen> {
                                   SizedBox(height: spacing.m),
                                   const Text(
                                     'در حال پردازش عملیات امن دیتابیس...',
-                                    style: TextStyle(fontFamily: 'Vazirmatn', fontWeight: FontWeight.bold),
+                                    style: TextStyle(
+                                      fontFamily: 'Vazirmatn',
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
                                 ],
                               ),
@@ -147,7 +185,11 @@ class _BackupRestoreScreenState extends ConsumerState<BackupRestoreScreen> {
     );
   }
 
-  Widget _buildSovereigntyAlert(ThemeData theme, SpacingExtension spacing, RadiusExtension radius) {
+  Widget _buildSovereigntyAlert(
+    ThemeData theme,
+    SpacingExtension spacing,
+    RadiusExtension radius,
+  ) {
     return Card(
       elevation: 0,
       shape: RoundedRectangleBorder(
@@ -164,7 +206,12 @@ class _BackupRestoreScreenState extends ConsumerState<BackupRestoreScreen> {
             const Expanded(
               child: Text(
                 'تمامی فرآیندهای رمزنگاری و پشتیبان‌گیری صددرصد آفلاین روی حافظه این دستگاه انجام می‌شود. هیچ داده‌ای به سرورهای ابری منتقل نخواهد شد.',
-                style: TextStyle(fontFamily: 'Vazirmatn', fontSize: 11, height: 1.5, color: Colors.green),
+                style: TextStyle(
+                  fontFamily: 'Vazirmatn',
+                  fontSize: 11,
+                  height: 1.5,
+                  color: Colors.green,
+                ),
               ),
             ),
           ],
@@ -184,16 +231,25 @@ class _BackupRestoreScreenState extends ConsumerState<BackupRestoreScreen> {
     final meta = state.metadata;
     final lastBackupText = meta.lastBackupTime != null
         ? DateFormatter.toPersianDigits(
-            DateFormatter.format(meta.lastBackupTime!, pattern: 'yyyy/MM/dd - HH:mm'),
+            DateFormatter.format(
+              meta.lastBackupTime!,
+              pattern: 'yyyy/MM/dd - HH:mm',
+            ),
           )
         : 'هیچ پشتیبان‌گیری موفقی یافت نشد';
 
-    final dbSizeMB = (meta.databaseSizeBytes / (1024 * 1024)).toStringAsFixed(1);
-    final backupSizeMB = (meta.backupSizeBytes / (1024 * 1024)).toStringAsFixed(1);
+    final dbSizeMB = (meta.databaseSizeBytes / (1024 * 1024)).toStringAsFixed(
+      1,
+    );
+    final backupSizeMB = (meta.backupSizeBytes / (1024 * 1024)).toStringAsFixed(
+      1,
+    );
 
     final scoreColor = meta.healthPercentage >= 90
         ? semanticColors.success
-        : (meta.healthPercentage >= 60 ? semanticColors.warning : semanticColors.error);
+        : (meta.healthPercentage >= 60
+              ? semanticColors.warning
+              : semanticColors.error);
 
     return BaseCard(
       child: Padding(
@@ -213,12 +269,16 @@ class _BackupRestoreScreenState extends ConsumerState<BackupRestoreScreen> {
                         value: meta.healthPercentage / 100,
                         strokeWidth: 5,
                         color: scoreColor,
-                        backgroundColor: theme.colorScheme.outlineVariant.withOpacity(0.3),
+                        backgroundColor: theme.colorScheme.outlineVariant
+                            .withOpacity(0.3),
                       ),
                     ),
                     Text(
                       '${DateFormatter.toPersianDigits(meta.healthPercentage.toString())}٪',
-                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 13,
+                      ),
                     ),
                   ],
                 ),
@@ -229,7 +289,11 @@ class _BackupRestoreScreenState extends ConsumerState<BackupRestoreScreen> {
                     children: [
                       const Text(
                         'وضعیت سلامت دیتابیس',
-                        style: TextStyle(fontFamily: 'Vazirmatn', fontWeight: FontWeight.bold, fontSize: 14),
+                        style: TextStyle(
+                          fontFamily: 'Vazirmatn',
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
+                        ),
                       ),
                       SizedBox(height: spacing.xxs),
                       Text(
@@ -262,7 +326,8 @@ class _BackupRestoreScreenState extends ConsumerState<BackupRestoreScreen> {
                   spacing,
                   icon: Icons.archive_outlined,
                   title: 'اندازه آخرین پشتیبان',
-                  value: '${DateFormatter.toPersianDigits(backupSizeMB)} مگابایت',
+                  value:
+                      '${DateFormatter.toPersianDigits(backupSizeMB)} مگابایت',
                 ),
               ],
             ),
@@ -274,18 +339,28 @@ class _BackupRestoreScreenState extends ConsumerState<BackupRestoreScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text('فضای آزاد حافظه داخلی', style: TextStyle(fontFamily: 'Vazirmatn', fontSize: 11)),
+                    const Text(
+                      'فضای آزاد حافظه داخلی',
+                      style: TextStyle(fontFamily: 'Vazirmatn', fontSize: 11),
+                    ),
                     Text(
                       '${DateFormatter.toPersianDigits(meta.freeSpacePercentage.toStringAsFixed(0))}٪ خالی',
-                      style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold),
+                      style: const TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ],
                 ),
                 SizedBox(height: spacing.xxs),
                 LinearProgressIndicator(
                   value: (100 - meta.freeSpacePercentage) / 100,
-                  backgroundColor: theme.colorScheme.outlineVariant.withOpacity(0.3),
-                  color: meta.freeSpacePercentage < 15 ? semanticColors.error : semanticColors.success,
+                  backgroundColor: theme.colorScheme.outlineVariant.withOpacity(
+                    0.3,
+                  ),
+                  color: meta.freeSpacePercentage < 15
+                      ? semanticColors.error
+                      : semanticColors.success,
                 ),
               ],
             ),
@@ -309,11 +384,21 @@ class _BackupRestoreScreenState extends ConsumerState<BackupRestoreScreen> {
           children: [
             Icon(icon, size: 16, color: theme.colorScheme.primary),
             SizedBox(width: spacing.xxs),
-            Text(title, style: TextStyle(fontFamily: 'Vazirmatn', fontSize: 11, color: theme.colorScheme.onSurfaceVariant)),
+            Text(
+              title,
+              style: TextStyle(
+                fontFamily: 'Vazirmatn',
+                fontSize: 11,
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
           ],
         ),
         SizedBox(height: spacing.xxs),
-        Text(value, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+        Text(
+          value,
+          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+        ),
       ],
     );
   }
@@ -331,7 +416,11 @@ class _BackupRestoreScreenState extends ConsumerState<BackupRestoreScreen> {
       children: [
         const Text(
           'عملیات و ابزارهای سریع',
-          style: TextStyle(fontFamily: 'Vazirmatn', fontWeight: FontWeight.bold, fontSize: 14),
+          style: TextStyle(
+            fontFamily: 'Vazirmatn',
+            fontWeight: FontWeight.bold,
+            fontSize: 14,
+          ),
         ),
         SizedBox(height: spacing.s),
         GridView.count(
@@ -364,7 +453,11 @@ class _BackupRestoreScreenState extends ConsumerState<BackupRestoreScreen> {
                     notifier.createManualBackup(password).then((success) {
                       if (success && shareAutomatically) {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('فایل جدید صادر شد و برای اشتراک‌گذاری آماده است.')),
+                          const SnackBar(
+                            content: Text(
+                              'فایل جدید صادر شد و برای اشتراک‌گذاری آماده است.',
+                            ),
+                          ),
                         );
                       }
                     });
@@ -382,7 +475,9 @@ class _BackupRestoreScreenState extends ConsumerState<BackupRestoreScreen> {
               onTap: () {
                 if (state.history.isEmpty) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('هیچ فایل پشتیبانی محلی وجود ندارد.')),
+                    const SnackBar(
+                      content: Text('هیچ فایل پشتیبانی محلی وجود ندارد.'),
+                    ),
                   );
                   return;
                 }
@@ -392,15 +487,23 @@ class _BackupRestoreScreenState extends ConsumerState<BackupRestoreScreen> {
                   onConfirm: (password) async {
                     // Simulating reading from selected history item
                     final file = state.history.first;
-                    final fileBytesRes = await ref.read(localBackupDataSourceProvider).readBackupFile(file.filePath);
+                    final fileBytesRes = await ref
+                        .read(localBackupDataSourceProvider)
+                        .readBackupFile(file.filePath);
                     if (context.mounted) {
-                      final previewSuccess = await notifier.loadRestorePreview(fileBytesRes, password);
+                      final previewSuccess = await notifier.loadRestorePreview(
+                        fileBytesRes,
+                        password,
+                      );
                       if (previewSuccess && context.mounted) {
-                        final metrics = ref.read(backupNotifierProvider).previewMetrics!;
+                        final metrics = ref
+                            .read(backupNotifierProvider)
+                            .previewMetrics!;
                         BackupDialogs.showConflictResolution(
                           context: context,
                           localTransactions: metrics['local_transactions'] ?? 0,
-                          backupTransactions: metrics['backup_transactions'] ?? 0,
+                          backupTransactions:
+                              metrics['backup_transactions'] ?? 0,
                           localAccounts: metrics['local_accounts'] ?? 0,
                           backupAccounts: metrics['backup_accounts'] ?? 0,
                           onApply: (forceReplace) async {
@@ -410,7 +513,8 @@ class _BackupRestoreScreenState extends ConsumerState<BackupRestoreScreen> {
                               forceReplace: forceReplace,
                             );
                             if (success && context.mounted) {
-                              BackupDialogs.showCreateConfirm( // Dummy/Success mock trigger
+                              BackupDialogs.showCreateConfirm(
+                                // Dummy/Success mock trigger
                                 context: context,
                                 onConfirm: (_, __) {},
                               );
@@ -432,7 +536,11 @@ class _BackupRestoreScreenState extends ConsumerState<BackupRestoreScreen> {
               subtitle: 'بررسی کلیدهای امنیتی',
               onTap: () {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('پروتکل AES-256-CBC فعال و کلیدها ایمن هستند.')),
+                  const SnackBar(
+                    content: Text(
+                      'پروتکل AES-256-CBC فعال و کلیدها ایمن هستند.',
+                    ),
+                  ),
                 );
               },
             ),
@@ -446,7 +554,9 @@ class _BackupRestoreScreenState extends ConsumerState<BackupRestoreScreen> {
               onTap: () {
                 if (state.history.isEmpty) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('هیچ فایلی برای بررسی سلامت یافت نشد.')),
+                    const SnackBar(
+                      content: Text('هیچ فایلی برای بررسی سلامت یافت نشد.'),
+                    ),
                   );
                   return;
                 }
@@ -485,7 +595,9 @@ class _BackupRestoreScreenState extends ConsumerState<BackupRestoreScreen> {
       elevation: 0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(radius.m),
-        side: BorderSide(color: theme.colorScheme.outlineVariant.withOpacity(0.5)),
+        side: BorderSide(
+          color: theme.colorScheme.outlineVariant.withOpacity(0.5),
+        ),
       ),
       child: InkWell(
         onTap: onTap,
@@ -498,10 +610,21 @@ class _BackupRestoreScreenState extends ConsumerState<BackupRestoreScreen> {
             children: [
               Icon(icon, color: theme.colorScheme.primary, size: 24),
               SizedBox(height: spacing.xs),
-              Text(title, style: const TextStyle(fontFamily: 'Vazirmatn', fontWeight: FontWeight.bold, fontSize: 12)),
+              Text(
+                title,
+                style: const TextStyle(
+                  fontFamily: 'Vazirmatn',
+                  fontWeight: FontWeight.bold,
+                  fontSize: 12,
+                ),
+              ),
               Text(
                 subtitle,
-                style: TextStyle(fontFamily: 'Vazirmatn', fontSize: 9, color: theme.colorScheme.onSurfaceVariant),
+                style: TextStyle(
+                  fontFamily: 'Vazirmatn',
+                  fontSize: 9,
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -523,10 +646,15 @@ class _BackupRestoreScreenState extends ConsumerState<BackupRestoreScreen> {
       elevation: 0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(radius.m),
-        side: BorderSide(color: theme.colorScheme.outlineVariant.withOpacity(0.5)),
+        side: BorderSide(
+          color: theme.colorScheme.outlineVariant.withOpacity(0.5),
+        ),
       ),
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: spacing.m, vertical: spacing.s),
+        padding: EdgeInsets.symmetric(
+          horizontal: spacing.m,
+          vertical: spacing.s,
+        ),
         child: Row(
           children: [
             Icon(Icons.alarm_on_outlined, color: theme.colorScheme.primary),
@@ -535,8 +663,22 @@ class _BackupRestoreScreenState extends ConsumerState<BackupRestoreScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('یادآور خودکار پشتیبان‌گیری دوره‌ای', style: TextStyle(fontFamily: 'Vazirmatn', fontWeight: FontWeight.bold, fontSize: 13)),
-                  Text('یادآوری هفتگی برای تهیه نسخه پشتیبان محلی', style: TextStyle(fontFamily: 'Vazirmatn', fontSize: 10, color: Colors.grey)),
+                  Text(
+                    'یادآور خودکار پشتیبان‌گیری دوره‌ای',
+                    style: TextStyle(
+                      fontFamily: 'Vazirmatn',
+                      fontWeight: FontWeight.bold,
+                      fontSize: 13,
+                    ),
+                  ),
+                  Text(
+                    'یادآوری هفتگی برای تهیه نسخه پشتیبان محلی',
+                    style: TextStyle(
+                      fontFamily: 'Vazirmatn',
+                      fontSize: 10,
+                      color: Colors.grey,
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -568,11 +710,20 @@ class _BackupRestoreScreenState extends ConsumerState<BackupRestoreScreen> {
           children: [
             const Text(
               'تاریخچه فایل‌های پشتیبان',
-              style: TextStyle(fontFamily: 'Vazirmatn', fontWeight: FontWeight.bold, fontSize: 14),
+              style: TextStyle(
+                fontFamily: 'Vazirmatn',
+                fontWeight: FontWeight.bold,
+                fontSize: 14,
+              ),
             ),
             Text(
               '${DateFormatter.toPersianDigits(state.history.length.toString())} فایل موجود',
-              style: TextStyle(fontFamily: 'Vazirmatn', fontSize: 11, color: theme.colorScheme.primary, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontFamily: 'Vazirmatn',
+                fontSize: 11,
+                color: theme.colorScheme.primary,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ],
         ),
@@ -582,18 +733,38 @@ class _BackupRestoreScreenState extends ConsumerState<BackupRestoreScreen> {
             elevation: 0,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(radius.m),
-              side: BorderSide(color: theme.colorScheme.outlineVariant.withOpacity(0.5)),
+              side: BorderSide(
+                color: theme.colorScheme.outlineVariant.withOpacity(0.5),
+              ),
             ),
             child: Padding(
               padding: EdgeInsets.all(spacing.l),
               child: Center(
                 child: Column(
                   children: [
-                    Icon(Icons.inventory_2_outlined, size: 40, color: theme.colorScheme.outline),
+                    Icon(
+                      Icons.inventory_2_outlined,
+                      size: 40,
+                      color: theme.colorScheme.outline,
+                    ),
                     SizedBox(height: spacing.s),
-                    const Text('هیچ فایل پشتیبان محلی یافت نشد', style: TextStyle(fontFamily: 'Vazirmatn', fontWeight: FontWeight.bold, fontSize: 13)),
+                    const Text(
+                      'هیچ فایل پشتیبان محلی یافت نشد',
+                      style: TextStyle(
+                        fontFamily: 'Vazirmatn',
+                        fontWeight: FontWeight.bold,
+                        fontSize: 13,
+                      ),
+                    ),
                     SizedBox(height: spacing.xxs),
-                    const Text('پیشنهاد می‌شود جهت امنیت حساب خود، همین حالا اولین فایل پشتیبان را ایجاد کنید.', style: TextStyle(fontFamily: 'Vazirmatn', fontSize: 10, color: Colors.grey)),
+                    const Text(
+                      'پیشنهاد می‌شود جهت امنیت حساب خود، همین حالا اولین فایل پشتیبان را ایجاد کنید.',
+                      style: TextStyle(
+                        fontFamily: 'Vazirmatn',
+                        fontSize: 10,
+                        color: Colors.grey,
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -606,7 +777,14 @@ class _BackupRestoreScreenState extends ConsumerState<BackupRestoreScreen> {
             itemCount: state.history.length,
             itemBuilder: (context, index) {
               final item = state.history[index];
-              return _buildHistoryRow(context, theme, spacing, radius, item, notifier);
+              return _buildHistoryRow(
+                context,
+                theme,
+                spacing,
+                radius,
+                item,
+                notifier,
+              );
             },
           ),
       ],
@@ -632,7 +810,9 @@ class _BackupRestoreScreenState extends ConsumerState<BackupRestoreScreen> {
       margin: EdgeInsets.only(bottom: spacing.s),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(radius.s),
-        side: BorderSide(color: theme.colorScheme.outlineVariant.withOpacity(0.5)),
+        side: BorderSide(
+          color: theme.colorScheme.outlineVariant.withOpacity(0.5),
+        ),
       ),
       child: ListTile(
         leading: Icon(
@@ -641,7 +821,11 @@ class _BackupRestoreScreenState extends ConsumerState<BackupRestoreScreen> {
         ),
         title: Text(
           item.isManual ? 'پشتیبان‌گیری دستی' : 'پشتیبان‌گیری دوره‌ای',
-          style: const TextStyle(fontFamily: 'Vazirmatn', fontWeight: FontWeight.bold, fontSize: 13),
+          style: const TextStyle(
+            fontFamily: 'Vazirmatn',
+            fontWeight: FontWeight.bold,
+            fontSize: 13,
+          ),
         ),
         subtitle: Text(
           '$formattedDate | ${DateFormatter.toPersianDigits(sizeMB)} مگابایت',
@@ -651,12 +835,20 @@ class _BackupRestoreScreenState extends ConsumerState<BackupRestoreScreen> {
           mainAxisSize: MainAxisSize.min,
           children: [
             if (item.isHealthy)
-              const Icon(Icons.check_circle_outline, color: Colors.green, size: 18)
+              const Icon(
+                Icons.check_circle_outline,
+                color: Colors.green,
+                size: 18,
+              )
             else
               const Icon(Icons.warning_amber, color: Colors.orange, size: 18),
             SizedBox(width: spacing.xs),
             IconButton(
-              icon: Icon(Icons.delete_outline, color: theme.colorScheme.error, size: 20),
+              icon: Icon(
+                Icons.delete_outline,
+                color: theme.colorScheme.error,
+                size: 20,
+              ),
               onPressed: () {
                 BackupDialogs.showDeleteConfirm(
                   context: context,
@@ -670,7 +862,12 @@ class _BackupRestoreScreenState extends ConsumerState<BackupRestoreScreen> {
     );
   }
 
-  Widget _buildRecoveryPhraseCard(BuildContext context, ThemeData theme, SpacingExtension spacing, RadiusExtension radius) {
+  Widget _buildRecoveryPhraseCard(
+    BuildContext context,
+    ThemeData theme,
+    SpacingExtension spacing,
+    RadiusExtension radius,
+  ) {
     return Card(
       elevation: 0,
       shape: RoundedRectangleBorder(
@@ -689,14 +886,22 @@ class _BackupRestoreScreenState extends ConsumerState<BackupRestoreScreen> {
                 SizedBox(width: spacing.xs),
                 const Text(
                   'کلمات کلیدی اضطراری (12-Word Phrase)',
-                  style: TextStyle(fontFamily: 'Vazirmatn', fontWeight: FontWeight.bold, fontSize: 13),
+                  style: TextStyle(
+                    fontFamily: 'Vazirmatn',
+                    fontWeight: FontWeight.bold,
+                    fontSize: 13,
+                  ),
                 ),
               ],
             ),
             SizedBox(height: spacing.s),
             const Text(
               '۱۲ عبارت امنیتی برای زمان قطع دسترسی یا گم کردن پین‌کد ورود استفاده می‌شود. این عبارت را به شکل مکتوب و آفلاین نگهداری کنید.',
-              style: TextStyle(fontFamily: 'Vazirmatn', fontSize: 11, height: 1.5),
+              style: TextStyle(
+                fontFamily: 'Vazirmatn',
+                fontSize: 11,
+                height: 1.5,
+              ),
             ),
             SizedBox(height: spacing.s),
             if (!_showRecoveryPhraseRevealed)
@@ -708,7 +913,10 @@ class _BackupRestoreScreenState extends ConsumerState<BackupRestoreScreen> {
                       _showRecoveryPhraseRevealed = true;
                     });
                   },
-                  child: const Text('نمایش کلمات کلیدی اضطراری', style: TextStyle(fontFamily: 'Vazirmatn')),
+                  child: const Text(
+                    'نمایش کلمات کلیدی اضطراری',
+                    style: TextStyle(fontFamily: 'Vazirmatn'),
+                  ),
                 ),
               )
             else ...[
@@ -721,7 +929,12 @@ class _BackupRestoreScreenState extends ConsumerState<BackupRestoreScreen> {
                 ),
                 child: const Text(
                   'apple banana cherry dog elephant fox grape horse ink jack king lemon',
-                  style: TextStyle(fontFamily: 'monospace', fontSize: 12, fontWeight: FontWeight.bold, letterSpacing: 1.2),
+                  style: TextStyle(
+                    fontFamily: 'monospace',
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 1.2,
+                  ),
                 ),
               ),
               SizedBox(height: spacing.s),
@@ -733,7 +946,13 @@ class _BackupRestoreScreenState extends ConsumerState<BackupRestoreScreen> {
                       _showRecoveryPhraseRevealed = false;
                     });
                   },
-                  child: const Text('پنهان‌سازی مجدد', style: TextStyle(fontFamily: 'Vazirmatn', color: Colors.grey)),
+                  child: const Text(
+                    'پنهان‌سازی مجدد',
+                    style: TextStyle(
+                      fontFamily: 'Vazirmatn',
+                      color: Colors.grey,
+                    ),
+                  ),
                 ),
               ),
             ],
@@ -743,19 +962,37 @@ class _BackupRestoreScreenState extends ConsumerState<BackupRestoreScreen> {
     );
   }
 
-  Widget _buildDisasterTipsCard(ThemeData theme, SpacingExtension spacing, RadiusExtension radius) {
+  Widget _buildDisasterTipsCard(
+    ThemeData theme,
+    SpacingExtension spacing,
+    RadiusExtension radius,
+  ) {
     return Card(
       elevation: 0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(radius.m),
-        side: BorderSide(color: theme.colorScheme.outlineVariant.withOpacity(0.5)),
+        side: BorderSide(
+          color: theme.colorScheme.outlineVariant.withOpacity(0.5),
+        ),
       ),
       child: Column(
         children: [
           ListTile(
-            leading: Icon(Icons.tips_and_updates_outlined, color: theme.colorScheme.primary),
-            title: const Text('توصیه‌های پیشگیری از فقدان اطلاعات مالی', style: TextStyle(fontFamily: 'Vazirmatn', fontWeight: FontWeight.bold, fontSize: 13)),
-            trailing: Icon(_showDisasterTipsExpanded ? Icons.expand_less : Icons.expand_more),
+            leading: Icon(
+              Icons.tips_and_updates_outlined,
+              color: theme.colorScheme.primary,
+            ),
+            title: const Text(
+              'توصیه‌های پیشگیری از فقدان اطلاعات مالی',
+              style: TextStyle(
+                fontFamily: 'Vazirmatn',
+                fontWeight: FontWeight.bold,
+                fontSize: 13,
+              ),
+            ),
+            trailing: Icon(
+              _showDisasterTipsExpanded ? Icons.expand_less : Icons.expand_more,
+            ),
             onTap: () {
               setState(() {
                 _showDisasterTipsExpanded = !_showDisasterTipsExpanded;
@@ -764,7 +1001,11 @@ class _BackupRestoreScreenState extends ConsumerState<BackupRestoreScreen> {
           ),
           if (_showDisasterTipsExpanded)
             Padding(
-              padding: EdgeInsets.only(left: spacing.m, right: spacing.m, bottom: spacing.m),
+              padding: EdgeInsets.only(
+                left: spacing.m,
+                right: spacing.m,
+                bottom: spacing.m,
+              ),
               child: const Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -773,7 +1014,11 @@ class _BackupRestoreScreenState extends ConsumerState<BackupRestoreScreen> {
                     '۱. فایل‌های دات بانک‌یار (.bankyar) تولید شده را از پوشه دیتابیس گوشی کپی کرده و در هارد اکسترنال یا دستگاه دیگری نگه دارید.\n'
                     '۲. رمز عبور پشتیبان‌گیری را هرگز فراموش نکنید. در صورت گم کردن رمز عبور، هیچ راه حلی برای بازیابی اطلاعات در دنیای رمزنگاری وجود نخواهد داشت.\n'
                     '۳. یادآور خودکار را فعال نگه دارید تا قبل از بروز حوادث سخت‌افزاری، یک نسخه به‌روز داشته باشید.',
-                    style: TextStyle(fontFamily: 'Vazirmatn', fontSize: 11, height: 1.8),
+                    style: TextStyle(
+                      fontFamily: 'Vazirmatn',
+                      fontSize: 11,
+                      height: 1.8,
+                    ),
                   ),
                 ],
               ),

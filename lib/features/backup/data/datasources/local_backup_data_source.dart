@@ -158,7 +158,9 @@ class LocalBackupDataSourceImpl implements LocalBackupDataSource {
       }
       final List<dynamic> listRaw = jsonDecode(jsonStr) as List<dynamic>;
       return listRaw
-          .map((item) => BackupHistoryItem.fromJson(item as Map<String, dynamic>))
+          .map(
+            (item) => BackupHistoryItem.fromJson(item as Map<String, dynamic>),
+          )
           .toList();
     } catch (e, stack) {
       _logger.log(

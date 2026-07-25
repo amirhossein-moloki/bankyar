@@ -51,12 +51,12 @@ class BackupState {
 
   /// Default initial state.
   factory BackupState.initial() => BackupState(
-        metadata: BackupMetadata.initial(),
-        history: const [],
-        isLoading: false,
-        isActionLoading: false,
-        isAutomaticReminderEnabled: false,
-      );
+    metadata: BackupMetadata.initial(),
+    history: const [],
+    isLoading: false,
+    isActionLoading: false,
+    isAutomaticReminderEnabled: false,
+  );
 
   /// Helper to duplicate state with optional parameter overrides.
   BackupState copyWith({
@@ -77,10 +77,15 @@ class BackupState {
       history: history ?? this.history,
       isLoading: isLoading ?? this.isLoading,
       isActionLoading: isActionLoading ?? this.isActionLoading,
-      isAutomaticReminderEnabled: isAutomaticReminderEnabled ?? this.isAutomaticReminderEnabled,
+      isAutomaticReminderEnabled:
+          isAutomaticReminderEnabled ?? this.isAutomaticReminderEnabled,
       errorMessage: clearError ? null : (errorMessage ?? this.errorMessage),
-      successMessage: clearSuccess ? null : (successMessage ?? this.successMessage),
-      previewMetrics: clearPreview ? null : (previewMetrics ?? this.previewMetrics),
+      successMessage: clearSuccess
+          ? null
+          : (successMessage ?? this.successMessage),
+      previewMetrics: clearPreview
+          ? null
+          : (previewMetrics ?? this.previewMetrics),
     );
   }
 }
@@ -118,7 +123,11 @@ class BackupNotifier extends StateNotifier<BackupState> {
   /// Reloads metadata, history, and scheduled reminders configuration from repositories.
   Future<void> loadInitialData() async {
     if (!mounted) return;
-    state = state.copyWith(isLoading: true, clearError: true, clearSuccess: true);
+    state = state.copyWith(
+      isLoading: true,
+      clearError: true,
+      clearSuccess: true,
+    );
 
     final repository = _ref.read(backupRepositoryProvider);
     final metadataRes = await _getBackupMetadataUseCase(const NoParams());
@@ -127,8 +136,12 @@ class BackupNotifier extends StateNotifier<BackupState> {
 
     if (!mounted) return;
 
-    final metadata = metadataRes.isSuccess ? metadataRes.successOrCrash : BackupMetadata.initial();
-    final history = historyRes.isSuccess ? historyRes.successOrCrash : <BackupHistoryItem>[];
+    final metadata = metadataRes.isSuccess
+        ? metadataRes.successOrCrash
+        : BackupMetadata.initial();
+    final history = historyRes.isSuccess
+        ? historyRes.successOrCrash
+        : <BackupHistoryItem>[];
     final reminder = reminderRes.isSuccess ? reminderRes.successOrCrash : false;
 
     state = BackupState(
@@ -157,12 +170,15 @@ class BackupNotifier extends StateNotifier<BackupState> {
   /// Initiates password-encrypted manual backup generation.
   Future<bool> createManualBackup(String password) async {
     if (!mounted) return false;
-    state = state.copyWith(isActionLoading: true, clearError: true, clearSuccess: true);
+    state = state.copyWith(
+      isActionLoading: true,
+      clearError: true,
+      clearSuccess: true,
+    );
 
-    final res = await _createBackupUseCase(CreateBackupParams(
-      password: password,
-      isManual: true,
-    ));
+    final res = await _createBackupUseCase(
+      CreateBackupParams(password: password, isManual: true),
+    );
 
     if (!mounted) return false;
 
@@ -185,7 +201,11 @@ class BackupNotifier extends StateNotifier<BackupState> {
   /// Deletes a specific portable backup.
   Future<bool> deleteBackupItem(String id) async {
     if (!mounted) return false;
-    state = state.copyWith(isActionLoading: true, clearError: true, clearSuccess: true);
+    state = state.copyWith(
+      isActionLoading: true,
+      clearError: true,
+      clearSuccess: true,
+    );
 
     final res = await _deleteBackupUseCase(id);
 
@@ -210,13 +230,16 @@ class BackupNotifier extends StateNotifier<BackupState> {
   /// Performs a password-protected checksum and decryption validation on a file.
   Future<bool> verifyBackupItem(String id, String password) async {
     if (!mounted) return false;
-    state = state.copyWith(isActionLoading: true, clearError: true, clearSuccess: true);
+    state = state.copyWith(
+      isActionLoading: true,
+      clearError: true,
+      clearSuccess: true,
+    );
 
     final item = state.history.firstWhere((h) => h.id == id);
-    final res = await _verifyBackupFileUseCase(VerifyBackupFileParams(
-      filePath: item.filePath,
-      password: password,
-    ));
+    final res = await _verifyBackupFileUseCase(
+      VerifyBackupFileParams(filePath: item.filePath, password: password),
+    );
 
     if (!mounted) return false;
 
@@ -224,7 +247,9 @@ class BackupNotifier extends StateNotifier<BackupState> {
       final isValid = res.successOrCrash;
       state = state.copyWith(
         isActionLoading: false,
-        successMessage: isValid ? 'سلامت فایل پشتیبان تأیید شد.' : 'رمز عبور اشتباه است یا فایل آسیب دیده است.',
+        successMessage: isValid
+            ? 'سلامت فایل پشتیبان تأیید شد.'
+            : 'رمز عبور اشتباه است یا فایل آسیب دیده است.',
       );
 
       // Local update to update the list's isHealthy state
@@ -256,7 +281,12 @@ class BackupNotifier extends StateNotifier<BackupState> {
   /// Loads and prepares a side-by-side data comparison preview for the user before committing a restore.
   Future<bool> loadRestorePreview(List<int> bytes, String password) async {
     if (!mounted) return false;
-    state = state.copyWith(isActionLoading: true, clearError: true, clearSuccess: true, clearPreview: true);
+    state = state.copyWith(
+      isActionLoading: true,
+      clearError: true,
+      clearSuccess: true,
+      clearPreview: true,
+    );
 
     final repository = _ref.read(backupRepositoryProvider);
     final res = await repository.previewRestoreMetrics(
@@ -288,13 +318,19 @@ class BackupNotifier extends StateNotifier<BackupState> {
     required bool forceReplace,
   }) async {
     if (!mounted) return false;
-    state = state.copyWith(isActionLoading: true, clearError: true, clearSuccess: true);
+    state = state.copyWith(
+      isActionLoading: true,
+      clearError: true,
+      clearSuccess: true,
+    );
 
-    final res = await _restoreBackupUseCase(RestoreBackupParams(
-      password: password,
-      backupBytes: bytes,
-      forceReplace: forceReplace,
-    ));
+    final res = await _restoreBackupUseCase(
+      RestoreBackupParams(
+        password: password,
+        backupBytes: bytes,
+        forceReplace: forceReplace,
+      ),
+    );
 
     if (!mounted) return false;
 
@@ -325,21 +361,22 @@ class BackupNotifier extends StateNotifier<BackupState> {
 }
 
 /// Provider exposing the BackupNotifier state.
-final backupNotifierProvider = StateNotifierProvider<BackupNotifier, BackupState>((ref) {
-  final createBackup = ref.watch(createBackupUseCaseProvider);
-  final restoreBackup = ref.watch(restoreBackupUseCaseProvider);
-  final getHistory = ref.watch(getBackupHistoryUseCaseProvider);
-  final deleteBackup = ref.watch(deleteBackupUseCaseProvider);
-  final verifyBackup = ref.watch(verifyBackupFileUseCaseProvider);
-  final getMetadata = ref.watch(getBackupMetadataUseCaseProvider);
+final backupNotifierProvider =
+    StateNotifierProvider<BackupNotifier, BackupState>((ref) {
+      final createBackup = ref.watch(createBackupUseCaseProvider);
+      final restoreBackup = ref.watch(restoreBackupUseCaseProvider);
+      final getHistory = ref.watch(getBackupHistoryUseCaseProvider);
+      final deleteBackup = ref.watch(deleteBackupUseCaseProvider);
+      final verifyBackup = ref.watch(verifyBackupFileUseCaseProvider);
+      final getMetadata = ref.watch(getBackupMetadataUseCaseProvider);
 
-  return BackupNotifier(
-    createBackupUseCase: createBackup,
-    restoreBackupUseCase: restoreBackup,
-    getBackupHistoryUseCase: getHistory,
-    deleteBackupUseCase: deleteBackup,
-    verifyBackupFileUseCase: verifyBackup,
-    getBackupMetadataUseCase: getMetadata,
-    ref: ref,
-  );
-});
+      return BackupNotifier(
+        createBackupUseCase: createBackup,
+        restoreBackupUseCase: restoreBackup,
+        getBackupHistoryUseCase: getHistory,
+        deleteBackupUseCase: deleteBackup,
+        verifyBackupFileUseCase: verifyBackup,
+        getBackupMetadataUseCase: getMetadata,
+        ref: ref,
+      );
+    });

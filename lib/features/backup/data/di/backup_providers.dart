@@ -53,7 +53,9 @@ final restoreBackupUseCaseProvider = Provider<RestoreBackupUseCase>((ref) {
 });
 
 /// Provider exposing GetBackupHistoryUseCase.
-final getBackupHistoryUseCaseProvider = Provider<GetBackupHistoryUseCase>((ref) {
+final getBackupHistoryUseCaseProvider = Provider<GetBackupHistoryUseCase>((
+  ref,
+) {
   final repository = ref.watch(backupRepositoryProvider);
   return GetBackupHistoryUseCase(repository);
 });
@@ -65,13 +67,17 @@ final deleteBackupUseCaseProvider = Provider<DeleteBackupUseCase>((ref) {
 });
 
 /// Provider exposing VerifyBackupFileUseCase.
-final verifyBackupFileUseCaseProvider = Provider<VerifyBackupFileUseCase>((ref) {
+final verifyBackupFileUseCaseProvider = Provider<VerifyBackupFileUseCase>((
+  ref,
+) {
   final repository = ref.watch(backupRepositoryProvider);
   return VerifyBackupFileUseCase(repository);
 });
 
 /// Provider exposing GetBackupMetadataUseCase.
-final getBackupMetadataUseCaseProvider = Provider<GetBackupMetadataUseCase>((ref) {
+final getBackupMetadataUseCaseProvider = Provider<GetBackupMetadataUseCase>((
+  ref,
+) {
   final repository = ref.watch(backupRepositoryProvider);
   return GetBackupMetadataUseCase(repository);
 });

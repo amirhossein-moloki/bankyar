@@ -64,12 +64,18 @@ void main() {
       expect(todayRange.endDate, DateTime(2023, 10, 15, 23, 59, 59, 999));
 
       // Yesterday
-      final yesterdayRange = TimeRange.fromPreset(TimeRangePreset.yesterday, anchor);
+      final yesterdayRange = TimeRange.fromPreset(
+        TimeRangePreset.yesterday,
+        anchor,
+      );
       expect(yesterdayRange.startDate, DateTime(2023, 10, 14));
       expect(yesterdayRange.endDate, DateTime(2023, 10, 14, 23, 59, 59, 999));
 
       // This Month
-      final monthRange = TimeRange.fromPreset(TimeRangePreset.thisMonth, anchor);
+      final monthRange = TimeRange.fromPreset(
+        TimeRangePreset.thisMonth,
+        anchor,
+      );
       expect(monthRange.startDate, DateTime(2023, 10, 1));
       expect(monthRange.endDate, DateTime(2023, 10, 15, 23, 59, 59, 999));
     });
@@ -89,68 +95,76 @@ void main() {
   });
 
   group('Analytics Notifier View Model Tests', () {
-    test('AnalyticsNotifier loads aggregates on boot and updates state', () async {
-      final summary = AnalyticsSummary(
-        totalIncome: 100000.0,
-        totalExpenses: 40000.0,
-        netBalance: 60000.0,
-        transactionCount: 5,
-        averageTransaction: 28000.0,
-        largestIncome: 80000.0,
-        largestExpense: 30000.0,
-        categoryTotals: {'خرید': 30000.0, 'حمل و نقل': 10000.0},
-        bankTotals: {'ملی': 60000.0},
-        tagStatistics: {'مهم': 40000.0},
-        dailyTrends: [
-          TrendPoint(label: '12 دی', income: 100000.0, expense: 40000.0, timestamp: DateTime(2023, 10, 15)),
-        ],
-        weeklyTrends: [],
-        monthlyTrends: [],
-        recentInsights: [
-          const FinancialInsight(
-            id: 'ins-1',
-            type: InsightType.topSpendingDay,
-            title: 'پرخرج‌ترین روز هفته',
-            description: 'پنج‌شنبه پرخرج‌ترین روز شما بوده است.',
-            value: 40000.0,
-            isPositive: false,
+    test(
+      'AnalyticsNotifier loads aggregates on boot and updates state',
+      () async {
+        final summary = AnalyticsSummary(
+          totalIncome: 100000.0,
+          totalExpenses: 40000.0,
+          netBalance: 60000.0,
+          transactionCount: 5,
+          averageTransaction: 28000.0,
+          largestIncome: 80000.0,
+          largestExpense: 30000.0,
+          categoryTotals: {'خرید': 30000.0, 'حمل و نقل': 10000.0},
+          bankTotals: {'ملی': 60000.0},
+          tagStatistics: {'مهم': 40000.0},
+          dailyTrends: [
+            TrendPoint(
+              label: '12 دی',
+              income: 100000.0,
+              expense: 40000.0,
+              timestamp: DateTime(2023, 10, 15),
+            ),
+          ],
+          weeklyTrends: [],
+          monthlyTrends: [],
+          recentInsights: [
+            const FinancialInsight(
+              id: 'ins-1',
+              type: InsightType.topSpendingDay,
+              title: 'پرخرج‌ترین روز هفته',
+              description: 'پنج‌شنبه پرخرج‌ترین روز شما بوده است.',
+              value: 40000.0,
+              isPositive: false,
+            ),
+          ],
+        );
+
+        when(
+          () => mockRepository.getStatistics(
+            startDate: any(named: 'startDate'),
+            endDate: any(named: 'endDate'),
+            bankFilter: any(named: 'bankFilter'),
           ),
-        ],
-      );
+        ).thenAnswer((_) async => Result.success(summary));
 
-      when(
-        () => mockRepository.getStatistics(
-          startDate: any(named: 'startDate'),
-          endDate: any(named: 'endDate'),
-          bankFilter: any(named: 'bankFilter'),
-        ),
-      ).thenAnswer((_) async => Result.success(summary));
+        final container = ProviderContainer(
+          overrides: [
+            statisticsRepositoryProvider.overrideWithValue(mockRepository),
+            loggerProvider.overrideWithValue(mockLogger),
+          ],
+        );
 
-      final container = ProviderContainer(
-        overrides: [
-          statisticsRepositoryProvider.overrideWithValue(mockRepository),
-          loggerProvider.overrideWithValue(mockLogger),
-        ],
-      );
+        final notifier = container.read(analyticsViewModelProvider.notifier);
+        await notifier.loadAnalytics();
 
-      final notifier = container.read(analyticsViewModelProvider.notifier);
-      await notifier.loadAnalytics();
-
-      final state = container.read(analyticsViewModelProvider);
-      state.when(
-        initial: () => fail(''),
-        loading: (_) => fail(''),
-        error: (_) => fail(''),
-        success: (data) {
-          expect(data.summary.totalIncome, 100000.0);
-          expect(data.summary.totalExpenses, 40000.0);
-          expect(data.summary.netBalance, 60000.0);
-          expect(data.summary.transactionCount, 5);
-          expect(data.summary.recentInsights.length, 1);
-          expect(data.summary.recentInsights.first.id, 'ins-1');
-        },
-      );
-    });
+        final state = container.read(analyticsViewModelProvider);
+        state.when(
+          initial: () => fail(''),
+          loading: (_) => fail(''),
+          error: (_) => fail(''),
+          success: (data) {
+            expect(data.summary.totalIncome, 100000.0);
+            expect(data.summary.totalExpenses, 40000.0);
+            expect(data.summary.netBalance, 60000.0);
+            expect(data.summary.transactionCount, 5);
+            expect(data.summary.recentInsights.length, 1);
+            expect(data.summary.recentInsights.first.id, 'ins-1');
+          },
+        );
+      },
+    );
   });
 
   group('Analytics UI Screen & Charts Rendering Tests', () {
@@ -169,163 +183,188 @@ void main() {
       );
     }
 
-    testWidgets('StatisticsDashboardScreen renders loading state skeleton loaders', (tester) async {
-      final summary = AnalyticsSummary.empty();
-      when(
-        () => mockRepository.getStatistics(
-          startDate: any(named: 'startDate'),
-          endDate: any(named: 'endDate'),
-          bankFilter: any(named: 'bankFilter'),
-        ),
-      ).thenAnswer((_) async => Result.success(summary));
-
-      await tester.pumpWidget(
-        buildTestableWidget(
-          ProviderScope(
-            overrides: [
-              statisticsRepositoryProvider.overrideWithValue(mockRepository),
-              loggerProvider.overrideWithValue(mockLogger),
-            ],
-            child: const StatisticsDashboardScreen(),
+    testWidgets(
+      'StatisticsDashboardScreen renders loading state skeleton loaders',
+      (tester) async {
+        final summary = AnalyticsSummary.empty();
+        when(
+          () => mockRepository.getStatistics(
+            startDate: any(named: 'startDate'),
+            endDate: any(named: 'endDate'),
+            bankFilter: any(named: 'bankFilter'),
           ),
-        ),
-      );
+        ).thenAnswer((_) async => Result.success(summary));
 
-      // Loading skeletons are drawn during async state
-      expect(find.byType(SkeletonLoader), findsWidgets);
-    });
-
-    testWidgets('StatisticsDashboardScreen renders empty template on zero data', (tester) async {
-      tester.view.physicalSize = const Size(1200, 1920);
-      tester.view.devicePixelRatio = 1.0;
-      addTearDown(() {
-        tester.view.resetPhysicalSize();
-        tester.view.resetDevicePixelRatio();
-      });
-
-      final summary = AnalyticsSummary.empty();
-      when(
-        () => mockRepository.getStatistics(
-          startDate: any(named: 'startDate'),
-          endDate: any(named: 'endDate'),
-          bankFilter: any(named: 'bankFilter'),
-        ),
-      ).thenAnswer((_) async => Result.success(summary));
-
-      await tester.pumpWidget(
-        buildTestableWidget(
-          ProviderScope(
-            overrides: [
-              statisticsRepositoryProvider.overrideWithValue(mockRepository),
-              loggerProvider.overrideWithValue(mockLogger),
-            ],
-            child: const StatisticsDashboardScreen(),
+        await tester.pumpWidget(
+          buildTestableWidget(
+            ProviderScope(
+              overrides: [
+                statisticsRepositoryProvider.overrideWithValue(mockRepository),
+                loggerProvider.overrideWithValue(mockLogger),
+              ],
+              child: const StatisticsDashboardScreen(),
+            ),
           ),
-        ),
-      );
+        );
 
-      // Settle frames to let loading resolve
-      await tester.pump();
-      await tester.pumpAndSettle();
+        // Loading skeletons are drawn during async state
+        expect(find.byType(SkeletonLoader), findsWidgets);
+      },
+    );
 
-      // Empty template text
-      expect(find.text('آماری برای نمایش وجود ندارد'), findsOneWidget);
-    });
+    testWidgets(
+      'StatisticsDashboardScreen renders empty template on zero data',
+      (tester) async {
+        tester.view.physicalSize = const Size(1200, 1920);
+        tester.view.devicePixelRatio = 1.0;
+        addTearDown(() {
+          tester.view.resetPhysicalSize();
+          tester.view.resetDevicePixelRatio();
+        });
 
-    testWidgets('StatisticsDashboardScreen renders scorecards, custom charts, and insights on success', (tester) async {
-      tester.view.physicalSize = const Size(1200, 1920);
-      tester.view.devicePixelRatio = 1.0;
-      addTearDown(() {
-        tester.view.resetPhysicalSize();
-        tester.view.resetDevicePixelRatio();
-      });
-
-      final summary = AnalyticsSummary(
-        totalIncome: 120000.0,
-        totalExpenses: 50000.0,
-        netBalance: 70000.0,
-        transactionCount: 3,
-        averageTransaction: 40000.0,
-        largestIncome: 120000.0,
-        largestExpense: 30000.0,
-        categoryTotals: {'خرید': 30000.0, 'غذا': 20000.0},
-        bankTotals: {'ملی': 70000.0},
-        tagStatistics: {},
-        dailyTrends: [
-          TrendPoint(label: '12 دی', income: 120000.0, expense: 50000.0, timestamp: DateTime(2023, 10, 15)),
-        ],
-        weeklyTrends: [
-          TrendPoint(label: 'هفته ۱', income: 120000.0, expense: 50000.0, timestamp: DateTime(2023, 10, 15)),
-        ],
-        monthlyTrends: [],
-        recentInsights: [
-          const FinancialInsight(
-            id: 'ins-1',
-            type: InsightType.topSpendingDay,
-            title: 'پرخرج‌ترین روز هفته',
-            description: 'پنج‌شنبه پرخرج‌ترین روز شما بوده است.',
-            value: 50000.0,
-            isPositive: false,
+        final summary = AnalyticsSummary.empty();
+        when(
+          () => mockRepository.getStatistics(
+            startDate: any(named: 'startDate'),
+            endDate: any(named: 'endDate'),
+            bankFilter: any(named: 'bankFilter'),
           ),
-        ],
-      );
+        ).thenAnswer((_) async => Result.success(summary));
 
-      when(
-        () => mockRepository.getStatistics(
-          startDate: any(named: 'startDate'),
-          endDate: any(named: 'endDate'),
-          bankFilter: any(named: 'bankFilter'),
-        ),
-      ).thenAnswer((_) async => Result.success(summary));
-
-      await tester.pumpWidget(
-        buildTestableWidget(
-          ProviderScope(
-            overrides: [
-              statisticsRepositoryProvider.overrideWithValue(mockRepository),
-              loggerProvider.overrideWithValue(mockLogger),
-            ],
-            child: const StatisticsDashboardScreen(),
+        await tester.pumpWidget(
+          buildTestableWidget(
+            ProviderScope(
+              overrides: [
+                statisticsRepositoryProvider.overrideWithValue(mockRepository),
+                loggerProvider.overrideWithValue(mockLogger),
+              ],
+              child: const StatisticsDashboardScreen(),
+            ),
           ),
-        ),
-      );
+        );
 
-      await tester.pump();
-      await tester.pumpAndSettle();
+        // Settle frames to let loading resolve
+        await tester.pump();
+        await tester.pumpAndSettle();
 
-      // Scorecards present
-      expect(find.text('تراز خالص دوره'), findsOneWidget);
-      expect(find.text('مجموع دریافتی'), findsOneWidget);
-      expect(find.text('مجموع مخارج'), findsOneWidget);
+        // Empty template text
+        expect(find.text('آماری برای نمایش وجود ندارد'), findsOneWidget);
+      },
+    );
 
-      // LineChart rendered by default
-      expect(find.byType(LineChart), findsOneWidget);
+    testWidgets(
+      'StatisticsDashboardScreen renders scorecards, custom charts, and insights on success',
+      (tester) async {
+        tester.view.physicalSize = const Size(1200, 1920);
+        tester.view.devicePixelRatio = 1.0;
+        addTearDown(() {
+          tester.view.resetPhysicalSize();
+          tester.view.resetDevicePixelRatio();
+        });
 
-      // Switch tab to "Weekly Trends" (هفتگی)
-      await tester.tap(find.text('روند هفتگی'));
-      await tester.pumpAndSettle();
+        final summary = AnalyticsSummary(
+          totalIncome: 120000.0,
+          totalExpenses: 50000.0,
+          netBalance: 70000.0,
+          transactionCount: 3,
+          averageTransaction: 40000.0,
+          largestIncome: 120000.0,
+          largestExpense: 30000.0,
+          categoryTotals: {'خرید': 30000.0, 'غذا': 20000.0},
+          bankTotals: {'ملی': 70000.0},
+          tagStatistics: {},
+          dailyTrends: [
+            TrendPoint(
+              label: '12 دی',
+              income: 120000.0,
+              expense: 50000.0,
+              timestamp: DateTime(2023, 10, 15),
+            ),
+          ],
+          weeklyTrends: [
+            TrendPoint(
+              label: 'هفته ۱',
+              income: 120000.0,
+              expense: 50000.0,
+              timestamp: DateTime(2023, 10, 15),
+            ),
+          ],
+          monthlyTrends: [],
+          recentInsights: [
+            const FinancialInsight(
+              id: 'ins-1',
+              type: InsightType.topSpendingDay,
+              title: 'پرخرج‌ترین روز هفته',
+              description: 'پنج‌شنبه پرخرج‌ترین روز شما بوده است.',
+              value: 50000.0,
+              isPositive: false,
+            ),
+          ],
+        );
 
-      // Weekly trend draws BarChart
-      expect(find.byType(BarChart), findsOneWidget);
+        when(
+          () => mockRepository.getStatistics(
+            startDate: any(named: 'startDate'),
+            endDate: any(named: 'endDate'),
+            bankFilter: any(named: 'bankFilter'),
+          ),
+        ).thenAnswer((_) async => Result.success(summary));
 
-      // Insight card is visible
-      expect(find.text('بینش‌های مالی اخیر'), findsOneWidget);
-      expect(find.text('پرخرج‌ترین روز هفته'), findsOneWidget);
-    });
+        await tester.pumpWidget(
+          buildTestableWidget(
+            ProviderScope(
+              overrides: [
+                statisticsRepositoryProvider.overrideWithValue(mockRepository),
+                loggerProvider.overrideWithValue(mockLogger),
+              ],
+              child: const StatisticsDashboardScreen(),
+            ),
+          ),
+        );
 
-    testWidgets('LineChart has proper semantic announcements for screen readers', (tester) async {
-      final points = [
-        TrendPoint(label: '12 دی', income: 1000.0, expense: 500.0, timestamp: DateTime.now()),
-      ];
+        await tester.pump();
+        await tester.pumpAndSettle();
 
-      await tester.pumpWidget(
-        buildTestableWidget(
-          LineChart(points: points, height: 100),
-        ),
-      );
+        // Scorecards present
+        expect(find.text('تراز خالص دوره'), findsOneWidget);
+        expect(find.text('مجموع دریافتی'), findsOneWidget);
+        expect(find.text('مجموع مخارج'), findsOneWidget);
 
-      // LineChart is accessibility compliant, LineChart has been rendered
-      expect(find.byType(LineChart), findsOneWidget);
-    });
+        // LineChart rendered by default
+        expect(find.byType(LineChart), findsOneWidget);
+
+        // Switch tab to "Weekly Trends" (هفتگی)
+        await tester.tap(find.text('روند هفتگی'));
+        await tester.pumpAndSettle();
+
+        // Weekly trend draws BarChart
+        expect(find.byType(BarChart), findsOneWidget);
+
+        // Insight card is visible
+        expect(find.text('بینش‌های مالی اخیر'), findsOneWidget);
+        expect(find.text('پرخرج‌ترین روز هفته'), findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      'LineChart has proper semantic announcements for screen readers',
+      (tester) async {
+        final points = [
+          TrendPoint(
+            label: '12 دی',
+            income: 1000.0,
+            expense: 500.0,
+            timestamp: DateTime.now(),
+          ),
+        ];
+
+        await tester.pumpWidget(
+          buildTestableWidget(LineChart(points: points, height: 100)),
+        );
+
+        // LineChart is accessibility compliant, LineChart has been rendered
+        expect(find.byType(LineChart), findsOneWidget);
+      },
+    );
   });
 }

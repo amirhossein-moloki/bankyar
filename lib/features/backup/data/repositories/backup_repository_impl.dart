@@ -35,7 +35,7 @@ class BackupRepositoryImpl implements BackupRepository {
     'attachments',
     'settings',
     'notifications',
-    'audit_logs'
+    'audit_logs',
   ];
 
   /// Constructor.
@@ -68,10 +68,12 @@ class BackupRepositoryImpl implements BackupRepository {
 
       final dbServiceConcrete = _databaseService as DatabaseServiceImpl;
       if (!dbServiceConcrete.isOpen) {
-        return const Result.failure(DatabaseCorruptionFailure(
-          code: 'BY_REP_DB_CLOSED',
-          message: 'Database is not open.',
-        ));
+        return const Result.failure(
+          DatabaseCorruptionFailure(
+            code: 'BY_REP_DB_CLOSED',
+            message: 'Database is not open.',
+          ),
+        );
       }
 
       final db = dbServiceConcrete.database;
@@ -115,10 +117,12 @@ class BackupRepositoryImpl implements BackupRepository {
       // Verify write by doing a quick verification check
       final exists = await _localBackupDataSource.backupFileExists(filePath);
       if (!exists) {
-        return const Result.failure(FileAccessFailure(
-          code: 'BY_REP_BACKUP_WRITE_VERIFICATION_FAILED',
-          message: 'Failed to verify backup file write on disk.',
-        ));
+        return const Result.failure(
+          FileAccessFailure(
+            code: 'BY_REP_BACKUP_WRITE_VERIFICATION_FAILED',
+            message: 'Failed to verify backup file write on disk.',
+          ),
+        );
       }
 
       final historyItem = BackupHistoryItem(
@@ -156,10 +160,12 @@ class BackupRepositoryImpl implements BackupRepository {
         error: e,
         stackTrace: stack,
       );
-      return Result.failure(FileAccessFailure(
-        code: 'BY_REP_CREATE_BACKUP_FAILED',
-        message: 'Backup creation failed: ${e.toString()}',
-      ));
+      return Result.failure(
+        FileAccessFailure(
+          code: 'BY_REP_CREATE_BACKUP_FAILED',
+          message: 'Backup creation failed: ${e.toString()}',
+        ),
+      );
     }
   }
 
@@ -179,10 +185,12 @@ class BackupRepositoryImpl implements BackupRepository {
 
       final dbServiceConcrete = _databaseService as DatabaseServiceImpl;
       if (!dbServiceConcrete.isOpen) {
-        return const Result.failure(DatabaseCorruptionFailure(
-          code: 'BY_REP_DB_CLOSED',
-          message: 'Database is not open.',
-        ));
+        return const Result.failure(
+          DatabaseCorruptionFailure(
+            code: 'BY_REP_DB_CLOSED',
+            message: 'Database is not open.',
+          ),
+        );
       }
 
       final db = dbServiceConcrete.database;
@@ -242,10 +250,12 @@ class BackupRepositoryImpl implements BackupRepository {
         error: e,
         stackTrace: stack,
       );
-      return Result.failure(DatabaseCorruptionFailure(
-        code: 'BY_REP_RESTORE_BACKUP_FAILED',
-        message: 'Restoration failed: ${e.toString()}',
-      ));
+      return Result.failure(
+        DatabaseCorruptionFailure(
+          code: 'BY_REP_RESTORE_BACKUP_FAILED',
+          message: 'Restoration failed: ${e.toString()}',
+        ),
+      );
     }
   }
 
@@ -257,10 +267,12 @@ class BackupRepositoryImpl implements BackupRepository {
     try {
       final dbServiceConcrete = _databaseService as DatabaseServiceImpl;
       if (!dbServiceConcrete.isOpen) {
-        return const Result.failure(DatabaseCorruptionFailure(
-          code: 'BY_REP_DB_CLOSED',
-          message: 'Database is not open.',
-        ));
+        return const Result.failure(
+          DatabaseCorruptionFailure(
+            code: 'BY_REP_DB_CLOSED',
+            message: 'Database is not open.',
+          ),
+        );
       }
 
       final db = dbServiceConcrete.database;
@@ -277,10 +289,14 @@ class BackupRepositoryImpl implements BackupRepository {
       final tablesData = importRes.successOrCrash;
 
       // Local metrics
-      final localTxResults = await db.rawQuery('SELECT COUNT(*) FROM transactions;');
+      final localTxResults = await db.rawQuery(
+        'SELECT COUNT(*) FROM transactions;',
+      );
       final localTxCount = Sqflite.firstIntValue(localTxResults) ?? 0;
 
-      final localAccResults = await db.rawQuery('SELECT COUNT(*) FROM accounts;');
+      final localAccResults = await db.rawQuery(
+        'SELECT COUNT(*) FROM accounts;',
+      );
       final localAccCount = Sqflite.firstIntValue(localAccResults) ?? 0;
 
       // Backup metrics
@@ -296,10 +312,13 @@ class BackupRepositoryImpl implements BackupRepository {
 
       return Result.success(metrics);
     } catch (e) {
-      return Result.failure(DatabaseCorruptionFailure(
-        code: 'BY_REP_PREVIEW_METRICS_FAILED',
-        message: 'Could not decrypt and parse preview metrics: ${e.toString()}',
-      ));
+      return Result.failure(
+        DatabaseCorruptionFailure(
+          code: 'BY_REP_PREVIEW_METRICS_FAILED',
+          message:
+              'Could not decrypt and parse preview metrics: ${e.toString()}',
+        ),
+      );
     }
   }
 
@@ -326,10 +345,12 @@ class BackupRepositoryImpl implements BackupRepository {
       }
       return const Result.success(null);
     } catch (e) {
-      return Result.failure(FileAccessFailure(
-        code: 'BY_REP_DELETE_BACKUP_FAILED',
-        message: 'Could not delete backup item: ${e.toString()}',
-      ));
+      return Result.failure(
+        FileAccessFailure(
+          code: 'BY_REP_DELETE_BACKUP_FAILED',
+          message: 'Could not delete backup item: ${e.toString()}',
+        ),
+      );
     }
   }
 
@@ -356,16 +377,18 @@ class BackupRepositoryImpl implements BackupRepository {
     try {
       final dbServiceConcrete = _databaseService as DatabaseServiceImpl;
       if (!dbServiceConcrete.isOpen) {
-        return const Result.success(BackupMetadata(
-          lastBackupTime: null,
-          databaseVersion: 1,
-          encryptionAlgorithm: 'AES-256-CBC',
-          databaseSizeBytes: 0,
-          backupSizeBytes: 0,
-          healthPercentage: 100,
-          deviceFreeSpaceBytes: 1024 * 1024 * 1024,
-          deviceTotalSpaceBytes: 4 * 1024 * 1024 * 1024,
-        ));
+        return const Result.success(
+          BackupMetadata(
+            lastBackupTime: null,
+            databaseVersion: 1,
+            encryptionAlgorithm: 'AES-256-CBC',
+            databaseSizeBytes: 0,
+            backupSizeBytes: 0,
+            healthPercentage: 100,
+            deviceFreeSpaceBytes: 1024 * 1024 * 1024,
+            deviceTotalSpaceBytes: 4 * 1024 * 1024 * 1024,
+          ),
+        );
       }
 
       final db = dbServiceConcrete.database;

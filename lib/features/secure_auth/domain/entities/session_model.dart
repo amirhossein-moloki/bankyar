@@ -22,11 +22,11 @@ class SessionModel {
 
   /// Factory for a clean, default session.
   factory SessionModel.initial() => const SessionModel(
-        isAuthenticated: false,
-        lastActivity: null,
-        failedAttempts: 0,
-        lockoutUntil: null,
-      );
+    isAuthenticated: false,
+    lastActivity: null,
+    failedAttempts: 0,
+    lockoutUntil: null,
+  );
 
   /// Helper indicating if the user is currently under a brute-force cooldown lockout.
   bool get isLockedOut {

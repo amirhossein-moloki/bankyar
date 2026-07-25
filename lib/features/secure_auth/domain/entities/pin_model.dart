@@ -7,8 +7,5 @@ class PinModel {
   final String salt;
 
   /// Constructor.
-  const PinModel({
-    required this.pinHash,
-    required this.salt,
-  });
+  const PinModel({required this.pinHash, required this.salt});
 }

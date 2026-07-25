@@ -47,7 +47,8 @@ class StatisticsDashboardScreen extends ConsumerWidget {
         loading: (_) => const _LoadingSkeletonWorkspace(),
         error: (failure) => ErrorState(
           message: failure.message,
-          onRetry: () => ref.read(analyticsViewModelProvider.notifier).loadAnalytics(),
+          onRetry: () =>
+              ref.read(analyticsViewModelProvider.notifier).loadAnalytics(),
         ),
         success: (data) {
           if (data.summary.transactionCount == 0) {
@@ -59,7 +60,11 @@ class StatisticsDashboardScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildEmptyState(BuildContext context, AnalyticsState data, WidgetRef ref) {
+  Widget _buildEmptyState(
+    BuildContext context,
+    AnalyticsState data,
+    WidgetRef ref,
+  ) {
     final theme = Theme.of(context);
     final spacing = theme.extension<SpacingExtension>()!;
     final notifier = ref.read(analyticsViewModelProvider.notifier);
@@ -70,7 +75,8 @@ class StatisticsDashboardScreen extends ConsumerWidget {
           padding: EdgeInsets.all(spacing.xl),
           child: EmptyState(
             title: 'تراکنشی با فیلترهای انتخابی یافت نشد',
-            message: 'هیچ‌کدام از پیامک‌های بانکی حساب "${data.selectedBankFilter}" در این بازه زمانی یافت نشد.',
+            message:
+                'هیچ‌کدام از پیامک‌های بانکی حساب "${data.selectedBankFilter}" در این بازه زمانی یافت نشد.',
             actionLabel: 'پاک کردن فیلتر حساب',
             onActionPressed: () => notifier.selectBankFilter('All'),
           ),
@@ -86,9 +92,11 @@ class StatisticsDashboardScreen extends ConsumerWidget {
           children: [
             EmptyState(
               title: 'آماری برای نمایش وجود ندارد',
-              message: 'برای محاسبه نمودارها و تحلیل‌ها، حداقل یک تراکنش مالی در محدوده زمانی انتخاب شده مورد نیاز است.',
+              message:
+                  'برای محاسبه نمودارها و تحلیل‌ها، حداقل یک تراکنش مالی در محدوده زمانی انتخاب شده مورد نیاز است.',
               actionLabel: 'تغییر محدوده زمانی',
-              onActionPressed: () => _showCustomDateRangeSelector(context, notifier),
+              onActionPressed: () =>
+                  _showCustomDateRangeSelector(context, notifier),
             ),
           ],
         ),
@@ -109,10 +117,14 @@ class StatisticsDashboardScreen extends ConsumerWidget {
             children: [
               Text(
                 'اشتراک‌گذاری تصویر نمودار',
-                style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               SizedBox(height: spacing.s),
-              const Text('شما می‌توانید یک تصویر فوری امن از گزارش دارایی خود تهیه و ذخیره نمایید.'),
+              const Text(
+                'شما می‌توانید یک تصویر فوری امن از گزارش دارایی خود تهیه و ذخیره نمایید.',
+              ),
               SizedBox(height: spacing.m),
               PrimaryButton(
                 label: 'ذخیره عکس در گالری',
@@ -138,10 +150,14 @@ class StatisticsDashboardScreen extends ConsumerWidget {
             children: [
               Text(
                 'خروجی اطلاعات مالی',
-                style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               SizedBox(height: spacing.s),
-              const Text('دریافت خروجی گزارش با فرمت CSV یا اکسل کاملاً رمزنگاری شده در دستگاه.'),
+              const Text(
+                'دریافت خروجی گزارش با فرمت CSV یا اکسل کاملاً رمزنگاری شده در دستگاه.',
+              ),
               SizedBox(height: spacing.m),
               Row(
                 children: [
@@ -167,7 +183,10 @@ class StatisticsDashboardScreen extends ConsumerWidget {
     );
   }
 
-  void _showCustomDateRangeSelector(BuildContext context, AnalyticsNotifier notifier) {
+  void _showCustomDateRangeSelector(
+    BuildContext context,
+    AnalyticsNotifier notifier,
+  ) {
     showDialog<void>(
       context: context,
       builder: (context) {
@@ -238,7 +257,9 @@ class _DashboardScrollWorkspace extends ConsumerWidget {
     final notifier = ref.read(analyticsViewModelProvider.notifier);
 
     final summary = data.summary;
-    final formattedStart = DateFormatter.formatFriendly(data.timeRange.startDate);
+    final formattedStart = DateFormatter.formatFriendly(
+      data.timeRange.startDate,
+    );
     final formattedEnd = DateFormatter.formatFriendly(data.timeRange.endDate);
 
     return RefreshIndicator(
@@ -251,7 +272,10 @@ class _DashboardScrollWorkspace extends ConsumerWidget {
               padding: EdgeInsets.all(spacing.m),
               child: BaseCard(
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: spacing.s, vertical: spacing.xs),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: spacing.s,
+                    vertical: spacing.xs,
+                  ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -359,13 +383,17 @@ class _DashboardScrollWorkspace extends ConsumerWidget {
                 ),
                 StatisticCard(
                   title: 'تعداد تراکنش‌ها',
-                  value: DateFormatter.toPersianDigits(summary.transactionCount.toString()),
+                  value: DateFormatter.toPersianDigits(
+                    summary.transactionCount.toString(),
+                  ),
                   trendLabel: 'تراکنش',
                   isPositiveTrend: true,
                 ),
                 StatisticCard(
                   title: 'میانگین تراکنش',
-                  value: CurrencyFormatter.formatToman(summary.averageTransaction),
+                  value: CurrencyFormatter.formatToman(
+                    summary.averageTransaction,
+                  ),
                   trendLabel: 'مبلغ واحد',
                   isPositiveTrend: true,
                 ),
@@ -434,50 +462,53 @@ class _DashboardScrollWorkspace extends ConsumerWidget {
           SliverToBoxAdapter(
             child: Padding(
               padding: EdgeInsets.all(spacing.m),
-              child: const SectionHeader(
-                title: 'بینش‌های مالی اخیر',
-              ),
+              child: const SectionHeader(title: 'بینش‌های مالی اخیر'),
             ),
           ),
 
           SliverPadding(
             padding: EdgeInsets.symmetric(horizontal: spacing.m),
             sliver: SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (context, index) {
-                  final insight = summary.recentInsights[index];
-                  final color = insight.isPositive ? Colors.green : Colors.red;
-                  final icon = insight.isPositive ? Icons.lightbulb_outline : Icons.analytics_outlined;
+              delegate: SliverChildBuilderDelegate((context, index) {
+                final insight = summary.recentInsights[index];
+                final color = insight.isPositive ? Colors.green : Colors.red;
+                final icon = insight.isPositive
+                    ? Icons.lightbulb_outline
+                    : Icons.analytics_outlined;
 
-                  return Padding(
-                    padding: EdgeInsets.only(bottom: spacing.s),
-                    child: BaseCard(
-                      child: ListTile(
-                        leading: CircleAvatar(
-                          backgroundColor: color.withOpacity(0.1),
-                          child: Icon(icon, color: color, size: 20),
+                return Padding(
+                  padding: EdgeInsets.only(bottom: spacing.s),
+                  child: BaseCard(
+                    child: ListTile(
+                      leading: CircleAvatar(
+                        backgroundColor: color.withOpacity(0.1),
+                        child: Icon(icon, color: color, size: 20),
+                      ),
+                      title: Text(
+                        insight.title,
+                        style: theme.textTheme.titleSmall?.copyWith(
+                          fontWeight: FontWeight.bold,
                         ),
-                        title: Text(
-                          insight.title,
-                          style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
-                        ),
-                        subtitle: Padding(
-                          padding: EdgeInsets.only(top: spacing.xxs),
-                          child: Text(
-                            insight.description,
-                            style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+                      ),
+                      subtitle: Padding(
+                        padding: EdgeInsets.only(top: spacing.xxs),
+                        child: Text(
+                          insight.description,
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: theme.colorScheme.onSurfaceVariant,
                           ),
                         ),
-                        trailing: Text(
-                          CurrencyFormatter.formatToman(insight.value),
-                          style: theme.textTheme.bodySmall?.copyWith(fontWeight: FontWeight.bold),
+                      ),
+                      trailing: Text(
+                        CurrencyFormatter.formatToman(insight.value),
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
-                  );
-                },
-                childCount: summary.recentInsights.length,
-              ),
+                  ),
+                );
+              }, childCount: summary.recentInsights.length),
             ),
           ),
 
@@ -539,16 +570,23 @@ class _ChartSegmentTab extends StatelessWidget {
       onTap: onTap,
       borderRadius: BorderRadius.circular(100),
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: spacing.m, vertical: spacing.xs),
+        padding: EdgeInsets.symmetric(
+          horizontal: spacing.m,
+          vertical: spacing.xs,
+        ),
         decoration: BoxDecoration(
-          color: isActive ? theme.colorScheme.primary : theme.colorScheme.surfaceVariant,
+          color: isActive
+              ? theme.colorScheme.primary
+              : theme.colorScheme.surfaceVariant,
           borderRadius: BorderRadius.circular(100),
         ),
         child: Text(
           label,
           style: theme.textTheme.labelMedium?.copyWith(
             fontWeight: FontWeight.bold,
-            color: isActive ? theme.colorScheme.onPrimary : theme.colorScheme.onSurfaceVariant,
+            color: isActive
+                ? theme.colorScheme.onPrimary
+                : theme.colorScheme.onSurfaceVariant,
           ),
         ),
       ),
@@ -574,17 +612,37 @@ class _LoadingSkeletonWorkspace extends StatelessWidget {
             SizedBox(height: spacing.m),
             Row(
               children: [
-                Expanded(child: const SkeletonLoader(height: 100, width: double.infinity)),
+                Expanded(
+                  child: const SkeletonLoader(
+                    height: 100,
+                    width: double.infinity,
+                  ),
+                ),
                 SizedBox(width: spacing.s),
-                Expanded(child: const SkeletonLoader(height: 100, width: double.infinity)),
+                Expanded(
+                  child: const SkeletonLoader(
+                    height: 100,
+                    width: double.infinity,
+                  ),
+                ),
               ],
             ),
             SizedBox(height: spacing.s),
             Row(
               children: [
-                Expanded(child: const SkeletonLoader(height: 100, width: double.infinity)),
+                Expanded(
+                  child: const SkeletonLoader(
+                    height: 100,
+                    width: double.infinity,
+                  ),
+                ),
                 SizedBox(width: spacing.s),
-                Expanded(child: const SkeletonLoader(height: 100, width: double.infinity)),
+                Expanded(
+                  child: const SkeletonLoader(
+                    height: 100,
+                    width: double.infinity,
+                  ),
+                ),
               ],
             ),
             SizedBox(height: spacing.m),

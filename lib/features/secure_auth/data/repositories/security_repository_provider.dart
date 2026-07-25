@@ -44,22 +44,27 @@ final changePinUseCaseProvider = Provider<ChangePinUseCase>((ref) {
 });
 
 /// Use case provider for biometric verification.
-final verifyBiometricsUseCaseProvider = Provider<VerifyBiometricsUseCase>((ref) {
+final verifyBiometricsUseCaseProvider = Provider<VerifyBiometricsUseCase>((
+  ref,
+) {
   final repository = ref.watch(securityRepositoryProvider);
   return VerifyBiometricsUseCase(repository);
 });
 
 /// Use case provider for retrieving security configurations.
-final getSecuritySettingsUseCaseProvider = Provider<GetSecuritySettingsUseCase>((ref) {
-  final repository = ref.watch(securityRepositoryProvider);
-  return GetSecuritySettingsUseCase(repository);
-});
+final getSecuritySettingsUseCaseProvider = Provider<GetSecuritySettingsUseCase>(
+  (ref) {
+    final repository = ref.watch(securityRepositoryProvider);
+    return GetSecuritySettingsUseCase(repository);
+  },
+);
 
 /// Use case provider for saving security configurations.
-final updateSecuritySettingsUseCaseProvider = Provider<UpdateSecuritySettingsUseCase>((ref) {
-  final repository = ref.watch(securityRepositoryProvider);
-  return UpdateSecuritySettingsUseCase(repository);
-});
+final updateSecuritySettingsUseCaseProvider =
+    Provider<UpdateSecuritySettingsUseCase>((ref) {
+      final repository = ref.watch(securityRepositoryProvider);
+      return UpdateSecuritySettingsUseCase(repository);
+    });
 
 /// Use case provider for emergency application data erasure.
 final purgeAllDataUseCaseProvider = Provider<PurgeAllDataUseCase>((ref) {

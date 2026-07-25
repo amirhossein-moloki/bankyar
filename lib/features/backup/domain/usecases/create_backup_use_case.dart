@@ -16,7 +16,8 @@ class CreateBackupParams {
 }
 
 /// Executes database serialization and AES-256 encryption backup generation.
-class CreateBackupUseCase implements UseCase<BackupHistoryItem, CreateBackupParams> {
+class CreateBackupUseCase
+    implements UseCase<BackupHistoryItem, CreateBackupParams> {
   final BackupRepository _repository;
 
   /// Constructor.

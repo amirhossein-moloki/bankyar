@@ -39,7 +39,9 @@ extension ResultExtensions<T> on Result<T> {
     if (this is Success<T>) {
       return (this as Success<T>).data;
     }
-    throw StateError('Attempted to retrieve success data on a non-Success result: $this');
+    throw StateError(
+      'Attempted to retrieve success data on a non-Success result: $this',
+    );
   }
 
   /// Returns the underlying failure if failed, otherwise throws a StateError.
@@ -47,7 +49,9 @@ extension ResultExtensions<T> on Result<T> {
     if (this is FailureResult<T>) {
       return (this as FailureResult<T>).failure;
     }
-    throw StateError('Attempted to retrieve failure on a non-Failure result: $this');
+    throw StateError(
+      'Attempted to retrieve failure on a non-Failure result: $this',
+    );
   }
 
   /// Evaluates state and transforms successful result payloads.

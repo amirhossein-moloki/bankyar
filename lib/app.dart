@@ -20,7 +20,9 @@ class BankYarApp extends ConsumerWidget {
       themeMode: ThemeMode.system,
       theme: AppTheme.createThemeLight(),
       darkTheme: AppTheme.createThemeDark(),
-      locale: const Locale('fa'), // Sets Persian Farsi as primary native default
+      locale: const Locale(
+        'fa',
+      ), // Sets Persian Farsi as primary native default
       localizationsDelegates: const [
         AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
@@ -46,10 +48,9 @@ class BankYarApp extends ConsumerWidget {
                     if (!authState.isAppUnlocked)
                       Positioned.fill(
                         child: FocusScope(
-                          node: FocusScopeNode(), // Captures keyboard and accessibility focus mapping
-                          child: const Material(
-                            child: UnlockScreen(),
-                          ),
+                          node:
+                              FocusScopeNode(), // Captures keyboard and accessibility focus mapping
+                          child: const Material(child: UnlockScreen()),
                         ),
                       ),
                   ],
@@ -69,17 +70,16 @@ class AppLifecycleObserver extends ConsumerWidget {
   final Widget child;
 
   /// Constructor.
-  const AppLifecycleObserver({
-    super.key,
-    required this.child,
-  });
+  const AppLifecycleObserver({super.key, required this.child});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
-      onTapDown: (_) => ref.read(appLockCoordinatorProvider.notifier).recordUserActivity(),
-      onPanDown: (_) => ref.read(appLockCoordinatorProvider.notifier).recordUserActivity(),
+      onTapDown: (_) =>
+          ref.read(appLockCoordinatorProvider.notifier).recordUserActivity(),
+      onPanDown: (_) =>
+          ref.read(appLockCoordinatorProvider.notifier).recordUserActivity(),
       child: child,
     );
   }

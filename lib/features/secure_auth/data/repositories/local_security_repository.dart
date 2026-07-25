@@ -45,7 +45,8 @@ class LocalSecurityRepository implements SecurityRepository {
   static const String _prefPrivacyModeEnabled = 'by_sec_privacy_mode_enabled';
 
   static const String _prefSessionAuth = 'by_sec_session_auth';
-  static const String _prefSessionFailedAttempts = 'by_sec_session_failed_attempts';
+  static const String _prefSessionFailedAttempts =
+      'by_sec_session_failed_attempts';
   static const String _prefSessionLockoutUntil = 'by_sec_session_lockout_until';
 
   @override
@@ -54,10 +55,12 @@ class LocalSecurityRepository implements SecurityRepository {
       final hash = await _secureStorage.read(_pinHashKey);
       return Result.success(hash != null && hash.isNotEmpty);
     } catch (e) {
-      return Result.failure(SecurityFailure(
-        code: 'BY_SEC_STORAGE_ERROR',
-        message: 'Could not read PIN status from secure storage.',
-      ));
+      return Result.failure(
+        SecurityFailure(
+          code: 'BY_SEC_STORAGE_ERROR',
+          message: 'Could not read PIN status from secure storage.',
+        ),
+      );
     }
   }
 
@@ -75,10 +78,12 @@ class LocalSecurityRepository implements SecurityRepository {
 
       return const Result.success(null);
     } catch (e) {
-      return Result.failure(SecurityFailure(
-        code: 'BY_SEC_STORAGE_ERROR',
-        message: 'Could not write PIN configuration to secure storage.',
-      ));
+      return Result.failure(
+        SecurityFailure(
+          code: 'BY_SEC_STORAGE_ERROR',
+          message: 'Could not write PIN configuration to secure storage.',
+        ),
+      );
     }
   }
 
@@ -95,15 +100,20 @@ class LocalSecurityRepository implements SecurityRepository {
       final computedHash = SecurityHashHelper.hashPin(pin, salt);
       return Result.success(computedHash == hash);
     } catch (e) {
-      return Result.failure(SecurityFailure(
-        code: 'BY_SEC_VERIFICATION_ERROR',
-        message: 'Could not execute secure PIN cryptographic matching.',
-      ));
+      return Result.failure(
+        SecurityFailure(
+          code: 'BY_SEC_VERIFICATION_ERROR',
+          message: 'Could not execute secure PIN cryptographic matching.',
+        ),
+      );
     }
   }
 
   @override
-  Future<Result<void>> changePin({required String oldPin, required String newPin}) async {
+  Future<Result<void>> changePin({
+    required String oldPin,
+    required String newPin,
+  }) async {
     try {
       final verification = await verifyPin(oldPin);
       if (verification.isFailure) {
@@ -111,35 +121,45 @@ class LocalSecurityRepository implements SecurityRepository {
       }
 
       if (!verification.successOrCrash) {
-        return Result.failure(const SecurityFailure(
-          code: 'BY_SEC_PIN_MISMATCH',
-          message: 'The old PIN entered is incorrect.',
-        ));
+        return Result.failure(
+          const SecurityFailure(
+            code: 'BY_SEC_PIN_MISMATCH',
+            message: 'The old PIN entered is incorrect.',
+          ),
+        );
       }
 
       return savePin(newPin);
     } catch (e) {
-      return Result.failure(SecurityFailure(
-        code: 'BY_SEC_CHANGE_ERROR',
-        message: 'Could not complete secure PIN rollover operation.',
-      ));
+      return Result.failure(
+        SecurityFailure(
+          code: 'BY_SEC_CHANGE_ERROR',
+          message: 'Could not complete secure PIN rollover operation.',
+        ),
+      );
     }
   }
 
   @override
   Future<Result<SecuritySettings>> getSettings() async {
     try {
-      final pinEnabled = await _preferencesStorage.getBool(_prefPinEnabled) ?? false;
-      final bioEnabled = await _preferencesStorage.getBool(_prefBiometricsEnabled) ?? false;
-      final timeoutSecs = await _preferencesStorage.getInt(_prefAutoLockTimeout) ?? 60;
-      final privacyEnabled = await _preferencesStorage.getBool(_prefPrivacyModeEnabled) ?? false;
+      final pinEnabled =
+          await _preferencesStorage.getBool(_prefPinEnabled) ?? false;
+      final bioEnabled =
+          await _preferencesStorage.getBool(_prefBiometricsEnabled) ?? false;
+      final timeoutSecs =
+          await _preferencesStorage.getInt(_prefAutoLockTimeout) ?? 60;
+      final privacyEnabled =
+          await _preferencesStorage.getBool(_prefPrivacyModeEnabled) ?? false;
 
-      return Result.success(SecuritySettings(
-        isPinEnabled: pinEnabled,
-        isBiometricsEnabled: bioEnabled,
-        autoLockTimeout: Duration(seconds: timeoutSecs),
-        isPrivacyModeEnabled: privacyEnabled,
-      ));
+      return Result.success(
+        SecuritySettings(
+          isPinEnabled: pinEnabled,
+          isBiometricsEnabled: bioEnabled,
+          autoLockTimeout: Duration(seconds: timeoutSecs),
+          isPrivacyModeEnabled: privacyEnabled,
+        ),
+      );
     } catch (e) {
       return Result.success(SecuritySettings.initial());
     }
@@ -149,35 +169,54 @@ class LocalSecurityRepository implements SecurityRepository {
   Future<Result<void>> updateSettings(SecuritySettings settings) async {
     try {
       await _preferencesStorage.setBool(_prefPinEnabled, settings.isPinEnabled);
-      await _preferencesStorage.setBool(_prefBiometricsEnabled, settings.isBiometricsEnabled);
-      await _preferencesStorage.setInt(_prefAutoLockTimeout, settings.autoLockTimeout.inSeconds);
-      await _preferencesStorage.setBool(_prefPrivacyModeEnabled, settings.isPrivacyModeEnabled);
+      await _preferencesStorage.setBool(
+        _prefBiometricsEnabled,
+        settings.isBiometricsEnabled,
+      );
+      await _preferencesStorage.setInt(
+        _prefAutoLockTimeout,
+        settings.autoLockTimeout.inSeconds,
+      );
+      await _preferencesStorage.setBool(
+        _prefPrivacyModeEnabled,
+        settings.isPrivacyModeEnabled,
+      );
 
       // Align balance privacy masking key used in transactions feature
-      await _preferencesStorage.setBool('by_balance_obscured', settings.isPrivacyModeEnabled);
+      await _preferencesStorage.setBool(
+        'by_balance_obscured',
+        settings.isPrivacyModeEnabled,
+      );
 
       return const Result.success(null);
     } catch (e) {
-      return Result.failure(SecurityFailure(
-        code: 'BY_SEC_UPDATE_SETTINGS_ERROR',
-        message: 'Could not persist active security preferences.',
-      ));
+      return Result.failure(
+        SecurityFailure(
+          code: 'BY_SEC_UPDATE_SETTINGS_ERROR',
+          message: 'Could not persist active security preferences.',
+        ),
+      );
     }
   }
 
   @override
   Future<Result<BiometricCapabilities>> getBiometricCapabilities() async {
     try {
-      final status = await _permissionService.checkStatus(AppPermission.biometrics);
+      final status = await _permissionService.checkStatus(
+        AppPermission.biometrics,
+      );
       final isHardwareAvailable = simulateBiometricsHardwareAvailable;
       final isEnrolled = status == PermissionStatus.granted;
-      final isEnabled = await _preferencesStorage.getBool(_prefBiometricsEnabled) ?? false;
+      final isEnabled =
+          await _preferencesStorage.getBool(_prefBiometricsEnabled) ?? false;
 
-      return Result.success(BiometricCapabilities(
-        isHardwareAvailable: isHardwareAvailable,
-        isEnrolled: isEnrolled,
-        isEnabled: isEnabled,
-      ));
+      return Result.success(
+        BiometricCapabilities(
+          isHardwareAvailable: isHardwareAvailable,
+          isEnrolled: isEnrolled,
+          isEnabled: isEnabled,
+        ),
+      );
     } catch (e) {
       return Result.success(BiometricCapabilities.initial());
     }
@@ -191,10 +230,13 @@ class LocalSecurityRepository implements SecurityRepository {
       final caps = capsRes.successOrCrash;
 
       if (!caps.isHardwareAvailable || !caps.isEnrolled) {
-        return Result.failure(SecurityFailure(
-          code: 'BY_SEC_BIOMETRICS_UNAVAILABLE',
-          message: 'Biometric scan hardware is not ready or configured on the device.',
-        ));
+        return Result.failure(
+          SecurityFailure(
+            code: 'BY_SEC_BIOMETRICS_UNAVAILABLE',
+            message:
+                'Biometric scan hardware is not ready or configured on the device.',
+          ),
+        );
       }
 
       // Simulate authentication scanning outcome
@@ -212,20 +254,26 @@ class LocalSecurityRepository implements SecurityRepository {
   Future<Result<SessionModel>> getSession() async {
     try {
       final auth = await _preferencesStorage.getBool(_prefSessionAuth) ?? false;
-      final failed = await _preferencesStorage.getInt(_prefSessionFailedAttempts) ?? 0;
-      final lockoutStr = await _preferencesStorage.getString(_prefSessionLockoutUntil);
+      final failed =
+          await _preferencesStorage.getInt(_prefSessionFailedAttempts) ?? 0;
+      final lockoutStr = await _preferencesStorage.getString(
+        _prefSessionLockoutUntil,
+      );
 
       DateTime? lockoutUntil;
       if (lockoutStr != null && lockoutStr.isNotEmpty) {
         lockoutUntil = DateTime.tryParse(lockoutStr);
       }
 
-      return Result.success(SessionModel(
-        isAuthenticated: auth,
-        lastActivity: DateTime.now(), // Dynamic last activity representing active boot check
-        failedAttempts: failed,
-        lockoutUntil: lockoutUntil,
-      ));
+      return Result.success(
+        SessionModel(
+          isAuthenticated: auth,
+          lastActivity:
+              DateTime.now(), // Dynamic last activity representing active boot check
+          failedAttempts: failed,
+          lockoutUntil: lockoutUntil,
+        ),
+      );
     } catch (e) {
       return Result.success(SessionModel.initial());
     }
@@ -234,8 +282,14 @@ class LocalSecurityRepository implements SecurityRepository {
   @override
   Future<Result<void>> saveSession(SessionModel session) async {
     try {
-      await _preferencesStorage.setBool(_prefSessionAuth, session.isAuthenticated);
-      await _preferencesStorage.setInt(_prefSessionFailedAttempts, session.failedAttempts);
+      await _preferencesStorage.setBool(
+        _prefSessionAuth,
+        session.isAuthenticated,
+      );
+      await _preferencesStorage.setInt(
+        _prefSessionFailedAttempts,
+        session.failedAttempts,
+      );
       if (session.lockoutUntil != null) {
         await _preferencesStorage.setString(
           _prefSessionLockoutUntil,
@@ -246,10 +300,12 @@ class LocalSecurityRepository implements SecurityRepository {
       }
       return const Result.success(null);
     } catch (e) {
-      return Result.failure(SecurityFailure(
-        code: 'BY_SEC_SESSION_SAVE_ERROR',
-        message: 'Could not write active session properties.',
-      ));
+      return Result.failure(
+        SecurityFailure(
+          code: 'BY_SEC_SESSION_SAVE_ERROR',
+          message: 'Could not write active session properties.',
+        ),
+      );
     }
   }
 
@@ -268,10 +324,13 @@ class LocalSecurityRepository implements SecurityRepository {
 
       return const Result.success(null);
     } catch (e) {
-      return Result.failure(SecurityFailure(
-        code: 'BY_SEC_PURGE_ERROR',
-        message: 'Could not execute defensive zeroization of application storage.',
-      ));
+      return Result.failure(
+        SecurityFailure(
+          code: 'BY_SEC_PURGE_ERROR',
+          message:
+              'Could not execute defensive zeroization of application storage.',
+        ),
+      );
     }
   }
 }

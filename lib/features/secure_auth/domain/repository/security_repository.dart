@@ -16,7 +16,10 @@ abstract class SecurityRepository {
   Future<Result<bool>> verifyPin(String pin);
 
   /// Modify the active PIN after confirming credentials.
-  Future<Result<void>> changePin({required String oldPin, required String newPin});
+  Future<Result<void>> changePin({
+    required String oldPin,
+    required String newPin,
+  });
 
   /// Retrieve overall application security and privacy configurations.
   Future<Result<SecuritySettings>> getSettings();

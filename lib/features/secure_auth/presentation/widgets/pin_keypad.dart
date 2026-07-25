@@ -39,35 +39,40 @@ class PinKeypad extends StatelessWidget {
     ];
 
     return Directionality(
-      textDirection: TextDirection.rtl, // Enforce RTL direction for consistent keypad layout
+      textDirection: TextDirection
+          .rtl, // Enforce RTL direction for consistent keypad layout
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: spacing.m),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            ...rows.map((row) => Padding(
-                  padding: EdgeInsets.only(bottom: spacing.s),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: row.map((digit) => _KeypadButton(
+            ...rows.map(
+              (row) => Padding(
+                padding: EdgeInsets.only(bottom: spacing.s),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: row
+                      .map(
+                        (digit) => _KeypadButton(
                           label: digit,
                           onTap: () => onDigitTap(digit),
-                        )).toList(),
-                  ),
-                )),
+                        ),
+                      )
+                      .toList(),
+                ),
+              ),
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 leftAccessory ?? const SizedBox(width: 72, height: 72),
-                _KeypadButton(
-                  label: '0',
-                  onTap: () => onDigitTap('0'),
-                ),
-                rightAccessory ?? _KeypadIconButton(
-                  icon: Icons.backspace_outlined,
-                  onTap: onBackspaceTap,
-                  semanticLabel: 'پاک کردن رقم قبل',
-                ),
+                _KeypadButton(label: '0', onTap: () => onDigitTap('0')),
+                rightAccessory ??
+                    _KeypadIconButton(
+                      icon: Icons.backspace_outlined,
+                      onTap: onBackspaceTap,
+                      semanticLabel: 'پاک کردن رقم قبل',
+                    ),
               ],
             ),
           ],
@@ -81,10 +86,7 @@ class _KeypadButton extends StatelessWidget {
   final String label;
   final VoidCallback onTap;
 
-  const _KeypadButton({
-    required this.label,
-    required this.onTap,
-  });
+  const _KeypadButton({required this.label, required this.onTap});
 
   @override
   Widget build(BuildContext context) {

@@ -31,11 +31,17 @@ abstract class BackupDialogs {
                 ),
                 title: Row(
                   children: [
-                    Icon(Icons.add_moderator_outlined, color: theme.colorScheme.primary),
+                    Icon(
+                      Icons.add_moderator_outlined,
+                      color: theme.colorScheme.primary,
+                    ),
                     SizedBox(width: spacing.xs),
                     const Text(
                       'ایجاد فایل پشتیبان جدید',
-                      style: TextStyle(fontFamily: 'Vazirmatn', fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                        fontFamily: 'Vazirmatn',
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ],
                 ),
@@ -46,7 +52,11 @@ abstract class BackupDialogs {
                     children: [
                       const Text(
                         'یک نسخه پشتیبان رمزگذاری‌شده از تمامی تراکنش‌ها و تنظیمات برنامه در حافظه گوشی ذخیره خواهد شد. جهت امنیت اطلاعات خود، یک رمز عبور تعیین کنید.',
-                        style: TextStyle(fontFamily: 'Vazirmatn', fontSize: 13, height: 1.5),
+                        style: TextStyle(
+                          fontFamily: 'Vazirmatn',
+                          fontSize: 13,
+                          height: 1.5,
+                        ),
                       ),
                       SizedBox(height: spacing.s),
                       TextInputField(
@@ -72,14 +82,19 @@ abstract class BackupDialogs {
                 actions: [
                   TextButton(
                     onPressed: () => Navigator.pop(dialogCtx),
-                    child: const Text('انصراف', style: TextStyle(fontFamily: 'Vazirmatn')),
+                    child: const Text(
+                      'انصراف',
+                      style: TextStyle(fontFamily: 'Vazirmatn'),
+                    ),
                   ),
                   ElevatedButton(
                     onPressed: () {
                       final pwd = passwordController.text.trim();
                       if (pwd.length < 4) {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('رمز عبور باید حداقل ۴ نویسه باشد.')),
+                          const SnackBar(
+                            content: Text('رمز عبور باید حداقل ۴ نویسه باشد.'),
+                          ),
                         );
                         return;
                       }
@@ -93,7 +108,10 @@ abstract class BackupDialogs {
                         borderRadius: BorderRadius.circular(radius.m),
                       ),
                     ),
-                    child: const Text('تایید و ساخت فایل', style: TextStyle(fontFamily: 'Vazirmatn')),
+                    child: const Text(
+                      'تایید و ساخت فایل',
+                      style: TextStyle(fontFamily: 'Vazirmatn'),
+                    ),
                   ),
                 ],
               ),
@@ -129,11 +147,17 @@ abstract class BackupDialogs {
                 ),
                 title: Row(
                   children: [
-                    Icon(Icons.warning_amber_outlined, color: theme.colorScheme.error),
+                    Icon(
+                      Icons.warning_amber_outlined,
+                      color: theme.colorScheme.error,
+                    ),
                     SizedBox(width: spacing.xs),
                     const Text(
                       'بازیابی اطلاعات دیتابیس',
-                      style: TextStyle(fontFamily: 'Vazirmatn', fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                        fontFamily: 'Vazirmatn',
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ],
                 ),
@@ -144,7 +168,11 @@ abstract class BackupDialogs {
                     children: [
                       const Text(
                         'شما در حال بارگذاری یک فایل پشتیبان هستید. جهت خروج اطلاعات از حالت رمزگذاری، رمز عبور پشتیبان‌گیری مربوط به همان فایل را وارد کنید.',
-                        style: TextStyle(fontFamily: 'Vazirmatn', fontSize: 13, height: 1.5),
+                        style: TextStyle(
+                          fontFamily: 'Vazirmatn',
+                          fontSize: 13,
+                          height: 1.5,
+                        ),
                       ),
                       SizedBox(height: spacing.s),
                       TextInputField(
@@ -169,7 +197,10 @@ abstract class BackupDialogs {
                 actions: [
                   TextButton(
                     onPressed: () => Navigator.pop(dialogCtx),
-                    child: const Text('انصراف', style: TextStyle(fontFamily: 'Vazirmatn')),
+                    child: const Text(
+                      'انصراف',
+                      style: TextStyle(fontFamily: 'Vazirmatn'),
+                    ),
                   ),
                   ElevatedButton(
                     onPressed: understandConsequences
@@ -187,7 +218,10 @@ abstract class BackupDialogs {
                         borderRadius: BorderRadius.circular(radius.m),
                       ),
                     ),
-                    child: const Text('تایید و شروع بازیابی', style: TextStyle(fontFamily: 'Vazirmatn')),
+                    child: const Text(
+                      'تایید و شروع بازیابی',
+                      style: TextStyle(fontFamily: 'Vazirmatn'),
+                    ),
                   ),
                 ],
               ),
@@ -207,7 +241,8 @@ abstract class BackupDialogs {
     required int backupAccounts,
     required void Function(bool forceReplace) onApply,
   }) async {
-    bool forceReplace = false; // default is false (Option A: Merge & Deduplicate)
+    bool forceReplace =
+        false; // default is false (Option A: Merge & Deduplicate)
 
     await showDialog(
       context: context,
@@ -226,11 +261,17 @@ abstract class BackupDialogs {
                 ),
                 title: Row(
                   children: [
-                    Icon(Icons.report_gmailerrorred_outlined, color: theme.colorScheme.error),
+                    Icon(
+                      Icons.report_gmailerrorred_outlined,
+                      color: theme.colorScheme.error,
+                    ),
                     SizedBox(width: spacing.xs),
                     const Text(
                       'تداخل در فایل‌های دیتابیس',
-                      style: TextStyle(fontFamily: 'Vazirmatn', fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                        fontFamily: 'Vazirmatn',
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ],
                 ),
@@ -241,43 +282,105 @@ abstract class BackupDialogs {
                     children: [
                       const Text(
                         'اطلاعات تداخل‌دار بین نسخه پشتیبان و دیتابیس فعلی پیدا شد. جهت حفظ اطلاعات، یکی از روش‌های زیر را انتخاب کنید:',
-                        style: TextStyle(fontFamily: 'Vazirmatn', fontSize: 13, height: 1.5),
+                        style: TextStyle(
+                          fontFamily: 'Vazirmatn',
+                          fontSize: 13,
+                          height: 1.5,
+                        ),
                       ),
                       SizedBox(height: spacing.s),
                       // Comparison Board Panel
                       Container(
                         padding: EdgeInsets.all(spacing.s),
                         decoration: BoxDecoration(
-                          color: theme.colorScheme.surfaceVariant.withOpacity(0.4),
+                          color: theme.colorScheme.surfaceVariant.withOpacity(
+                            0.4,
+                          ),
                           borderRadius: BorderRadius.circular(radius.s),
-                          border: Border.all(color: theme.colorScheme.outlineVariant),
+                          border: Border.all(
+                            color: theme.colorScheme.outlineVariant,
+                          ),
                         ),
                         child: Column(
                           children: [
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                const Text('شاخص مقایسه', style: TextStyle(fontFamily: 'Vazirmatn', fontWeight: FontWeight.bold, fontSize: 11)),
-                                const Text('دیتابیس فعلی', style: TextStyle(fontFamily: 'Vazirmatn', fontWeight: FontWeight.bold, fontSize: 11)),
-                                const Text('فایل پشتیبان', style: TextStyle(fontFamily: 'Vazirmatn', fontWeight: FontWeight.bold, fontSize: 11, color: Colors.blue)),
+                                const Text(
+                                  'شاخص مقایسه',
+                                  style: TextStyle(
+                                    fontFamily: 'Vazirmatn',
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 11,
+                                  ),
+                                ),
+                                const Text(
+                                  'دیتابیس فعلی',
+                                  style: TextStyle(
+                                    fontFamily: 'Vazirmatn',
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 11,
+                                  ),
+                                ),
+                                const Text(
+                                  'فایل پشتیبان',
+                                  style: TextStyle(
+                                    fontFamily: 'Vazirmatn',
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 11,
+                                    color: Colors.blue,
+                                  ),
+                                ),
                               ],
                             ),
                             const Divider(),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                const Text('تعداد تراکنش‌ها:', style: TextStyle(fontFamily: 'Vazirmatn', fontSize: 12)),
-                                Text('$localTransactions', style: const TextStyle(fontSize: 12)),
-                                Text('$backupTransactions', style: const TextStyle(fontSize: 12, color: Colors.blue, fontWeight: FontWeight.bold)),
+                                const Text(
+                                  'تعداد تراکنش‌ها:',
+                                  style: TextStyle(
+                                    fontFamily: 'Vazirmatn',
+                                    fontSize: 12,
+                                  ),
+                                ),
+                                Text(
+                                  '$localTransactions',
+                                  style: const TextStyle(fontSize: 12),
+                                ),
+                                Text(
+                                  '$backupTransactions',
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.blue,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
                               ],
                             ),
                             SizedBox(height: spacing.xxs),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                const Text('حساب‌های بانکی:', style: TextStyle(fontFamily: 'Vazirmatn', fontSize: 12)),
-                                Text('$localAccounts', style: const TextStyle(fontSize: 12)),
-                                Text('$backupAccounts', style: const TextStyle(fontSize: 12, color: Colors.blue, fontWeight: FontWeight.bold)),
+                                const Text(
+                                  'حساب‌های بانکی:',
+                                  style: TextStyle(
+                                    fontFamily: 'Vazirmatn',
+                                    fontSize: 12,
+                                  ),
+                                ),
+                                Text(
+                                  '$localAccounts',
+                                  style: const TextStyle(fontSize: 12),
+                                ),
+                                Text(
+                                  '$backupAccounts',
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.blue,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
                               ],
                             ),
                           ],
@@ -311,7 +414,10 @@ abstract class BackupDialogs {
                 actions: [
                   TextButton(
                     onPressed: () => Navigator.pop(dialogCtx),
-                    child: const Text('لغو بازیابی', style: TextStyle(fontFamily: 'Vazirmatn')),
+                    child: const Text(
+                      'لغو بازیابی',
+                      style: TextStyle(fontFamily: 'Vazirmatn'),
+                    ),
                   ),
                   ElevatedButton(
                     onPressed: () {
@@ -319,13 +425,20 @@ abstract class BackupDialogs {
                       onApply(forceReplace);
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: forceReplace ? theme.colorScheme.error : theme.colorScheme.primary,
-                      foregroundColor: forceReplace ? theme.colorScheme.onError : theme.colorScheme.onPrimary,
+                      backgroundColor: forceReplace
+                          ? theme.colorScheme.error
+                          : theme.colorScheme.primary,
+                      foregroundColor: forceReplace
+                          ? theme.colorScheme.onError
+                          : theme.colorScheme.onPrimary,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(radius.m),
                       ),
                     ),
-                    child: const Text('اعمال تصمیم', style: TextStyle(fontFamily: 'Vazirmatn')),
+                    child: const Text(
+                      'اعمال تصمیم',
+                      style: TextStyle(fontFamily: 'Vazirmatn'),
+                    ),
                   ),
                 ],
               ),
@@ -356,22 +469,35 @@ abstract class BackupDialogs {
             ),
             title: Row(
               children: [
-                Icon(Icons.delete_forever_outlined, color: theme.colorScheme.error),
+                Icon(
+                  Icons.delete_forever_outlined,
+                  color: theme.colorScheme.error,
+                ),
                 SizedBox(width: spacing.xs),
                 const Text(
                   'حذف فایل پشتیبان',
-                  style: TextStyle(fontFamily: 'Vazirmatn', fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                    fontFamily: 'Vazirmatn',
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ],
             ),
             content: const Text(
               'شما در حال حذف دائمی این فایل پشتیبان از حافظه محلی گوشی هستید. این عمل غیر قابل بازگشت است.',
-              style: TextStyle(fontFamily: 'Vazirmatn', fontSize: 13, height: 1.5),
+              style: TextStyle(
+                fontFamily: 'Vazirmatn',
+                fontSize: 13,
+                height: 1.5,
+              ),
             ),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(dialogCtx),
-                child: const Text('انصراف', style: TextStyle(fontFamily: 'Vazirmatn')),
+                child: const Text(
+                  'انصراف',
+                  style: TextStyle(fontFamily: 'Vazirmatn'),
+                ),
               ),
               ElevatedButton(
                 onPressed: () {
@@ -385,7 +511,10 @@ abstract class BackupDialogs {
                     borderRadius: BorderRadius.circular(radius.m),
                   ),
                 ),
-                child: const Text('تایید و حذف دائم', style: TextStyle(fontFamily: 'Vazirmatn')),
+                child: const Text(
+                  'تایید و حذف دائم',
+                  style: TextStyle(fontFamily: 'Vazirmatn'),
+                ),
               ),
             ],
           ),
@@ -418,25 +547,38 @@ abstract class BackupDialogs {
                 SizedBox(width: spacing.xs),
                 const Text(
                   'عدم تأیید سلامت فایل',
-                  style: TextStyle(fontFamily: 'Vazirmatn', fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                    fontFamily: 'Vazirmatn',
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ],
             ),
             content: const Text(
               'بررسی سلامت دیتابیس ناموفق بود. امضای دیجیتال یا ساختار فایل خراب است. این فایل نباید برای بازیابی استفاده شود.',
-              style: TextStyle(fontFamily: 'Vazirmatn', fontSize: 13, height: 1.5),
+              style: TextStyle(
+                fontFamily: 'Vazirmatn',
+                fontSize: 13,
+                height: 1.5,
+              ),
             ),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(dialogCtx),
-                child: const Text('فهمیدم', style: TextStyle(fontFamily: 'Vazirmatn')),
+                child: const Text(
+                  'فهمیدم',
+                  style: TextStyle(fontFamily: 'Vazirmatn'),
+                ),
               ),
               OutlinedButton(
                 onPressed: () {
                   Navigator.pop(dialogCtx);
                   onVerifyAgain();
                 },
-                child: const Text('بررسی مجدد فایل', style: TextStyle(fontFamily: 'Vazirmatn')),
+                child: const Text(
+                  'بررسی مجدد فایل',
+                  style: TextStyle(fontFamily: 'Vazirmatn'),
+                ),
               ),
             ],
           ),
@@ -469,30 +611,45 @@ abstract class BackupDialogs {
                 SizedBox(width: spacing.xs),
                 const Text(
                   'خطا در بازیابی اطلاعات',
-                  style: TextStyle(fontFamily: 'Vazirmatn', fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                    fontFamily: 'Vazirmatn',
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ],
             ),
             content: const Text(
               'خطای غیرمنتظره‌ای هنگام مهاجرت پایگاه داده رخ داد. اطلاعات فعلی شما بدون هیچ تغییری حفظ شده است.',
-              style: TextStyle(fontFamily: 'Vazirmatn', fontSize: 13, height: 1.5),
+              style: TextStyle(
+                fontFamily: 'Vazirmatn',
+                fontSize: 13,
+                height: 1.5,
+              ),
             ),
             actions: [
               TextButton(
                 onPressed: () {
                   Navigator.pop(dialogCtx);
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('گزارش اشکال‌زدایی ذخیره شد.')),
+                    const SnackBar(
+                      content: Text('گزارش اشکال‌زدایی ذخیره شد.'),
+                    ),
                   );
                 },
-                child: const Text('مشاهده گزارش خطا', style: TextStyle(fontFamily: 'Vazirmatn')),
+                child: const Text(
+                  'مشاهده گزارش خطا',
+                  style: TextStyle(fontFamily: 'Vazirmatn'),
+                ),
               ),
               ElevatedButton(
                 onPressed: () {
                   Navigator.pop(dialogCtx);
                   onRetry();
                 },
-                child: const Text('تلاش مجدد', style: TextStyle(fontFamily: 'Vazirmatn')),
+                child: const Text(
+                  'تلاش مجدد',
+                  style: TextStyle(fontFamily: 'Vazirmatn'),
+                ),
               ),
             ],
           ),
@@ -521,29 +678,45 @@ abstract class BackupDialogs {
             ),
             title: Row(
               children: [
-                Icon(Icons.running_with_errors_outlined, color: theme.colorScheme.error),
+                Icon(
+                  Icons.running_with_errors_outlined,
+                  color: theme.colorScheme.error,
+                ),
                 SizedBox(width: spacing.xs),
                 const Text(
                   'فایل پشتیبان آسیب دیده است',
-                  style: TextStyle(fontFamily: 'Vazirmatn', fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                    fontFamily: 'Vazirmatn',
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ],
             ),
             content: const Text(
               'ساختار فایل پشتیبان (.bankyar) خوانا نیست. این فایل ناقص است یا دچار خرابی شده است.',
-              style: TextStyle(fontFamily: 'Vazirmatn', fontSize: 13, height: 1.5),
+              style: TextStyle(
+                fontFamily: 'Vazirmatn',
+                fontSize: 13,
+                height: 1.5,
+              ),
             ),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(dialogCtx),
-                child: const Text('انصراف', style: TextStyle(fontFamily: 'Vazirmatn')),
+                child: const Text(
+                  'انصراف',
+                  style: TextStyle(fontFamily: 'Vazirmatn'),
+                ),
               ),
               ElevatedButton(
                 onPressed: () {
                   Navigator.pop(dialogCtx);
                   onSelectAnother();
                 },
-                child: const Text('انتخاب فایل دیگر', style: TextStyle(fontFamily: 'Vazirmatn')),
+                child: const Text(
+                  'انتخاب فایل دیگر',
+                  style: TextStyle(fontFamily: 'Vazirmatn'),
+                ),
               ),
             ],
           ),
@@ -573,29 +746,45 @@ abstract class BackupDialogs {
             ),
             title: Row(
               children: [
-                Icon(Icons.lock_person_outlined, color: theme.colorScheme.error),
+                Icon(
+                  Icons.lock_person_outlined,
+                  color: theme.colorScheme.error,
+                ),
                 SizedBox(width: spacing.xs),
                 const Text(
                   'پین امنیتی اشتباه است',
-                  style: TextStyle(fontFamily: 'Vazirmatn', fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                    fontFamily: 'Vazirmatn',
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ],
             ),
             content: Text(
               'پین یا رمز عبور وارد شده با کلید رمزگذاری فایل تطابق ندارد. لطفاً پس از بررسی مجدد تلاش کنید.\nتعداد تلاش‌های باقی‌مانده: $attemptsRemaining بار تلاش',
-              style: const TextStyle(fontFamily: 'Vazirmatn', fontSize: 13, height: 1.5),
+              style: const TextStyle(
+                fontFamily: 'Vazirmatn',
+                fontSize: 13,
+                height: 1.5,
+              ),
             ),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(dialogCtx),
-                child: const Text('انصراف', style: TextStyle(fontFamily: 'Vazirmatn')),
+                child: const Text(
+                  'انصراف',
+                  style: TextStyle(fontFamily: 'Vazirmatn'),
+                ),
               ),
               ElevatedButton(
                 onPressed: () {
                   Navigator.pop(dialogCtx);
                   onReenter();
                 },
-                child: const Text('ورود مجدد پین', style: TextStyle(fontFamily: 'Vazirmatn')),
+                child: const Text(
+                  'ورود مجدد پین',
+                  style: TextStyle(fontFamily: 'Vazirmatn'),
+                ),
               ),
             ],
           ),
@@ -628,25 +817,38 @@ abstract class BackupDialogs {
                 SizedBox(width: spacing.xs),
                 const Text(
                   'حافظه گوشی پر است',
-                  style: TextStyle(fontFamily: 'Vazirmatn', fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                    fontFamily: 'Vazirmatn',
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ],
             ),
             content: const Text(
               'فضای کافی جهت ایجاد فایل پشتیبان جدید در دسترس نیست. حداقل به ۱۰ مگابایت فضای خالی نیاز است.',
-              style: TextStyle(fontFamily: 'Vazirmatn', fontSize: 13, height: 1.5),
+              style: TextStyle(
+                fontFamily: 'Vazirmatn',
+                fontSize: 13,
+                height: 1.5,
+              ),
             ),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(dialogCtx),
-                child: const Text('لغو فرآیند', style: TextStyle(fontFamily: 'Vazirmatn')),
+                child: const Text(
+                  'لغو فرآیند',
+                  style: TextStyle(fontFamily: 'Vazirmatn'),
+                ),
               ),
               OutlinedButton(
                 onPressed: () {
                   Navigator.pop(dialogCtx);
                   onRetry();
                 },
-                child: const Text('تلاش مجدد', style: TextStyle(fontFamily: 'Vazirmatn')),
+                child: const Text(
+                  'تلاش مجدد',
+                  style: TextStyle(fontFamily: 'Vazirmatn'),
+                ),
               ),
             ],
           ),

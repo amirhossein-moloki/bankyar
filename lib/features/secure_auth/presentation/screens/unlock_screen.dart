@@ -19,8 +19,10 @@ class UnlockScreen extends ConsumerStatefulWidget {
 
 class _UnlockScreenState extends ConsumerState<UnlockScreen> {
   bool _isRecoveryMode = false;
-  final List<TextEditingController> _wordControllers =
-      List.generate(12, (_) => TextEditingController());
+  final List<TextEditingController> _wordControllers = List.generate(
+    12,
+    (_) => TextEditingController(),
+  );
   Timer? _countdownTicker;
   int _secondsLeft = 0;
 
@@ -44,7 +46,9 @@ class _UnlockScreenState extends ConsumerState<UnlockScreen> {
       final session = ref.read(appLockCoordinatorProvider).session;
       if (session.isLockedOut) {
         setState(() {
-          _secondsLeft = session.lockoutUntil!.difference(DateTime.now()).inSeconds;
+          _secondsLeft = session.lockoutUntil!
+              .difference(DateTime.now())
+              .inSeconds;
         });
       } else {
         setState(() {
@@ -98,10 +102,14 @@ class _UnlockScreenState extends ConsumerState<UnlockScreen> {
           ),
           SizedBox(height: spacing.m),
           Text(
-            isLockedOut ? 'امکان ورود موقتاً مسدود است' : 'کد عبور ۴ رقمی خود را وارد کنید',
+            isLockedOut
+                ? 'امکان ورود موقتاً مسدود است'
+                : 'کد عبور ۴ رقمی خود را وارد کنید',
             style: theme.textTheme.titleMedium?.copyWith(
               fontWeight: FontWeight.bold,
-              color: isLockedOut ? theme.colorScheme.error : theme.colorScheme.onBackground,
+              color: isLockedOut
+                  ? theme.colorScheme.error
+                  : theme.colorScheme.onBackground,
             ),
           ),
           SizedBox(height: spacing.s),
@@ -125,8 +133,9 @@ class _UnlockScreenState extends ConsumerState<UnlockScreen> {
           SizedBox(height: spacing.xl),
           if (!isLockedOut)
             PinKeypad(
-              onDigitTap: (digit) =>
-                  ref.read(appLockCoordinatorProvider.notifier).appendDigit(digit),
+              onDigitTap: (digit) => ref
+                  .read(appLockCoordinatorProvider.notifier)
+                  .appendDigit(digit),
               onBackspaceTap: () =>
                   ref.read(appLockCoordinatorProvider.notifier).backspace(),
               leftAccessory: IconButton(
@@ -141,7 +150,9 @@ class _UnlockScreenState extends ConsumerState<UnlockScreen> {
                       .authenticateBiometrics();
                   if (success && mounted) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('برنامه با موفقیت قفل‌گشایی شد')),
+                      const SnackBar(
+                        content: Text('برنامه با موفقیت قفل‌گشایی شد'),
+                      ),
                     );
                   }
                 },
@@ -176,11 +187,10 @@ class _UnlockScreenState extends ConsumerState<UnlockScreen> {
           height: 18,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: isFilled ? theme.colorScheme.primary : theme.colorScheme.outlineVariant,
-            border: Border.all(
-              color: theme.colorScheme.primary,
-              width: 1.5,
-            ),
+            color: isFilled
+                ? theme.colorScheme.primary
+                : theme.colorScheme.outlineVariant,
+            border: Border.all(color: theme.colorScheme.primary, width: 1.5),
           ),
         );
       }),
@@ -207,7 +217,10 @@ class _UnlockScreenState extends ConsumerState<UnlockScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.hourglass_disabled_outlined, color: theme.colorScheme.error),
+                Icon(
+                  Icons.hourglass_disabled_outlined,
+                  color: theme.colorScheme.error,
+                ),
                 SizedBox(width: spacing.s),
                 Text(
                   'تلاش بیش از حد ناموفق',
@@ -258,7 +271,9 @@ class _UnlockScreenState extends ConsumerState<UnlockScreen> {
                 SizedBox(height: spacing.s),
                 Text(
                   'بازیابی با کلمات پشتیبان',
-                  style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 SizedBox(height: spacing.xs),
                 Text(
@@ -277,15 +292,12 @@ class _UnlockScreenState extends ConsumerState<UnlockScreen> {
               crossAxisSpacing: 8,
               childAspectRatio: 2.2,
             ),
-            delegate: SliverChildBuilderDelegate(
-              (context, index) {
-                return TextInputField(
-                  controller: _wordControllers[index],
-                  label: 'کلمه ${index + 1}',
-                );
-              },
-              childCount: 12,
-            ),
+            delegate: SliverChildBuilderDelegate((context, index) {
+              return TextInputField(
+                controller: _wordControllers[index],
+                label: 'کلمه ${index + 1}',
+              );
+            }, childCount: 12),
           ),
           SliverToBoxAdapter(
             child: Column(
@@ -294,7 +306,9 @@ class _UnlockScreenState extends ConsumerState<UnlockScreen> {
                 PrimaryButton(
                   label: 'بررسی و تایید کلمات بازیابی',
                   onPressed: () async {
-                    final words = _wordControllers.map((c) => c.text.trim()).toList();
+                    final words = _wordControllers
+                        .map((c) => c.text.trim())
+                        .toList();
                     final success = await ref
                         .read(appLockCoordinatorProvider.notifier)
                         .recoverWithSeedWords(words);
@@ -302,7 +316,9 @@ class _UnlockScreenState extends ConsumerState<UnlockScreen> {
                     if (success && mounted) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
-                          content: Text('اعتبارسنجی کلمات با موفقیت انجام شد. پین‌کد غیرفعال شد.'),
+                          content: Text(
+                            'اعتبارسنجی کلمات با موفقیت انجام شد. پین‌کد غیرفعال شد.',
+                          ),
                         ),
                       );
                       setState(() {
@@ -311,7 +327,9 @@ class _UnlockScreenState extends ConsumerState<UnlockScreen> {
                     } else if (mounted) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
-                          content: Text('کلمات پشتیبان مطابقت ندارند یا نامعتبر هستند.'),
+                          content: Text(
+                            'کلمات پشتیبان مطابقت ندارند یا نامعتبر هستند.',
+                          ),
                           backgroundColor: Colors.red,
                         ),
                       );

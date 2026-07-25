@@ -53,11 +53,7 @@ class TrendIndicator extends StatelessWidget {
 /// Custom painted Line Chart supporting RTL flow, high-contrast, and Material Design 3 tokens.
 class LineChart extends StatelessWidget {
   /// Constructor.
-  const LineChart({
-    required this.points,
-    required this.height,
-    super.key,
-  });
+  const LineChart({required this.points, required this.height, super.key});
 
   /// Coordinates to plot.
   final List<TrendPoint> points;
@@ -147,16 +143,18 @@ class _LineChartPainter extends CustomPainter {
       ..strokeWidth = 1.0
       ..style = PaintingStyle.stroke;
 
-    final textPainter = TextPainter(
-      textDirection: TextDirection.rtl,
-    );
+    final textPainter = TextPainter(textDirection: TextDirection.rtl);
 
     const int divisions = 4;
     for (int i = 0; i <= divisions; i++) {
       final double y = paddingTop + drawHeight - (i * (drawHeight / divisions));
       final double value = (maxVal / divisions) * i;
 
-      canvas.drawLine(Offset(paddingLeft, y), Offset(size.width - paddingRight, y), gridPaint);
+      canvas.drawLine(
+        Offset(paddingLeft, y),
+        Offset(size.width - paddingRight, y),
+        gridPaint,
+      );
 
       textPainter.text = TextSpan(
         text: CurrencyFormatter.formatToman(value),
@@ -168,15 +166,19 @@ class _LineChartPainter extends CustomPainter {
       textPainter.paint(canvas, Offset(labelX, y - textPainter.height / 2));
     }
 
-    final double stepX = points.length > 1 ? drawWidth / (points.length - 1) : drawWidth;
+    final double stepX = points.length > 1
+        ? drawWidth / (points.length - 1)
+        : drawWidth;
 
     final incomePath = Path();
     final expensePath = Path();
 
     for (int i = 0; i < points.length; i++) {
       final p = points[i];
-      final double incomeY = paddingTop + drawHeight - (p.income / maxVal) * drawHeight;
-      final double expenseY = paddingTop + drawHeight - (p.expense / maxVal) * drawHeight;
+      final double incomeY =
+          paddingTop + drawHeight - (p.income / maxVal) * drawHeight;
+      final double expenseY =
+          paddingTop + drawHeight - (p.expense / maxVal) * drawHeight;
 
       final double x = isRtl
           ? (size.width - paddingRight - (i * stepX))
@@ -190,13 +192,17 @@ class _LineChartPainter extends CustomPainter {
         expensePath.lineTo(x, expenseY);
       }
 
-      if (points.length < 7 || i % (points.length ~/ 3).clamp(1, points.length) == 0) {
+      if (points.length < 7 ||
+          i % (points.length ~/ 3).clamp(1, points.length) == 0) {
         textPainter.text = TextSpan(
           text: p.label,
           style: TextStyle(color: textColor, fontSize: 8),
         );
         textPainter.layout();
-        textPainter.paint(canvas, Offset(x - textPainter.width / 2, size.height - paddingBottom + 4.0));
+        textPainter.paint(
+          canvas,
+          Offset(x - textPainter.width / 2, size.height - paddingBottom + 4.0),
+        );
       }
     }
 
@@ -221,11 +227,7 @@ class _LineChartPainter extends CustomPainter {
 /// Responsive Bar Chart supporting RTL order and custom themes.
 class BarChart extends StatelessWidget {
   /// Constructor.
-  const BarChart({
-    required this.points,
-    required this.height,
-    super.key,
-  });
+  const BarChart({required this.points, required this.height, super.key});
 
   /// Trend coordinates representing columns.
   final List<TrendPoint> points;
@@ -308,23 +310,28 @@ class _BarChartPainter extends CustomPainter {
       ..color = gridColor
       ..strokeWidth = 1.0;
 
-    final textPainter = TextPainter(
-      textDirection: TextDirection.rtl,
-    );
+    final textPainter = TextPainter(textDirection: TextDirection.rtl);
 
     const int divisions = 4;
     for (int i = 0; i <= divisions; i++) {
       final double y = paddingTop + drawHeight - (i * (drawHeight / divisions));
       final double value = (maxVal / divisions) * i;
 
-      canvas.drawLine(Offset(paddingLeft, y), Offset(size.width - paddingRight, y), gridPaint);
+      canvas.drawLine(
+        Offset(paddingLeft, y),
+        Offset(size.width - paddingRight, y),
+        gridPaint,
+      );
 
       textPainter.text = TextSpan(
         text: CurrencyFormatter.formatToman(value),
         style: TextStyle(color: textColor, fontSize: 8),
       );
       textPainter.layout();
-      textPainter.paint(canvas, Offset(size.width - paddingRight + 4.0, y - textPainter.height / 2));
+      textPainter.paint(
+        canvas,
+        Offset(size.width - paddingRight + 4.0, y - textPainter.height / 2),
+      );
     }
 
     final double totalBarGroups = points.length.toDouble();
@@ -343,8 +350,10 @@ class _BarChartPainter extends CustomPainter {
     for (int i = 0; i < points.length; i++) {
       final p = points[i];
 
-      final double incomeY = paddingTop + drawHeight - (p.income / maxVal) * drawHeight;
-      final double expenseY = paddingTop + drawHeight - (p.expense / maxVal) * drawHeight;
+      final double incomeY =
+          paddingTop + drawHeight - (p.income / maxVal) * drawHeight;
+      final double expenseY =
+          paddingTop + drawHeight - (p.expense / maxVal) * drawHeight;
 
       final double groupCenter = isRtl
           ? (size.width - paddingRight - (i * groupWidth) - groupWidth / 2)
@@ -355,7 +364,12 @@ class _BarChartPainter extends CustomPainter {
 
       canvas.drawRRect(
         RRect.fromRectAndCorners(
-          Rect.fromLTRB(incomeX, incomeY, incomeX + barWidth, paddingTop + drawHeight),
+          Rect.fromLTRB(
+            incomeX,
+            incomeY,
+            incomeX + barWidth,
+            paddingTop + drawHeight,
+          ),
           topLeft: const Radius.circular(2),
           topRight: const Radius.circular(2),
         ),
@@ -364,7 +378,12 @@ class _BarChartPainter extends CustomPainter {
 
       canvas.drawRRect(
         RRect.fromRectAndCorners(
-          Rect.fromLTRB(expenseX, expenseY, expenseX + barWidth, paddingTop + drawHeight),
+          Rect.fromLTRB(
+            expenseX,
+            expenseY,
+            expenseX + barWidth,
+            paddingTop + drawHeight,
+          ),
           topLeft: const Radius.circular(2),
           topRight: const Radius.circular(2),
         ),
@@ -376,7 +395,13 @@ class _BarChartPainter extends CustomPainter {
         style: TextStyle(color: textColor, fontSize: 8),
       );
       textPainter.layout();
-      textPainter.paint(canvas, Offset(groupCenter - textPainter.width / 2, size.height - paddingBottom + 4.0));
+      textPainter.paint(
+        canvas,
+        Offset(
+          groupCenter - textPainter.width / 2,
+          size.height - paddingBottom + 4.0,
+        ),
+      );
     }
   }
 
@@ -389,11 +414,7 @@ class _BarChartPainter extends CustomPainter {
 /// Custom Donut/Pie Chart representing categorical distributions.
 class PieDonutChart extends StatelessWidget {
   /// Constructor.
-  const PieDonutChart({
-    required this.data,
-    required this.height,
-    super.key,
-  });
+  const PieDonutChart({required this.data, required this.height, super.key});
 
   /// Categories mapping to absolute amounts.
   final Map<String, double> data;
@@ -440,7 +461,9 @@ class PieDonutChart extends StatelessWidget {
             itemCount: sortedEntries.length.clamp(0, 5),
             itemBuilder: (context, index) {
               final entry = sortedEntries[index];
-              final percentage = totalSum > 0 ? (entry.value / totalSum) * 100 : 0.0;
+              final percentage = totalSum > 0
+                  ? (entry.value / totalSum) * 100
+                  : 0.0;
               final color = palette[index % palette.length];
 
               return Padding(

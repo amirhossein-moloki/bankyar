@@ -22,11 +22,11 @@ class SecuritySettings {
 
   /// Factory for standard default secure configurations.
   factory SecuritySettings.initial() => const SecuritySettings(
-        isPinEnabled: false,
-        isBiometricsEnabled: false,
-        autoLockTimeout: Duration(minutes: 1),
-        isPrivacyModeEnabled: false,
-      );
+    isPinEnabled: false,
+    isBiometricsEnabled: false,
+    autoLockTimeout: Duration(minutes: 1),
+    isPrivacyModeEnabled: false,
+  );
 
   /// Helper to create a copy of the settings with modified fields.
   SecuritySettings copyWith({
