@@ -54,7 +54,7 @@ void main() {
     registerFallbackValue(LogLevel.error);
     registerFallbackValue(LogCategories.backup);
     registerFallbackValue(ConflictAlgorithm.replace);
-    registerFallbackValue(const []);
+    registerFallbackValue(<String>[]);
   });
 
   setUp(() {
@@ -230,10 +230,6 @@ void main() {
           backupBytes: backupBytes,
           forceReplace: true,
         );
-
-        if (res.isFailure) {
-          print('RESTORATION FAILED WITH: ${res.failureOrCrash.message}');
-        }
 
         expect(res.isSuccess, isTrue);
       },

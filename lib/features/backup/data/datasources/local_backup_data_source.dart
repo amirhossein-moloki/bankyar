@@ -35,7 +35,6 @@ abstract class LocalBackupDataSource {
 /// Concrete production-ready implementation of [LocalBackupDataSource]
 /// utilizing secure [FileStorage] and [PreferencesStorage].
 class LocalBackupDataSourceImpl implements LocalBackupDataSource {
-
   /// Constructor.
   LocalBackupDataSourceImpl({
     required FileStorage fileStorage,

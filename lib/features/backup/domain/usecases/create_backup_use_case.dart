@@ -5,9 +5,9 @@ import '../repository/backup_repository.dart';
 
 /// Parameters for creating a manual or automatic backup.
 class CreateBackupParams {
-
   /// Constructor.
   const CreateBackupParams({required this.password, required this.isManual});
+
   /// The user's encryption password.
   final String password;
 
@@ -18,7 +18,6 @@ class CreateBackupParams {
 /// Executes database serialization and AES-256 encryption backup generation.
 class CreateBackupUseCase
     implements UseCase<BackupHistoryItem, CreateBackupParams> {
-
   /// Constructor.
   CreateBackupUseCase(this._repository);
   final BackupRepository _repository;

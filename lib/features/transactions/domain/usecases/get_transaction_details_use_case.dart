@@ -4,8 +4,7 @@ import '../entities/transaction_details.dart';
 import '../repository/transaction_repository.dart';
 
 /// Use case to fetch full enriched transaction details.
-class GetTransactionDetailsUseCase
-    extends UseCase<Result<TransactionDetails>, String> {
+class GetTransactionDetailsUseCase extends UseCase<TransactionDetails, String> {
   /// Constructor.
   GetTransactionDetailsUseCase(this._repository);
 

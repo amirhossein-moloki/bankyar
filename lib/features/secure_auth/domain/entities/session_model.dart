@@ -1,6 +1,5 @@
 /// Model representing the local application authentication session state.
 class SessionModel {
-
   /// Constructor.
   const SessionModel({
     required this.isAuthenticated,
@@ -16,6 +15,7 @@ class SessionModel {
     failedAttempts: 0,
     lockoutUntil: null,
   );
+
   /// Whether the user has successfully unlocked the application during this run.
   final bool isAuthenticated;
 

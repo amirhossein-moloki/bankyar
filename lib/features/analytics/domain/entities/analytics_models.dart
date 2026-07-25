@@ -71,7 +71,6 @@ class FinancialInsight extends Entity<String> {
 
 /// Comprehensive aggregate financial analytical summary for a date range.
 class AnalyticsSummary {
-
   /// Factory creating empty summary state when no records exist.
   factory AnalyticsSummary.empty() {
     return const AnalyticsSummary(
@@ -91,6 +90,7 @@ class AnalyticsSummary {
       recentInsights: [],
     );
   }
+
   /// Constructor.
   const AnalyticsSummary({
     required this.totalIncome,

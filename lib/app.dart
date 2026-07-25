@@ -43,6 +43,7 @@ class BankYarApp extends ConsumerWidget {
                 textDirection: TextDirection.rtl,
                 child: Stack(
                   children: [
+                    // ignore: use_null_aware_elements
                     if (child != null) child,
                     // Security overlay completely blocks interaction and shields data
                     if (!authState.isAppUnlocked)
@@ -66,9 +67,9 @@ class BankYarApp extends ConsumerWidget {
 
 /// Helper observer widget tracking user haptic interactions to delay auto-locks.
 class AppLifecycleObserver extends ConsumerWidget {
-
   /// Constructor.
   const AppLifecycleObserver({super.key, required this.child});
+
   /// The nested UI child widget to render underneath.
   final Widget child;
 

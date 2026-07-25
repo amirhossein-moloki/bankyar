@@ -13,7 +13,6 @@ enum TimeRangePreset {
 
 /// Domain Value Object encapsulating start and end date bounds for reporting.
 class TimeRange extends ValueObject<TimeRangePreset> {
-
   /// Helper factory to generate predefined ranges based on a given time anchor.
   factory TimeRange.fromPreset(TimeRangePreset preset, DateTime anchor) {
     switch (preset) {
@@ -100,6 +99,7 @@ class TimeRange extends ValueObject<TimeRangePreset> {
         );
     }
   }
+
   /// Constructor defining concrete chronological bounds.
   const TimeRange(
     super.value, {

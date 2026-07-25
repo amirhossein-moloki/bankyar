@@ -6,12 +6,10 @@ import '../../domain/entities/security_settings.dart';
 import '../../domain/usecases/get_security_settings_use_case.dart';
 import '../../domain/usecases/setup_pin_use_case.dart';
 import '../../domain/usecases/update_security_settings_use_case.dart';
-import '../../domain/usecases/verify_biometrics_use_case.dart';
 import '../../data/repositories/security_repository_provider.dart';
 
 /// Combined state representing the user's security configuration profile.
 class SecurityState {
-
   /// Constructor.
   const SecurityState({
     required this.settings,
@@ -25,6 +23,7 @@ class SecurityState {
     biometricCapabilities: BiometricCapabilities.initial(),
     isLoading: false,
   );
+
   /// The active security and privacy configuration options.
   final SecuritySettings settings;
 
@@ -51,18 +50,15 @@ class SecurityState {
 
 /// StateNotifier orchestrating preferences updates, biometrics checks, and settings toggle actions.
 class SecurityNotifier extends StateNotifier<SecurityState> {
-
   /// Constructor initiating automatic profile loading.
   SecurityNotifier({
     required SetupPinUseCase setupPinUseCase,
     required GetSecuritySettingsUseCase getSecuritySettingsUseCase,
     required UpdateSecuritySettingsUseCase updateSecuritySettingsUseCase,
-    required VerifyBiometricsUseCase verifyBiometricsUseCase,
     required Ref ref,
   }) : _setupPinUseCase = setupPinUseCase,
        _getSecuritySettingsUseCase = getSecuritySettingsUseCase,
        _updateSecuritySettingsUseCase = updateSecuritySettingsUseCase,
-       _verifyBiometricsUseCase = verifyBiometricsUseCase,
        _ref = ref,
        super(SecurityState.initial()) {
     loadSettings();
@@ -70,7 +66,6 @@ class SecurityNotifier extends StateNotifier<SecurityState> {
   final SetupPinUseCase _setupPinUseCase;
   final GetSecuritySettingsUseCase _getSecuritySettingsUseCase;
   final UpdateSecuritySettingsUseCase _updateSecuritySettingsUseCase;
-  final VerifyBiometricsUseCase _verifyBiometricsUseCase;
   final Ref _ref;
 
   /// Retrieves current on-device preferences and capabilities.
@@ -177,13 +172,11 @@ final securityNotifierProvider =
       final setupPin = ref.watch(setupPinUseCaseProvider);
       final getSettings = ref.watch(getSecuritySettingsUseCaseProvider);
       final updateSettings = ref.watch(updateSecuritySettingsUseCaseProvider);
-      final verifyBio = ref.watch(verifyBiometricsUseCaseProvider);
 
       return SecurityNotifier(
         setupPinUseCase: setupPin,
         getSecuritySettingsUseCase: getSettings,
         updateSecuritySettingsUseCase: updateSettings,
-        verifyBiometricsUseCase: verifyBio,
         ref: ref,
       );
     });

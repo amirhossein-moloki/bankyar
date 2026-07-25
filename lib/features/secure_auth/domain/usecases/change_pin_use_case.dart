@@ -4,9 +4,9 @@ import '../repository/security_repository.dart';
 
 /// Parameter wrapper for modifying existing PIN values.
 class ChangePinParams {
-
   /// Constructor.
   const ChangePinParams({required this.oldPin, required this.newPin});
+
   /// User's current PIN.
   final String oldPin;
 
@@ -16,7 +16,6 @@ class ChangePinParams {
 
 /// Use case to safely modify the active PIN after validating the current credentials.
 class ChangePinUseCase implements UseCase<void, ChangePinParams> {
-
   /// Constructor.
   const ChangePinUseCase(this._repository);
   final SecurityRepository _repository;

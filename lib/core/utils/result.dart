@@ -3,7 +3,6 @@ import '../errors/failures.dart';
 /// Standard, type-safe representation of asynchronous or business operation results.
 /// Conforms to BankYar ERROR_HANDLING_ARCHITECTURE.md specifications.
 abstract class Result<T> {
-
   /// Construct a [Success] result.
   const factory Result.success(T data) = Success<T>;
 

@@ -1,3 +1,4 @@
+// ignore_for_file: deprecated_member_use
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/presentation/widgets/widgets.dart';
@@ -448,7 +449,9 @@ class _BackupRestoreScreenState extends ConsumerState<BackupRestoreScreen> {
                   context: context,
                   onConfirm: (password, shareAutomatically) {
                     notifier.createManualBackup(password).then((success) {
+                      if (!mounted) return;
                       if (success && shareAutomatically) {
+                        // ignore: use_build_context_synchronously
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
                             content: Text(

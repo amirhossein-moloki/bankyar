@@ -6,7 +6,6 @@ import '../repository/backup_repository.dart';
 /// Use case that fetches the list of historical backups cached on device.
 class GetBackupHistoryUseCase
     implements UseCase<List<BackupHistoryItem>, NoParams> {
-
   /// Constructor.
   GetBackupHistoryUseCase(this._repository);
   final BackupRepository _repository;

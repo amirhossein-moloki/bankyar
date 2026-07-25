@@ -1,3 +1,4 @@
+// ignore_for_file: deprecated_member_use
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/presentation/widgets/widgets.dart';
@@ -18,8 +19,6 @@ class StatisticsDashboardScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final uiState = ref.watch(analyticsViewModelProvider);
-    final theme = Theme.of(context);
-    final spacing = theme.extension<SpacingExtension>()!;
 
     return Scaffold(
       appBar: CustomAppBar(
@@ -609,17 +608,11 @@ class _LoadingSkeletonWorkspace extends StatelessWidget {
             Row(
               children: [
                 const Expanded(
-                  child: SkeletonLoader(
-                    height: 100,
-                    width: double.infinity,
-                  ),
+                  child: SkeletonLoader(height: 100, width: double.infinity),
                 ),
                 SizedBox(width: spacing.s),
                 const Expanded(
-                  child: SkeletonLoader(
-                    height: 100,
-                    width: double.infinity,
-                  ),
+                  child: SkeletonLoader(height: 100, width: double.infinity),
                 ),
               ],
             ),
@@ -627,17 +620,11 @@ class _LoadingSkeletonWorkspace extends StatelessWidget {
             Row(
               children: [
                 const Expanded(
-                  child: SkeletonLoader(
-                    height: 100,
-                    width: double.infinity,
-                  ),
+                  child: SkeletonLoader(height: 100, width: double.infinity),
                 ),
                 SizedBox(width: spacing.s),
                 const Expanded(
-                  child: SkeletonLoader(
-                    height: 100,
-                    width: double.infinity,
-                  ),
+                  child: SkeletonLoader(height: 100, width: double.infinity),
                 ),
               ],
             ),

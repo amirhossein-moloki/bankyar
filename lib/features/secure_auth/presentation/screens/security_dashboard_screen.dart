@@ -1,3 +1,4 @@
+// ignore_for_file: deprecated_member_use
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -26,7 +27,6 @@ class SecurityDashboardScreen extends ConsumerStatefulWidget {
 }
 
 class _UnlockHoldListener extends StatefulWidget {
-
   const _UnlockHoldListener({required this.onHoldSuccess, required this.child});
   final VoidCallback onHoldSuccess;
   final Widget child;
@@ -125,7 +125,8 @@ class _UnlockHoldListenerState extends State<_UnlockHoldListener> {
 class _SecurityDashboardScreenState
     extends ConsumerState<SecurityDashboardScreen> {
   final Map<AppPermission, PermissionStatus> _permissionStatuses = {};
-  StreamSubscription? _permissionSubscription;
+  StreamSubscription<Map<AppPermission, PermissionStatus>>?
+  _permissionSubscription;
 
   @override
   void initState() {
@@ -383,7 +384,7 @@ class _SecurityDashboardScreenState
                 if (val) {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(
+                    MaterialPageRoute<void>(
                       builder: (context) => const CreatePinScreen(),
                     ),
                   );
@@ -404,7 +405,7 @@ class _SecurityDashboardScreenState
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(
+                    MaterialPageRoute<void>(
                       builder: (context) => const ChangePinScreen(),
                     ),
                   );
@@ -775,8 +776,7 @@ class _SecurityDashboardScreenState
   }
 
   void _showDisablePinConfirmation() {
-    final theme = Theme.of(context);
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('غیرفعال‌سازی پین‌کد؟'),
@@ -806,7 +806,7 @@ class _SecurityDashboardScreenState
   }
 
   void _showOfflineInfoSheet() {
-    showModalBottomSheet(
+    showModalBottomSheet<void>(
       context: context,
       builder: (context) => Directionality(
         textDirection: TextDirection.rtl,
@@ -844,7 +844,7 @@ class _SecurityDashboardScreenState
   }
 
   void _showCollectedDataSheet(ThemeData theme, SpacingExtension spacing) {
-    showModalBottomSheet(
+    showModalBottomSheet<void>(
       context: context,
       builder: (context) => Directionality(
         textDirection: TextDirection.rtl,
@@ -889,7 +889,7 @@ class _SecurityDashboardScreenState
   }
 
   void _showEmergencyPurgeConfirmation() {
-    showDialog(
+    showDialog<void>(
       context: context,
       barrierDismissible: false,
       builder: (dialogCtx) => Directionality(
@@ -900,8 +900,9 @@ class _SecurityDashboardScreenState
             await ref
                 .read(appLockCoordinatorProvider.notifier)
                 .triggerEmergencyPurge();
-            if (mounted) {
+            if (context.mounted) {
               Navigator.pop(dialogCtx); // pop dialog
+              // ignore: use_build_context_synchronously
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
                   content: Text(

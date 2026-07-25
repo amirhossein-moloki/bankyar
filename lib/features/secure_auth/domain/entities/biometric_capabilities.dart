@@ -1,6 +1,5 @@
 /// Model representing the biometric hardware status on the active device.
 class BiometricCapabilities {
-
   /// Constructor.
   const BiometricCapabilities({
     required this.isHardwareAvailable,
@@ -14,6 +13,7 @@ class BiometricCapabilities {
     isEnrolled: false,
     isEnabled: false,
   );
+
   /// Whether the device has biometric scanning hardware available.
   final bool isHardwareAvailable;
 

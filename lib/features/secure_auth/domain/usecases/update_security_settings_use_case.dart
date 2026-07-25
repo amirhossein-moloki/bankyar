@@ -5,7 +5,6 @@ import '../repository/security_repository.dart';
 
 /// Use case to persist modifications to active security/privacy configurations.
 class UpdateSecuritySettingsUseCase implements UseCase<void, SecuritySettings> {
-
   /// Constructor.
   const UpdateSecuritySettingsUseCase(this._repository);
   final SecurityRepository _repository;

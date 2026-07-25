@@ -16,7 +16,6 @@ import '../datasources/local_backup_data_source.dart';
 
 /// Production-ready implementation of [BackupRepository] managing table state serialization.
 class BackupRepositoryImpl implements BackupRepository {
-
   /// Constructor.
   BackupRepositoryImpl({
     required LocalBackupDataSource localBackupDataSource,

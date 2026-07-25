@@ -1,3 +1,4 @@
+// ignore_for_file: deprecated_member_use
 import 'package:flutter/material.dart';
 import '../../../../core/theme/radius_tokens.dart';
 import '../../../../core/theme/spacing_tokens.dart';
@@ -110,7 +111,9 @@ class _NotificationCardState extends State<NotificationCard> {
                   ? theme.colorScheme.primaryContainer.withOpacity(0.12)
                   : (widget.item.isRead
                         ? theme.colorScheme.surface
-                        : theme.colorScheme.surfaceContainerHighest.withOpacity(0.35)),
+                        : theme.colorScheme.surfaceContainerHighest.withOpacity(
+                            0.35,
+                          )),
               borderRadius: const BorderRadius.all(
                 Radius.circular(RadiusTokens.m),
               ),

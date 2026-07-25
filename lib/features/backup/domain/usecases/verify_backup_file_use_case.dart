@@ -4,12 +4,12 @@ import '../repository/backup_repository.dart';
 
 /// Parameters for verifying backup file integrity.
 class VerifyBackupFileParams {
-
   /// Constructor.
   const VerifyBackupFileParams({
     required this.filePath,
     required this.password,
   });
+
   /// File system path to the .bankyar archive.
   final String filePath;
 
@@ -19,7 +19,6 @@ class VerifyBackupFileParams {
 
 /// Use case to run standard checksum and decryption checks on a backup archive.
 class VerifyBackupFileUseCase implements UseCase<bool, VerifyBackupFileParams> {
-
   /// Constructor.
   VerifyBackupFileUseCase(this._repository);
   final BackupRepository _repository;

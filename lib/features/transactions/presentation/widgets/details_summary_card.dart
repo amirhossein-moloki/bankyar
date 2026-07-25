@@ -1,3 +1,4 @@
+// ignore_for_file: deprecated_member_use
 import 'package:flutter/material.dart';
 import '../../../../core/presentation/widgets/widgets.dart';
 import '../../../../core/theme/color_tokens.dart';

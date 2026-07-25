@@ -140,7 +140,7 @@ class DetailsNotesTagsSection extends ConsumerWidget {
 
   void _showEditNoteDialog(BuildContext context, String currentNote) {
     final controller = TextEditingController(text: currentNote);
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('ویرایش یادداشت', textDirection: TextDirection.rtl),
@@ -172,7 +172,7 @@ class DetailsNotesTagsSection extends ConsumerWidget {
 
   void _showAddTagDialog(BuildContext context, List<String> currentTags) {
     final controller = TextEditingController();
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text(
