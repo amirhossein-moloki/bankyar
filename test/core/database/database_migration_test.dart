@@ -19,8 +19,13 @@ void main() {
   group('Database Migration and Bootstrap Tests', () {
     test('onConfigure applies correct performance pragmas and keying', () async {
       final executedSqls = <String>[];
+      final rawQueries = <String>[];
       when(() => mockDb.execute(any())).thenAnswer((invocation) async {
         executedSqls.add(invocation.positionalArguments[0] as String);
+      });
+      when(() => mockDb.rawQuery(any())).thenAnswer((invocation) async {
+        rawQueries.add(invocation.positionalArguments[0] as String);
+        return [];
       });
 
       // Directly invoke schema configuration step to verify
@@ -29,24 +34,24 @@ void main() {
         version: 1,
         onConfigure: (db) async {
           await db.execute("PRAGMA key = '0102030405';");
-          await db.execute('PRAGMA journal_mode = WAL;');
-          await db.execute('PRAGMA synchronous = NORMAL;');
-          await db.execute('PRAGMA secure_delete = ON;');
-          await db.execute('PRAGMA page_size = 4096;');
-          await db.execute('PRAGMA cache_size = 2000;');
-          await db.execute('PRAGMA foreign_keys = ON;');
+          await db.rawQuery('PRAGMA journal_mode = WAL;');
+          await db.rawQuery('PRAGMA synchronous = NORMAL;');
+          await db.rawQuery('PRAGMA secure_delete = ON;');
+          await db.rawQuery('PRAGMA page_size = 4096;');
+          await db.rawQuery('PRAGMA cache_size = 2000;');
+          await db.rawQuery('PRAGMA foreign_keys = ON;');
         },
       );
 
       await openDatabaseOptions.onConfigure!(mockDb);
 
       expect(executedSqls, contains("PRAGMA key = '0102030405';"));
-      expect(executedSqls, contains('PRAGMA journal_mode = WAL;'));
-      expect(executedSqls, contains('PRAGMA synchronous = NORMAL;'));
-      expect(executedSqls, contains('PRAGMA secure_delete = ON;'));
-      expect(executedSqls, contains('PRAGMA page_size = 4096;'));
-      expect(executedSqls, contains('PRAGMA cache_size = 2000;'));
-      expect(executedSqls, contains('PRAGMA foreign_keys = ON;'));
+      expect(rawQueries, contains('PRAGMA journal_mode = WAL;'));
+      expect(rawQueries, contains('PRAGMA synchronous = NORMAL;'));
+      expect(rawQueries, contains('PRAGMA secure_delete = ON;'));
+      expect(rawQueries, contains('PRAGMA page_size = 4096;'));
+      expect(rawQueries, contains('PRAGMA cache_size = 2000;'));
+      expect(rawQueries, contains('PRAGMA foreign_keys = ON;'));
     });
   });
 }
