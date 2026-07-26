@@ -73,12 +73,14 @@ class DatabaseServiceImpl implements DatabaseService {
             await db.execute("PRAGMA key = '$keyHex';");
           }
           // Performance Tuning Pragmas according to DATABASE_ARCHITECTURE.md
-          await db.execute('PRAGMA journal_mode = WAL;');
-          await db.execute('PRAGMA synchronous = NORMAL;');
-          await db.execute('PRAGMA secure_delete = ON;');
-          await db.execute('PRAGMA page_size = 4096;');
-          await db.execute('PRAGMA cache_size = 2000;');
-          await db.execute('PRAGMA foreign_keys = ON;');
+          // Note: Using rawQuery instead of execute for PRAGMAs that might return values
+          // to prevent DatabaseException on Android (unknown error code 0 SQLITE_OK).
+          await db.rawQuery('PRAGMA journal_mode = WAL;');
+          await db.rawQuery('PRAGMA synchronous = NORMAL;');
+          await db.rawQuery('PRAGMA secure_delete = ON;');
+          await db.rawQuery('PRAGMA page_size = 4096;');
+          await db.rawQuery('PRAGMA cache_size = 2000;');
+          await db.rawQuery('PRAGMA foreign_keys = ON;');
         },
         onCreate: (db, version) async {
           _logger.log(
