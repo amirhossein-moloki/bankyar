@@ -6,6 +6,7 @@ import 'core/utils/result.dart';
 import 'core/utils/result_extensions.dart';
 import 'core/navigation/router.dart';
 import 'core/theme/app_theme.dart';
+import 'features/secure_auth/domain/entities/session_status.dart';
 import 'features/secure_auth/presentation/screens/unlock_screen.dart';
 import 'features/secure_auth/presentation/state/app_lock_coordinator.dart';
 import 'l10n/app_localizations.dart';
@@ -86,7 +87,8 @@ class BankYarApp extends ConsumerWidget {
                     // ignore: use_null_aware_elements
                     if (child != null) child,
                     // Security overlay completely blocks interaction and shields data
-                    if (!authState.isAppUnlocked)
+                    if (!authState.isAppUnlocked &&
+                        authState.sessionStatus != SessionStatus.SessionStarted)
                       Positioned.fill(
                         child: FocusScope(
                           node:
