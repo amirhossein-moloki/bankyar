@@ -81,7 +81,7 @@ abstract class SqliteBaseDao<T> implements BaseDao<T> {
 
       _tableMutationController.add(tableName);
       return const Result.success(null);
-    } on Exception catch (e, stack) {
+    } catch (e, stack) {
       logger.log(
         LogLevel.error,
         LogCategories.database,
@@ -90,6 +90,9 @@ abstract class SqliteBaseDao<T> implements BaseDao<T> {
         error: e,
         stackTrace: stack,
       );
+      if (e is Failure) {
+        return Result.failure(e);
+      }
       return Result.failure(
         DatabaseCorruptionFailure(
           code: 'BY_DAO_INSERT_FAILED',
@@ -116,7 +119,7 @@ abstract class SqliteBaseDao<T> implements BaseDao<T> {
 
       final entity = fromMap(results.first);
       return Result.success(entity);
-    } on Exception catch (e, stack) {
+    } catch (e, stack) {
       logger.log(
         LogLevel.error,
         LogCategories.database,
@@ -126,6 +129,9 @@ abstract class SqliteBaseDao<T> implements BaseDao<T> {
         error: e,
         stackTrace: stack,
       );
+      if (e is Failure) {
+        return Result.failure(e);
+      }
       return Result.failure(
         DatabaseCorruptionFailure(
           code: 'BY_DAO_FIND_FAILED',
@@ -146,7 +152,7 @@ abstract class SqliteBaseDao<T> implements BaseDao<T> {
 
       final list = results.map(fromMap).toList();
       return Result.success(list);
-    } on Exception catch (e, stack) {
+    } catch (e, stack) {
       logger.log(
         LogLevel.error,
         LogCategories.database,
@@ -155,6 +161,9 @@ abstract class SqliteBaseDao<T> implements BaseDao<T> {
         error: e,
         stackTrace: stack,
       );
+      if (e is Failure) {
+        return Result.failure(e);
+      }
       return Result.failure(
         DatabaseCorruptionFailure(
           code: 'BY_DAO_LIST_FAILED',
@@ -165,10 +174,9 @@ abstract class SqliteBaseDao<T> implements BaseDao<T> {
   }
 
   @override
-  Stream<Result<List<T>>> getChronologicalStream() {
-    // Perform an initial fetch on first stream creation
-    _triggerStreamRequery();
-    return _chronologicalStreamController.stream;
+  Stream<Result<List<T>>> getChronologicalStream() async* {
+    yield await getChronologicalList();
+    yield* _chronologicalStreamController.stream;
   }
 
   @override
@@ -187,7 +195,7 @@ abstract class SqliteBaseDao<T> implements BaseDao<T> {
 
       _tableMutationController.add(tableName);
       return const Result.success(null);
-    } on Exception catch (e, stack) {
+    } catch (e, stack) {
       logger.log(
         LogLevel.error,
         LogCategories.database,
@@ -196,6 +204,9 @@ abstract class SqliteBaseDao<T> implements BaseDao<T> {
         error: e,
         stackTrace: stack,
       );
+      if (e is Failure) {
+        return Result.failure(e);
+      }
       return Result.failure(
         DatabaseCorruptionFailure(
           code: 'BY_DAO_DELETE_FAILED',
@@ -231,7 +242,7 @@ abstract class SqliteBaseDao<T> implements BaseDao<T> {
 
       _tableMutationController.add(tableName);
       return const Result.success(null);
-    } on Exception catch (e, stack) {
+    } catch (e, stack) {
       logger.log(
         LogLevel.error,
         LogCategories.database,
@@ -240,6 +251,9 @@ abstract class SqliteBaseDao<T> implements BaseDao<T> {
         error: e,
         stackTrace: stack,
       );
+      if (e is Failure) {
+        return Result.failure(e);
+      }
       return Result.failure(
         DatabaseCorruptionFailure(
           code: 'BY_DAO_BATCH_FAILED',
@@ -258,7 +272,7 @@ abstract class SqliteBaseDao<T> implements BaseDao<T> {
       final R result = await db.transaction(action);
       _tableMutationController.add(tableName);
       return Result.success(result);
-    } on Exception catch (e, stack) {
+    } catch (e, stack) {
       logger.log(
         LogLevel.error,
         LogCategories.database,
@@ -267,6 +281,9 @@ abstract class SqliteBaseDao<T> implements BaseDao<T> {
         error: e,
         stackTrace: stack,
       );
+      if (e is Failure) {
+        return Result.failure(e);
+      }
       return Result.failure(
         DatabaseCorruptionFailure(
           code: 'BY_DAO_TX_FAILED',
@@ -329,7 +346,7 @@ abstract class SqliteBaseDao<T> implements BaseDao<T> {
       );
 
       return Result.success(paginatedList);
-    } on Exception catch (e, stack) {
+    } catch (e, stack) {
       logger.log(
         LogLevel.error,
         LogCategories.database,
@@ -338,6 +355,9 @@ abstract class SqliteBaseDao<T> implements BaseDao<T> {
         error: e,
         stackTrace: stack,
       );
+      if (e is Failure) {
+        return Result.failure(e);
+      }
       return Result.failure(
         DatabaseCorruptionFailure(
           code: 'BY_DAO_PAGINATION_FAILED',

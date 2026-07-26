@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../database/database_service.dart';
 import '../environment/environment.dart';
+import '../utils/result.dart';
 import '../logging/logger.dart';
 import '../platform/clock.dart';
 import '../platform/uuid.dart';
@@ -94,6 +95,11 @@ final databaseServiceProvider = Provider<DatabaseService>((ref) {
   throw UnimplementedError(
     'databaseServiceProvider must be explicitly overridden inside ProviderScope.',
   );
+});
+
+/// Provider exposing the database bootstrap result state.
+final databaseBootstrapProvider = Provider<Result<void>>((ref) {
+  return const Result.success(null);
 });
 
 /// Provider exposing the secure PreferencesStorage manager.
