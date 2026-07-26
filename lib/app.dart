@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'core/di/dependency_injection.dart';
+import 'core/utils/result.dart';
+import 'core/utils/result_extensions.dart';
 import 'core/navigation/router.dart';
 import 'core/theme/app_theme.dart';
 import 'features/secure_auth/presentation/screens/unlock_screen.dart';
@@ -37,6 +40,43 @@ class BankYarApp extends ConsumerWidget {
         return AppLifecycleObserver(
           child: Consumer(
             builder: (context, ref, _) {
+              final dbBootstrapResult = ref.watch(databaseBootstrapProvider);
+
+              if (dbBootstrapResult.isFailure) {
+                final failure = (dbBootstrapResult as FailureResult).failure;
+                return Directionality(
+                  textDirection: TextDirection.rtl,
+                  child: Scaffold(
+                    body: Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(24.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Icon(
+                              Icons.error_outline,
+                              color: Colors.red,
+                              size: 64,
+                            ),
+                            const SizedBox(height: 16),
+                            Text(
+                              'خطا در راه‌اندازی پایگاه داده',
+                              style: Theme.of(context).textTheme.titleLarge,
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              failure.message,
+                              textAlign: TextAlign.center,
+                              style: Theme.of(context).textTheme.bodyMedium,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              }
+
               final authState = ref.watch(appLockCoordinatorProvider);
 
               return Directionality(

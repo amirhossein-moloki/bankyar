@@ -6,6 +6,8 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'core/database/database_service_impl.dart';
 import 'core/di/dependency_injection.dart';
 import 'core/logging/logger.dart';
+import 'core/utils/result.dart';
+import 'core/errors/failures.dart';
 import 'app.dart';
 
 /// Helper to get or generate the cryptographically secure master key.
@@ -39,6 +41,7 @@ void main() async {
 
   // 2. Instantiate and open the secure relational database service
   final databaseService = DatabaseServiceImpl(logger);
+  Result<void> dbInitResult = const Result.success(null);
 
   try {
     const secureStorage = FlutterSecureStorage(
@@ -47,7 +50,7 @@ void main() async {
     );
 
     final masterKeyBytes = await _getOrCreateMasterKey(secureStorage);
-    await databaseService.openEncryptedConnection(masterKeyBytes);
+    dbInitResult = await databaseService.openEncryptedConnection(masterKeyBytes);
   } catch (e, stack) {
     logger.log(
       LogLevel.fatal,
@@ -57,6 +60,12 @@ void main() async {
       error: e,
       stackTrace: stack,
     );
+    dbInitResult = Result.failure(
+      DatabaseCorruptionFailure(
+        code: 'BY_MAIN_DB_INIT_FAILED',
+        message: 'Failed to initialize secure database on startup: ${e.toString()}',
+      ),
+    );
   }
 
   // Run the application wrapped inside Riverpod's ProviderScope container.
@@ -65,6 +74,8 @@ void main() async {
       overrides: [
         // Override the abstract databaseServiceProvider with our open database service
         databaseServiceProvider.overrideWithValue(databaseService),
+        // Override databaseBootstrapProvider with our bootstrap result
+        databaseBootstrapProvider.overrideWithValue(dbInitResult),
       ],
       child: const BankYarApp(),
     ),
