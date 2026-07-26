@@ -75,11 +75,9 @@ class AppLifecycleObserver extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return GestureDetector(
+    return Listener(
       behavior: HitTestBehavior.translucent,
-      onTapDown: (_) =>
-          ref.read(appLockCoordinatorProvider.notifier).recordUserActivity(),
-      onPanDown: (_) =>
+      onPointerDown: (_) =>
           ref.read(appLockCoordinatorProvider.notifier).recordUserActivity(),
       child: child,
     );
