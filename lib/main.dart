@@ -11,7 +11,9 @@ import 'core/errors/failures.dart';
 import 'app.dart';
 
 /// Helper to get or generate the cryptographically secure master key.
-Future<List<int>> _getOrCreateMasterKey(FlutterSecureStorage secureStorage) async {
+Future<List<int>> _getOrCreateMasterKey(
+  FlutterSecureStorage secureStorage,
+) async {
   const keyName = 'bankyar_db_key';
   final existingBase64 = await secureStorage.read(key: keyName);
   if (existingBase64 != null && existingBase64.isNotEmpty) {
@@ -34,10 +36,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // 1. Create robust structured logger
-  final logger = AppLoggerImpl(
-    isDiagnosticsEnabled: true,
-    consoleOutput: true,
-  );
+  final logger = AppLoggerImpl(isDiagnosticsEnabled: true, consoleOutput: true);
 
   // 2. Instantiate and open the secure relational database service
   final databaseService = DatabaseServiceImpl(logger);
@@ -50,7 +49,9 @@ void main() async {
     );
 
     final masterKeyBytes = await _getOrCreateMasterKey(secureStorage);
-    dbInitResult = await databaseService.openEncryptedConnection(masterKeyBytes);
+    dbInitResult = await databaseService.openEncryptedConnection(
+      masterKeyBytes,
+    );
   } catch (e, stack) {
     logger.log(
       LogLevel.fatal,
@@ -63,7 +64,8 @@ void main() async {
     dbInitResult = Result.failure(
       DatabaseCorruptionFailure(
         code: 'BY_MAIN_DB_INIT_FAILED',
-        message: 'Failed to initialize secure database on startup: ${e.toString()}',
+        message:
+            'Failed to initialize secure database on startup: ${e.toString()}',
       ),
     );
   }

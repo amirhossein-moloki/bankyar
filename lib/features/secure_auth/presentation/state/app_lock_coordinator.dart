@@ -115,7 +115,9 @@ class AppLockCoordinator extends StateNotifier<AppLockState>
       final session = sessionRes.isSuccess
           ? sessionRes.successOrCrash
           : SessionModel.initial();
-      final settings = settingsRes.isSuccess ? settingsRes.successOrCrash : null;
+      final settings = settingsRes.isSuccess
+          ? settingsRes.successOrCrash
+          : null;
 
       final pinConfigured = settings?.isPinEnabled ?? false;
       _startLockoutTimerIfActive(session);
@@ -435,7 +437,9 @@ class AppLockCoordinator extends StateNotifier<AppLockState>
       if (lifecycleState == AppLifecycleState.paused ||
           lifecycleState == AppLifecycleState.inactive) {
         // Suspending - record exact timestamp
-        final updatedSession = state.session.copyWith(lastActivity: clock.now());
+        final updatedSession = state.session.copyWith(
+          lastActivity: clock.now(),
+        );
         await repository.saveSession(updatedSession);
         if (!mounted) return;
         state = state.copyWith(session: updatedSession);
@@ -454,7 +458,9 @@ class AppLockCoordinator extends StateNotifier<AppLockState>
           if (!mounted) return;
 
           if (isTimeoutExpired) {
-            final updatedSession = savedSession.copyWith(isAuthenticated: false);
+            final updatedSession = savedSession.copyWith(
+              isAuthenticated: false,
+            );
             await repository.saveSession(updatedSession);
 
             state = state.copyWith(
