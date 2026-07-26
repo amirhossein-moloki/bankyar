@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/architecture/use_case.dart';
 import '../../../../core/di/dependency_injection.dart';
+import '../../../../core/logging/logger.dart';
 import '../../../../core/utils/result_extensions.dart';
 import '../../domain/entities/session_model.dart';
 import '../../domain/entities/session_status.dart';
@@ -85,7 +86,6 @@ class AppLockCoordinator extends StateNotifier<AppLockState>
        _verifyBiometricsUseCase = verifyBiometricsUseCase,
        _ref = ref,
        super(AppLockState.initial()) {
-    WidgetsBinding.instance.addObserver(this);
     _initSession();
   }
   final VerifyPinUseCase _verifyPinUseCase;
@@ -107,34 +107,59 @@ class AppLockCoordinator extends StateNotifier<AppLockState>
   Stream<SessionStatus> get onSessionStatusChanged => _statusController.stream;
 
   Future<void> _initSession() async {
-    final repository = _ref.read(securityRepositoryProvider);
-    final sessionRes = await repository.getSession();
-    final settingsRes = await repository.getSettings();
+    try {
+      final repository = _ref.read(securityRepositoryProvider);
+      final sessionRes = await repository.getSession();
+      final settingsRes = await repository.getSettings();
 
-    final session = sessionRes.isSuccess
-        ? sessionRes.successOrCrash
-        : SessionModel.initial();
-    final settings = settingsRes.isSuccess ? settingsRes.successOrCrash : null;
+      final session = sessionRes.isSuccess
+          ? sessionRes.successOrCrash
+          : SessionModel.initial();
+      final settings = settingsRes.isSuccess ? settingsRes.successOrCrash : null;
 
-    final pinConfigured = settings?.isPinEnabled ?? false;
-    _startLockoutTimerIfActive(session);
+      final pinConfigured = settings?.isPinEnabled ?? false;
+      _startLockoutTimerIfActive(session);
 
-    final isUnlocked = !pinConfigured;
-    final initialStatus = isUnlocked
-        ? SessionStatus.SessionUnlocked
-        : SessionStatus.SessionLocked;
+      final isUnlocked = !pinConfigured;
+      final initialStatus = isUnlocked
+          ? SessionStatus.SessionUnlocked
+          : SessionStatus.SessionLocked;
 
-    if (!mounted) return;
+      if (!mounted) return;
 
-    state = AppLockState(
-      session: session,
-      sessionStatus: initialStatus,
-      isAppUnlocked: isUnlocked,
-      currentInputPin: '',
-      isPermanentLockout: session.failedAttempts >= 15,
-    );
+      state = AppLockState(
+        session: session,
+        sessionStatus: initialStatus,
+        isAppUnlocked: isUnlocked,
+        currentInputPin: '',
+        isPermanentLockout: session.failedAttempts >= 15,
+      );
 
-    _emitStatus(initialStatus);
+      _emitStatus(initialStatus);
+    } catch (e, stack) {
+      final logger = _ref.read(loggerProvider);
+      logger.log(
+        LogLevel.error,
+        LogCategories.security,
+        'BY_SEC_INIT_SESSION_FAILED',
+        'Failed to initialize security session gracefully. Defaulting to unlocked.',
+        error: e,
+        stackTrace: stack,
+      );
+      if (!mounted) return;
+      state = AppLockState(
+        session: SessionModel.initial(),
+        sessionStatus: SessionStatus.SessionUnlocked,
+        isAppUnlocked: true,
+        currentInputPin: '',
+        isPermanentLockout: false,
+      );
+      _emitStatus(SessionStatus.SessionUnlocked);
+    } finally {
+      if (mounted) {
+        WidgetsBinding.instance.addObserver(this);
+      }
+    }
   }
 
   /// Appends a digit to the in-memory PIN buffer, auto-triggering verification at 4 digits.
@@ -391,71 +416,83 @@ class AppLockCoordinator extends StateNotifier<AppLockState>
   Future<void> handleLifecycleTransition(
     AppLifecycleState lifecycleState,
   ) async {
-    final repository = _ref.read(securityRepositoryProvider);
-    final clock = _ref.read(clockProvider);
-    final settingsRes = await repository.getSettings();
-    if (settingsRes.isFailure) return;
-    final settings = settingsRes.successOrCrash;
+    try {
+      final repository = _ref.read(securityRepositoryProvider);
+      final clock = _ref.read(clockProvider);
+      final settingsRes = await repository.getSettings();
+      if (settingsRes.isFailure) return;
+      final settings = settingsRes.successOrCrash;
 
-    if (!settings.isPinEnabled) {
-      if (!mounted) return;
-      state = state.copyWith(
-        sessionStatus: SessionStatus.SessionUnlocked,
-        isAppUnlocked: true,
-      );
-      return;
-    }
-
-    if (lifecycleState == AppLifecycleState.paused ||
-        lifecycleState == AppLifecycleState.inactive) {
-      // Suspending - record exact timestamp
-      final updatedSession = state.session.copyWith(lastActivity: clock.now());
-      await repository.saveSession(updatedSession);
-      if (!mounted) return;
-      state = state.copyWith(session: updatedSession);
-    } else if (lifecycleState == AppLifecycleState.resumed) {
-      final sessionRes = await repository.getSession();
-      if (sessionRes.isFailure) return;
-      final savedSession = sessionRes.successOrCrash;
-
-      final lastActivity = savedSession.lastActivity;
-      if (lastActivity != null) {
-        final elapsed = clock.now().difference(lastActivity);
-
-        // Immediate lock on background transition or when timeout threshold is exceeded
-        final isTimeoutExpired = elapsed >= settings.autoLockTimeout;
-
-        if (!mounted) return;
-
-        if (isTimeoutExpired) {
-          final updatedSession = savedSession.copyWith(isAuthenticated: false);
-          await repository.saveSession(updatedSession);
-
-          state = state.copyWith(
-            session: updatedSession,
-            sessionStatus: SessionStatus.SessionExpired,
-            isAppUnlocked: false,
-            currentInputPin: '',
-          );
-
-          _emitStatus(SessionStatus.SessionExpired);
-        } else {
-          final updatedSession = savedSession.copyWith(
-            lastActivity: clock.now(),
-          );
-          await repository.saveSession(updatedSession);
-          state = state.copyWith(session: updatedSession);
-        }
-      } else {
+      if (!settings.isPinEnabled) {
         if (!mounted) return;
         state = state.copyWith(
-          sessionStatus: SessionStatus.SessionLocked,
-          isAppUnlocked: false,
+          sessionStatus: SessionStatus.SessionUnlocked,
+          isAppUnlocked: true,
         );
-        _emitStatus(SessionStatus.SessionLocked);
+        return;
       }
 
-      _startLockoutTimerIfActive(state.session);
+      if (lifecycleState == AppLifecycleState.paused ||
+          lifecycleState == AppLifecycleState.inactive) {
+        // Suspending - record exact timestamp
+        final updatedSession = state.session.copyWith(lastActivity: clock.now());
+        await repository.saveSession(updatedSession);
+        if (!mounted) return;
+        state = state.copyWith(session: updatedSession);
+      } else if (lifecycleState == AppLifecycleState.resumed) {
+        final sessionRes = await repository.getSession();
+        if (sessionRes.isFailure) return;
+        final savedSession = sessionRes.successOrCrash;
+
+        final lastActivity = savedSession.lastActivity;
+        if (lastActivity != null) {
+          final elapsed = clock.now().difference(lastActivity);
+
+          // Immediate lock on background transition or when timeout threshold is exceeded
+          final isTimeoutExpired = elapsed >= settings.autoLockTimeout;
+
+          if (!mounted) return;
+
+          if (isTimeoutExpired) {
+            final updatedSession = savedSession.copyWith(isAuthenticated: false);
+            await repository.saveSession(updatedSession);
+
+            state = state.copyWith(
+              session: updatedSession,
+              sessionStatus: SessionStatus.SessionExpired,
+              isAppUnlocked: false,
+              currentInputPin: '',
+            );
+
+            _emitStatus(SessionStatus.SessionExpired);
+          } else {
+            final updatedSession = savedSession.copyWith(
+              lastActivity: clock.now(),
+            );
+            await repository.saveSession(updatedSession);
+            state = state.copyWith(session: updatedSession);
+          }
+        } else {
+          if (!mounted) return;
+          state = state.copyWith(
+            sessionStatus: SessionStatus.SessionLocked,
+            isAppUnlocked: false,
+          );
+          _emitStatus(SessionStatus.SessionLocked);
+        }
+
+        _startLockoutTimerIfActive(state.session);
+      }
+    } catch (e, stack) {
+      final logger = _ref.read(loggerProvider);
+      logger.log(
+        LogLevel.error,
+        LogCategories.security,
+        'BY_SEC_LIFECYCLE_TRANSITION_FAILED',
+        'Failed to handle lifecycle transition gracefully.',
+        error: e,
+        stackTrace: stack,
+      );
     }
   }
 
