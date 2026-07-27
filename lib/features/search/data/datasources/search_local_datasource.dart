@@ -115,8 +115,8 @@ class SearchLocalDataSourceImpl implements SearchLocalDataSource {
       final textQuery = query.text.trim();
       final textParam = '%$textQuery%';
 
-      // We use standard LIKE clauses combined with FTS5 table references for high confidence matches.
-      // Since FTS5 index contains merchant_name, note_text, and tag_labels, we can query it:
+      // We use standard LIKE clauses combined with FTS4 table references for high confidence matches.
+      // Since FTS4 index contains merchant_name, note_text, and tag_labels, we can query it:
       const String ftsClause =
           't.id IN (SELECT transaction_id FROM fts_transactions_search WHERE fts_transactions_search MATCH ?)';
 
