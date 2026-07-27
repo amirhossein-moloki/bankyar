@@ -70,17 +70,17 @@ class DatabaseServiceImpl implements DatabaseService {
         onConfigure: (db) async {
           // Standard SQLCipher decryption pragma
           if (keyHex.isNotEmpty) {
-            await db.execute("PRAGMA key = '$keyHex';");
+            await executePragma(db, "PRAGMA key = '$keyHex';");
           }
           // Performance Tuning Pragmas according to DATABASE_ARCHITECTURE.md
-          // Note: Using rawQuery instead of execute for PRAGMAs that might return values
+          // Note: Using a resilient wrapper trying rawQuery first and falling back to execute
           // to prevent DatabaseException on Android (unknown error code 0 SQLITE_OK).
-          await db.rawQuery('PRAGMA journal_mode = WAL;');
-          await db.rawQuery('PRAGMA synchronous = NORMAL;');
-          await db.rawQuery('PRAGMA secure_delete = ON;');
-          await db.rawQuery('PRAGMA page_size = 4096;');
-          await db.rawQuery('PRAGMA cache_size = 2000;');
-          await db.rawQuery('PRAGMA foreign_keys = ON;');
+          await executePragma(db, 'PRAGMA journal_mode = WAL;');
+          await executePragma(db, 'PRAGMA synchronous = NORMAL;');
+          await executePragma(db, 'PRAGMA secure_delete = ON;');
+          await executePragma(db, 'PRAGMA page_size = 4096;');
+          await executePragma(db, 'PRAGMA cache_size = 2000;');
+          await executePragma(db, 'PRAGMA foreign_keys = ON;');
         },
         onCreate: (db, version) async {
           _logger.log(
@@ -119,6 +119,30 @@ class DatabaseServiceImpl implements DatabaseService {
           message: 'Secure database open failed: ${e.toString()}',
         ),
       );
+    }
+  }
+
+  /// Resiliently execute a database PRAGMA statement.
+  /// Tries [rawQuery] first for query-like pragmas, then falls back to [execute] for commands.
+  Future<void> executePragma(Database db, String pragmaSql) async {
+    try {
+      // Try rawQuery first as it is safer for pragmas that return values (e.g. journal_mode)
+      await db.rawQuery(pragmaSql);
+    } catch (_) {
+      try {
+        // Fallback to execute for pragmas that don't return values
+        await db.execute(pragmaSql);
+      } catch (e, stack) {
+        _logger.log(
+          LogLevel.error,
+          LogCategories.database,
+          'BY_DB_PRAGMA_FAILED',
+          'Failed to execute pragma: $pragmaSql',
+          error: e,
+          stackTrace: stack,
+        );
+        rethrow;
+      }
     }
   }
 
@@ -447,6 +471,46 @@ class DatabaseServiceImpl implements DatabaseService {
           UPDATE fts_transactions_search
           SET note_text = ''
           WHERE transaction_id = old.transaction_id;
+        END;
+      ''');
+
+      // Triggers for syncing transaction tags to the search index via aggregation
+      await txn.execute('''
+        CREATE TRIGGER trg_tx_tags_insert AFTER INSERT ON transaction_tags BEGIN
+          UPDATE fts_transactions_search
+          SET tag_labels = COALESCE((
+            SELECT group_concat(tg.label_text, ' ')
+            FROM transaction_tags tt
+            INNER JOIN tags tg ON tt.tag_id = tg.id
+            WHERE tt.transaction_id = new.transaction_id
+          ), '')
+          WHERE transaction_id = new.transaction_id;
+        END;
+      ''');
+
+      await txn.execute('''
+        CREATE TRIGGER trg_tx_tags_delete AFTER DELETE ON transaction_tags BEGIN
+          UPDATE fts_transactions_search
+          SET tag_labels = COALESCE((
+            SELECT group_concat(tg.label_text, ' ')
+            FROM transaction_tags tt
+            INNER JOIN tags tg ON tt.tag_id = tg.id
+            WHERE tt.transaction_id = old.transaction_id
+          ), '')
+          WHERE transaction_id = old.transaction_id;
+        END;
+      ''');
+
+      await txn.execute('''
+        CREATE TRIGGER trg_tx_tags_update AFTER UPDATE ON transaction_tags BEGIN
+          UPDATE fts_transactions_search
+          SET tag_labels = COALESCE((
+            SELECT group_concat(tg.label_text, ' ')
+            FROM transaction_tags tt
+            INNER JOIN tags tg ON tt.tag_id = tg.id
+            WHERE tt.transaction_id = new.transaction_id
+          ), '')
+          WHERE transaction_id = new.transaction_id;
         END;
       ''');
 
