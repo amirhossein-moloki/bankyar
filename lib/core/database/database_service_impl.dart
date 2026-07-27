@@ -418,9 +418,9 @@ class DatabaseServiceImpl implements DatabaseService {
         );
       ''');
 
-      // 12. fts_transactions_search (FTS5 shadow table)
+      // 12. fts_transactions_search (FTS4 shadow table)
       await txn.execute('''
-        CREATE VIRTUAL TABLE fts_transactions_search USING fts5(
+        CREATE VIRTUAL TABLE fts_transactions_search USING fts4(
           transaction_id,
           merchant_name,
           note_text,
