@@ -239,6 +239,7 @@ class MainActivity : FlutterActivity() {
         val list = mutableListOf<Map<String, Any>>()
         val uri = Telephony.Sms.Inbox.CONTENT_URI
         val projection = arrayOf(
+            Telephony.Sms.Inbox._ID,
             Telephony.Sms.Inbox.ADDRESS,
             Telephony.Sms.Inbox.BODY,
             Telephony.Sms.Inbox.DATE
@@ -248,15 +249,18 @@ class MainActivity : FlutterActivity() {
         val sortOrder = "${Telephony.Sms.Inbox.DATE} ASC"
 
         contentResolver.query(uri, projection, selection, selectionArgs, sortOrder)?.use { cursor ->
+            val idIdx = cursor.getColumnIndexOrThrow(Telephony.Sms.Inbox._ID)
             val addressIdx = cursor.getColumnIndexOrThrow(Telephony.Sms.Inbox.ADDRESS)
             val bodyIdx = cursor.getColumnIndexOrThrow(Telephony.Sms.Inbox.BODY)
             val dateIdx = cursor.getColumnIndexOrThrow(Telephony.Sms.Inbox.DATE)
 
             while (cursor.moveToNext()) {
+                val id = cursor.getLong(idIdx)
                 val address = cursor.getString(addressIdx)
                 val body = cursor.getString(bodyIdx)
                 val date = cursor.getLong(dateIdx)
                 list.add(mapOf(
+                    "id" to id.toString(),
                     "sender" to address,
                     "body" to body,
                     "timestamp" to date

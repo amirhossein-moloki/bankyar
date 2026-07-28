@@ -12,6 +12,7 @@ import '../../../../core/platform/permission.dart';
 import '../../../../core/presentation/widgets/widgets.dart';
 import '../state/security_notifier.dart';
 import '../state/app_lock_coordinator.dart';
+import '../../../transactions/presentation/state/data_management_notifier.dart';
 
 /// Central dashboard screen representing the Security & Privacy Center of BankYar.
 /// Integrates all 3 key sections: Security Score Card, Permission Checklist, and Privacy Controls.
@@ -234,6 +235,9 @@ class _SecurityDashboardScreenState
 
                     // Section III: Privacy Overview
                     _buildPrivacyOverviewCard(secState, theme, spacing, radius),
+                    SizedBox(height: spacing.m),
+
+                    _buildDataManagementCard(theme, spacing, radius),
                     SizedBox(height: spacing.xl),
 
                     _buildEmergencyActionsCard(theme, spacing, radius),
@@ -243,6 +247,495 @@ class _SecurityDashboardScreenState
               ),
       ),
     );
+  }
+
+  bool _isProgressDialogShowing = false;
+
+  String _formatDateTime(DateTime dt) {
+    final y = _toPersianDigits(dt.year.toString());
+    final m = _toPersianDigits(dt.month.toString().padLeft(2, '0'));
+    final d = _toPersianDigits(dt.day.toString().padLeft(2, '0'));
+    final h = _toPersianDigits(dt.hour.toString().padLeft(2, '0'));
+    final min = _toPersianDigits(dt.minute.toString().padLeft(2, '0'));
+    return '$y-$m-$d $h:$min';
+  }
+
+  Widget _buildDataManagementCard(
+    ThemeData theme,
+    SpacingExtension spacing,
+    RadiusExtension radius,
+  ) {
+    final dataState = ref.watch(dataManagementNotifierProvider);
+
+    // Background Safety Active Progress Restore
+    if (dataState.isImporting && !_isProgressDialogShowing) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _startScanningFlow(ImportRange.all);
+      });
+    }
+
+    return Card(
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(radius.m),
+        side: BorderSide(
+          color: theme.colorScheme.outlineVariant.withOpacity(0.5),
+        ),
+      ),
+      child: Padding(
+        padding: EdgeInsets.all(spacing.m),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'مدیریت داده‌ها (Data Management)',
+              style: theme.textTheme.bodyLarge?.copyWith(
+                fontWeight: FontWeight.bold,
+                fontFamily: 'Vazirmatn',
+              ),
+            ),
+            SizedBox(height: spacing.s),
+            ListTile(
+              leading: Icon(
+                Icons.import_export_outlined,
+                color: theme.colorScheme.primary,
+              ),
+              title: const Text('وارد کردن پیامک‌های قبلی', style: TextStyle(fontFamily: 'Vazirmatn')),
+              subtitle: Text(
+                dataState.lastImportDate != null
+                    ? 'آخرین واردسازی موفق: ${_formatDateTime(dataState.lastImportDate!)}'
+                    : 'اسکن تاریخچه کامل صندوق ورودی گوشی شما',
+                style: const TextStyle(fontFamily: 'Vazirmatn', fontSize: 11),
+              ),
+              trailing: const Icon(Icons.play_arrow_outlined),
+              onTap: () {
+                _showImportDialog();
+              },
+            ),
+            const Divider(),
+            ListTile(
+              leading: Icon(
+                Icons.sms_failed_outlined,
+                color: theme.colorScheme.error,
+              ),
+              title: const Text('حذف پیامک‌های بانکی', style: TextStyle(fontFamily: 'Vazirmatn')),
+              subtitle: const Text('حذف پیامک‌های وارد شده از دیتابیس', style: TextStyle(fontFamily: 'Vazirmatn', fontSize: 11)),
+              trailing: const Icon(Icons.delete_outline),
+              onTap: () {
+                _showDeleteConfirmation(
+                  title: 'حذف پیامک‌های بانکی',
+                  onConfirm: () async {
+                    final success = await ref
+                        .read(dataManagementNotifierProvider.notifier)
+                        .deleteImportedSms();
+                    if (mounted && success) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('پیامک‌های بانکی با موفقیت حذف شدند.', style: TextStyle(fontFamily: 'Vazirmatn')),
+                        ),
+                      );
+                    }
+                  },
+                );
+              },
+            ),
+            const Divider(),
+            ListTile(
+              leading: Icon(
+                Icons.account_balance_wallet_outlined,
+                color: theme.colorScheme.error,
+              ),
+              title: const Text('حذف تمامی تراکنش‌ها', style: TextStyle(fontFamily: 'Vazirmatn')),
+              subtitle: const Text('حذف دفتر کل تراکنش‌ها و متادیتا با حفظ تنظیمات', style: TextStyle(fontFamily: 'Vazirmatn', fontSize: 11)),
+              trailing: const Icon(Icons.delete_outline),
+              onTap: () {
+                _showDeleteConfirmation(
+                  title: 'حذف تمامی تراکنش‌ها',
+                  onConfirm: () async {
+                    final success = await ref
+                        .read(dataManagementNotifierProvider.notifier)
+                        .deleteAllTransactions();
+                    if (mounted && success) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('تمامی تراکنش‌ها با موفقیت حذف شدند.', style: TextStyle(fontFamily: 'Vazirmatn')),
+                        ),
+                      );
+                    }
+                  },
+                );
+              },
+            ),
+            const Divider(),
+            ListTile(
+              leading: Icon(
+                Icons.delete_forever_outlined,
+                color: theme.colorScheme.error,
+              ),
+              title: const Text('حذف کامل پایگاه داده محلی', style: TextStyle(fontFamily: 'Vazirmatn')),
+              subtitle: const Text('بازنشانی کامل صندوقچه به وضعیت خام کارخانه', style: TextStyle(fontFamily: 'Vazirmatn', fontSize: 11)),
+              trailing: const Icon(Icons.delete_outline),
+              onTap: () {
+                _showDeleteConfirmation(
+                  title: 'حذف کامل پایگاه داده محلی',
+                  onConfirm: () async {
+                    final success = await ref
+                        .read(dataManagementNotifierProvider.notifier)
+                        .deleteLocalDatabase();
+                    if (mounted && success) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('پایگاه داده با موفقیت بازنشانی شد.', style: TextStyle(fontFamily: 'Vazirmatn')),
+                        ),
+                      );
+                    }
+                  },
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showDeleteConfirmation({
+    required String title,
+    required VoidCallback onConfirm,
+  }) {
+    showDialog<void>(
+      context: context,
+      builder: (context) => Directionality(
+        textDirection: TextDirection.rtl,
+        child: AlertDialog(
+          title: Text(
+            title,
+            style: const TextStyle(fontFamily: 'Vazirmatn', fontWeight: FontWeight.bold),
+          ),
+          content: const Text(
+            'تمام اطلاعات حذف خواهند شد.',
+            style: TextStyle(fontFamily: 'Vazirmatn'),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text(
+                'لغو',
+                style: TextStyle(fontFamily: 'Vazirmatn', color: Colors.grey),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+                onConfirm();
+              },
+              child: const Text(
+                'حذف همه',
+                style: TextStyle(
+                  fontFamily: 'Vazirmatn',
+                  color: Colors.red,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showImportDialog() {
+    showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (dialogCtx) => Directionality(
+        textDirection: TextDirection.rtl,
+        child: AlertDialog(
+          title: const Text(
+            'وارد کردن پیامک‌های قبلی',
+            style: TextStyle(fontFamily: 'Vazirmatn', fontWeight: FontWeight.bold),
+          ),
+          content: const Text(
+            'بانک‌یار می‌تواند پیامک‌های بانکی قبلی شما را نیز بررسی و وارد کند.',
+            style: TextStyle(fontFamily: 'Vazirmatn'),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(dialogCtx),
+              child: const Text(
+                'بعداً',
+                style: TextStyle(fontFamily: 'Vazirmatn', color: Colors.grey),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(dialogCtx);
+                _showRangeSelectionDialog();
+              },
+              child: const Text(
+                'شروع اسکن',
+                style: TextStyle(fontFamily: 'Vazirmatn', fontWeight: FontWeight.bold),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showRangeSelectionDialog() {
+    showDialog<void>(
+      context: context,
+      builder: (dialogCtx) => Directionality(
+        textDirection: TextDirection.rtl,
+        child: SimpleDialog(
+          title: const Text(
+            'بازه زمانی اسکن را انتخاب کنید',
+            style: TextStyle(fontFamily: 'Vazirmatn', fontWeight: FontWeight.bold),
+          ),
+          children: [
+            SimpleDialogOption(
+              onPressed: () {
+                Navigator.pop(dialogCtx);
+                _startScanningFlow(ImportRange.all);
+              },
+              child: const Text('کل پیامک‌ها', style: TextStyle(fontFamily: 'Vazirmatn')),
+            ),
+            SimpleDialogOption(
+              onPressed: () {
+                Navigator.pop(dialogCtx);
+                _startScanningFlow(ImportRange.last3Months);
+              },
+              child: const Text('۳ ماه اخیر', style: TextStyle(fontFamily: 'Vazirmatn')),
+            ),
+            SimpleDialogOption(
+              onPressed: () {
+                Navigator.pop(dialogCtx);
+                _startScanningFlow(ImportRange.last6Months);
+              },
+              child: const Text('۶ ماه اخیر', style: TextStyle(fontFamily: 'Vazirmatn')),
+            ),
+            SimpleDialogOption(
+              onPressed: () {
+                Navigator.pop(dialogCtx);
+                _startScanningFlow(ImportRange.last12Months);
+              },
+              child: const Text('۱۲ ماه اخیر', style: TextStyle(fontFamily: 'Vazirmatn')),
+            ),
+            SimpleDialogOption(
+              onPressed: () async {
+                Navigator.pop(dialogCtx);
+                final picked = await showDateRangePicker(
+                  context: context,
+                  firstDate: DateTime(2010),
+                  lastDate: DateTime.now(),
+                  locale: const Locale('fa'),
+                );
+                if (picked != null) {
+                  _startScanningFlow(
+                    ImportRange.custom,
+                    customStartDate: picked.start,
+                    customEndDate: picked.end,
+                  );
+                }
+              },
+              child: const Text('بازه زمانی دلخواه...', style: TextStyle(fontFamily: 'Vazirmatn')),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _startScanningFlow(
+    ImportRange range, {
+    DateTime? customStartDate,
+    DateTime? customEndDate,
+  }) {
+    if (_isProgressDialogShowing) return;
+    _isProgressDialogShowing = true;
+
+    final activeState = ref.read(dataManagementNotifierProvider);
+    if (!activeState.isImporting) {
+      ref.read(dataManagementNotifierProvider.notifier).startHistoricalImport(
+            range: range,
+            customStartDate: customStartDate,
+            customEndDate: customEndDate,
+          );
+    }
+
+    showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (dialogCtx) {
+        return Consumer(
+          builder: (context, ref, child) {
+            final scanState = ref.watch(dataManagementNotifierProvider);
+
+            if (!scanState.isImporting) {
+              _isProgressDialogShowing = false;
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                if (Navigator.canPop(dialogCtx)) {
+                  Navigator.pop(dialogCtx);
+
+                  if (scanState.summary != null) {
+                    _showSummaryDialog(scanState.summary!);
+                  } else if (scanState.successMessage != null) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          scanState.successMessage!,
+                          style: const TextStyle(fontFamily: 'Vazirmatn'),
+                        ),
+                        backgroundColor: Colors.green,
+                      ),
+                    );
+                  } else if (scanState.errorMessage != null) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          scanState.errorMessage!,
+                          style: const TextStyle(fontFamily: 'Vazirmatn'),
+                        ),
+                        backgroundColor: Theme.of(context).colorScheme.error,
+                      ),
+                    );
+                  }
+                  ref.read(dataManagementNotifierProvider.notifier).clearStatusMessages();
+                }
+              });
+            }
+
+            final countStr = _toPersianDigits(scanState.importedCount.toString());
+            final totalStr = _toPersianDigits(scanState.totalSmsCount.toString());
+
+            return Directionality(
+              textDirection: TextDirection.rtl,
+              child: AlertDialog(
+                content: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 16.0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const CircularProgressIndicator(),
+                      const SizedBox(height: 24),
+                      const Text(
+                        'در حال بررسی پیامک‌ها...',
+                        style: TextStyle(
+                          fontFamily: 'Vazirmatn',
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        '$countStr از $totalStr',
+                        style: const TextStyle(
+                          fontFamily: 'Vazirmatn',
+                          fontSize: 14,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      ref.read(dataManagementNotifierProvider.notifier).cancelImport();
+                    },
+                    child: const Text(
+                      'انصراف',
+                      style: TextStyle(
+                        fontFamily: 'Vazirmatn',
+                        color: Colors.red,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  void _showSummaryDialog(ImportSummary summary) {
+    showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (dialogCtx) => Directionality(
+        textDirection: TextDirection.rtl,
+        child: AlertDialog(
+          title: const Text(
+            'گزارش وارد کردن پیامک‌ها',
+            style: TextStyle(fontFamily: 'Vazirmatn', fontWeight: FontWeight.bold),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _buildSummaryRow('کل پیامک‌های بررسی شده:', summary.totalScanned),
+              const Divider(),
+              _buildSummaryRow('پیامک‌های بانکی شناسایی شده:', summary.bankSmsDetected),
+              const Divider(),
+              _buildSummaryRow('تراکنش‌های جدید وارد شده:', summary.newTransactionsImported),
+              const Divider(),
+              _buildSummaryRow('پیامک‌های تکراری نادیده گرفته شده:', summary.duplicateSmsSkipped),
+              const Divider(),
+              _buildSummaryRow('پیامک‌های نامعتبر یا غیربانکی:', summary.unsupportedSmsSkipped),
+              const Divider(),
+              _buildSummaryRow('زمان کل اسکن (ثانیه):', _toPersianDigits(summary.scanDurationSeconds.toStringAsFixed(1))),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(dialogCtx);
+                ref.read(dataManagementNotifierProvider.notifier).clearSummary();
+              },
+              child: const Text(
+                'تایید',
+                style: TextStyle(fontFamily: 'Vazirmatn', fontWeight: FontWeight.bold),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSummaryRow(String label, dynamic value) {
+    final valueStr = value is int ? _toPersianDigits(value.toString()) : value.toString();
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(label, style: const TextStyle(fontFamily: 'Vazirmatn', fontSize: 13)),
+          Text(
+            valueStr,
+            style: const TextStyle(
+              fontFamily: 'Vazirmatn',
+              fontWeight: FontWeight.bold,
+              fontSize: 14,
+              color: Colors.blue,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  String _toPersianDigits(String input) {
+    const english = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+    const persian = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+    var result = input;
+    for (var i = 0; i < english.length; i++) {
+      result = result.replaceAll(english[i], persian[i]);
+    }
+    return result;
   }
 
   Widget _buildScoreCard(
