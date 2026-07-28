@@ -12,6 +12,7 @@ import '../../../../core/state_management/undo_delete_notifier.dart';
 import '../../../secure_auth/presentation/state/permission_notifier.dart';
 import '../state/home_notifier.dart';
 import '../state/transactions_notifier.dart';
+import '../state/data_management_notifier.dart';
 import '../widgets/greeting_section.dart';
 import '../widgets/total_balance_card.dart';
 import '../widgets/monthly_summary_card.dart';
@@ -45,7 +46,324 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final completed = await prefs.getBool('by_onboarding_completed') ?? false;
     if (!completed && mounted) {
       context.go('/onboarding');
+    } else {
+      _checkAndPromptHistoricalSmsImport();
     }
+  }
+
+  Future<void> _checkAndPromptHistoricalSmsImport() async {
+    final prefs = ref.read(preferencesStorageProvider);
+    final offered = await prefs.getBool('by_historical_sms_import_offered') ?? false;
+    if (offered) return;
+
+    final permState = ref.read(permissionNotifierProvider);
+    if (permState.isSmsReadGranted) {
+      await prefs.setBool('by_historical_sms_import_offered', true);
+      if (mounted) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (mounted) {
+            _showImportDialog();
+          }
+        });
+      }
+    }
+  }
+
+  bool _isProgressDialogShowing = false;
+
+  void _showImportDialog() {
+    showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (dialogCtx) => Directionality(
+        textDirection: TextDirection.rtl,
+        child: AlertDialog(
+          title: const Text(
+            'وارد کردن پیامک‌های قبلی',
+            style: TextStyle(fontFamily: 'Vazirmatn', fontWeight: FontWeight.bold),
+          ),
+          content: const Text(
+            'بانک‌یار می‌تواند پیامک‌های بانکی قبلی شما را نیز بررسی و وارد کند.',
+            style: TextStyle(fontFamily: 'Vazirmatn'),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(dialogCtx),
+              child: const Text(
+                'بعداً',
+                style: TextStyle(fontFamily: 'Vazirmatn', color: Colors.grey),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(dialogCtx);
+                _showRangeSelectionDialog();
+              },
+              child: const Text(
+                'شروع اسکن',
+                style: TextStyle(fontFamily: 'Vazirmatn', fontWeight: FontWeight.bold),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showRangeSelectionDialog() {
+    showDialog<void>(
+      context: context,
+      builder: (dialogCtx) => Directionality(
+        textDirection: TextDirection.rtl,
+        child: SimpleDialog(
+          title: const Text(
+            'بازه زمانی اسکن را انتخاب کنید',
+            style: TextStyle(fontFamily: 'Vazirmatn', fontWeight: FontWeight.bold),
+          ),
+          children: [
+            SimpleDialogOption(
+              onPressed: () {
+                Navigator.pop(dialogCtx);
+                _startScanningFlow(ImportRange.all);
+              },
+              child: const Text('کل پیامک‌ها', style: TextStyle(fontFamily: 'Vazirmatn')),
+            ),
+            SimpleDialogOption(
+              onPressed: () {
+                Navigator.pop(dialogCtx);
+                _startScanningFlow(ImportRange.last3Months);
+              },
+              child: const Text('۳ ماه اخیر', style: TextStyle(fontFamily: 'Vazirmatn')),
+            ),
+            SimpleDialogOption(
+              onPressed: () {
+                Navigator.pop(dialogCtx);
+                _startScanningFlow(ImportRange.last6Months);
+              },
+              child: const Text('۶ ماه اخیر', style: TextStyle(fontFamily: 'Vazirmatn')),
+            ),
+            SimpleDialogOption(
+              onPressed: () {
+                Navigator.pop(dialogCtx);
+                _startScanningFlow(ImportRange.last12Months);
+              },
+              child: const Text('۱۲ ماه اخیر', style: TextStyle(fontFamily: 'Vazirmatn')),
+            ),
+            SimpleDialogOption(
+              onPressed: () async {
+                Navigator.pop(dialogCtx);
+                final picked = await showDateRangePicker(
+                  context: context,
+                  firstDate: DateTime(2010),
+                  lastDate: DateTime.now(),
+                  locale: const Locale('fa'),
+                );
+                if (picked != null) {
+                  _startScanningFlow(
+                    ImportRange.custom,
+                    customStartDate: picked.start,
+                    customEndDate: picked.end,
+                  );
+                }
+              },
+              child: const Text('بازه زمانی دلخواه...', style: TextStyle(fontFamily: 'Vazirmatn')),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _startScanningFlow(
+    ImportRange range, {
+    DateTime? customStartDate,
+    DateTime? customEndDate,
+  }) {
+    if (_isProgressDialogShowing) return;
+    _isProgressDialogShowing = true;
+
+    // Only start new import if not already active (to support background safety screen re-entry)
+    final activeState = ref.read(dataManagementNotifierProvider);
+    if (!activeState.isImporting) {
+      ref.read(dataManagementNotifierProvider.notifier).startHistoricalImport(
+            range: range,
+            customStartDate: customStartDate,
+            customEndDate: customEndDate,
+          );
+    }
+
+    showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (dialogCtx) {
+        return Consumer(
+          builder: (context, ref, child) {
+            final scanState = ref.watch(dataManagementNotifierProvider);
+
+            if (!scanState.isImporting) {
+              _isProgressDialogShowing = false;
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                if (Navigator.canPop(dialogCtx)) {
+                  Navigator.pop(dialogCtx);
+
+                  if (scanState.summary != null) {
+                    _showSummaryDialog(scanState.summary!);
+                  } else if (scanState.successMessage != null) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          scanState.successMessage!,
+                          style: const TextStyle(fontFamily: 'Vazirmatn'),
+                        ),
+                        backgroundColor: Colors.green,
+                      ),
+                    );
+                  } else if (scanState.errorMessage != null) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          scanState.errorMessage!,
+                          style: const TextStyle(fontFamily: 'Vazirmatn'),
+                        ),
+                        backgroundColor: Theme.of(context).colorScheme.error,
+                      ),
+                    );
+                  }
+                  ref.read(dataManagementNotifierProvider.notifier).clearStatusMessages();
+                }
+              });
+            }
+
+            final countStr = _toPersianDigits(scanState.importedCount.toString());
+            final totalStr = _toPersianDigits(scanState.totalSmsCount.toString());
+
+            return Directionality(
+              textDirection: TextDirection.rtl,
+              child: AlertDialog(
+                content: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 16.0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const CircularProgressIndicator(),
+                      const SizedBox(height: 24),
+                      const Text(
+                        'در حال بررسی پیامک‌ها...',
+                        style: TextStyle(
+                          fontFamily: 'Vazirmatn',
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        '$countStr از $totalStr',
+                        style: const TextStyle(
+                          fontFamily: 'Vazirmatn',
+                          fontSize: 14,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      ref.read(dataManagementNotifierProvider.notifier).cancelImport();
+                    },
+                    child: const Text(
+                      'انصراف',
+                      style: TextStyle(
+                        fontFamily: 'Vazirmatn',
+                        color: Colors.red,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  void _showSummaryDialog(ImportSummary summary) {
+    showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (dialogCtx) => Directionality(
+        textDirection: TextDirection.rtl,
+        child: AlertDialog(
+          title: const Text(
+            'گزارش وارد کردن پیامک‌ها',
+            style: TextStyle(fontFamily: 'Vazirmatn', fontWeight: FontWeight.bold),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _buildSummaryRow('کل پیامک‌های بررسی شده:', summary.totalScanned),
+              const Divider(),
+              _buildSummaryRow('پیامک‌های بانکی شناسایی شده:', summary.bankSmsDetected),
+              const Divider(),
+              _buildSummaryRow('تراکنش‌های جدید وارد شده:', summary.newTransactionsImported),
+              const Divider(),
+              _buildSummaryRow('پیامک‌های تکراری نادیده گرفته شده:', summary.duplicateSmsSkipped),
+              const Divider(),
+              _buildSummaryRow('پیامک‌های نامعتبر یا غیربانکی:', summary.unsupportedSmsSkipped),
+              const Divider(),
+              _buildSummaryRow('زمان کل اسکن (ثانیه):', _toPersianDigits(summary.scanDurationSeconds.toStringAsFixed(1))),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(dialogCtx);
+                ref.read(dataManagementNotifierProvider.notifier).clearSummary();
+              },
+              child: const Text(
+                'تایید',
+                style: TextStyle(fontFamily: 'Vazirmatn', fontWeight: FontWeight.bold),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSummaryRow(String label, dynamic value) {
+    final valueStr = value is int ? _toPersianDigits(value.toString()) : value.toString();
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(label, style: const TextStyle(fontFamily: 'Vazirmatn', fontSize: 13)),
+          Text(
+            valueStr,
+            style: const TextStyle(
+              fontFamily: 'Vazirmatn',
+              fontWeight: FontWeight.bold,
+              fontSize: 14,
+              color: Colors.blue,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  String _toPersianDigits(String input) {
+    const english = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+    const persian = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+    var result = input;
+    for (var i = 0; i < english.length; i++) {
+      result = result.replaceAll(english[i], persian[i]);
+    }
+    return result;
   }
 
   @override
@@ -71,6 +389,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           final receiver = ref.read(smsReceiverServiceProvider);
           await receiver.startListening();
         } catch (_) {}
+
+        _checkAndPromptHistoricalSmsImport();
       }
     });
 
