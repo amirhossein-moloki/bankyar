@@ -24,7 +24,9 @@ class AppLocalizationsFa extends AppLocalizations {
   String get unparsedTxAlert => 'تراکنش تجزیه‌نشده شناسایی شد';
 
   @override
-  String get greetingTitle => 'سلام، سهراب عزیز';
+  String greetingTitle(String name) {
+    return 'سلام، $name عزیز';
+  }
 
   @override
   String get greetingSubtitle => 'صندوقچه مالی شما امن و به‌روز است';

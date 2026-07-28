@@ -24,7 +24,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get unparsedTxAlert => 'Unparsed transaction detected';
 
   @override
-  String get greetingTitle => 'Hello, dear Sohrab';
+  String greetingTitle(String name) {
+    return 'Hello, dear $name';
+  }
 
   @override
   String get greetingSubtitle => 'Your financial vault is secure and updated';

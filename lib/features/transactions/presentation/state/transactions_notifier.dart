@@ -41,7 +41,7 @@ final transactionsViewModelProvider =
     });
 
 /// Riverpod StateNotifier controlling the Transactions Screen ledger operations,
-/// pagination, searching, sorting, filters, and grouping.
+/// pagination, searching, sorting, filters, grouping, and multi-selection mode.
 class TransactionsNotifier extends BaseUiNotifier<TransactionsState> {
   /// Constructor.
   TransactionsNotifier({
@@ -170,6 +170,158 @@ class TransactionsNotifier extends BaseUiNotifier<TransactionsState> {
       empty: () {
         setSuccess(currentState.copyWith(hasMore: false, isLoadingMore: false));
       },
+    );
+  }
+
+  /// Toggles selection of a specific transaction ID.
+  void toggleSelection(String id) {
+    final currentState = state.when(
+      initial: () => null,
+      loading: (_) => null,
+      error: (_) => null,
+      success: (d) => d,
+    );
+    if (currentState == null) return;
+
+    final updatedSelected = Set<String>.from(currentState.selectedIds);
+    if (updatedSelected.contains(id)) {
+      updatedSelected.remove(id);
+    } else {
+      updatedSelected.add(id);
+    }
+
+    final isMultiSelection = updatedSelected.isNotEmpty;
+
+    setSuccess(
+      currentState.copyWith(
+        selectedIds: updatedSelected,
+        isMultiSelectionMode: isMultiSelection,
+      ),
+    );
+  }
+
+  /// Selects all loaded transactions in the current screen.
+  void selectAll() {
+    final currentState = state.when(
+      initial: () => null,
+      loading: (_) => null,
+      error: (_) => null,
+      success: (d) => d,
+    );
+    if (currentState == null) return;
+
+    final allIds = currentState.transactions.map((t) => t.id).toSet();
+
+    setSuccess(
+      currentState.copyWith(selectedIds: allIds, isMultiSelectionMode: true),
+    );
+  }
+
+  /// Clears active selection and exits selection mode.
+  void clearSelection() {
+    final currentState = state.when(
+      initial: () => null,
+      loading: (_) => null,
+      error: (_) => null,
+      success: (d) => d,
+    );
+    if (currentState == null) return;
+
+    setSuccess(
+      currentState.copyWith(selectedIds: {}, isMultiSelectionMode: false),
+    );
+  }
+
+  /// Batch deletes selected transactions inside a single SQL transaction.
+  Future<void> batchDelete() async {
+    final currentState = state.when(
+      initial: () => null,
+      loading: (_) => null,
+      error: (_) => null,
+      success: (d) => d,
+    );
+    if (currentState == null || currentState.selectedIds.isEmpty) return;
+
+    setLoading();
+    final idsToDelete = currentState.selectedIds.toList();
+
+    final result = await _repository.deleteTransactions(idsToDelete);
+
+    result.when(
+      success: (_) async {
+        _logger.log(
+          LogLevel.info,
+          LogCategories.database,
+          'BY_TX_BATCH_DELETE_SUCCESS',
+          'Successfully deleted transactions in batch.',
+          metadata: {'count': idsToDelete.length},
+        );
+        // Clear selection and reload initial list
+        state = UiState.success(
+          currentState.copyWith(selectedIds: {}, isMultiSelectionMode: false),
+        );
+        await loadInitial();
+      },
+      failure: (f) {
+        _logger.log(
+          LogLevel.error,
+          LogCategories.database,
+          'BY_TX_BATCH_DELETE_FAILED',
+          'Failed batch deletion of transactions.',
+          error: f,
+        );
+        setError(f);
+      },
+      loading: (_) => null,
+      empty: () => null,
+    );
+  }
+
+  /// Batch assigns category to selected transactions inside a single SQL transaction.
+  Future<void> batchAssignCategory(String? categoryId) async {
+    final currentState = state.when(
+      initial: () => null,
+      loading: (_) => null,
+      error: (_) => null,
+      success: (d) => d,
+    );
+    if (currentState == null || currentState.selectedIds.isEmpty) return;
+
+    setLoading();
+    final idsToAssign = currentState.selectedIds.toList();
+
+    final result = await _repository.assignCategoryToTransactions(
+      idsToAssign,
+      categoryId,
+    );
+
+    result.when(
+      success: (_) async {
+        _logger.log(
+          LogLevel.info,
+          LogCategories.database,
+          'BY_TX_BATCH_ASSIGN_CAT_SUCCESS',
+          'Successfully batch assigned category to transactions.',
+          metadata: {'count': idsToAssign.length, 'category': categoryId},
+        );
+        // Clear selection and reload initial list
+        state = UiState.success(
+          currentState.copyWith(selectedIds: {}, isMultiSelectionMode: false),
+        );
+        await loadInitial();
+      },
+      failure: (f) {
+        _logger.log(
+          LogLevel.error,
+          LogCategories.database,
+          'BY_TX_BATCH_ASSIGN_CAT_FAILED',
+          'Failed batch category assignment to transactions.',
+          error: f,
+        );
+        setError(f);
+      },
+      loading: (_) => null,
+      empty: () => null,
     );
   }
 

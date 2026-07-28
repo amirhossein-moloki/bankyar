@@ -17,6 +17,15 @@ abstract class TransactionRepository {
   /// Direct transaction ledger record deletion.
   Future<Result<void>> deleteTransaction(String id);
 
+  /// Batch transaction ledger record deletion inside a single SQL transaction.
+  Future<Result<void>> deleteTransactions(List<String> ids);
+
+  /// Batch assign category to transactions inside a single SQL transaction.
+  Future<Result<void>> assignCategoryToTransactions(
+    List<String> ids,
+    String? categoryId,
+  );
+
   /// Fetches a paginated, filtered, and sorted list of transactions.
   Future<Result<List<ParsedTransaction>>> getTransactionsPaged({
     required int limit,

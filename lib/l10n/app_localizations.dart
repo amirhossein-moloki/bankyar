@@ -131,8 +131,8 @@ abstract class AppLocalizations {
   /// Greeting displayed on the dashboard
   ///
   /// In en, this message translates to:
-  /// **'Hello, dear Sohrab'**
-  String get greetingTitle;
+  /// **'Hello, dear {name}'**
+  String greetingTitle(String name);
 
   /// Subtitle displayed below the greeting
   ///

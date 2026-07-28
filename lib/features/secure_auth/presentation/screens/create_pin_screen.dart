@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import '../../../../core/theme/spacing_tokens.dart';
 import '../../../../core/presentation/widgets/navigation/custom_app_bar.dart';
 import '../widgets/pin_keypad.dart';
-import 'confirm_pin_screen.dart';
 
 /// Screen guiding the user to enter their proposed 4-digit PIN for the first time.
 class CreatePinScreen extends ConsumerStatefulWidget {
@@ -28,12 +28,7 @@ class _CreatePinScreenState extends ConsumerState<CreatePinScreen> {
       setState(() {
         _pinBuffer = '';
       });
-      Navigator.push(
-        context,
-        MaterialPageRoute<void>(
-          builder: (context) => ConfirmPinScreen(proposedPin: pin),
-        ),
-      );
+      context.push('/security/confirm-pin/$pin');
     }
   }
 
@@ -52,35 +47,40 @@ class _CreatePinScreenState extends ConsumerState<CreatePinScreen> {
     return Scaffold(
       appBar: const CustomAppBar(title: 'ایجاد پین‌کد امنیتی'),
       body: SafeArea(
-        child: Column(
-          children: [
-            SizedBox(height: spacing.xl),
-            Icon(
-              Icons.password_outlined,
-              size: 64,
-              color: theme.colorScheme.primary,
-            ),
-            SizedBox(height: spacing.m),
-            Text(
-              'کد عبور ۴ رقمی جدیدی وارد کنید',
-              style: theme.textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              SizedBox(height: spacing.m),
+              Icon(
+                Icons.password_outlined,
+                size: 48,
+                color: theme.colorScheme.primary,
               ),
-            ),
-            SizedBox(height: spacing.s),
-            Text(
-              'این کد عبور برای قفل‌گشایی‌های بعدی برنامه به صورت محلی استفاده می‌شود.',
-              textAlign: TextAlign.center,
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
+              SizedBox(height: spacing.s),
+              Text(
+                'کد عبور ۴ رقمی جدیدی وارد کنید',
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
-            SizedBox(height: spacing.xl),
-            _buildPinDots(_pinBuffer, spacing, theme),
-            const Spacer(),
-            PinKeypad(onDigitTap: _onDigit, onBackspaceTap: _onBackspace),
-            SizedBox(height: spacing.xl),
-          ],
+              SizedBox(height: spacing.xs),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: spacing.m),
+                child: Text(
+                  'این کد عبور برای قفل‌گشایی‌های بعدی برنامه به صورت محلی استفاده می‌شود.',
+                  textAlign: TextAlign.center,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              ),
+              SizedBox(height: spacing.m),
+              _buildPinDots(_pinBuffer, spacing, theme),
+              SizedBox(height: spacing.xl),
+              PinKeypad(onDigitTap: _onDigit, onBackspaceTap: _onBackspace),
+              SizedBox(height: spacing.m),
+            ],
+          ),
         ),
       ),
     );

@@ -12,8 +12,6 @@ import '../../../../core/platform/permission.dart';
 import '../../../../core/presentation/widgets/widgets.dart';
 import '../state/security_notifier.dart';
 import '../state/app_lock_coordinator.dart';
-import 'create_pin_screen.dart';
-import 'change_pin_screen.dart';
 
 /// Central dashboard screen representing the Security & Privacy Center of BankYar.
 /// Integrates all 3 key sections: Security Score Card, Permission Checklist, and Privacy Controls.
@@ -128,10 +126,14 @@ class _SecurityDashboardScreenState
   StreamSubscription<Map<AppPermission, PermissionStatus>>?
   _permissionSubscription;
 
+  bool _isBgServiceRunning = false;
+  String _selectedBrand = 'Samsung';
+
   @override
   void initState() {
     super.initState();
     _loadPermissions();
+    _loadBgServiceStatus();
     final permService = ref.read(permissionServiceProvider);
     _permissionSubscription = permService.onStatusesChanged.listen((event) {
       if (mounted) {
@@ -157,6 +159,16 @@ class _SecurityDashboardScreenState
           _permissionStatuses[perm] = status;
         });
       }
+    }
+  }
+
+  Future<void> _loadBgServiceStatus() async {
+    final bgManager = ref.read(backgroundServiceManagerProvider);
+    final isRunning = await bgManager.isServiceRunning();
+    if (mounted) {
+      setState(() {
+        _isBgServiceRunning = isRunning;
+      });
     }
   }
 
@@ -211,6 +223,10 @@ class _SecurityDashboardScreenState
 
                     // Section II: Permissions Checklist
                     _buildPermissionsCard(theme, spacing, radius),
+                    SizedBox(height: spacing.m),
+
+                    // SMS Diagnostics Panel (RB-005)
+                    _buildSmsDiagnosticsCard(theme, spacing, radius),
                     SizedBox(height: spacing.m),
 
                     _buildRecentEventsCard(theme, spacing, radius),
@@ -382,12 +398,7 @@ class _SecurityDashboardScreenState
               value: secState.settings.isPinEnabled,
               onChanged: (val) {
                 if (val) {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute<void>(
-                      builder: (context) => const CreatePinScreen(),
-                    ),
-                  );
+                  context.push('/security/create-pin');
                 } else {
                   _showDisablePinConfirmation();
                 }
@@ -403,12 +414,7 @@ class _SecurityDashboardScreenState
                 title: const Text('تغییر پین‌کد فعلی'),
                 trailing: const Icon(Icons.chevron_left_outlined),
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute<void>(
-                      builder: (context) => const ChangePinScreen(),
-                    ),
-                  );
+                  context.push('/security/change-pin');
                 },
               ),
             ],
@@ -551,6 +557,222 @@ class _SecurityDashboardScreenState
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildSmsDiagnosticsCard(
+    ThemeData theme,
+    SpacingExtension spacing,
+    RadiusExtension radius,
+  ) {
+    final smsGranted =
+        _permissionStatuses[AppPermission.smsRead] == PermissionStatus.granted;
+    final batteryGranted =
+        _permissionStatuses[AppPermission.batteryExclusion] ==
+        PermissionStatus.granted;
+
+    return Card(
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(radius.m),
+        side: BorderSide(
+          color: theme.colorScheme.outlineVariant.withOpacity(0.5),
+        ),
+      ),
+      child: Padding(
+        padding: EdgeInsets.all(spacing.m),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'عیب‌یابی ناظر پیامک و فعالیت پس‌زمینه (Diagnostics)',
+              style: theme.textTheme.bodyLarge?.copyWith(
+                fontWeight: FontWeight.bold,
+                fontFamily: 'Vazirmatn',
+              ),
+            ),
+            SizedBox(height: spacing.m),
+            _buildDiagnosticStatusRow(
+              'ناظر سیستم‌عامل (SMS Listener)',
+              smsGranted ? 'فعال و بیدار' : 'متوقف شده (نیازمند مجوز)',
+              smsGranted,
+            ),
+            const Divider(),
+            _buildDiagnosticStatusRow(
+              'سرویس پس‌زمینه (Foreground Sync)',
+              _isBgServiceRunning ? 'در حال اجرا' : 'غیرفعال (آماده به کار)',
+              _isBgServiceRunning,
+            ),
+            const Divider(),
+            _buildDiagnosticStatusRow(
+              'مدیریت هوشمند باتری',
+              batteryGranted
+                  ? 'معاف شده (بدون محدودیت)'
+                  : 'محدود شده (توسط سیستم‌عامل)',
+              batteryGranted,
+            ),
+            SizedBox(height: spacing.m),
+            Text(
+              'راهنمای لغو محدودیت باتری بر اساس برند گوشی شما:',
+              style: theme.textTheme.bodySmall?.copyWith(
+                fontWeight: FontWeight.bold,
+                fontFamily: 'Vazirmatn',
+              ),
+            ),
+            SizedBox(height: spacing.s),
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: [
+                  _buildBrandChip('Samsung'),
+                  SizedBox(width: spacing.xs),
+                  _buildBrandChip('Xiaomi'),
+                  SizedBox(width: spacing.xs),
+                  _buildBrandChip('Huawei'),
+                  SizedBox(width: spacing.xs),
+                  _buildBrandChip('Pixel'),
+                ],
+              ),
+            ),
+            SizedBox(height: spacing.m),
+            Container(
+              width: double.infinity,
+              padding: EdgeInsets.all(spacing.m),
+              decoration: BoxDecoration(
+                color: theme.colorScheme.surfaceContainerHighest.withOpacity(
+                  0.3,
+                ),
+                borderRadius: BorderRadius.circular(radius.s),
+                border: Border.all(
+                  color: theme.colorScheme.outlineVariant.withOpacity(0.3),
+                ),
+              ),
+              child: _buildDeviceInstructions(theme, spacing),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDiagnosticStatusRow(String label, String value, bool isOk) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            label,
+            style: const TextStyle(fontSize: 13, fontFamily: 'Vazirmatn'),
+          ),
+          Row(
+            children: [
+              Container(
+                width: 8,
+                height: 8,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: isOk ? Colors.green : Colors.orange,
+                ),
+              ),
+              const SizedBox(width: 6),
+              Text(
+                value,
+                style: TextStyle(
+                  fontSize: 12,
+                  fontFamily: 'Vazirmatn',
+                  fontWeight: FontWeight.bold,
+                  color: isOk ? Colors.green : Colors.orange,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildBrandChip(String brand) {
+    final isSelected = _selectedBrand == brand;
+    return ChoiceChip(
+      label: Text(brand, style: const TextStyle(fontFamily: 'Vazirmatn')),
+      selected: isSelected,
+      onSelected: (selected) {
+        if (selected) {
+          setState(() {
+            _selectedBrand = brand;
+          });
+        }
+      },
+    );
+  }
+
+  Widget _buildDeviceInstructions(ThemeData theme, SpacingExtension spacing) {
+    final List<String> steps;
+    switch (_selectedBrand) {
+      case 'Samsung':
+        steps = [
+          'به بخش تنظیمات (Settings) و سپس Battery and device care بروید.',
+          'روی Battery ضربه بزنید.',
+          'گزینه Background usage limits را انتخاب کنید.',
+          'برنامه را به بخش Never sleeping apps اضافه کنید.',
+        ];
+        break;
+      case 'Xiaomi':
+        steps = [
+          'در تنظیمات (Settings)، به بخش Apps و سپس Manage apps بروید.',
+          'برنامه بانک‌یار را پیدا کرده و انتخاب کنید.',
+          'گزینه Autostart را فعال کنید.',
+          'در بخش Battery saver، آن را روی No restrictions تنظیم نمایید.',
+        ];
+        break;
+      case 'Huawei':
+        steps = [
+          'در تنظیمات (Settings)، به بخش Battery و سپس App launch بروید.',
+          'برنامه را پیدا کرده و مدیریت آن را روی Manage manually قرار دهید.',
+          'هر سه گزینه Auto-launch، Secondary launch و Run in background را فعال کنید.',
+        ];
+        break;
+      case 'Pixel':
+      default:
+        steps = [
+          'روی آیکون برنامه لمس طولانی کرده و App info را بزنید.',
+          'به بخش Battery بروید.',
+          'گزینه Unrestricted را انتخاب کنید تا سیستم‌عامل فعالیت پس‌زمینه را محدود نکند.',
+        ];
+        break;
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: List.generate(steps.length, (index) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 4.0),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                '${index + 1}. ',
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.blue,
+                  fontFamily: 'Vazirmatn',
+                ),
+              ),
+              Expanded(
+                child: Text(
+                  steps[index],
+                  style: const TextStyle(
+                    fontSize: 12,
+                    height: 1.5,
+                    fontFamily: 'Vazirmatn',
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      }),
     );
   }
 

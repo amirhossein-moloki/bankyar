@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../../../core/di/dependency_injection.dart';
 import '../../../../core/presentation/widgets/navigation/custom_app_bar.dart';
 import '../../../../core/presentation/widgets/status/error_state.dart';
 import '../../../../core/theme/spacing_tokens.dart';
@@ -17,12 +18,31 @@ import '../widgets/home_skeleton_loader.dart';
 import '../widgets/manual_log_fab.dart';
 
 /// Central landing workspace for offline personal financial management.
-class HomeScreen extends ConsumerWidget {
+class HomeScreen extends ConsumerStatefulWidget {
   /// Constructor.
   const HomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends ConsumerState<HomeScreen> {
+  @override
+  void initState() {
+    super.initState();
+    _checkOnboarding();
+  }
+
+  void _checkOnboarding() async {
+    final prefs = ref.read(preferencesStorageProvider);
+    final completed = await prefs.getBool('by_onboarding_completed') ?? false;
+    if (!completed && mounted) {
+      context.go('/onboarding');
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final uiState = ref.watch(homeViewModelProvider);
     final l10n = AppLocalizations.of(context);
 
@@ -31,6 +51,11 @@ class HomeScreen extends ConsumerWidget {
         title: l10n.appTitle,
         showBackButton: false,
         actions: [
+          IconButton(
+            icon: const Icon(Icons.analytics_outlined),
+            tooltip: 'آموزش و آمار مالی',
+            onPressed: () => context.push('/analytics'),
+          ),
           IconButton(
             icon: const Icon(Icons.notifications_outlined),
             tooltip: 'مرکز اعلان‌ها',

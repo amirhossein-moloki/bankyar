@@ -69,6 +69,12 @@ void main() {
 
     // Default mock behavior for secure storage preferences
     when(() => mockPrefs.getBool(any())).thenAnswer((_) async => false);
+    when(
+      () => mockPrefs.getBool('by_onboarding_completed'),
+    ).thenAnswer((_) async => true);
+    when(
+      () => mockPrefs.getString('by_username'),
+    ).thenAnswer((_) async => 'سهراب');
     when(() => mockPrefs.setBool(any(), any())).thenAnswer((_) async {});
     when(
       () => mockImporter.performIncrementalSync(),

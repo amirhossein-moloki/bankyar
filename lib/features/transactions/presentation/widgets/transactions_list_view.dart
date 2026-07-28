@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/presentation/widgets/cards/transaction_card.dart';
 import '../../../../core/theme/spacing_tokens.dart';
 import '../../../../core/utils/currency_formatter.dart';
 import '../../../../core/utils/date_formatter.dart';
 import '../../../sms_detection/domain/entities/parsed_transaction.dart';
+import '../state/transactions_notifier.dart';
 
-/// Scrollable and grouped transactions list with infinite scroll pagination.
-class TransactionsListView extends StatefulWidget {
+/// Scrollable and grouped transactions list with infinite scroll pagination and long-press multi-selection.
+class TransactionsListView extends ConsumerStatefulWidget {
   /// Constructor.
   const TransactionsListView({
     required this.transactions,
@@ -30,10 +32,11 @@ class TransactionsListView extends StatefulWidget {
   final VoidCallback onLoadMore;
 
   @override
-  State<TransactionsListView> createState() => _TransactionsListViewState();
+  ConsumerState<TransactionsListView> createState() =>
+      _TransactionsListViewState();
 }
 
-class _TransactionsListViewState extends State<TransactionsListView> {
+class _TransactionsListViewState extends ConsumerState<TransactionsListView> {
   late final ScrollController _scrollController;
 
   @override
@@ -137,15 +140,62 @@ class _TransactionsListViewState extends State<TransactionsListView> {
         ? 'کارت *${DateFormatter.toPersianDigits(tx.cardIdentifier!)}'
         : 'بانک‌یار';
 
+    // Watch the selection state dynamically
+    final uiState = ref.watch(transactionsViewModelProvider);
+    final isSelectedMode = uiState.when(
+      initial: () => false,
+      loading: (_) => false,
+      error: (_) => false,
+      success: (data) => data.isMultiSelectionMode,
+    );
+    final isSelected = uiState.when(
+      initial: () => false,
+      loading: (_) => false,
+      error: (_) => false,
+      success: (data) => data.selectedIds.contains(tx.id),
+    );
+
     return Padding(
       padding: EdgeInsets.only(bottom: spacing.xs),
-      child: TransactionCard(
-        amount: amountText,
-        timestamp: formattedTime,
-        category: tx.normalizedMerchant,
-        accountLabel: cardLabel,
-        isCredit: isCredit,
-        onTap: () => context.push('/transactions/${tx.id}'),
+      child: GestureDetector(
+        onLongPress: () {
+          ref
+              .read(transactionsViewModelProvider.notifier)
+              .toggleSelection(tx.id);
+        },
+        child: Row(
+          children: [
+            if (isSelectedMode) ...[
+              Checkbox(
+                value: isSelected,
+                onChanged: (_) {
+                  ref
+                      .read(transactionsViewModelProvider.notifier)
+                      .toggleSelection(tx.id);
+                },
+              ),
+              SizedBox(width: spacing.xs),
+            ],
+            Expanded(
+              child: TransactionCard(
+                amount: amountText,
+                timestamp: formattedTime,
+                category: tx.normalizedMerchant,
+                accountLabel: cardLabel,
+                isCredit: isCredit,
+                onTap: () {
+                  if (isSelectedMode) {
+                    ref
+                        .read(transactionsViewModelProvider.notifier)
+                        .toggleSelection(tx.id);
+                  } else {
+                    context.push('/transactions/${tx.id}');
+                  }
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
