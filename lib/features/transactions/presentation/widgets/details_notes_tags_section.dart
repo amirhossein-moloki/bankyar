@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/presentation/widgets/widgets.dart';
 import '../../../../core/theme/spacing_tokens.dart';
+import '../../../../core/state_management/undo_delete_notifier.dart';
 import '../../domain/entities/transaction_details.dart';
+import '../state/transaction_details_notifier.dart';
 import '../state/transactions_notifier.dart';
 
 /// Notes, category, and tags editing widget for transaction details.
@@ -34,7 +36,9 @@ class DetailsNotesTagsSection extends ConsumerWidget {
     final spacing = theme.extension<SpacingExtension>()!;
     final categoriesAsync = ref.watch(categoriesListProvider);
 
-    final noteText = details.note ?? '';
+    final pendingDeletes = ref.watch(undoDeleteProvider);
+    final isNotePendingDelete = pendingDeletes.pendingNoteTransactionIds.contains(details.transaction.id);
+    final noteText = isNotePendingDelete ? '' : (details.note ?? '');
     final tags = details.tags;
     final currentCategoryId = details.category?.id;
 
@@ -73,7 +77,7 @@ class DetailsNotesTagsSection extends ConsumerWidget {
           SizedBox(height: spacing.m),
           _buildSectionHeader(theme, 'یادداشت کاربر'),
           BaseCard(
-            onTap: () => _showEditNoteDialog(context, noteText),
+            onTap: () => _showEditNoteDialog(context, ref, noteText),
             child: Padding(
               padding: EdgeInsets.all(spacing.m),
               child: Row(
@@ -138,7 +142,7 @@ class DetailsNotesTagsSection extends ConsumerWidget {
     );
   }
 
-  void _showEditNoteDialog(BuildContext context, String currentNote) {
+  void _showEditNoteDialog(BuildContext context, WidgetRef ref, String currentNote) {
     final controller = TextEditingController(text: currentNote);
     showDialog<void>(
       context: context,
@@ -160,8 +164,27 @@ class DetailsNotesTagsSection extends ConsumerWidget {
           ),
           TextButton(
             onPressed: () {
-              onSaveNote(controller.text);
+              final newText = controller.text.trim();
               Navigator.pop(context);
+              if (newText.isEmpty && currentNote.isNotEmpty) {
+                showDialog<void>(
+                  context: context,
+                  builder: (context) => DeleteConfirmationDialog(
+                    onConfirm: () {
+                      ref.read(undoDeleteProvider.notifier).deleteNote(
+                        context,
+                        details.transaction.id,
+                        currentNote,
+                        () {
+                          ref.invalidate(transactionDetailsViewModelProvider(details.transaction.id));
+                        },
+                      );
+                    },
+                  ),
+                );
+              } else {
+                onSaveNote(controller.text);
+              }
             },
             child: const Text('ذخیره'),
           ),

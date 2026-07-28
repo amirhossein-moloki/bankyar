@@ -172,13 +172,14 @@ void main() {
       final securityRoute =
           routes.firstWhere((r) => r is GoRoute && r.path == '/security')
               as GoRoute;
-      expect(securityRoute.routes.length, 3);
+      expect(securityRoute.routes.length, 4);
 
       final paths = securityRoute.routes
           .map((r) => (r as GoRoute).path)
           .toList();
       expect(paths, contains('create-pin'));
       expect(paths, contains('change-pin'));
+      expect(paths, contains('permissions'));
       expect(paths, contains('confirm-pin/:proposedPin'));
     },
   );

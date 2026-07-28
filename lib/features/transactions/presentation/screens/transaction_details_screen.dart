@@ -6,9 +6,12 @@ import '../../../../core/presentation/widgets/widgets.dart';
 import '../../../../core/theme/spacing_tokens.dart';
 import '../../../../core/utils/currency_formatter.dart';
 import '../../../sms_detection/domain/entities/parsed_transaction.dart';
+import '../state/home_notifier.dart';
 import '../state/transaction_details_notifier.dart';
+import '../state/transactions_notifier.dart';
 import '../widgets/details_action_footer.dart';
 import '../widgets/details_metadata_grid.dart';
+import '../../../../core/state_management/undo_delete_notifier.dart';
 import '../widgets/details_notes_tags_section.dart';
 import '../widgets/details_security_shield.dart';
 import '../widgets/details_summary_card.dart';
@@ -83,7 +86,7 @@ class TransactionDetailsScreen extends ConsumerWidget {
               DetailsActionFooter(
                 isVerified: data.transaction.confidenceScore >= 1.0,
                 onVerify: notifier.verifyTransaction,
-                onDelete: () => _showDeleteConfirmation(context, notifier),
+                onDelete: () => _showDeleteConfirmation(context, ref, data.transaction),
               ),
             ],
           ),
@@ -119,50 +122,25 @@ class TransactionDetailsScreen extends ConsumerWidget {
 
   void _showDeleteConfirmation(
     BuildContext context,
-    TransactionDetailsNotifier notifier,
+    WidgetRef ref,
+    ParsedTransaction tx,
   ) {
     showDialog<void>(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('حذف تراکنش', textDirection: TextDirection.rtl),
-        content: const Text(
-          'آیا از حذف دائمی این تراکنش اطمینان دارید؟ این اقدام غیرقابل بازگشت است.',
-          textDirection: TextDirection.rtl,
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('انصراف'),
-          ),
-          TextButton(
-            onPressed: () async {
-              Navigator.pop(context);
-              final result = await notifier.deleteTransaction();
-              result.when(
-                success: (_) {
-                  if (context.mounted) {
-                    context.pop();
-                  }
-                },
-                failure: (f) {
-                  if (context.mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('حذف با خطا مواجه شد: ${f.message}'),
-                      ),
-                    );
-                  }
-                },
-                loading: (_) => null,
-                empty: () => null,
-              );
+      builder: (context) => DeleteConfirmationDialog(
+        onConfirm: () {
+          if (context.mounted) {
+            context.pop();
+          }
+          ref.read(undoDeleteProvider.notifier).deleteTransaction(
+            context,
+            tx,
+            () {
+              ref.invalidate(homeViewModelProvider);
+              ref.invalidate(transactionsViewModelProvider);
             },
-            child: const Text(
-              'حذف تراکنش',
-              style: TextStyle(color: Colors.red),
-            ),
-          ),
-        ],
+          );
+        },
       ),
     );
   }

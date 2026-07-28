@@ -5,6 +5,7 @@ import '../../../../core/presentation/widgets/cards/transaction_card.dart';
 import '../../../../core/theme/spacing_tokens.dart';
 import '../../../../core/utils/currency_formatter.dart';
 import '../../../../core/utils/date_formatter.dart';
+import '../../../../core/state_management/undo_delete_notifier.dart';
 import '../../../sms_detection/domain/entities/parsed_transaction.dart';
 import '../state/transactions_notifier.dart';
 
@@ -63,7 +64,12 @@ class _TransactionsListViewState extends ConsumerState<TransactionsListView> {
     final theme = Theme.of(context);
     final spacing = theme.extension<SpacingExtension>()!;
 
-    final grouped = _groupTransactions(widget.transactions, widget.groupBy);
+    final pendingDeletes = ref.watch(undoDeleteProvider);
+    final visibleTransactions = widget.transactions
+        .where((tx) => !pendingDeletes.pendingTransactionIds.contains(tx.id))
+        .toList();
+
+    final grouped = _groupTransactions(visibleTransactions, widget.groupBy);
     final groupKeys = grouped.keys.toList();
 
     // Flatten group elements into a list of items/headers
@@ -81,6 +87,7 @@ class _TransactionsListViewState extends ConsumerState<TransactionsListView> {
 
     return ListView.builder(
       controller: _scrollController,
+      physics: const AlwaysScrollableScrollPhysics(),
       padding: EdgeInsets.symmetric(horizontal: spacing.m, vertical: spacing.s),
       itemCount: flatList.length,
       itemBuilder: (context, index) {

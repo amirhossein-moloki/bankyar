@@ -33,6 +33,7 @@ export 'feedback/custom_bottom_sheet.dart';
 export 'feedback/custom_dialog.dart';
 export 'feedback/custom_snackbar.dart';
 export 'feedback/custom_tooltip.dart';
+export 'delete_confirmation_dialog.dart';
 
 export 'indicators/circular_progress.dart';
 export 'indicators/linear_progress.dart';

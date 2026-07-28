@@ -9,6 +9,7 @@ import '../../../../core/state_management/base_providers.dart';
 import '../../../../core/state_management/state_wrappers.dart';
 import '../../../../core/utils/result.dart';
 import '../../../sms_detection/domain/entities/parsed_transaction.dart';
+import '../../../../core/state_management/undo_delete_notifier.dart';
 import '../../../sms_detection/presentation/state/sms_detection_providers.dart';
 import '../../data/datasources/transaction_dao.dart';
 import '../../data/repositories/transaction_repository_impl.dart';
@@ -58,6 +59,10 @@ class HomeNotifier extends BaseUiNotifier<HomeState> {
   }) : _getTransactionsUseCase = getTransactionsUseCase,
        _logger = logger,
        _ref = ref {
+    // Listen to undoDeleteProvider exactly once to avoid recursive listeners and loops on refresh
+    _ref.listen(undoDeleteProvider, (previous, next) {
+      _recomputeAndPublish();
+    });
     _loadVisibilityAndSubscribe();
   }
 
@@ -94,8 +99,10 @@ class HomeNotifier extends BaseUiNotifier<HomeState> {
     _subscribeToTransactions();
   }
 
-  void _subscribeToTransactions() {
-    setLoading();
+  void _subscribeToTransactions({bool isRefreshing = false}) {
+    if (!isRefreshing) {
+      setLoading();
+    }
     _subscription?.cancel();
     _subscription = _getTransactionsUseCase(const NoParams()).listen(
       (result) {
@@ -149,6 +156,7 @@ class HomeNotifier extends BaseUiNotifier<HomeState> {
         stackTrace: stack,
       );
     }
+    _subscribeToTransactions(isRefreshing: true);
   }
 
   /// Toggles sensitive cash value masking and shoulder-surfing protection overlays.
@@ -185,7 +193,12 @@ class HomeNotifier extends BaseUiNotifier<HomeState> {
     double income = 0.0;
     double expense = 0.0;
 
+    final pendingDeletes = _ref.read(undoDeleteProvider);
+
     for (final tx in _rawTransactions) {
+      if (pendingDeletes.pendingTransactionIds.contains(tx.id)) {
+        continue;
+      }
       final amt = tx.amount;
       if (tx.transactionType == SmsTransactionType.credit) {
         income += amt;
@@ -197,6 +210,7 @@ class HomeNotifier extends BaseUiNotifier<HomeState> {
     }
 
     final filtered = _rawTransactions.where((tx) {
+      if (pendingDeletes.pendingTransactionIds.contains(tx.id)) return false;
       if (_selectedBankFilter == 'All') return true;
       final source = tx.sourceSmsId != null ? tx.rawMerchant : '';
       return tx.normalizedMerchant.toLowerCase().contains(
