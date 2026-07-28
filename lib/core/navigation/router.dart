@@ -13,6 +13,7 @@ import '../../features/onboarding/presentation/screens/onboarding_screen.dart';
 import '../../features/secure_auth/presentation/screens/create_pin_screen.dart';
 import '../../features/secure_auth/presentation/screens/change_pin_screen.dart';
 import '../../features/secure_auth/presentation/screens/confirm_pin_screen.dart';
+import '../../features/secure_auth/presentation/screens/permission_status_screen.dart';
 
 /// Central declarative router mapping paths to lightweight route screens.
 /// Conforms to BankYar NAVIGATION_ARCHITECTURE.md specifications.
@@ -75,6 +76,10 @@ abstract class AppRouter {
           GoRoute(
             path: 'change-pin',
             builder: (context, state) => const ChangePinScreen(),
+          ),
+          GoRoute(
+            path: 'permissions',
+            builder: (context, state) => const PermissionStatusScreen(),
           ),
           GoRoute(
             path: 'confirm-pin/:proposedPin',

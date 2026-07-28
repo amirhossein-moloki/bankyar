@@ -355,6 +355,19 @@ class _SecurityDashboardScreenState
               theme,
               spacing,
             ),
+            const Divider(),
+            ListTile(
+              leading: Icon(
+                Icons.settings_suggest_outlined,
+                color: theme.colorScheme.primary,
+              ),
+              title: const Text('مدیریت پیشرفته تمامی مجوزها'),
+              subtitle: const Text('مشاهده جزئیات، عیب‌یابی و فعال‌سازی موارد دیگر'),
+              trailing: const Icon(Icons.chevron_left_outlined),
+              onTap: () {
+                context.push('/security/permissions');
+              },
+            ),
           ],
         ),
       ),

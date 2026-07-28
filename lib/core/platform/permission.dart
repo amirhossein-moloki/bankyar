@@ -21,6 +21,15 @@ enum AppPermission {
 
   /// Access system biometric hardware sensors.
   biometrics,
+
+  /// Real-time foreground synchronization and task execution daemon status.
+  foregroundService,
+
+  /// Re-initiate live background SMS interceptors automatically upon device reboot.
+  autoStart,
+
+  /// Schedule exact, high-precision background synchronization tasks.
+  exactAlarm,
 }
 
 /// Standard authorization statuses.
@@ -33,6 +42,9 @@ enum PermissionStatus {
 
   /// User blocked permission prompts permanently; requires manual system settings intervention.
   permanentlyDenied,
+
+  /// Permission is not available or not supported on this device.
+  unavailable,
 }
 
 /// Abstraction representing system authorization controllers with state observation and recovery capabilities.
@@ -71,6 +83,9 @@ class SystemPermissionService implements PermissionService {
     AppPermission.batteryExclusion: PermissionStatus.granted,
     AppPermission.localFiles: PermissionStatus.granted,
     AppPermission.biometrics: PermissionStatus.granted,
+    AppPermission.foregroundService: PermissionStatus.granted,
+    AppPermission.autoStart: PermissionStatus.granted,
+    AppPermission.exactAlarm: PermissionStatus.granted,
   };
 
   /// Allows unit tests to seed custom starting states easily.
