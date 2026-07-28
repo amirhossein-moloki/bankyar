@@ -44,7 +44,9 @@ class AmountInputField extends StatelessWidget {
         keyboardType: const TextInputType.numberWithOptions(decimal: true),
         style: theme.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
         inputFormatters: [
-          FilteringTextInputFormatter.allow(RegExp(r'[0-9\u06F0-\u06F9\u0660-\u0669,.]')),
+          FilteringTextInputFormatter.allow(
+            RegExp(r'[0-9\u06F0-\u06F9\u0660-\u0669,.]'),
+          ),
         ],
         decoration: InputDecoration(
           labelText: label,

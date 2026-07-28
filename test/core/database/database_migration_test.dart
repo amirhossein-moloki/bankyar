@@ -5,6 +5,7 @@ import 'package:bankyar/core/logging/logger.dart';
 import 'package:bankyar/core/database/database_service_impl.dart';
 
 class MockDatabase extends Mock implements Database {}
+
 class MockAppLogger extends Mock implements AppLogger {}
 
 class TestDatabaseServiceImpl extends DatabaseServiceImpl {
@@ -96,14 +97,20 @@ void main() {
       verify(() => mockDb.execute('PRAGMA synchronous = NORMAL;')).called(1);
     });
 
-    test('executePragma rethrows exception when both rawQuery and execute fail', () async {
-      when(() => mockDb.rawQuery(any())).thenThrow(Exception('Queries only'));
-      when(() => mockDb.execute(any())).thenThrow(Exception('Disk failure'));
+    test(
+      'executePragma rethrows exception when both rawQuery and execute fail',
+      () async {
+        when(() => mockDb.rawQuery(any())).thenThrow(Exception('Queries only'));
+        when(() => mockDb.execute(any())).thenThrow(Exception('Disk failure'));
 
-      expect(
-        () => dbService.testExecutePragma(mockDb, 'PRAGMA synchronous = NORMAL;'),
-        throwsException,
-      );
-    });
+        expect(
+          () => dbService.testExecutePragma(
+            mockDb,
+            'PRAGMA synchronous = NORMAL;',
+          ),
+          throwsException,
+        );
+      },
+    );
   });
 }

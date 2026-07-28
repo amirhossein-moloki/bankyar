@@ -4,7 +4,15 @@
   "errorOccurred": "خطایی رخ داده است",
   "lockScreenTitle": "قفل‌گشایی بانک‌یار",
   "unparsedTxAlert": "تراکنش تجزیه‌نشده شناسایی شد",
-  "greetingTitle": "سلام، سهراب عزیز",
+  "greetingTitle": "سلام، {name} عزیز",
+  "@greetingTitle": {
+    "description": "Greeting displayed on the dashboard",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "greetingSubtitle": "صندوقچه مالی شما امن و به‌روز است",
   "totalBalanceLabel": "دارایی کل صندوقچه",
   "monthlyIncomeLabel": "ورودی این ماه",

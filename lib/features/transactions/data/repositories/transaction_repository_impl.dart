@@ -63,6 +63,46 @@ class TransactionRepositoryImpl extends BaseRepository
   }
 
   @override
+  Future<Result<void>> deleteTransactions(List<String> ids) {
+    return executeSafe(() async {
+      await _transactionDao.runInTransaction((txn) async {
+        for (final id in ids) {
+          await txn.delete('transactions', where: 'id = ?', whereArgs: [id]);
+          await txn.delete(
+            'notes',
+            where: 'transaction_id = ?',
+            whereArgs: [id],
+          );
+          await txn.delete(
+            'transaction_tags',
+            where: 'transaction_id = ?',
+            whereArgs: [id],
+          );
+        }
+      });
+    });
+  }
+
+  @override
+  Future<Result<void>> assignCategoryToTransactions(
+    List<String> ids,
+    String? categoryId,
+  ) {
+    return executeSafe(() async {
+      await _transactionDao.runInTransaction((txn) async {
+        for (final id in ids) {
+          await txn.update(
+            'transactions',
+            {'category_id': categoryId},
+            where: 'id = ?',
+            whereArgs: [id],
+          );
+        }
+      });
+    });
+  }
+
+  @override
   Future<Result<List<ParsedTransaction>>> getTransactionsPaged({
     required int limit,
     required int offset,

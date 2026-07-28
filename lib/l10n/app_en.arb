@@ -19,9 +19,14 @@
   "@unparsedTxAlert": {
     "description": "Alert text for when SMS parsing fails and defaults to unparsed"
   },
-  "greetingTitle": "Hello, dear Sohrab",
+  "greetingTitle": "Hello, dear {name}",
   "@greetingTitle": {
-    "description": "Greeting displayed on the dashboard"
+    "description": "Greeting displayed on the dashboard",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
   },
   "greetingSubtitle": "Your financial vault is secure and updated",
   "@greetingSubtitle": {

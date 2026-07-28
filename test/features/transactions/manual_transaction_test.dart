@@ -29,18 +29,18 @@ void main() {
     mockRepository = MockTransactionRepository();
 
     // Default mock behaviors
-    when(() => mockRepository.getCategories()).thenAnswer(
-      (_) async => const Result.success(<TransactionCategory>[]),
-    );
-    when(() => mockRepository.saveTransaction(any())).thenAnswer(
-      (_) async => const Result.success(null),
-    );
-    when(() => mockRepository.saveNote(any(), any())).thenAnswer(
-      (_) async => const Result.success(null),
-    );
-    when(() => mockRepository.assignTags(any(), any())).thenAnswer(
-      (_) async => const Result.success(null),
-    );
+    when(
+      () => mockRepository.getCategories(),
+    ).thenAnswer((_) async => const Result.success(<TransactionCategory>[]));
+    when(
+      () => mockRepository.saveTransaction(any()),
+    ).thenAnswer((_) async => const Result.success(null));
+    when(
+      () => mockRepository.saveNote(any(), any()),
+    ).thenAnswer((_) async => const Result.success(null));
+    when(
+      () => mockRepository.assignTags(any(), any()),
+    ).thenAnswer((_) async => const Result.success(null));
   });
 
   Widget buildTestableWidget(WidgetRef ref, Widget child) {
@@ -55,10 +55,7 @@ void main() {
       supportedLocales: const [Locale('fa'), Locale('en')],
       locale: const Locale('fa'),
       home: Scaffold(
-        body: Directionality(
-          textDirection: TextDirection.rtl,
-          child: child,
-        ),
+        body: Directionality(textDirection: TextDirection.rtl, child: child),
       ),
     );
   }
@@ -71,10 +68,8 @@ void main() {
             transactionRepositoryProvider.overrideWithValue(mockRepository),
           ],
           child: Consumer(
-            builder: (context, ref, child) => buildTestableWidget(
-              ref,
-              const ManualTransactionBottomSheet(),
-            ),
+            builder: (context, ref, child) =>
+                buildTestableWidget(ref, const ManualTransactionBottomSheet()),
           ),
         ),
       );
@@ -113,10 +108,8 @@ void main() {
             transactionRepositoryProvider.overrideWithValue(mockRepository),
           ],
           child: Consumer(
-            builder: (context, ref, child) => buildTestableWidget(
-              ref,
-              const ManualTransactionBottomSheet(),
-            ),
+            builder: (context, ref, child) =>
+                buildTestableWidget(ref, const ManualTransactionBottomSheet()),
           ),
         ),
       );
@@ -137,17 +130,17 @@ void main() {
       verifyNever(() => mockRepository.saveTransaction(any()));
     });
 
-    testWidgets('Triggers validation error on invalid amount <= 0', (tester) async {
+    testWidgets('Triggers validation error on invalid amount <= 0', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
             transactionRepositoryProvider.overrideWithValue(mockRepository),
           ],
           child: Consumer(
-            builder: (context, ref, child) => buildTestableWidget(
-              ref,
-              const ManualTransactionBottomSheet(),
-            ),
+            builder: (context, ref, child) =>
+                buildTestableWidget(ref, const ManualTransactionBottomSheet()),
           ),
         ),
       );
@@ -166,7 +159,9 @@ void main() {
 
       final merchantTextFormField = find.descendant(
         of: find.byWidgetPredicate(
-          (widget) => widget is TextInputField && widget.label == 'پذیرنده / پرداخت‌کننده',
+          (widget) =>
+              widget is TextInputField &&
+              widget.label == 'پذیرنده / پرداخت‌کننده',
         ),
         matching: find.byType(TextFormField),
       );
@@ -197,10 +192,8 @@ void main() {
             transactionRepositoryProvider.overrideWithValue(mockRepository),
           ],
           child: Consumer(
-            builder: (context, ref, child) => buildTestableWidget(
-              ref,
-              const ManualTransactionBottomSheet(),
-            ),
+            builder: (context, ref, child) =>
+                buildTestableWidget(ref, const ManualTransactionBottomSheet()),
           ),
         ),
       );
@@ -219,21 +212,26 @@ void main() {
 
       final merchantTextFormField = find.descendant(
         of: find.byWidgetPredicate(
-          (widget) => widget is TextInputField && widget.label == 'پذیرنده / پرداخت‌کننده',
+          (widget) =>
+              widget is TextInputField &&
+              widget.label == 'پذیرنده / پرداخت‌کننده',
         ),
         matching: find.byType(TextFormField),
       );
 
       final noteTextFormField = find.descendant(
         of: find.byWidgetPredicate(
-          (widget) => widget is TextInputField && widget.label == 'یادداشت (اختیاری)',
+          (widget) =>
+              widget is TextInputField && widget.label == 'یادداشت (اختیاری)',
         ),
         matching: find.byType(TextFormField),
       );
 
       final tagsTextFormField = find.descendant(
         of: find.byWidgetPredicate(
-          (widget) => widget is TextInputField && widget.label == 'برچسب‌ها (با کاما جدا کنید)',
+          (widget) =>
+              widget is TextInputField &&
+              widget.label == 'برچسب‌ها (با کاما جدا کنید)',
         ),
         matching: find.byType(TextFormField),
       );
@@ -263,15 +261,24 @@ void main() {
       expect(find.text('نام پذیرنده الزامی است'), findsNothing);
 
       // Verify that saveTransaction was called with the correctly parsed double 150000.0
-      final capturedTx = verify(() => mockRepository.saveTransaction(captureAny())).captured.first as ParsedTransaction;
+      final capturedTx =
+          verify(
+                () => mockRepository.saveTransaction(captureAny()),
+              ).captured.first
+              as ParsedTransaction;
       expect(capturedTx.amount, equals(150000.0));
       expect(capturedTx.rawMerchant, equals('اسنپ باکس'));
       expect(capturedTx.parsingMethod, equals('manual'));
       expect(capturedTx.confidenceScore, equals(1.0));
 
       // Verify notes & tags save actions are triggered with correct IDs
-      verify(() => mockRepository.saveNote(capturedTx.id, 'کرایه اسنپ ناهار امروز')).called(1);
-      verify(() => mockRepository.assignTags(capturedTx.id, ['اسنپ', 'سفر', 'ناهار'])).called(1);
+      verify(
+        () => mockRepository.saveNote(capturedTx.id, 'کرایه اسنپ ناهار امروز'),
+      ).called(1);
+      verify(
+        () =>
+            mockRepository.assignTags(capturedTx.id, ['اسنپ', 'سفر', 'ناهار']),
+      ).called(1);
     });
   });
 }

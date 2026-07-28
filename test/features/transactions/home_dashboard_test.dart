@@ -365,10 +365,52 @@ void main() {
     }
 
     testWidgets(
-      'GreetingSection exhibits correct localized text & secure badge',
+      'GreetingSection exhibits correct localized text & secure badge when username is سهراب',
       (tester) async {
-        await tester.pumpWidget(buildTestableWidget(const GreetingSection()));
+        when(
+          () => mockPrefs.getString('by_username'),
+        ).thenAnswer((_) async => 'سهراب');
+
+        await tester.pumpWidget(
+          buildTestableWidget(
+            ProviderScope(
+              overrides: [
+                preferencesStorageProvider.overrideWithValue(mockPrefs),
+                loggerProvider.overrideWithValue(mockLogger),
+              ],
+              child: const GreetingSection(),
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+
         expect(find.text('سلام، سهراب عزیز'), findsOneWidget);
+        expect(find.text('صندوقچه مالی شما امن و به‌روز است'), findsOneWidget);
+        expect(find.text('کاملاً آفلاین'), findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      'GreetingSection exhibits fallback localized text when username is empty',
+      (tester) async {
+        when(
+          () => mockPrefs.getString('by_username'),
+        ).thenAnswer((_) async => null);
+
+        await tester.pumpWidget(
+          buildTestableWidget(
+            ProviderScope(
+              overrides: [
+                preferencesStorageProvider.overrideWithValue(mockPrefs),
+                loggerProvider.overrideWithValue(mockLogger),
+              ],
+              child: const GreetingSection(),
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        expect(find.text('سلام، کاربر عزیز'), findsOneWidget);
         expect(find.text('صندوقچه مالی شما امن و به‌روز است'), findsOneWidget);
         expect(find.text('کاملاً آفلاین'), findsOneWidget);
       },

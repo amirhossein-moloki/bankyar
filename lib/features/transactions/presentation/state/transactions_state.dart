@@ -1,6 +1,6 @@
 import '../../../sms_detection/domain/entities/parsed_transaction.dart';
 
-/// State object managing filtering, pagination, sorting, search, and grouping of transactions.
+/// State object managing filtering, pagination, sorting, search, grouping, and multi-selection of transactions.
 class TransactionsState {
   /// Constructor defining all defaults.
   const TransactionsState({
@@ -16,6 +16,8 @@ class TransactionsState {
     required this.sortBy,
     required this.descending,
     required this.isLoadingMore,
+    required this.selectedIds,
+    required this.isMultiSelectionMode,
   });
 
   /// Factory constructor for initial empty state.
@@ -33,6 +35,8 @@ class TransactionsState {
       sortBy: 'Date',
       descending: true,
       isLoadingMore: false,
+      selectedIds: {},
+      isMultiSelectionMode: false,
     );
   }
 
@@ -72,6 +76,12 @@ class TransactionsState {
   /// Spinner state for lazy list pagination.
   final bool isLoadingMore;
 
+  /// Currently selected transaction IDs for batch actions.
+  final Set<String> selectedIds;
+
+  /// Flag indicating if multi-selection mode is active.
+  final bool isMultiSelectionMode;
+
   /// Copy constructor.
   TransactionsState copyWith({
     List<ParsedTransaction>? transactions,
@@ -86,6 +96,8 @@ class TransactionsState {
     String? sortBy,
     bool? descending,
     bool? isLoadingMore,
+    Set<String>? selectedIds,
+    bool? isMultiSelectionMode,
   }) {
     return TransactionsState(
       transactions: transactions ?? this.transactions,
@@ -100,6 +112,8 @@ class TransactionsState {
       sortBy: sortBy ?? this.sortBy,
       descending: descending ?? this.descending,
       isLoadingMore: isLoadingMore ?? this.isLoadingMore,
+      selectedIds: selectedIds ?? this.selectedIds,
+      isMultiSelectionMode: isMultiSelectionMode ?? this.isMultiSelectionMode,
     );
   }
 }

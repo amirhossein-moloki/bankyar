@@ -112,7 +112,9 @@ class _ManualTransactionBottomSheetState
     bool isValid = true;
 
     // Normalize amount digits from Persian/Arabic if any
-    final normalizedAmountText = RegexPatterns.normalizeNumerals(amountRaw).replaceAll(',', '');
+    final normalizedAmountText = RegexPatterns.normalizeNumerals(
+      amountRaw,
+    ).replaceAll(',', '');
     final amount = double.tryParse(normalizedAmountText);
 
     if (amountRaw.isEmpty) {
@@ -189,7 +191,10 @@ class _ManualTransactionBottomSheetState
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('تراکنش با موفقیت به صورت دستی ثبت شد.', textDirection: TextDirection.rtl),
+            content: Text(
+              'تراکنش با موفقیت به صورت دستی ثبت شد.',
+              textDirection: TextDirection.rtl,
+            ),
             backgroundColor: Colors.green,
           ),
         );
@@ -208,7 +213,10 @@ class _ManualTransactionBottomSheetState
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('خطا در ثبت تراکنش: ${failure.message}', textDirection: TextDirection.rtl),
+            content: Text(
+              'خطا در ثبت تراکنش: ${failure.message}',
+              textDirection: TextDirection.rtl,
+            ),
             backgroundColor: Colors.red,
           ),
         );
@@ -242,7 +250,9 @@ class _ManualTransactionBottomSheetState
                 // Transaction Type Choice Chips Row
                 Text(
                   'نوع تراکنش',
-                  style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
+                  style: theme.textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
                   textDirection: TextDirection.rtl,
                 ),
                 SizedBox(height: spacing.xs),
@@ -340,95 +350,96 @@ class _ManualTransactionBottomSheetState
                       const DropdownMenuItem(
                         value: null,
                         child: Text('بدون دسته‌بندی'),
+                      ),
+                      ...categories.map(
+                        (c) =>
+                            DropdownMenuItem(value: c.id, child: Text(c.name)),
+                      ),
+                    ],
+                    onChanged: (val) {
+                      setState(() {
+                        _selectedCategoryId = val;
+                      });
+                    },
+                  ),
+                  loading: () =>
+                      const Center(child: CircularProgressIndicator()),
+                  error: (err, stack) => const SizedBox(),
+                ),
+                SizedBox(height: spacing.m),
+
+                // Date & Time Picker buttons row
+                Text(
+                  'تاریخ و زمان تراکنش',
+                  style: theme.textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textDirection: TextDirection.rtl,
+                ),
+                SizedBox(height: spacing.xs),
+                Row(
+                  textDirection: TextDirection.rtl,
+                  children: [
+                    Expanded(
+                      child: OutlinedButton.icon(
+                        onPressed: _selectDate,
+                        icon: const Icon(Icons.calendar_month_outlined),
+                        label: Text(
+                          'تاریخ: ${DateFormatter.formatFriendly(_selectedDateTime, locale: 'fa')}',
+                          style: theme.textTheme.bodyMedium,
+                        ),
+                      ),
                     ),
-                    ...categories.map(
-                      (c) => DropdownMenuItem(
-                        value: c.id,
-                        child: Text(c.name),
+                    SizedBox(width: spacing.s),
+                    Expanded(
+                      child: OutlinedButton.icon(
+                        onPressed: _selectTime,
+                        icon: const Icon(Icons.access_time_outlined),
+                        label: Text(
+                          'ساعت: ${TimeOfDay.fromDateTime(_selectedDateTime).format(context)}',
+                          style: theme.textTheme.bodyMedium,
+                        ),
                       ),
                     ),
                   ],
-                  onChanged: (val) {
-                    setState(() {
-                      _selectedCategoryId = val;
-                    });
-                  },
                 ),
-                loading: () => const Center(child: CircularProgressIndicator()),
-                error: (err, stack) => const SizedBox(),
-              ),
-              SizedBox(height: spacing.m),
+                SizedBox(height: spacing.m),
 
-              // Date & Time Picker buttons row
-              Text(
-                'تاریخ و زمان تراکنش',
-                style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
-                textDirection: TextDirection.rtl,
-              ),
-              SizedBox(height: spacing.xs),
-              Row(
-                textDirection: TextDirection.rtl,
-                children: [
-                  Expanded(
-                    child: OutlinedButton.icon(
-                      onPressed: _selectDate,
-                      icon: const Icon(Icons.calendar_month_outlined),
-                      label: Text(
-                        'تاریخ: ${DateFormatter.formatFriendly(_selectedDateTime, locale: 'fa')}',
-                        style: theme.textTheme.bodyMedium,
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: spacing.s),
-                  Expanded(
-                    child: OutlinedButton.icon(
-                      onPressed: _selectTime,
-                      icon: const Icon(Icons.access_time_outlined),
-                      label: Text(
-                        'ساعت: ${TimeOfDay.fromDateTime(_selectedDateTime).format(context)}',
-                        style: theme.textTheme.bodyMedium,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: spacing.m),
+                // Reference Code Suffix Field
+                TextInputField(
+                  label: 'شماره پیگیری / مرجع (اختیاری)',
+                  controller: _referenceController,
+                  keyboardType: TextInputType.text,
+                ),
+                SizedBox(height: spacing.m),
 
-              // Reference Code Suffix Field
-              TextInputField(
-                label: 'شماره پیگیری / مرجع (اختیاری)',
-                controller: _referenceController,
-                keyboardType: TextInputType.text,
-              ),
-              SizedBox(height: spacing.m),
+                // Tags Field
+                TextInputField(
+                  label: 'برچسب‌ها (با کاما جدا کنید)',
+                  controller: _tagsController,
+                  hintText: 'مثال: ناهار, بنزین, سفر',
+                ),
+                SizedBox(height: spacing.m),
 
-              // Tags Field
-              TextInputField(
-                label: 'برچسب‌ها (با کاما جدا کنید)',
-                controller: _tagsController,
-                hintText: 'مثال: ناهار, بنزین, سفر',
-              ),
-              SizedBox(height: spacing.m),
+                // Note Field
+                TextInputField(
+                  label: 'یادداشت (اختیاری)',
+                  controller: _noteController,
+                  hintText: 'مثلا: خرید کادوی تولد سهراب',
+                ),
+                SizedBox(height: spacing.xl),
 
-              // Note Field
-              TextInputField(
-                label: 'یادداشت (اختیاری)',
-                controller: _noteController,
-                hintText: 'مثلا: خرید کادوی تولد سهراب',
-              ),
-              SizedBox(height: spacing.xl),
-
-              // Submit Button
-              PrimaryButton(
-                label: 'ثبت و ذخیره تراکنش',
-                onPressed: _validateAndSubmit,
-              ),
-              SizedBox(height: spacing.m),
-            ],
+                // Submit Button
+                PrimaryButton(
+                  label: 'ثبت و ذخیره تراکنش',
+                  onPressed: _validateAndSubmit,
+                ),
+                SizedBox(height: spacing.m),
+              ],
+            ),
           ),
         ),
       ),
-    ),
-  );
-}
+    );
+  }
 }

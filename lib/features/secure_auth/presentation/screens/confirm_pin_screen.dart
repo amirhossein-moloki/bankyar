@@ -112,45 +112,50 @@ class _ConfirmPinScreenState extends ConsumerState<ConfirmPinScreen> {
     return Scaffold(
       appBar: const CustomAppBar(title: 'تأیید پین‌کد امنیتی'),
       body: SafeArea(
-        child: Column(
-          children: [
-            SizedBox(height: spacing.xl),
-            Icon(
-              Icons.verified_user_outlined,
-              size: 64,
-              color: theme.colorScheme.primary,
-            ),
-            SizedBox(height: spacing.m),
-            Text(
-              'تأیید پین‌کد',
-              style: theme.textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              SizedBox(height: spacing.m),
+              Icon(
+                Icons.verified_user_outlined,
+                size: 48,
+                color: theme.colorScheme.primary,
               ),
-            ),
-            SizedBox(height: spacing.s),
-            Text(
-              'لطفاً پین‌کد خود را مجدداً وارد کنید تا از صحت آن اطمینان حاصل شود.',
-              textAlign: TextAlign.center,
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
-              ),
-            ),
-            SizedBox(height: spacing.s),
-            if (_errorMessage != null)
+              SizedBox(height: spacing.s),
               Text(
-                _errorMessage!,
-                textAlign: TextAlign.center,
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  color: theme.colorScheme.error,
-                  fontWeight: FontWeight.w500,
+                'تأیید پین‌کد',
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
                 ),
               ),
-            SizedBox(height: spacing.xl),
-            _buildPinDots(_confirmBuffer, spacing, theme),
-            const Spacer(),
-            PinKeypad(onDigitTap: _onDigit, onBackspaceTap: _onBackspace),
-            SizedBox(height: spacing.xl),
-          ],
+              SizedBox(height: spacing.xs),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: spacing.m),
+                child: Text(
+                  'لطفاً پین‌کد خود را مجدداً وارد کنید تا از صحت آن اطمینان حاصل شود.',
+                  textAlign: TextAlign.center,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              ),
+              SizedBox(height: spacing.xs),
+              if (_errorMessage != null)
+                Text(
+                  _errorMessage!,
+                  textAlign: TextAlign.center,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: theme.colorScheme.error,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              SizedBox(height: spacing.m),
+              _buildPinDots(_confirmBuffer, spacing, theme),
+              SizedBox(height: spacing.xl),
+              PinKeypad(onDigitTap: _onDigit, onBackspaceTap: _onBackspace),
+              SizedBox(height: spacing.m),
+            ],
+          ),
         ),
       ),
     );

@@ -8,6 +8,11 @@ import '../../features/transactions/presentation/screens/transaction_details_scr
 import '../../features/transactions/presentation/screens/transactions_screen.dart';
 import '../../features/backup/presentation/screens/backup_restore_screen.dart';
 import '../../features/notifications/presentation/screens/notification_center_screen.dart';
+import '../../features/analytics/presentation/screens/statistics_dashboard_screen.dart';
+import '../../features/onboarding/presentation/screens/onboarding_screen.dart';
+import '../../features/secure_auth/presentation/screens/create_pin_screen.dart';
+import '../../features/secure_auth/presentation/screens/change_pin_screen.dart';
+import '../../features/secure_auth/presentation/screens/confirm_pin_screen.dart';
 
 /// Central declarative router mapping paths to lightweight route screens.
 /// Conforms to BankYar NAVIGATION_ARCHITECTURE.md specifications.
@@ -36,6 +41,12 @@ abstract class AppRouter {
   /// Unique route path for the notification center screen.
   static const String notificationsRoute = '/notifications';
 
+  /// Unique route path for the statistics and analytics dashboard.
+  static const String analyticsRoute = '/analytics';
+
+  /// Unique route path for the interactive onboarding experience flow.
+  static const String onboardingRoute = '/onboarding';
+
   /// Declares the central routing graph.
   static final GoRouter router = GoRouter(
     initialLocation: homeRoute,
@@ -56,6 +67,23 @@ abstract class AppRouter {
       GoRoute(
         path: securityRoute,
         builder: (context, state) => const SecurityDashboardScreen(),
+        routes: [
+          GoRoute(
+            path: 'create-pin',
+            builder: (context, state) => const CreatePinScreen(),
+          ),
+          GoRoute(
+            path: 'change-pin',
+            builder: (context, state) => const ChangePinScreen(),
+          ),
+          GoRoute(
+            path: 'confirm-pin/:proposedPin',
+            builder: (context, state) {
+              final proposedPin = state.pathParameters['proposedPin']!;
+              return ConfirmPinScreen(proposedPin: proposedPin);
+            },
+          ),
+        ],
       ),
       GoRoute(
         path: backupRoute,
@@ -64,6 +92,14 @@ abstract class AppRouter {
       GoRoute(
         path: notificationsRoute,
         builder: (context, state) => const NotificationCenterScreen(),
+      ),
+      GoRoute(
+        path: analyticsRoute,
+        builder: (context, state) => const StatisticsDashboardScreen(),
+      ),
+      GoRoute(
+        path: onboardingRoute,
+        builder: (context, state) => const OnboardingScreen(),
       ),
       GoRoute(
         path: transactionDetailsRoute,
