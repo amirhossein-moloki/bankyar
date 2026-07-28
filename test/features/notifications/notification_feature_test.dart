@@ -138,6 +138,9 @@ class FakeNotificationNotifier extends StateNotifier<UiState<NotificationState>>
   Future<void> simulateIncomingNotification() async {}
 
   @override
+  Future<void> refresh() async {}
+
+  @override
   void setInitial() {}
 
   @override

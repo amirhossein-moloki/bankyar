@@ -8,8 +8,10 @@ import '../../../../core/theme/spacing_tokens.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../sms_detection/domain/entities/parsed_transaction.dart';
 import '../../../sms_detection/presentation/state/sms_detection_providers.dart';
+import '../../../../core/state_management/undo_delete_notifier.dart';
 import '../../../secure_auth/presentation/state/permission_notifier.dart';
 import '../state/home_notifier.dart';
+import '../state/transactions_notifier.dart';
 import '../widgets/greeting_section.dart';
 import '../widgets/total_balance_card.dart';
 import '../widgets/monthly_summary_card.dart';
@@ -215,23 +217,17 @@ class _DashboardContentWidget extends ConsumerWidget {
   ) {
     showDialog<void>(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('حذف تراکنش'),
-        content: const Text('آیا از حذف این تراکنش از صندوقچه اطمینان دارید؟'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('انصراف'),
-          ),
-          TextButton(
-            onPressed: () async {
-              Navigator.pop(context);
-              final repo = ref.read(transactionRepositoryProvider);
-              await repo.deleteTransaction(tx.id);
+      builder: (context) => DeleteConfirmationDialog(
+        onConfirm: () {
+          ref.read(undoDeleteProvider.notifier).deleteTransaction(
+            context,
+            tx,
+            () {
+              ref.invalidate(homeViewModelProvider);
+              ref.invalidate(transactionsViewModelProvider);
             },
-            child: const Text('حذف', style: TextStyle(color: Colors.red)),
-          ),
-        ],
+          );
+        },
       ),
     );
   }

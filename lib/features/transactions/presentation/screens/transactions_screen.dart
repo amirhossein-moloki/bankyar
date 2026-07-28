@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/presentation/widgets/widgets.dart';
 import '../../../../core/theme/spacing_tokens.dart';
+import '../state/home_notifier.dart';
 import '../state/transactions_notifier.dart';
 import '../widgets/transactions_filter_chips.dart';
 import '../widgets/transactions_list_view.dart';
 import '../widgets/transactions_search_bar.dart';
+import '../../../../core/state_management/undo_delete_notifier.dart';
 import '../widgets/transactions_sort_controls.dart';
 
 /// Screen exhibiting all parsed transactions with filters, sorting, grouping, pagination, and multi-selection mode.
@@ -33,32 +35,32 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
   }
 
   void _showBatchDeleteConfirmation(BuildContext context, WidgetRef ref) {
-    showDialog<void>(
-      context: context,
-      builder: (dialogCtx) => Directionality(
-        textDirection: TextDirection.rtl,
-        child: AlertDialog(
-          title: const Text('حذف گروهی تراکنش‌ها'),
-          content: const Text(
-            'آیا از حذف دائمی تراکنش‌های انتخاب شده اطمینان دارید؟',
+    final state = ref.read(transactionsViewModelProvider);
+    state.when(
+      initial: () {},
+      loading: (_) {},
+      error: (_) {},
+      success: (data) {
+        if (data.selectedIds.isEmpty) return;
+        final selectedIds = data.selectedIds.toList();
+
+        showDialog<void>(
+          context: context,
+          builder: (dialogCtx) => DeleteConfirmationDialog(
+            onConfirm: () {
+              ref.read(undoDeleteProvider.notifier).deleteTransactions(
+                context,
+                selectedIds,
+                () {
+                  ref.read(transactionsViewModelProvider.notifier).clearSelection();
+                  ref.read(transactionsViewModelProvider.notifier).loadInitial();
+                  ref.invalidate(homeViewModelProvider);
+                },
+              );
+            },
           ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(dialogCtx),
-              child: const Text('انصراف'),
-            ),
-            TextButton(
-              onPressed: () async {
-                Navigator.pop(dialogCtx);
-                await ref
-                    .read(transactionsViewModelProvider.notifier)
-                    .batchDelete();
-              },
-              child: const Text('حذف', style: TextStyle(color: Colors.red)),
-            ),
-          ],
-        ),
-      ),
+        );
+      },
     );
   }
 

@@ -59,6 +59,11 @@ class NotificationNotifier extends BaseUiNotifier<NotificationState> {
     _loadNotesAndSubscribe();
   }
 
+  /// Explicitly reloads latest notifications, read status, notes, and categories.
+  Future<void> refresh() async {
+    _initStream();
+  }
+
   Future<void> _loadNotesAndSubscribe() async {
     final notes = await _loadNotesFromStorage();
     _streamSubscription = _getNotificationStream(const clean_uc.NoParams())

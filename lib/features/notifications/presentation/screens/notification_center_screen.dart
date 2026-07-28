@@ -351,7 +351,9 @@ class NotificationCenterScreen extends ConsumerWidget {
 
     return RefreshIndicator(
       onRefresh: () async {
-        ref.read(notificationNotifierProvider.notifier).clearSelection();
+        final notifier = ref.read(notificationNotifierProvider.notifier);
+        notifier.clearSelection();
+        await notifier.refresh();
       },
       child: ListView(
         padding: const EdgeInsets.all(SpacingTokens.l),

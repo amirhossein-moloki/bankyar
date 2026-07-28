@@ -449,77 +449,16 @@ abstract class BackupDialogs {
     );
   }
 
-  /// Dialog 4: Delete Backup File Dialog
+  /// Dialog 4: Delete Backup File Dialog conforming to standard Material Design 3 and RTL Persian layouts.
   static Future<void> showDeleteConfirm({
     required BuildContext context,
     required VoidCallback onDelete,
   }) async {
     await showDialog<void>(
       context: context,
-      builder: (dialogCtx) {
-        final theme = Theme.of(context);
-        final spacing = theme.extension<SpacingExtension>()!;
-        final radius = theme.extension<RadiusExtension>()!;
-
-        return Directionality(
-          textDirection: TextDirection.rtl,
-          child: AlertDialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(radius.l),
-            ),
-            title: Row(
-              children: [
-                Icon(
-                  Icons.delete_forever_outlined,
-                  color: theme.colorScheme.error,
-                ),
-                SizedBox(width: spacing.xs),
-                const Text(
-                  'حذف فایل پشتیبان',
-                  style: TextStyle(
-                    fontFamily: 'Vazirmatn',
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-            content: const Text(
-              'شما در حال حذف دائمی این فایل پشتیبان از حافظه محلی گوشی هستید. این عمل غیر قابل بازگشت است.',
-              style: TextStyle(
-                fontFamily: 'Vazirmatn',
-                fontSize: 13,
-                height: 1.5,
-              ),
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(dialogCtx),
-                child: const Text(
-                  'انصراف',
-                  style: TextStyle(fontFamily: 'Vazirmatn'),
-                ),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(dialogCtx);
-                  onDelete();
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: theme.colorScheme.error,
-                  foregroundColor: theme.colorScheme.onError,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(radius.m),
-                  ),
-                ),
-                child: const Text(
-                  'تایید و حذف دائم',
-                  style: TextStyle(fontFamily: 'Vazirmatn'),
-                ),
-              ),
-            ],
-          ),
-        );
-      },
+      builder: (dialogCtx) => DeleteConfirmationDialog(
+        onConfirm: onDelete,
+      ),
     );
   }
 

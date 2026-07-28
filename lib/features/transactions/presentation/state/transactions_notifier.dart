@@ -57,7 +57,7 @@ class TransactionsNotifier extends BaseUiNotifier<TransactionsState> {
   final SmsHistoryImporter _importer;
 
   /// Resets and loads the first page of transactions.
-  Future<void> loadInitial() async {
+  Future<void> loadInitial({bool isRefreshing = false}) async {
     final currentState = state.when(
       initial: () => TransactionsState.initial(),
       loading: (_) => TransactionsState.initial(),
@@ -65,7 +65,9 @@ class TransactionsNotifier extends BaseUiNotifier<TransactionsState> {
       success: (d) => d,
     );
 
-    setLoading();
+    if (!isRefreshing) {
+      setLoading();
+    }
 
     final result = await _repository.getTransactionsPaged(
       limit: currentState.limit,
@@ -345,7 +347,7 @@ class TransactionsNotifier extends BaseUiNotifier<TransactionsState> {
         stackTrace: stack,
       );
     }
-    await loadInitial();
+    await loadInitial(isRefreshing: true);
   }
 
   /// Updates search text query and refreshes.
