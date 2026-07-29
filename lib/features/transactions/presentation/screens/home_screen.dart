@@ -53,7 +53,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   Future<void> _checkAndPromptHistoricalSmsImport() async {
     final prefs = ref.read(preferencesStorageProvider);
-    final offered = await prefs.getBool('by_historical_sms_import_offered') ?? false;
+    final offered =
+        await prefs.getBool('by_historical_sms_import_offered') ?? false;
     if (offered) return;
 
     final permState = ref.read(permissionNotifierProvider);
@@ -80,7 +81,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         child: AlertDialog(
           title: const Text(
             'وارد کردن پیامک‌های قبلی',
-            style: TextStyle(fontFamily: 'Vazirmatn', fontWeight: FontWeight.bold),
+            style: TextStyle(
+              fontFamily: 'Vazirmatn',
+              fontWeight: FontWeight.bold,
+            ),
           ),
           content: const Text(
             'بانک‌یار می‌تواند پیامک‌های بانکی قبلی شما را نیز بررسی و وارد کند.',
@@ -101,7 +105,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               },
               child: const Text(
                 'شروع اسکن',
-                style: TextStyle(fontFamily: 'Vazirmatn', fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  fontFamily: 'Vazirmatn',
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ],
@@ -118,7 +125,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         child: SimpleDialog(
           title: const Text(
             'بازه زمانی اسکن را انتخاب کنید',
-            style: TextStyle(fontFamily: 'Vazirmatn', fontWeight: FontWeight.bold),
+            style: TextStyle(
+              fontFamily: 'Vazirmatn',
+              fontWeight: FontWeight.bold,
+            ),
           ),
           children: [
             SimpleDialogOption(
@@ -126,28 +136,40 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 Navigator.pop(dialogCtx);
                 _startScanningFlow(ImportRange.all);
               },
-              child: const Text('کل پیامک‌ها', style: TextStyle(fontFamily: 'Vazirmatn')),
+              child: const Text(
+                'کل پیامک‌ها',
+                style: TextStyle(fontFamily: 'Vazirmatn'),
+              ),
             ),
             SimpleDialogOption(
               onPressed: () {
                 Navigator.pop(dialogCtx);
                 _startScanningFlow(ImportRange.last3Months);
               },
-              child: const Text('۳ ماه اخیر', style: TextStyle(fontFamily: 'Vazirmatn')),
+              child: const Text(
+                '۳ ماه اخیر',
+                style: TextStyle(fontFamily: 'Vazirmatn'),
+              ),
             ),
             SimpleDialogOption(
               onPressed: () {
                 Navigator.pop(dialogCtx);
                 _startScanningFlow(ImportRange.last6Months);
               },
-              child: const Text('۶ ماه اخیر', style: TextStyle(fontFamily: 'Vazirmatn')),
+              child: const Text(
+                '۶ ماه اخیر',
+                style: TextStyle(fontFamily: 'Vazirmatn'),
+              ),
             ),
             SimpleDialogOption(
               onPressed: () {
                 Navigator.pop(dialogCtx);
                 _startScanningFlow(ImportRange.last12Months);
               },
-              child: const Text('۱۲ ماه اخیر', style: TextStyle(fontFamily: 'Vazirmatn')),
+              child: const Text(
+                '۱۲ ماه اخیر',
+                style: TextStyle(fontFamily: 'Vazirmatn'),
+              ),
             ),
             SimpleDialogOption(
               onPressed: () async {
@@ -166,7 +188,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   );
                 }
               },
-              child: const Text('بازه زمانی دلخواه...', style: TextStyle(fontFamily: 'Vazirmatn')),
+              child: const Text(
+                'بازه زمانی دلخواه...',
+                style: TextStyle(fontFamily: 'Vazirmatn'),
+              ),
             ),
           ],
         ),
@@ -185,7 +210,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     // Only start new import if not already active (to support background safety screen re-entry)
     final activeState = ref.read(dataManagementNotifierProvider);
     if (!activeState.isImporting) {
-      ref.read(dataManagementNotifierProvider.notifier).startHistoricalImport(
+      ref
+          .read(dataManagementNotifierProvider.notifier)
+          .startHistoricalImport(
             range: range,
             customStartDate: customStartDate,
             customEndDate: customEndDate,
@@ -229,13 +256,19 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       ),
                     );
                   }
-                  ref.read(dataManagementNotifierProvider.notifier).clearStatusMessages();
+                  ref
+                      .read(dataManagementNotifierProvider.notifier)
+                      .clearStatusMessages();
                 }
               });
             }
 
-            final countStr = _toPersianDigits(scanState.importedCount.toString());
-            final totalStr = _toPersianDigits(scanState.totalSmsCount.toString());
+            final countStr = _toPersianDigits(
+              scanState.importedCount.toString(),
+            );
+            final totalStr = _toPersianDigits(
+              scanState.totalSmsCount.toString(),
+            );
 
             return Directionality(
               textDirection: TextDirection.rtl,
@@ -270,7 +303,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 actions: [
                   TextButton(
                     onPressed: () {
-                      ref.read(dataManagementNotifierProvider.notifier).cancelImport();
+                      ref
+                          .read(dataManagementNotifierProvider.notifier)
+                          .cancelImport();
                     },
                     child: const Text(
                       'انصراف',
@@ -299,33 +334,58 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         child: AlertDialog(
           title: const Text(
             'گزارش وارد کردن پیامک‌ها',
-            style: TextStyle(fontFamily: 'Vazirmatn', fontWeight: FontWeight.bold),
+            style: TextStyle(
+              fontFamily: 'Vazirmatn',
+              fontWeight: FontWeight.bold,
+            ),
           ),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               _buildSummaryRow('کل پیامک‌های بررسی شده:', summary.totalScanned),
               const Divider(),
-              _buildSummaryRow('پیامک‌های بانکی شناسایی شده:', summary.bankSmsDetected),
+              _buildSummaryRow(
+                'پیامک‌های بانکی شناسایی شده:',
+                summary.bankSmsDetected,
+              ),
               const Divider(),
-              _buildSummaryRow('تراکنش‌های جدید وارد شده:', summary.newTransactionsImported),
+              _buildSummaryRow(
+                'تراکنش‌های جدید وارد شده:',
+                summary.newTransactionsImported,
+              ),
               const Divider(),
-              _buildSummaryRow('پیامک‌های تکراری نادیده گرفته شده:', summary.duplicateSmsSkipped),
+              _buildSummaryRow(
+                'پیامک‌های تکراری نادیده گرفته شده:',
+                summary.duplicateSmsSkipped,
+              ),
               const Divider(),
-              _buildSummaryRow('پیامک‌های نامعتبر یا غیربانکی:', summary.unsupportedSmsSkipped),
+              _buildSummaryRow(
+                'پیامک‌های نامعتبر یا غیربانکی:',
+                summary.unsupportedSmsSkipped,
+              ),
               const Divider(),
-              _buildSummaryRow('زمان کل اسکن (ثانیه):', _toPersianDigits(summary.scanDurationSeconds.toStringAsFixed(1))),
+              _buildSummaryRow(
+                'زمان کل اسکن (ثانیه):',
+                _toPersianDigits(
+                  summary.scanDurationSeconds.toStringAsFixed(1),
+                ),
+              ),
             ],
           ),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.pop(dialogCtx);
-                ref.read(dataManagementNotifierProvider.notifier).clearSummary();
+                ref
+                    .read(dataManagementNotifierProvider.notifier)
+                    .clearSummary();
               },
               child: const Text(
                 'تایید',
-                style: TextStyle(fontFamily: 'Vazirmatn', fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  fontFamily: 'Vazirmatn',
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ],
@@ -335,13 +395,18 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 
   Widget _buildSummaryRow(String label, dynamic value) {
-    final valueStr = value is int ? _toPersianDigits(value.toString()) : value.toString();
+    final valueStr = value is int
+        ? _toPersianDigits(value.toString())
+        : value.toString();
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label, style: const TextStyle(fontFamily: 'Vazirmatn', fontSize: 13)),
+          Text(
+            label,
+            style: const TextStyle(fontFamily: 'Vazirmatn', fontSize: 13),
+          ),
           Text(
             valueStr,
             style: const TextStyle(
@@ -372,7 +437,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final l10n = AppLocalizations.of(context);
 
     // Auto start SMS engine and refresh when critical permissions are granted later
-    ref.listen<PermissionState>(permissionNotifierProvider, (previous, next) async {
+    ref.listen<PermissionState>(permissionNotifierProvider, (
+      previous,
+      next,
+    ) async {
       final prevSmsRead = previous?.isSmsReadGranted ?? false;
       final prevSmsRec = previous?.isSmsReceiveGranted ?? false;
       final nextSmsRead = next.isSmsReadGranted;
@@ -460,7 +528,8 @@ class _DashboardContentWidget extends ConsumerWidget {
       ),
     );
 
-    final showWarningBanner = permState.isAnyCriticalMissing && !bannerDismissed;
+    final showWarningBanner =
+        permState.isAnyCriticalMissing && !bannerDismissed;
 
     return RefreshIndicator(
       onRefresh: notifier.refresh,
@@ -478,7 +547,10 @@ class _DashboardContentWidget extends ConsumerWidget {
                 child: CustomBanner(
                   message:
                       'بانک‌یار به برخی مجوزهای حیاتی دسترسی ندارد و ممکن است پیامک‌های جدید پردازش نشوند.',
-                  icon: const Icon(Icons.warning_amber_rounded, color: Colors.orange),
+                  icon: const Icon(
+                    Icons.warning_amber_rounded,
+                    color: Colors.orange,
+                  ),
                   backgroundColor: Colors.orange.withOpacity(0.12),
                   actions: [
                     TextButton(
@@ -496,7 +568,12 @@ class _DashboardContentWidget extends ConsumerWidget {
                     ),
                     TextButton(
                       onPressed: () {
-                        ref.read(permissionBannerDismissedProvider.notifier).state = true;
+                        ref
+                                .read(
+                                  permissionBannerDismissedProvider.notifier,
+                                )
+                                .state =
+                            true;
                       },
                       child: const Text(
                         'بستن',
@@ -528,7 +605,8 @@ class _DashboardContentWidget extends ConsumerWidget {
           const RecentTransactionsHeaderSliver(),
           RecentTransactionsListSliver(
             onTapTransaction: (tx) => context.push('/transactions/${tx.id}'),
-            onLongPressTransaction: (tx) => _showDeleteConfirmation(context, ref, tx),
+            onLongPressTransaction: (tx) =>
+                _showDeleteConfirmation(context, ref, tx),
           ),
           SliverToBoxAdapter(child: SizedBox(height: spacing.xl)),
         ],

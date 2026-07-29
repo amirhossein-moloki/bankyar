@@ -154,10 +154,7 @@ class _TransactionItemWidget extends StatelessWidget {
     );
 
     if (onLongPress != null) {
-      return GestureDetector(
-        onLongPress: onLongPress,
-        child: card,
-      );
+      return GestureDetector(onLongPress: onLongPress, child: card);
     }
 
     return card;

@@ -66,7 +66,8 @@ class FakePermissionService implements PermissionService {
     AppPermission.autoStart: PermissionStatus.granted,
     AppPermission.exactAlarm: PermissionStatus.granted,
   };
-  final _controller = StreamController<Map<AppPermission, PermissionStatus>>.broadcast();
+  final _controller =
+      StreamController<Map<AppPermission, PermissionStatus>>.broadcast();
 
   void setMockStatus(AppPermission perm, PermissionStatus status) {
     _statuses[perm] = status;
@@ -87,7 +88,8 @@ class FakePermissionService implements PermissionService {
   }
 
   @override
-  Stream<Map<AppPermission, PermissionStatus>> get onStatusesChanged => _controller.stream;
+  Stream<Map<AppPermission, PermissionStatus>> get onStatusesChanged =>
+      _controller.stream;
 
   @override
   Future<void> openSettings() async {}
@@ -120,7 +122,9 @@ void main() {
 
     // Default mock behavior
     when(() => mockPrefs.getBool(any())).thenAnswer((_) async => false);
-    when(() => mockPrefs.getBool('by_onboarding_completed')).thenAnswer((_) async => true);
+    when(
+      () => mockPrefs.getBool('by_onboarding_completed'),
+    ).thenAnswer((_) async => true);
     when(() => mockPrefs.getString(any())).thenAnswer((_) async => 'کاربر');
     when(() => mockPrefs.setBool(any(), any())).thenAnswer((_) async {});
 
@@ -136,7 +140,9 @@ void main() {
       ),
     ).thenReturn(null);
 
-    when(() => mockImporter.performIncrementalSync()).thenAnswer((_) async => 0);
+    when(
+      () => mockImporter.performIncrementalSync(),
+    ).thenAnswer((_) async => 0);
     when(() => mockReceiver.startListening()).thenAnswer((_) async {});
   });
 
@@ -174,7 +180,10 @@ void main() {
       expect(state.grantedCount, 3);
       expect(state.totalCount, 9);
       expect(state.percentage, 33); // (3/9)*100 = 33.33 => 33
-      expect(state.isAnyCriticalMissing, isFalse); // smsRead, smsReceive, notifications are granted
+      expect(
+        state.isAnyCriticalMissing,
+        isFalse,
+      ); // smsRead, smsReceive, notifications are granted
     });
 
     test('Critical permission flags detect missing permissions', () {
@@ -189,35 +198,54 @@ void main() {
       expect(state.isAnyCriticalMissing, isTrue);
     });
 
-    test('PermissionNotifier updates state reactively upon stream broadcast', () async {
-      final container = ProviderContainer(
-        overrides: [
-          permissionServiceProvider.overrideWithValue(fakePermissionService),
-          loggerProvider.overrideWithValue(mockLogger),
-        ],
-      );
+    test(
+      'PermissionNotifier updates state reactively upon stream broadcast',
+      () async {
+        final container = ProviderContainer(
+          overrides: [
+            permissionServiceProvider.overrideWithValue(fakePermissionService),
+            loggerProvider.overrideWithValue(mockLogger),
+          ],
+        );
 
-      final notifier = container.read(permissionNotifierProvider.notifier);
+        final notifier = container.read(permissionNotifierProvider.notifier);
 
-      // Complete asynchronous check
-      await notifier.refresh();
+        // Complete asynchronous check
+        await notifier.refresh();
 
-      // Verify defaults are initially set to granted inside FakePermissionService
-      expect(container.read(permissionNotifierProvider).isAnyCriticalMissing, isFalse);
+        // Verify defaults are initially set to granted inside FakePermissionService
+        expect(
+          container.read(permissionNotifierProvider).isAnyCriticalMissing,
+          isFalse,
+        );
 
-      // Change smsRead to denied using mock modifier
-      fakePermissionService.setMockStatus(AppPermission.smsRead, PermissionStatus.denied);
+        // Change smsRead to denied using mock modifier
+        fakePermissionService.setMockStatus(
+          AppPermission.smsRead,
+          PermissionStatus.denied,
+        );
 
-      // Wait brief moment for stream propagation
-      await Future<void>.delayed(Duration.zero);
+        // Wait brief moment for stream propagation
+        await Future<void>.delayed(Duration.zero);
 
-      expect(container.read(permissionNotifierProvider).isAnyCriticalMissing, isTrue);
-      expect(container.read(permissionNotifierProvider).statuses[AppPermission.smsRead], PermissionStatus.denied);
-    });
+        expect(
+          container.read(permissionNotifierProvider).isAnyCriticalMissing,
+          isTrue,
+        );
+        expect(
+          container
+              .read(permissionNotifierProvider)
+              .statuses[AppPermission.smsRead],
+          PermissionStatus.denied,
+        );
+      },
+    );
   });
 
   group('PermissionStatusScreen Widget Tests', () {
-    testWidgets('Renders all 9 permissions with score and highlights criticals', (tester) async {
+    testWidgets('Renders all 9 permissions with score and highlights criticals', (
+      tester,
+    ) async {
       tester.view.physicalSize = const Size(1200, 2500);
       tester.view.devicePixelRatio = 1.0;
       addTearDown(() {
@@ -226,9 +254,18 @@ void main() {
       });
 
       // Set custom statuses
-      fakePermissionService.setMockStatus(AppPermission.smsRead, PermissionStatus.denied);
-      fakePermissionService.setMockStatus(AppPermission.smsReceive, PermissionStatus.granted);
-      fakePermissionService.setMockStatus(AppPermission.notifications, PermissionStatus.permanentlyDenied);
+      fakePermissionService.setMockStatus(
+        AppPermission.smsRead,
+        PermissionStatus.denied,
+      );
+      fakePermissionService.setMockStatus(
+        AppPermission.smsReceive,
+        PermissionStatus.granted,
+      );
+      fakePermissionService.setMockStatus(
+        AppPermission.notifications,
+        PermissionStatus.permanentlyDenied,
+      );
 
       await tester.pumpWidget(
         ProviderScope(
@@ -245,7 +282,10 @@ void main() {
 
       // Verify Diagnostics/Health Header Card
       expect(find.text('سلامت دسترسی‌های سیستم'), findsOneWidget);
-      expect(find.textContaining('توجه: برخی مجوزهای حیاتی قطع هستند'), findsOneWidget);
+      expect(
+        find.textContaining('توجه: برخی مجوزهای حیاتی قطع هستند'),
+        findsOneWidget,
+      );
 
       // Verify specific permission text & badges
       expect(find.text('خواندن پیامک‌های بانکی (READ_SMS)'), findsOneWidget);
@@ -256,8 +296,14 @@ void main() {
 
       // Verify status indicators are drawn
       expect(find.text('وضعیت: رد شده (غیرفعال)'), findsOneWidget); // smsRead
-      expect(find.text('وضعیت: تایید شده (فعال)'), findsWidgets); // smsReceive is granted
-      expect(find.text('وضعیت: ممنوعیت دائمی (تنظیمات)'), findsOneWidget); // notifications
+      expect(
+        find.text('وضعیت: تایید شده (فعال)'),
+        findsWidgets,
+      ); // smsReceive is granted
+      expect(
+        find.text('وضعیت: ممنوعیت دائمی (تنظیمات)'),
+        findsOneWidget,
+      ); // notifications
 
       // Verify buttons exist for non-granted permissions
       expect(find.text('اعطای مجوز'), findsWidgets); // for smsRead
@@ -266,88 +312,131 @@ void main() {
   });
 
   group('Home Dashboard Warning Banner Integration Tests', () {
-    testWidgets('Shows warning banner on HomeScreen when critical permission is missing', (tester) async {
-      // Missing READ_SMS
-      fakePermissionService.setMockStatus(AppPermission.smsRead, PermissionStatus.denied);
-      fakePermissionService.setMockStatus(AppPermission.smsReceive, PermissionStatus.granted);
-      fakePermissionService.setMockStatus(AppPermission.notifications, PermissionStatus.granted);
+    testWidgets(
+      'Shows warning banner on HomeScreen when critical permission is missing',
+      (tester) async {
+        // Missing READ_SMS
+        fakePermissionService.setMockStatus(
+          AppPermission.smsRead,
+          PermissionStatus.denied,
+        );
+        fakePermissionService.setMockStatus(
+          AppPermission.smsReceive,
+          PermissionStatus.granted,
+        );
+        fakePermissionService.setMockStatus(
+          AppPermission.notifications,
+          PermissionStatus.granted,
+        );
 
-      final fakeHomeState = HomeState.empty();
-      final notifier = FakeHomeNotifier(UiState.success(fakeHomeState));
+        final fakeHomeState = HomeState.empty();
+        final notifier = FakeHomeNotifier(UiState.success(fakeHomeState));
 
-      await tester.pumpWidget(
-        ProviderScope(
-          overrides: [
-            permissionServiceProvider.overrideWithValue(fakePermissionService),
-            loggerProvider.overrideWithValue(mockLogger),
-            preferencesStorageProvider.overrideWithValue(mockPrefs),
-            smsHistoryImporterProvider.overrideWithValue(mockImporter),
-            smsReceiverServiceProvider.overrideWithValue(mockReceiver),
-            homeViewModelProvider.overrideWith((ref) => notifier),
-          ],
-          child: buildTestableWidget(const HomeScreen()),
-        ),
-      );
+        await tester.pumpWidget(
+          ProviderScope(
+            overrides: [
+              permissionServiceProvider.overrideWithValue(
+                fakePermissionService,
+              ),
+              loggerProvider.overrideWithValue(mockLogger),
+              preferencesStorageProvider.overrideWithValue(mockPrefs),
+              smsHistoryImporterProvider.overrideWithValue(mockImporter),
+              smsReceiverServiceProvider.overrideWithValue(mockReceiver),
+              homeViewModelProvider.overrideWith((ref) => notifier),
+            ],
+            child: buildTestableWidget(const HomeScreen()),
+          ),
+        );
 
-      // Advance virtual clock by 1 second to let all async initialization finish and rebuild
-      await tester.pump(const Duration(seconds: 1));
+        // Advance virtual clock by 1 second to let all async initialization finish and rebuild
+        await tester.pump(const Duration(seconds: 1));
 
-      // Warning banner is displayed
-      expect(find.textContaining('بانک‌یار به برخی مجوزهای حیاتی دسترسی ندارد'), findsOneWidget);
-      expect(find.text('مدیریت مجوزها'), findsOneWidget);
+        // Warning banner is displayed
+        expect(
+          find.textContaining('بانک‌یار به برخی مجوزهای حیاتی دسترسی ندارد'),
+          findsOneWidget,
+        );
+        expect(find.text('مدیریت مجوزها'), findsOneWidget);
 
-      // Dismiss the banner
-      await tester.tap(find.text('بستن'));
-      await tester.pump(const Duration(milliseconds: 100));
+        // Dismiss the banner
+        await tester.tap(find.text('بستن'));
+        await tester.pump(const Duration(milliseconds: 100));
 
-      // Warning banner should disappear
-      expect(find.textContaining('بانک‌یار به برخی مجوزهای حیاتی دسترسی ندارد'), findsNothing);
-    });
+        // Warning banner should disappear
+        expect(
+          find.textContaining('بانک‌یار به برخی مجوزهای حیاتی دسترسی ندارد'),
+          findsNothing,
+        );
+      },
+    );
 
-    testWidgets('Warning banner disappears instantly and starts engine when permission is granted later', (tester) async {
-      fakePermissionService.setMockStatus(AppPermission.smsRead, PermissionStatus.denied);
-      fakePermissionService.setMockStatus(AppPermission.smsReceive, PermissionStatus.granted);
-      fakePermissionService.setMockStatus(AppPermission.notifications, PermissionStatus.granted);
+    testWidgets(
+      'Warning banner disappears instantly and starts engine when permission is granted later',
+      (tester) async {
+        fakePermissionService.setMockStatus(
+          AppPermission.smsRead,
+          PermissionStatus.denied,
+        );
+        fakePermissionService.setMockStatus(
+          AppPermission.smsReceive,
+          PermissionStatus.granted,
+        );
+        fakePermissionService.setMockStatus(
+          AppPermission.notifications,
+          PermissionStatus.granted,
+        );
 
-      final fakeHomeState = HomeState.empty();
-      final notifier = FakeHomeNotifier(UiState.success(fakeHomeState));
+        final fakeHomeState = HomeState.empty();
+        final notifier = FakeHomeNotifier(UiState.success(fakeHomeState));
 
-      await tester.pumpWidget(
-        ProviderScope(
-          overrides: [
-            permissionServiceProvider.overrideWithValue(fakePermissionService),
-            loggerProvider.overrideWithValue(mockLogger),
-            preferencesStorageProvider.overrideWithValue(mockPrefs),
-            smsHistoryImporterProvider.overrideWithValue(mockImporter),
-            smsReceiverServiceProvider.overrideWithValue(mockReceiver),
-            homeViewModelProvider.overrideWith((ref) => notifier),
-          ],
-          child: buildTestableWidget(const HomeScreen()),
-        ),
-      );
+        await tester.pumpWidget(
+          ProviderScope(
+            overrides: [
+              permissionServiceProvider.overrideWithValue(
+                fakePermissionService,
+              ),
+              loggerProvider.overrideWithValue(mockLogger),
+              preferencesStorageProvider.overrideWithValue(mockPrefs),
+              smsHistoryImporterProvider.overrideWithValue(mockImporter),
+              smsReceiverServiceProvider.overrideWithValue(mockReceiver),
+              homeViewModelProvider.overrideWith((ref) => notifier),
+            ],
+            child: buildTestableWidget(const HomeScreen()),
+          ),
+        );
 
-      // Advance virtual clock by 1 second to let all async initialization finish and rebuild
-      await tester.pump(const Duration(seconds: 1));
+        // Advance virtual clock by 1 second to let all async initialization finish and rebuild
+        await tester.pump(const Duration(seconds: 1));
 
-      // Warning banner is initially displayed
-      expect(find.textContaining('بانک‌یار به برخی مجوزهای حیاتی دسترسی ندارد'), findsOneWidget);
+        // Warning banner is initially displayed
+        expect(
+          find.textContaining('بانک‌یار به برخی مجوزهای حیاتی دسترسی ندارد'),
+          findsOneWidget,
+        );
 
-      // Clear interactions from mockito/mocktail to isolate the granting step
-      clearInteractions(mockImporter);
-      clearInteractions(mockReceiver);
+        // Clear interactions from mockito/mocktail to isolate the granting step
+        clearInteractions(mockImporter);
+        clearInteractions(mockReceiver);
 
-      // User grants permission now
-      fakePermissionService.setMockStatus(AppPermission.smsRead, PermissionStatus.granted);
+        // User grants permission now
+        fakePermissionService.setMockStatus(
+          AppPermission.smsRead,
+          PermissionStatus.granted,
+        );
 
-      // Wait for stream event to propagate and rebuild UI
-      await tester.pump(const Duration(milliseconds: 100));
+        // Wait for stream event to propagate and rebuild UI
+        await tester.pump(const Duration(milliseconds: 100));
 
-      // Warning banner should disappear immediately
-      expect(find.textContaining('بانک‌یار به برخی مجوزهای حیاتی دسترسی ندارد'), findsNothing);
+        // Warning banner should disappear immediately
+        expect(
+          find.textContaining('بانک‌یار به برخی مجوزهای حیاتی دسترسی ندارد'),
+          findsNothing,
+        );
 
-      // Verify background engine / sync started automatically after permission became granted
-      verify(() => mockImporter.performIncrementalSync()).called(1);
-      verify(() => mockReceiver.startListening()).called(1);
-    });
+        // Verify background engine / sync started automatically after permission became granted
+        verify(() => mockImporter.performIncrementalSync()).called(1);
+        verify(() => mockReceiver.startListening()).called(1);
+      },
+    );
   });
 }

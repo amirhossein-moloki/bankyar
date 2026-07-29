@@ -20,10 +20,7 @@ import '../../../analytics/presentation/state/analytics_notifier.dart';
 /// Built with Material Design 3, RTL Persian layout compliance.
 class EditTransactionBottomSheet extends ConsumerStatefulWidget {
   /// Constructor.
-  const EditTransactionBottomSheet({
-    required this.details,
-    super.key,
-  });
+  const EditTransactionBottomSheet({required this.details, super.key});
 
   /// The current transaction details.
   final TransactionDetails details;
@@ -61,13 +58,19 @@ class _EditTransactionBottomSheetState
     final tx = widget.details.transaction;
 
     _transactionType = tx.transactionType;
-    _amountController = TextEditingController(text: tx.amount.toStringAsFixed(0));
+    _amountController = TextEditingController(
+      text: tx.amount.toStringAsFixed(0),
+    );
     _bankController = TextEditingController(text: tx.cardIdentifier ?? '');
     _accountController = TextEditingController(text: tx.cardIdentifier ?? '');
     _merchantController = TextEditingController(text: tx.normalizedMerchant);
-    _tagsController = TextEditingController(text: widget.details.tags.join(', '));
+    _tagsController = TextEditingController(
+      text: widget.details.tags.join(', '),
+    );
     _noteController = TextEditingController(text: widget.details.note ?? '');
-    _referenceController = TextEditingController(text: tx.referenceNumber ?? '');
+    _referenceController = TextEditingController(
+      text: tx.referenceNumber ?? '',
+    );
 
     _selectedDateTime = DateTime.fromMillisecondsSinceEpoch(tx.timestamp);
     _selectedCategoryId = tx.categoryId;

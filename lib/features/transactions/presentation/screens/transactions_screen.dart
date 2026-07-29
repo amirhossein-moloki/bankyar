@@ -52,8 +52,12 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
                 context,
                 selectedIds,
                 () {
-                  ref.read(transactionsViewModelProvider.notifier).clearSelection();
-                  ref.read(transactionsViewModelProvider.notifier).loadInitial();
+                  ref
+                      .read(transactionsViewModelProvider.notifier)
+                      .clearSelection();
+                  ref
+                      .read(transactionsViewModelProvider.notifier)
+                      .loadInitial();
                   ref.invalidate(homeViewModelProvider);
                 },
               );

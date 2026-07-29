@@ -456,9 +456,7 @@ abstract class BackupDialogs {
   }) async {
     await showDialog<void>(
       context: context,
-      builder: (dialogCtx) => DeleteConfirmationDialog(
-        onConfirm: onDelete,
-      ),
+      builder: (dialogCtx) => DeleteConfirmationDialog(onConfirm: onDelete),
     );
   }
 

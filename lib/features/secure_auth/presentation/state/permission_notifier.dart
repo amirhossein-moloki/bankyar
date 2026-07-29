@@ -7,10 +7,7 @@ import '../../../../core/platform/permission.dart';
 /// State of the Permission Management System.
 class PermissionState {
   /// Constructor.
-  const PermissionState({
-    required this.statuses,
-    this.isLoading = false,
-  });
+  const PermissionState({required this.statuses, this.isLoading = false});
 
   /// Factory for initial state.
   factory PermissionState.initial() {

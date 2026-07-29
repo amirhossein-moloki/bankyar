@@ -291,8 +291,14 @@ class _SecurityDashboardScreenState
                 Icons.sms_failed_outlined,
                 color: theme.colorScheme.error,
               ),
-              title: const Text('حذف پیامک‌های بانکی', style: TextStyle(fontFamily: 'Vazirmatn')),
-              subtitle: const Text('حذف پیامک‌های وارد شده از دیتابیس', style: TextStyle(fontFamily: 'Vazirmatn', fontSize: 11)),
+              title: const Text(
+                'حذف پیامک‌های بانکی',
+                style: TextStyle(fontFamily: 'Vazirmatn'),
+              ),
+              subtitle: const Text(
+                'حذف پیامک‌های وارد شده از دیتابیس',
+                style: TextStyle(fontFamily: 'Vazirmatn', fontSize: 11),
+              ),
               trailing: const Icon(Icons.delete_outline),
               onTap: () {
                 _showDeleteConfirmation(
@@ -304,7 +310,10 @@ class _SecurityDashboardScreenState
                     if (mounted && success) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
-                          content: Text('پیامک‌های بانکی با موفقیت حذف شدند.', style: TextStyle(fontFamily: 'Vazirmatn')),
+                          content: Text(
+                            'پیامک‌های بانکی با موفقیت حذف شدند.',
+                            style: TextStyle(fontFamily: 'Vazirmatn'),
+                          ),
                         ),
                       );
                     }
@@ -318,8 +327,14 @@ class _SecurityDashboardScreenState
                 Icons.account_balance_wallet_outlined,
                 color: theme.colorScheme.error,
               ),
-              title: const Text('حذف تمامی تراکنش‌ها', style: TextStyle(fontFamily: 'Vazirmatn')),
-              subtitle: const Text('حذف دفتر کل تراکنش‌ها و متادیتا با حفظ تنظیمات', style: TextStyle(fontFamily: 'Vazirmatn', fontSize: 11)),
+              title: const Text(
+                'حذف تمامی تراکنش‌ها',
+                style: TextStyle(fontFamily: 'Vazirmatn'),
+              ),
+              subtitle: const Text(
+                'حذف دفتر کل تراکنش‌ها و متادیتا با حفظ تنظیمات',
+                style: TextStyle(fontFamily: 'Vazirmatn', fontSize: 11),
+              ),
               trailing: const Icon(Icons.delete_outline),
               onTap: () {
                 _showDeleteConfirmation(
@@ -331,7 +346,10 @@ class _SecurityDashboardScreenState
                     if (mounted && success) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
-                          content: Text('تمامی تراکنش‌ها با موفقیت حذف شدند.', style: TextStyle(fontFamily: 'Vazirmatn')),
+                          content: Text(
+                            'تمامی تراکنش‌ها با موفقیت حذف شدند.',
+                            style: TextStyle(fontFamily: 'Vazirmatn'),
+                          ),
                         ),
                       );
                     }
@@ -345,8 +363,14 @@ class _SecurityDashboardScreenState
                 Icons.delete_forever_outlined,
                 color: theme.colorScheme.error,
               ),
-              title: const Text('حذف کامل پایگاه داده محلی', style: TextStyle(fontFamily: 'Vazirmatn')),
-              subtitle: const Text('بازنشانی کامل صندوقچه به وضعیت خام کارخانه', style: TextStyle(fontFamily: 'Vazirmatn', fontSize: 11)),
+              title: const Text(
+                'حذف کامل پایگاه داده محلی',
+                style: TextStyle(fontFamily: 'Vazirmatn'),
+              ),
+              subtitle: const Text(
+                'بازنشانی کامل صندوقچه به وضعیت خام کارخانه',
+                style: TextStyle(fontFamily: 'Vazirmatn', fontSize: 11),
+              ),
               trailing: const Icon(Icons.delete_outline),
               onTap: () {
                 _showDeleteConfirmation(
@@ -358,7 +382,10 @@ class _SecurityDashboardScreenState
                     if (mounted && success) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
-                          content: Text('پایگاه داده با موفقیت بازنشانی شد.', style: TextStyle(fontFamily: 'Vazirmatn')),
+                          content: Text(
+                            'پایگاه داده با موفقیت بازنشانی شد.',
+                            style: TextStyle(fontFamily: 'Vazirmatn'),
+                          ),
                         ),
                       );
                     }
@@ -383,7 +410,10 @@ class _SecurityDashboardScreenState
         child: AlertDialog(
           title: Text(
             title,
-            style: const TextStyle(fontFamily: 'Vazirmatn', fontWeight: FontWeight.bold),
+            style: const TextStyle(
+              fontFamily: 'Vazirmatn',
+              fontWeight: FontWeight.bold,
+            ),
           ),
           content: const Text(
             'تمام اطلاعات حذف خواهند شد.',
@@ -426,7 +456,10 @@ class _SecurityDashboardScreenState
         child: AlertDialog(
           title: const Text(
             'وارد کردن پیامک‌های قبلی',
-            style: TextStyle(fontFamily: 'Vazirmatn', fontWeight: FontWeight.bold),
+            style: TextStyle(
+              fontFamily: 'Vazirmatn',
+              fontWeight: FontWeight.bold,
+            ),
           ),
           content: const Text(
             'بانک‌یار می‌تواند پیامک‌های بانکی قبلی شما را نیز بررسی و وارد کند.',
@@ -447,7 +480,10 @@ class _SecurityDashboardScreenState
               },
               child: const Text(
                 'شروع اسکن',
-                style: TextStyle(fontFamily: 'Vazirmatn', fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  fontFamily: 'Vazirmatn',
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ],
@@ -464,7 +500,10 @@ class _SecurityDashboardScreenState
         child: SimpleDialog(
           title: const Text(
             'بازه زمانی اسکن را انتخاب کنید',
-            style: TextStyle(fontFamily: 'Vazirmatn', fontWeight: FontWeight.bold),
+            style: TextStyle(
+              fontFamily: 'Vazirmatn',
+              fontWeight: FontWeight.bold,
+            ),
           ),
           children: [
             SimpleDialogOption(
@@ -472,28 +511,40 @@ class _SecurityDashboardScreenState
                 Navigator.pop(dialogCtx);
                 _startScanningFlow(ImportRange.all);
               },
-              child: const Text('کل پیامک‌ها', style: TextStyle(fontFamily: 'Vazirmatn')),
+              child: const Text(
+                'کل پیامک‌ها',
+                style: TextStyle(fontFamily: 'Vazirmatn'),
+              ),
             ),
             SimpleDialogOption(
               onPressed: () {
                 Navigator.pop(dialogCtx);
                 _startScanningFlow(ImportRange.last3Months);
               },
-              child: const Text('۳ ماه اخیر', style: TextStyle(fontFamily: 'Vazirmatn')),
+              child: const Text(
+                '۳ ماه اخیر',
+                style: TextStyle(fontFamily: 'Vazirmatn'),
+              ),
             ),
             SimpleDialogOption(
               onPressed: () {
                 Navigator.pop(dialogCtx);
                 _startScanningFlow(ImportRange.last6Months);
               },
-              child: const Text('۶ ماه اخیر', style: TextStyle(fontFamily: 'Vazirmatn')),
+              child: const Text(
+                '۶ ماه اخیر',
+                style: TextStyle(fontFamily: 'Vazirmatn'),
+              ),
             ),
             SimpleDialogOption(
               onPressed: () {
                 Navigator.pop(dialogCtx);
                 _startScanningFlow(ImportRange.last12Months);
               },
-              child: const Text('۱۲ ماه اخیر', style: TextStyle(fontFamily: 'Vazirmatn')),
+              child: const Text(
+                '۱۲ ماه اخیر',
+                style: TextStyle(fontFamily: 'Vazirmatn'),
+              ),
             ),
             SimpleDialogOption(
               onPressed: () async {
@@ -512,7 +563,10 @@ class _SecurityDashboardScreenState
                   );
                 }
               },
-              child: const Text('بازه زمانی دلخواه...', style: TextStyle(fontFamily: 'Vazirmatn')),
+              child: const Text(
+                'بازه زمانی دلخواه...',
+                style: TextStyle(fontFamily: 'Vazirmatn'),
+              ),
             ),
           ],
         ),
@@ -530,7 +584,9 @@ class _SecurityDashboardScreenState
 
     final activeState = ref.read(dataManagementNotifierProvider);
     if (!activeState.isImporting) {
-      ref.read(dataManagementNotifierProvider.notifier).startHistoricalImport(
+      ref
+          .read(dataManagementNotifierProvider.notifier)
+          .startHistoricalImport(
             range: range,
             customStartDate: customStartDate,
             customEndDate: customEndDate,
@@ -574,13 +630,19 @@ class _SecurityDashboardScreenState
                       ),
                     );
                   }
-                  ref.read(dataManagementNotifierProvider.notifier).clearStatusMessages();
+                  ref
+                      .read(dataManagementNotifierProvider.notifier)
+                      .clearStatusMessages();
                 }
               });
             }
 
-            final countStr = _toPersianDigits(scanState.importedCount.toString());
-            final totalStr = _toPersianDigits(scanState.totalSmsCount.toString());
+            final countStr = _toPersianDigits(
+              scanState.importedCount.toString(),
+            );
+            final totalStr = _toPersianDigits(
+              scanState.totalSmsCount.toString(),
+            );
 
             return Directionality(
               textDirection: TextDirection.rtl,
@@ -615,7 +677,9 @@ class _SecurityDashboardScreenState
                 actions: [
                   TextButton(
                     onPressed: () {
-                      ref.read(dataManagementNotifierProvider.notifier).cancelImport();
+                      ref
+                          .read(dataManagementNotifierProvider.notifier)
+                          .cancelImport();
                     },
                     child: const Text(
                       'انصراف',
@@ -644,33 +708,58 @@ class _SecurityDashboardScreenState
         child: AlertDialog(
           title: const Text(
             'گزارش وارد کردن پیامک‌ها',
-            style: TextStyle(fontFamily: 'Vazirmatn', fontWeight: FontWeight.bold),
+            style: TextStyle(
+              fontFamily: 'Vazirmatn',
+              fontWeight: FontWeight.bold,
+            ),
           ),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               _buildSummaryRow('کل پیامک‌های بررسی شده:', summary.totalScanned),
               const Divider(),
-              _buildSummaryRow('پیامک‌های بانکی شناسایی شده:', summary.bankSmsDetected),
+              _buildSummaryRow(
+                'پیامک‌های بانکی شناسایی شده:',
+                summary.bankSmsDetected,
+              ),
               const Divider(),
-              _buildSummaryRow('تراکنش‌های جدید وارد شده:', summary.newTransactionsImported),
+              _buildSummaryRow(
+                'تراکنش‌های جدید وارد شده:',
+                summary.newTransactionsImported,
+              ),
               const Divider(),
-              _buildSummaryRow('پیامک‌های تکراری نادیده گرفته شده:', summary.duplicateSmsSkipped),
+              _buildSummaryRow(
+                'پیامک‌های تکراری نادیده گرفته شده:',
+                summary.duplicateSmsSkipped,
+              ),
               const Divider(),
-              _buildSummaryRow('پیامک‌های نامعتبر یا غیربانکی:', summary.unsupportedSmsSkipped),
+              _buildSummaryRow(
+                'پیامک‌های نامعتبر یا غیربانکی:',
+                summary.unsupportedSmsSkipped,
+              ),
               const Divider(),
-              _buildSummaryRow('زمان کل اسکن (ثانیه):', _toPersianDigits(summary.scanDurationSeconds.toStringAsFixed(1))),
+              _buildSummaryRow(
+                'زمان کل اسکن (ثانیه):',
+                _toPersianDigits(
+                  summary.scanDurationSeconds.toStringAsFixed(1),
+                ),
+              ),
             ],
           ),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.pop(dialogCtx);
-                ref.read(dataManagementNotifierProvider.notifier).clearSummary();
+                ref
+                    .read(dataManagementNotifierProvider.notifier)
+                    .clearSummary();
               },
               child: const Text(
                 'تایید',
-                style: TextStyle(fontFamily: 'Vazirmatn', fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  fontFamily: 'Vazirmatn',
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ],
@@ -680,13 +769,18 @@ class _SecurityDashboardScreenState
   }
 
   Widget _buildSummaryRow(String label, dynamic value) {
-    final valueStr = value is int ? _toPersianDigits(value.toString()) : value.toString();
+    final valueStr = value is int
+        ? _toPersianDigits(value.toString())
+        : value.toString();
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label, style: const TextStyle(fontFamily: 'Vazirmatn', fontSize: 13)),
+          Text(
+            label,
+            style: const TextStyle(fontFamily: 'Vazirmatn', fontSize: 13),
+          ),
           Text(
             valueStr,
             style: const TextStyle(
@@ -837,7 +931,9 @@ class _SecurityDashboardScreenState
                 color: theme.colorScheme.primary,
               ),
               title: const Text('مدیریت پیشرفته تمامی مجوزها'),
-              subtitle: const Text('مشاهده جزئیات، عیب‌یابی و فعال‌سازی موارد دیگر'),
+              subtitle: const Text(
+                'مشاهده جزئیات، عیب‌یابی و فعال‌سازی موارد دیگر',
+              ),
               trailing: const Icon(Icons.chevron_left_outlined),
               onTap: () {
                 context.push('/security/permissions');
@@ -1058,7 +1154,10 @@ class _SecurityDashboardScreenState
                 Icons.import_export_outlined,
                 color: theme.colorScheme.primary,
               ),
-              title: const Text('وارد کردن پیامک‌های قبلی (اسکن تاریخچه)', style: TextStyle(fontFamily: 'Vazirmatn')),
+              title: const Text(
+                'وارد کردن پیامک‌های قبلی (اسکن تاریخچه)',
+                style: TextStyle(fontFamily: 'Vazirmatn'),
+              ),
               subtitle: Text(
                 dataState.lastImportDate != null
                     ? 'آخرین واردسازی موفق: ${_formatDateTime(dataState.lastImportDate!)}'

@@ -37,7 +37,8 @@ class DetailsNotesTagsSection extends ConsumerWidget {
     final categoriesAsync = ref.watch(categoriesListProvider);
 
     final pendingDeletes = ref.watch(undoDeleteProvider);
-    final isNotePendingDelete = pendingDeletes.pendingNoteTransactionIds.contains(details.transaction.id);
+    final isNotePendingDelete = pendingDeletes.pendingNoteTransactionIds
+        .contains(details.transaction.id);
     final noteText = isNotePendingDelete ? '' : (details.note ?? '');
     final tags = details.tags;
     final currentCategoryId = details.category?.id;
@@ -142,7 +143,11 @@ class DetailsNotesTagsSection extends ConsumerWidget {
     );
   }
 
-  void _showEditNoteDialog(BuildContext context, WidgetRef ref, String currentNote) {
+  void _showEditNoteDialog(
+    BuildContext context,
+    WidgetRef ref,
+    String currentNote,
+  ) {
     final controller = TextEditingController(text: currentNote);
     showDialog<void>(
       context: context,
@@ -176,7 +181,11 @@ class DetailsNotesTagsSection extends ConsumerWidget {
                         details.transaction.id,
                         currentNote,
                         () {
-                          ref.invalidate(transactionDetailsViewModelProvider(details.transaction.id));
+                          ref.invalidate(
+                            transactionDetailsViewModelProvider(
+                              details.transaction.id,
+                            ),
+                          );
                         },
                       );
                     },

@@ -25,10 +25,15 @@ import 'package:bankyar/features/notifications/data/di/notification_providers.da
 import 'package:bankyar/l10n/app_localizations.dart';
 
 class MockAppLogger extends Mock implements AppLogger {}
+
 class MockPreferencesStorage extends Mock implements PreferencesStorage {}
+
 class MockSmsHistoryImporter extends Mock implements SmsHistoryImporter {}
+
 class MockTransactionRepository extends Mock implements TransactionRepository {}
-class MockNotificationRepository extends Mock implements NotificationRepository {}
+
+class MockNotificationRepository extends Mock
+    implements NotificationRepository {}
 
 void main() {
   late MockAppLogger mockLogger;
@@ -87,12 +92,16 @@ void main() {
     ).thenReturn(null);
 
     when(() => mockPrefs.getBool(any())).thenAnswer((_) async => false);
-    when(() => mockPrefs.getBool('by_onboarding_completed')).thenAnswer((_) async => true);
+    when(
+      () => mockPrefs.getBool('by_onboarding_completed'),
+    ).thenAnswer((_) async => true);
     when(() => mockPrefs.getString(any())).thenAnswer((_) async => null);
     when(() => mockPrefs.setBool(any(), any())).thenAnswer((_) async {});
     when(() => mockPrefs.setString(any(), any())).thenAnswer((_) async {});
 
-    when(() => mockImporter.performIncrementalSync()).thenAnswer((_) async => 0);
+    when(
+      () => mockImporter.performIncrementalSync(),
+    ).thenAnswer((_) async => 0);
 
     when(
       () => mockRepository.getTransactionsPaged(
@@ -107,15 +116,29 @@ void main() {
       ),
     ).thenAnswer((_) async => const Result.success([testTx]));
 
-    when(() => mockRepository.getCategories()).thenAnswer((_) async => Result.success([]));
-    when(() => mockRepository.getTransactions()).thenAnswer((_) async => const Result.success([testTx]));
-    when(() => mockRepository.watchTransactions()).thenAnswer((_) => Stream.value(const Result.success([testTx])));
-    when(() => mockRepository.deleteTransactions(any())).thenAnswer((_) async => const Result.success(null));
-    when(() => mockRepository.deleteTransaction(any())).thenAnswer((_) async => const Result.success(null));
+    when(
+      () => mockRepository.getCategories(),
+    ).thenAnswer((_) async => Result.success([]));
+    when(
+      () => mockRepository.getTransactions(),
+    ).thenAnswer((_) async => const Result.success([testTx]));
+    when(
+      () => mockRepository.watchTransactions(),
+    ).thenAnswer((_) => Stream.value(const Result.success([testTx])));
+    when(
+      () => mockRepository.deleteTransactions(any()),
+    ).thenAnswer((_) async => const Result.success(null));
+    when(
+      () => mockRepository.deleteTransaction(any()),
+    ).thenAnswer((_) async => const Result.success(null));
 
     // Notifications mocks
-    when(() => mockNotificationRepository.getNotifications()).thenAnswer((_) async => Result.success([testNotif]));
-    when(() => mockNotificationRepository.getNotificationStream()).thenAnswer((_) => Stream.value(Result.success([testNotif])));
+    when(
+      () => mockNotificationRepository.getNotifications(),
+    ).thenAnswer((_) async => Result.success([testNotif]));
+    when(
+      () => mockNotificationRepository.getNotificationStream(),
+    ).thenAnswer((_) => Stream.value(Result.success([testNotif])));
   });
 
   Widget buildTestableWidget(Widget child) {
@@ -131,15 +154,15 @@ void main() {
       locale: const Locale('fa'),
       home: Directionality(
         textDirection: TextDirection.rtl,
-        child: Scaffold(
-          body: child,
-        ),
+        child: Scaffold(body: child),
       ),
     );
   }
 
   group('DeleteConfirmationDialog Tests', () {
-    testWidgets('Displays Material Design 3 layout, RTL, and standard texts', (tester) async {
+    testWidgets('Displays Material Design 3 layout, RTL, and standard texts', (
+      tester,
+    ) async {
       bool confirmClicked = false;
 
       await tester.pumpWidget(
@@ -165,7 +188,12 @@ void main() {
 
       // Verify title and description in RTL
       expect(find.text('حذف اطلاعات'), findsOneWidget);
-      expect(find.text('آیا از حذف این مورد اطمینان دارید؟ این عملیات قابل بازگردانی نخواهد بود.'), findsOneWidget);
+      expect(
+        find.text(
+          'آیا از حذف این مورد اطمینان دارید؟ این عملیات قابل بازگردانی نخواهد بود.',
+        ),
+        findsOneWidget,
+      );
 
       // Verify buttons
       expect(find.text('لغو'), findsOneWidget);
@@ -188,9 +216,8 @@ void main() {
               onPressed: () {
                 showDialog<void>(
                   context: context,
-                  builder: (context) => DeleteConfirmationDialog(
-                    onConfirm: () => confirmCount++,
-                  ),
+                  builder: (context) =>
+                      DeleteConfirmationDialog(onConfirm: () => confirmCount++),
                 );
               },
               child: const Text('Show Dialog'),
@@ -213,7 +240,9 @@ void main() {
   });
 
   group('Undo Delete State & Notifier Tests', () {
-    testWidgets('Undo action correctly restores transactions/notes', (tester) async {
+    testWidgets('Undo action correctly restores transactions/notes', (
+      tester,
+    ) async {
       final container = ProviderContainer(
         overrides: [
           transactionRepositoryProvider.overrideWithValue(mockRepository),
@@ -250,7 +279,10 @@ void main() {
       await tester.pump();
 
       // Transaction ID should be in pending deletions instantly
-      expect(container.read(undoDeleteProvider).pendingTransactionIds, contains(testTx.id));
+      expect(
+        container.read(undoDeleteProvider).pendingTransactionIds,
+        contains(testTx.id),
+      );
       expect(refreshCalled, isTrue);
 
       // Verify snackbar is displayed
@@ -269,7 +301,9 @@ void main() {
   });
 
   group('Pull To Refresh Tests', () {
-    testWidgets('Pull to refresh calls correct refresh methods on Dashboard', (tester) async {
+    testWidgets('Pull to refresh calls correct refresh methods on Dashboard', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
@@ -292,58 +326,72 @@ void main() {
       await tester.pump(const Duration(seconds: 2));
 
       // Verify importer performIncrementalSync was called
-      verify(() => mockImporter.performIncrementalSync()).called(greaterThanOrEqualTo(1));
+      verify(
+        () => mockImporter.performIncrementalSync(),
+      ).called(greaterThanOrEqualTo(1));
     });
 
-    testWidgets('Pull to refresh calls correct refresh methods on Transactions list', (tester) async {
-      await tester.pumpWidget(
-        ProviderScope(
-          overrides: [
-            transactionRepositoryProvider.overrideWithValue(mockRepository),
-            loggerProvider.overrideWithValue(mockLogger),
-            smsHistoryImporterProvider.overrideWithValue(mockImporter),
-            preferencesStorageProvider.overrideWithValue(mockPrefs),
-          ],
-          child: buildTestableWidget(const TransactionsScreen()),
-        ),
-      );
+    testWidgets(
+      'Pull to refresh calls correct refresh methods on Transactions list',
+      (tester) async {
+        await tester.pumpWidget(
+          ProviderScope(
+            overrides: [
+              transactionRepositoryProvider.overrideWithValue(mockRepository),
+              loggerProvider.overrideWithValue(mockLogger),
+              smsHistoryImporterProvider.overrideWithValue(mockImporter),
+              preferencesStorageProvider.overrideWithValue(mockPrefs),
+            ],
+            child: buildTestableWidget(const TransactionsScreen()),
+          ),
+        );
 
-      await tester.pump();
-      await tester.pumpAndSettle();
+        await tester.pump();
+        await tester.pumpAndSettle();
 
-      // Programmatically trigger RefreshIndicator
-      final dynamic state = tester.state(find.byType(RefreshIndicator));
-      state.show();
-      await tester.pump();
-      await tester.pump(const Duration(seconds: 2));
+        // Programmatically trigger RefreshIndicator
+        final dynamic state = tester.state(find.byType(RefreshIndicator));
+        state.show();
+        await tester.pump();
+        await tester.pump(const Duration(seconds: 2));
 
-      // Verify list reload & sync check triggers
-      verify(() => mockImporter.performIncrementalSync()).called(greaterThanOrEqualTo(1));
-    });
+        // Verify list reload & sync check triggers
+        verify(
+          () => mockImporter.performIncrementalSync(),
+        ).called(greaterThanOrEqualTo(1));
+      },
+    );
 
-    testWidgets('Pull to refresh calls correct refresh methods on Notification center', (tester) async {
-      await tester.pumpWidget(
-        ProviderScope(
-          overrides: [
-            notificationRepositoryProvider.overrideWithValue(mockNotificationRepository),
-            preferencesStorageProvider.overrideWithValue(mockPrefs),
-            loggerProvider.overrideWithValue(mockLogger),
-          ],
-          child: buildTestableWidget(const NotificationCenterScreen()),
-        ),
-      );
+    testWidgets(
+      'Pull to refresh calls correct refresh methods on Notification center',
+      (tester) async {
+        await tester.pumpWidget(
+          ProviderScope(
+            overrides: [
+              notificationRepositoryProvider.overrideWithValue(
+                mockNotificationRepository,
+              ),
+              preferencesStorageProvider.overrideWithValue(mockPrefs),
+              loggerProvider.overrideWithValue(mockLogger),
+            ],
+            child: buildTestableWidget(const NotificationCenterScreen()),
+          ),
+        );
 
-      await tester.pump();
-      await tester.pumpAndSettle();
+        await tester.pump();
+        await tester.pumpAndSettle();
 
-      // Programmatically trigger RefreshIndicator
-      final dynamic state = tester.state(find.byType(RefreshIndicator));
-      state.show();
-      await tester.pump();
-      await tester.pump(const Duration(seconds: 2));
+        // Programmatically trigger RefreshIndicator
+        final dynamic state = tester.state(find.byType(RefreshIndicator));
+        state.show();
+        await tester.pump();
+        await tester.pump(const Duration(seconds: 2));
 
-      // Verify query is updated and refreshed
-      verify(() => mockNotificationRepository.getNotificationStream()).called(greaterThanOrEqualTo(1));
-    });
+        // Verify query is updated and refreshed
+        verify(
+          () => mockNotificationRepository.getNotificationStream(),
+        ).called(greaterThanOrEqualTo(1));
+      },
+    );
   });
 }

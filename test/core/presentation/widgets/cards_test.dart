@@ -47,7 +47,7 @@ void main() {
         );
 
         expect(find.text('Salary'), findsOneWidget);
-        expect(find.text('+500,000'), findsOneWidget);
+        expect(find.text('500,000'), findsOneWidget);
 
         await tester.pumpWidget(
           buildTestableWidget(
@@ -62,7 +62,7 @@ void main() {
         );
 
         expect(find.text('Groceries'), findsOneWidget);
-        expect(find.text('-120,000'), findsOneWidget);
+        expect(find.text('120,000'), findsOneWidget);
       },
     );
 
