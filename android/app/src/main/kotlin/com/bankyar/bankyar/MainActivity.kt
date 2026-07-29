@@ -19,6 +19,7 @@ import java.util.concurrent.TimeUnit
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.EventChannel
+import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 
 class MainActivity : FlutterActivity() {
@@ -62,7 +63,7 @@ class MainActivity : FlutterActivity() {
                     }
                 }
                 "registerBackgroundCallback" -> {
-                    val handle = call.argument<Long>("handle") ?: 0L
+                    val handle = getSafeLongArgument(call, "handle") ?: 0L
                     val prefs = getSharedPreferences("bankyar_bg_prefs", Context.MODE_PRIVATE)
                     prefs.edit().putLong("bg_callback_handle", handle).apply()
                     result.success(true)
@@ -93,12 +94,12 @@ class MainActivity : FlutterActivity() {
                 }
                 "scheduleWork" -> {
                     val taskName = call.argument<String>("taskName") ?: "SyncTask"
-                    val intervalMinutes = call.argument<Int>("intervalMinutes")?.toLong() ?: 15L
+                    val intervalMinutes = getSafeLongArgument(call, "intervalMinutes") ?: 15L
                     val requiresCharging = call.argument<Boolean>("requiresCharging") ?: false
                     val requiresDeviceIdle = call.argument<Boolean>("requiresDeviceIdle") ?: false
                     val requiresBatteryNotLow = call.argument<Boolean>("requiresBatteryNotLow") ?: true
                     val backoffPolicyStr = call.argument<String>("backoffPolicy") ?: "exponential"
-                    val backoffDelaySeconds = call.argument<Int>("backoffDelaySeconds")?.toLong() ?: 30L
+                    val backoffDelaySeconds = getSafeLongArgument(call, "backoffDelaySeconds") ?: 30L
 
                     try {
                         val constraints = Constraints.Builder().apply {
@@ -140,7 +141,7 @@ class MainActivity : FlutterActivity() {
                     }
                 }
                 "queryHistoricalSms" -> {
-                    val sinceTimestamp = call.argument<Long>("since") ?: 0L
+                    val sinceTimestamp = getSafeLongArgument(call, "since") ?: 0L
                     val messages = querySmsInbox(sinceTimestamp)
                     result.success(messages)
                 }
@@ -255,10 +256,10 @@ class MainActivity : FlutterActivity() {
             val dateIdx = cursor.getColumnIndexOrThrow(Telephony.Sms.Inbox.DATE)
 
             while (cursor.moveToNext()) {
-                val id = cursor.getLong(idIdx)
-                val address = cursor.getString(addressIdx)
-                val body = cursor.getString(bodyIdx)
-                val date = cursor.getLong(dateIdx)
+                val id = if (cursor.isNull(idIdx)) 0L else cursor.getLong(idIdx)
+                val address = if (cursor.isNull(addressIdx)) "" else cursor.getString(addressIdx)
+                val body = if (cursor.isNull(bodyIdx)) "" else cursor.getString(bodyIdx)
+                val date = if (cursor.isNull(dateIdx)) 0L else cursor.getLong(dateIdx)
                 list.add(mapOf(
                     "id" to id.toString(),
                     "sender" to address,
@@ -268,5 +269,23 @@ class MainActivity : FlutterActivity() {
             }
         }
         return list
+    }
+
+    private fun getSafeLongArgument(call: MethodCall, key: String): Long? {
+        val value = call.argument<Any>(key) ?: return null
+        return when (value) {
+            is Number -> value.toLong()
+            is String -> value.toLongOrNull()
+            else -> null
+        }
+    }
+
+    private fun getSafeIntArgument(call: MethodCall, key: String): Int? {
+        val value = call.argument<Any>(key) ?: return null
+        return when (value) {
+            is Number -> value.toInt()
+            is String -> value.toIntOrNull()
+            else -> null
+        }
     }
 }
