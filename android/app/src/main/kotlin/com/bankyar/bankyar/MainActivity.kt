@@ -21,10 +21,70 @@ import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
+import android.provider.DocumentsContract
+import android.net.Uri
+import java.io.OutputStream
+import java.io.IOException
 
 class MainActivity : FlutterActivity() {
     private val PLATFORM_CHANNEL = "com.bankyar.app/platform"
     private val SMS_EVENT_CHANNEL = "com.bankyar.app/sms_events"
+    private var pendingResult: MethodChannel.Result? = null
+    private var pendingFileName: String? = null
+    private var pendingContent: String? = null
+    private val REQUEST_CODE_PICK_DIRECTORY = 1003
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_CODE_PICK_DIRECTORY) {
+            val result = pendingResult
+            val filename = pendingFileName
+            val content = pendingContent
+
+            pendingResult = null
+            pendingFileName = null
+            pendingContent = null
+
+            if (result == null) return
+
+            if (resultCode == RESULT_OK && data != null) {
+                val treeUri = data.data
+                if (treeUri != null) {
+                    try {
+                        val takeFlags = Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+                        contentResolver.takePersistableUriPermission(treeUri, takeFlags)
+
+                        val docUri = DocumentsContract.buildDocumentUriUsingTree(
+                            treeUri,
+                            DocumentsContract.getTreeDocumentId(treeUri)
+                        )
+                        val fileUri = DocumentsContract.createDocument(
+                            contentResolver,
+                            docUri,
+                            "application/json",
+                            filename ?: "bankyar_export.json"
+                        )
+
+                        if (fileUri != null) {
+                            contentResolver.openOutputStream(fileUri)?.use { outputStream ->
+                                outputStream.write((content ?: "").toByteArray(Charsets.UTF_8))
+                            }
+                            val decodedPath = Uri.decode(fileUri.toString())
+                            result.success(decodedPath)
+                        } else {
+                            result.error("EXPORT_FAILED", "Failed to create document in selected folder", null)
+                        }
+                    } catch (e: Exception) {
+                        result.error("EXPORT_FAILED", e.message, null)
+                    }
+                } else {
+                    result.error("EXPORT_CANCELLED", "No directory was selected", null)
+                }
+            } else {
+                result.error("EXPORT_CANCELLED", "Export was cancelled by user", null)
+            }
+        }
+    }
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
@@ -144,6 +204,23 @@ class MainActivity : FlutterActivity() {
                     val sinceTimestamp = getSafeLongArgument(call, "since") ?: 0L
                     val messages = querySmsInbox(sinceTimestamp)
                     result.success(messages)
+                }
+                "exportJsonViaSAF" -> {
+                    val filename = call.argument<String>("filename") ?: "bankyar_export.json"
+                    val content = call.argument<String>("content") ?: ""
+                    pendingFileName = filename
+                    pendingContent = content
+                    pendingResult = result
+
+                    try {
+                        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT_TREE)
+                        startActivityForResult(intent, REQUEST_CODE_PICK_DIRECTORY)
+                    } catch (e: Exception) {
+                        pendingResult = null
+                        pendingFileName = null
+                        pendingContent = null
+                        result.error("SAF_ERROR", e.message, null)
+                    }
                 }
                 else -> {
                     result.notImplemented()

@@ -129,12 +129,14 @@ class _SecurityDashboardScreenState
 
   bool _isBgServiceRunning = false;
   String _selectedBrand = 'Samsung';
+  bool _isDeveloperModeEnabled = false;
 
   @override
   void initState() {
     super.initState();
     _loadPermissions();
     _loadBgServiceStatus();
+    _loadDeveloperMode();
     final permService = ref.read(permissionServiceProvider);
     _permissionSubscription = permService.onStatusesChanged.listen((event) {
       if (mounted) {
@@ -143,6 +145,16 @@ class _SecurityDashboardScreenState
         });
       }
     });
+  }
+
+  Future<void> _loadDeveloperMode() async {
+    final prefs = ref.read(preferencesStorageProvider);
+    final val = await prefs.getBool('by_developer_mode_enabled') ?? false;
+    if (mounted) {
+      setState(() {
+        _isDeveloperModeEnabled = val;
+      });
+    }
   }
 
   @override
@@ -391,6 +403,29 @@ class _SecurityDashboardScreenState
                     }
                   },
                 );
+              },
+            ),
+            const Divider(),
+            SwitchListTile(
+              secondary: Icon(
+                Icons.developer_mode_outlined,
+                color: theme.colorScheme.primary,
+              ),
+              title: const Text(
+                'حالت توسعه‌دهنده (Developer Mode)',
+                style: TextStyle(fontFamily: 'Vazirmatn'),
+              ),
+              subtitle: const Text(
+                'فعال‌سازی ابزارهای پیشرفته توسعه و عیب‌یابی',
+                style: TextStyle(fontFamily: 'Vazirmatn', fontSize: 11),
+              ),
+              value: _isDeveloperModeEnabled,
+              onChanged: (val) async {
+                final prefs = ref.read(preferencesStorageProvider);
+                await prefs.setBool('by_developer_mode_enabled', val);
+                setState(() {
+                  _isDeveloperModeEnabled = val;
+                });
               },
             ),
           ],

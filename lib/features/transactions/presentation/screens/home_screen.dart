@@ -21,10 +21,21 @@ import '../widgets/bank_status_indicators.dart';
 import '../widgets/recent_transactions_section.dart';
 import '../widgets/home_skeleton_loader.dart';
 import '../widgets/manual_log_fab.dart';
+import 'package:flutter/services.dart';
+import '../../data/repositories/developer_export_service.dart';
+import '../../../../core/utils/result_extensions.dart';
 
 /// Central landing workspace for offline personal financial management.
 /// Provider managing session-level warning banner dismissals.
 final permissionBannerDismissedProvider = StateProvider<bool>((ref) => false);
+
+/// Provider checking whether Developer Mode is enabled or experimental features are active.
+final developerModeEnabledProvider = FutureProvider<bool>((ref) async {
+  final prefs = ref.watch(preferencesStorageProvider);
+  final val = await prefs.getBool('by_developer_mode_enabled') ?? false;
+  final env = ref.watch(environmentProvider);
+  return val || env.isExperimentalFeatureActive;
+});
 
 class HomeScreen extends ConsumerStatefulWidget {
   /// Constructor.
@@ -39,6 +50,91 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   void initState() {
     super.initState();
     _checkOnboarding();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        ref.invalidate(developerModeEnabledProvider);
+      }
+    });
+  }
+
+  Future<void> _handleJsonExport(BuildContext context) async {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text(
+          'در حال آماده‌سازی فایل خروجی...',
+          style: TextStyle(fontFamily: 'Vazirmatn'),
+        ),
+        duration: Duration(seconds: 1),
+      ),
+    );
+
+    final exportService = ref.read(developerExportServiceProvider);
+    final result = await exportService.generateJsonExport();
+
+    if (!mounted) return;
+
+    if (result.isFailure) {
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'خطا در تولید خروجی: ${result.failureOrCrash.message}',
+            style: const TextStyle(fontFamily: 'Vazirmatn'),
+          ),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    final jsonContent = result.successOrCrash;
+
+    final now = DateTime.now();
+    final y = now.year.toString();
+    final m = now.month.toString().padLeft(2, '0');
+    final d = now.day.toString().padLeft(2, '0');
+    final h = now.hour.toString().padLeft(2, '0');
+    final min = now.minute.toString().padLeft(2, '0');
+    final s = now.second.toString().padLeft(2, '0');
+    final filename = 'bankyar_export_${y}_${m}_${d}_${h}_${min}_${s}.json';
+
+    try {
+      const platform = MethodChannel('com.bankyar.app/platform');
+      final String? savedPath = await platform.invokeMethod<String>(
+        'exportJsonViaSAF',
+        {
+          'filename': filename,
+          'content': jsonContent,
+        },
+      );
+      if (!mounted) return;
+
+      if (savedPath != null) {
+        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'فایل با موفقیت ذخیره شد:\n$savedPath',
+              style: const TextStyle(fontFamily: 'Vazirmatn'),
+            ),
+            backgroundColor: Colors.green,
+            duration: const Duration(seconds: 5),
+          ),
+        );
+      }
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'خطا در ذخیره فایل یا لغو عملیات: ${e.toString()}',
+            style: const TextStyle(fontFamily: 'Vazirmatn'),
+          ),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 
   void _checkOnboarding() async {
@@ -462,11 +558,20 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       }
     });
 
+    final devModeAsync = ref.watch(developerModeEnabledProvider);
+    final isDevMode = devModeAsync.value ?? false;
+
     return Scaffold(
       appBar: CustomAppBar(
         title: l10n.appTitle,
         showBackButton: false,
         actions: [
+          if (isDevMode)
+            IconButton(
+              icon: const Icon(Icons.download),
+              tooltip: 'Export JSON',
+              onPressed: () => _handleJsonExport(context),
+            ),
           IconButton(
             icon: const Icon(Icons.analytics_outlined),
             tooltip: 'آموزش و آمار مالی',
