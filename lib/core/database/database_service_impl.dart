@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:meta/meta.dart';
 import 'package:sqflite/sqflite.dart';
 import '../errors/failures.dart';
 import '../logging/logger.dart';
@@ -103,6 +104,8 @@ class DatabaseServiceImpl implements DatabaseService {
       );
 
       _database = db;
+      // Guarantee standard default accounts exist on connection open/initialization
+      await seedAccountsIfEmpty(db);
       return const Result.success(null);
     } on Exception catch (e, stack) {
       _logger.log(
@@ -532,6 +535,100 @@ class DatabaseServiceImpl implements DatabaseService {
       );
       await txn.execute('CREATE INDEX idx_notes_tx ON notes (transaction_id);');
     });
+
+    // Seed default accounts to satisfy foreign key constraints immediately
+    await seedAccountsIfEmpty(db);
+  }
+
+  /// Seeds default accounts if they do not exist in the database.
+  @visibleForTesting
+  Future<void> seedAccountsIfEmpty(Database db) async {
+    try {
+      final countResult = await db.rawQuery(
+        'SELECT COUNT(*) as cnt FROM accounts',
+      );
+      final count = Sqflite.firstIntValue(countResult) ?? 0;
+
+      if (count == 0) {
+        _logger.log(
+          LogLevel.info,
+          LogCategories.database,
+          'BY_DB_SEED_ACCOUNTS',
+          'Seeding standard bank accounts matching BankRegistry.',
+        );
+
+        final defaultAccounts = [
+          {
+            'id': 'melli',
+            'name': 'Bank Melli Iran',
+            'sender_prefix': 'Melli',
+            'logo_token': 'melli',
+            'balance': 0.0,
+          },
+          {
+            'id': 'mellat',
+            'name': 'Bank Mellat',
+            'sender_prefix': 'Mellat',
+            'logo_token': 'mellat',
+            'balance': 0.0,
+          },
+          {
+            'id': 'tejarat',
+            'name': 'Bank Tejarat',
+            'sender_prefix': 'Tejarat',
+            'logo_token': 'tejarat',
+            'balance': 0.0,
+          },
+          {
+            'id': 'saman',
+            'name': 'Saman Bank',
+            'sender_prefix': 'Saman',
+            'logo_token': 'saman',
+            'balance': 0.0,
+          },
+          {
+            'id': 'pasargad',
+            'name': 'Pasargad Bank',
+            'sender_prefix': 'Pasargad',
+            'logo_token': 'pasargad',
+            'balance': 0.0,
+          },
+          {
+            'id': 'saderat',
+            'name': 'Bank Saderat Iran',
+            'sender_prefix': 'Saderat',
+            'logo_token': 'saderat',
+            'balance': 0.0,
+          },
+          {
+            'id': 'parsian',
+            'name': 'Parsian Bank',
+            'sender_prefix': 'Parsian',
+            'logo_token': 'parsian',
+            'balance': 0.0,
+          },
+        ];
+
+        final batch = db.batch();
+        for (final acc in defaultAccounts) {
+          batch.insert(
+            'accounts',
+            acc,
+            conflictAlgorithm: ConflictAlgorithm.ignore,
+          );
+        }
+        await batch.commit(noResult: true);
+      }
+    } catch (e, stack) {
+      _logger.log(
+        LogLevel.error,
+        LogCategories.database,
+        'BY_DB_SEED_ACCOUNTS_FAILED',
+        'Exception occurred while seeding accounts',
+        error: e,
+        stackTrace: stack,
+      );
+    }
   }
 
   Future<void> _runMigrations(
