@@ -82,12 +82,12 @@ class DataManagementState {
 
   /// Default initial state.
   factory DataManagementState.initial() => const DataManagementState(
-        isImporting: false,
-        importedCount: 0,
-        totalSmsCount: 0,
-        isCancelled: false,
-        successfulParsedCount: 0,
-      );
+    isImporting: false,
+    importedCount: 0,
+    totalSmsCount: 0,
+    isCancelled: false,
+    successfulParsedCount: 0,
+  );
 
   /// True when the historical SMS parsing task is in progress.
   final bool isImporting;
@@ -139,8 +139,9 @@ class DataManagementState {
       successfulParsedCount:
           successfulParsedCount ?? this.successfulParsedCount,
       errorMessage: clearError ? null : (errorMessage ?? this.errorMessage),
-      successMessage:
-          clearSuccess ? null : (successMessage ?? this.successMessage),
+      successMessage: clearSuccess
+          ? null
+          : (successMessage ?? this.successMessage),
       lastImportDate: lastImportDate ?? this.lastImportDate,
       summary: clearSummary ? null : (summary ?? this.summary),
     );
@@ -151,8 +152,8 @@ class DataManagementState {
 class DataManagementNotifier extends StateNotifier<DataManagementState> {
   /// Constructor.
   DataManagementNotifier({required Ref ref})
-      : _ref = ref,
-        super(DataManagementState.initial()) {
+    : _ref = ref,
+      super(DataManagementState.initial()) {
     loadLastImportDate();
   }
 
@@ -208,12 +209,15 @@ class DataManagementNotifier extends StateNotifier<DataManagementState> {
     }
 
     // 2. Same Sender + Same Timestamp + Same Amount + Same Transaction Type
-    final resTx = await db.rawQuery('''
+    final resTx = await db.rawQuery(
+      '''
       SELECT 1 FROM transactions t
       INNER JOIN bank_messages m ON t.source_sms_id = m.id
       WHERE m.sender_id = ? AND t.timestamp = ? AND t.amount = ? AND t.transaction_type = ?
       LIMIT 1
-    ''', [senderId, timestamp, amount, transactionType]);
+    ''',
+      [senderId, timestamp, amount, transactionType],
+    );
 
     return resTx.isNotEmpty;
   }
@@ -235,16 +239,19 @@ class DataManagementNotifier extends StateNotifier<DataManagementState> {
 
       switch (range) {
         case ImportRange.last3Months:
-          sinceTimestamp =
-              now.subtract(const Duration(days: 90)).millisecondsSinceEpoch;
+          sinceTimestamp = now
+              .subtract(const Duration(days: 90))
+              .millisecondsSinceEpoch;
           break;
         case ImportRange.last6Months:
-          sinceTimestamp =
-              now.subtract(const Duration(days: 180)).millisecondsSinceEpoch;
+          sinceTimestamp = now
+              .subtract(const Duration(days: 180))
+              .millisecondsSinceEpoch;
           break;
         case ImportRange.last12Months:
-          sinceTimestamp =
-              now.subtract(const Duration(days: 365)).millisecondsSinceEpoch;
+          sinceTimestamp = now
+              .subtract(const Duration(days: 365))
+              .millisecondsSinceEpoch;
           break;
         case ImportRange.custom:
           sinceTimestamp = customStartDate?.millisecondsSinceEpoch ?? 0;
@@ -256,11 +263,10 @@ class DataManagementNotifier extends StateNotifier<DataManagementState> {
       }
 
       const channel = MethodChannel('com.bankyar.app/platform');
-      final List<dynamic>? rawMessages =
-          await channel.invokeMethod<List<dynamic>>(
-        'queryHistoricalSms',
-        {'since': sinceTimestamp},
-      );
+      final List<dynamic>? rawMessages = await channel
+          .invokeMethod<List<dynamic>>('queryHistoricalSms', {
+            'since': sinceTimestamp,
+          });
 
       if (rawMessages == null || rawMessages.isEmpty) {
         stopwatch.stop();
@@ -444,14 +450,16 @@ class DataManagementNotifier extends StateNotifier<DataManagementState> {
         isImporting: false,
         errorMessage: 'خطا در وارد کردن پیامک‌ها: $e',
       );
-      _ref.read(loggerProvider).log(
-        LogLevel.error,
-        LogCategories.platform,
-        'BY_HISTORICAL_IMPORT_FAILED',
-        'Historical SMS ingestion exception',
-        error: e,
-        stackTrace: stack,
-      );
+      _ref
+          .read(loggerProvider)
+          .log(
+            LogLevel.error,
+            LogCategories.platform,
+            'BY_HISTORICAL_IMPORT_FAILED',
+            'Historical SMS ingestion exception',
+            error: e,
+            stackTrace: stack,
+          );
     }
   }
 
@@ -625,5 +633,5 @@ class DataManagementNotifier extends StateNotifier<DataManagementState> {
 /// Provider exposing the DataManagementNotifier.
 final dataManagementNotifierProvider =
     StateNotifierProvider<DataManagementNotifier, DataManagementState>((ref) {
-  return DataManagementNotifier(ref: ref);
-});
+      return DataManagementNotifier(ref: ref);
+    });

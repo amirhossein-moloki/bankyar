@@ -43,10 +43,7 @@ class _DetailsSummaryCardState extends State<DetailsSummaryCard> {
     final semanticColor = theme.extension<SemanticColorExtension>()!;
 
     final isCredit = widget.transactionType == SmsTransactionType.credit;
-    final amountColor = isCredit
-        ? semanticColor.success
-        : theme.colorScheme.onSurface;
-    final amountPrefix = isCredit ? '+' : '-';
+    final amountColor = isCredit ? semanticColor.success : semanticColor.error;
 
     final formattedAmount = _isObscured
         ? '••••••'
@@ -65,7 +62,7 @@ class _DetailsSummaryCardState extends State<DetailsSummaryCard> {
             Semantics(
               label: 'مبلغ تراکنش: $formattedAmount',
               child: Text(
-                '$amountPrefix$formattedAmount',
+                formattedAmount,
                 style: theme.textTheme.displayMedium?.copyWith(
                   fontWeight: FontWeight.bold,
                   color: amountColor,

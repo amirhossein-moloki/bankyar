@@ -7,7 +7,8 @@ class DeleteConfirmationDialog extends StatefulWidget {
   const DeleteConfirmationDialog({
     required this.onConfirm,
     this.title = 'حذف اطلاعات',
-    this.message = 'آیا از حذف این مورد اطمینان دارید؟ این عملیات قابل بازگردانی نخواهد بود.',
+    this.message =
+        'آیا از حذف این مورد اطمینان دارید؟ این عملیات قابل بازگردانی نخواهد بود.',
     super.key,
   });
 
@@ -21,7 +22,8 @@ class DeleteConfirmationDialog extends StatefulWidget {
   final String message;
 
   @override
-  State<DeleteConfirmationDialog> createState() => _DeleteConfirmationDialogState();
+  State<DeleteConfirmationDialog> createState() =>
+      _DeleteConfirmationDialogState();
 }
 
 class _DeleteConfirmationDialogState extends State<DeleteConfirmationDialog> {
@@ -40,10 +42,7 @@ class _DeleteConfirmationDialogState extends State<DeleteConfirmationDialog> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        content: Text(
-          widget.message,
-          style: theme.textTheme.bodyMedium,
-        ),
+        content: Text(widget.message, style: theme.textTheme.bodyMedium),
         actions: [
           TextButton(
             onPressed: _isProcessing ? null : () => Navigator.pop(context),
@@ -62,7 +61,9 @@ class _DeleteConfirmationDialogState extends State<DeleteConfirmationDialog> {
             child: Text(
               'حذف',
               style: TextStyle(
-                color: _isProcessing ? theme.colorScheme.error.withOpacity(0.5) : theme.colorScheme.error,
+                color: _isProcessing
+                    ? theme.colorScheme.error.withOpacity(0.5)
+                    : theme.colorScheme.error,
                 fontWeight: FontWeight.bold,
               ),
             ),

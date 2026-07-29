@@ -49,7 +49,14 @@ class PermissionStatusScreen extends ConsumerWidget {
                     ...AppPermission.values.map((perm) {
                       return Padding(
                         padding: EdgeInsets.only(bottom: spacing.s),
-                        child: _buildPermissionCard(context, ref, perm, state, theme, spacing),
+                        child: _buildPermissionCard(
+                          context,
+                          ref,
+                          perm,
+                          state,
+                          theme,
+                          spacing,
+                        ),
                       );
                     }),
                     SizedBox(height: spacing.xl),
@@ -72,7 +79,9 @@ class PermissionStatusScreen extends ConsumerWidget {
     final allCriticalGranted = !state.isAnyCriticalMissing;
     final scoreColor = allCriticalGranted
         ? semanticColors.success
-        : (state.percentage >= 60 ? semanticColors.warning : semanticColors.error);
+        : (state.percentage >= 60
+              ? semanticColors.warning
+              : semanticColors.error);
 
     return Card(
       elevation: 0,
@@ -96,7 +105,8 @@ class PermissionStatusScreen extends ConsumerWidget {
                     value: state.percentage / 100,
                     strokeWidth: 6,
                     color: scoreColor,
-                    backgroundColor: theme.colorScheme.outlineVariant.withOpacity(0.3),
+                    backgroundColor: theme.colorScheme.outlineVariant
+                        .withOpacity(0.3),
                   ),
                 ),
                 Text(
@@ -134,7 +144,9 @@ class PermissionStatusScreen extends ConsumerWidget {
                         ? 'تمام مجوزهای حیاتی بانک‌یار اعطا شده است.'
                         : 'توجه: برخی مجوزهای حیاتی قطع هستند و ممکن است پیامک‌ها ثبت نشوند!',
                     style: theme.textTheme.labelSmall?.copyWith(
-                      color: allCriticalGranted ? semanticColors.success : semanticColors.error,
+                      color: allCriticalGranted
+                          ? semanticColors.success
+                          : semanticColors.error,
                       fontWeight: FontWeight.bold,
                       fontFamily: 'Vazirmatn',
                     ),
@@ -161,7 +173,8 @@ class PermissionStatusScreen extends ConsumerWidget {
     final radius = theme.extension<RadiusExtension>()!;
     final semanticColors = theme.extension<SemanticColorExtension>()!;
 
-    final isCritical = perm == AppPermission.smsRead ||
+    final isCritical =
+        perm == AppPermission.smsRead ||
         perm == AppPermission.smsReceive ||
         perm == AppPermission.notifications;
 
@@ -224,11 +237,16 @@ class PermissionStatusScreen extends ConsumerWidget {
                 ),
                 if (isCritical)
                   Container(
-                    padding: EdgeInsets.symmetric(horizontal: spacing.xs, vertical: 2),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: spacing.xs,
+                      vertical: 2,
+                    ),
                     decoration: BoxDecoration(
                       color: semanticColors.error.withOpacity(0.08),
                       borderRadius: BorderRadius.circular(100),
-                      border: Border.all(color: semanticColors.error.withOpacity(0.2)),
+                      border: Border.all(
+                        color: semanticColors.error.withOpacity(0.2),
+                      ),
                     ),
                     child: Text(
                       'مجوز حیاتی',
@@ -272,13 +290,18 @@ class PermissionStatusScreen extends ConsumerWidget {
             SizedBox(height: spacing.s),
 
             // Row 4: Action Button
-            if (status != PermissionStatus.granted && status != PermissionStatus.unavailable)
+            if (status != PermissionStatus.granted &&
+                status != PermissionStatus.unavailable)
               SizedBox(
                 width: double.infinity,
                 child: PrimaryButton(
-                  label: status == PermissionStatus.permanentlyDenied ? 'تنظیمات سیستمی' : 'اعطای مجوز',
+                  label: status == PermissionStatus.permanentlyDenied
+                      ? 'تنظیمات سیستمی'
+                      : 'اعطای مجوز',
                   onPressed: () {
-                    ref.read(permissionNotifierProvider.notifier).requestPermission(perm);
+                    ref
+                        .read(permissionNotifierProvider.notifier)
+                        .requestPermission(perm);
                   },
                 ),
               ),
@@ -310,55 +333,64 @@ class PermissionStatusScreen extends ConsumerWidget {
       case AppPermission.smsRead:
         return const _PermissionUiDetails(
           title: 'خواندن پیامک‌های بانکی (READ_SMS)',
-          description: 'بانک‌یار برای اینکه بتواند در گام نخست یا پس از نصب، پیامک‌های قدیمی تراکنش‌های بانکی شما را در صندوقچه مالی وارد کند، به این مجوز احتیاج دارد.',
+          description:
+              'بانک‌یار برای اینکه بتواند در گام نخست یا پس از نصب، پیامک‌های قدیمی تراکنش‌های بانکی شما را در صندوقچه مالی وارد کند، به این مجوز احتیاج دارد.',
           icon: Icons.sms_outlined,
         );
       case AppPermission.smsReceive:
         return const _PermissionUiDetails(
           title: 'دریافت آنی پیامک‌ها (RECEIVE_SMS)',
-          description: 'این مجوز به بانک‌یار اجازه می‌دهد تا بلافاصله پس از دریافت پیامک واریز یا برداشت جدید از سوی بانک، آن را بدون نیاز به ورود مجدد به برنامه، سازماندهی و پردازش کند.',
+          description:
+              'این مجوز به بانک‌یار اجازه می‌دهد تا بلافاصله پس از دریافت پیامک واریز یا برداشت جدید از سوی بانک، آن را بدون نیاز به ورود مجدد به برنامه، سازماندهی و پردازش کند.',
           icon: Icons.notifications_paused_outlined,
         );
       case AppPermission.notifications:
         return const _PermissionUiDetails(
           title: 'ارسال اعلان‌های سیستمی (POST_NOTIFICATIONS)',
-          description: 'برای اینکه بلافاصله پس از پردازش موفق هر پیامک بانکی در پس‌زمینه، خلاصه و تاییدیه ثبت تراکنش به عنوان اعلان (نوتیفیکیشن) برای شما ارسال شود.',
+          description:
+              'برای اینکه بلافاصله پس از پردازش موفق هر پیامک بانکی در پس‌زمینه، خلاصه و تاییدیه ثبت تراکنش به عنوان اعلان (نوتیفیکیشن) برای شما ارسال شود.',
           icon: Icons.notifications_active_outlined,
         );
       case AppPermission.batteryExclusion:
         return const _PermissionUiDetails(
           title: 'لغو بهینه‌سازی باتری (Battery Optimization)',
-          description: 'سیستم‌عامل اندروید در صورت بی‌کار ماندن طولانی گوشی، فعالیت‌های پس‌زمینه را متوقف می‌کند. اعطای این مجوز مانع بسته‌شدن خودکار ناظر پیامک بانک‌یار می‌شود.',
+          description:
+              'سیستم‌عامل اندروید در صورت بی‌کار ماندن طولانی گوشی، فعالیت‌های پس‌زمینه را متوقف می‌کند. اعطای این مجوز مانع بسته‌شدن خودکار ناظر پیامک بانک‌یار می‌شود.',
           icon: Icons.battery_saver_outlined,
         );
       case AppPermission.foregroundService:
         return const _PermissionUiDetails(
           title: 'فعالیت سرویس پس‌زمینه (Foreground Service)',
-          description: 'برای حفظ یکپارچگی تحلیل، یک فرآیند سبک و پیوسته در سیستم‌عامل روشن می‌ماند تا هیچ پیامی در هیاهوی برنامه‌ها از دست نرود.',
+          description:
+              'برای حفظ یکپارچگی تحلیل، یک فرآیند سبک و پیوسته در سیستم‌عامل روشن می‌ماند تا هیچ پیامی در هیاهوی برنامه‌ها از دست نرود.',
           icon: Icons.sync_outlined,
         );
       case AppPermission.autoStart:
         return const _PermissionUiDetails(
           title: 'شروع خودکار پس از بوت (Auto Start)',
-          description: 'تنظیم تاییدیه برای بیدار شدن ناظر برنامه بلافاصله پس از راه‌اندازی یا روشن شدن مجدد گوشی بدون نیاز به اجرای دستی بانک‌یار (توصیه شده برای شیائومی و هوآوی).',
+          description:
+              'تنظیم تاییدیه برای بیدار شدن ناظر برنامه بلافاصله پس از راه‌اندازی یا روشن شدن مجدد گوشی بدون نیاز به اجرای دستی بانک‌یار (توصیه شده برای شیائومی و هوآوی).',
           icon: Icons.power_settings_new_outlined,
         );
       case AppPermission.exactAlarm:
         return const _PermissionUiDetails(
           title: 'آلارم دقیق سیستم (Exact Alarm)',
-          description: 'جهت زمان‌بندی همگام‌سازی‌های دوره‌ای و پایش خودکار با دقت بالا حتی زمانی که دستگاه در حالت بهینه‌سازی خواب قرار دارد.',
+          description:
+              'جهت زمان‌بندی همگام‌سازی‌های دوره‌ای و پایش خودکار با دقت بالا حتی زمانی که دستگاه در حالت بهینه‌سازی خواب قرار دارد.',
           icon: Icons.alarm_outlined,
         );
       case AppPermission.localFiles:
         return const _PermissionUiDetails(
           title: 'فضای ذخیره‌سازی محلی (Storage)',
-          description: 'برای خروجی گرفتن و یا وارد کردن فایل‌های پشتیبان رمزگذاری شده صندوقچه روی کارت حافظه یا حافظه عمومی دستگاه شما.',
+          description:
+              'برای خروجی گرفتن و یا وارد کردن فایل‌های پشتیبان رمزگذاری شده صندوقچه روی کارت حافظه یا حافظه عمومی دستگاه شما.',
           icon: Icons.folder_open_outlined,
         );
       case AppPermission.biometrics:
         return const _PermissionUiDetails(
           title: 'حسگرهای بیومتریک ورود (Biometrics)',
-          description: 'برای راحتی بیشتر، به جای وارد کردن همیشگی پین‌کد عبور، می‌توانید صندوقچه را از طریق حسگر اثر انگشت یا تشخیص چهره به طور امن باز کنید.',
+          description:
+              'برای راحتی بیشتر، به جای وارد کردن همیشگی پین‌کد عبور، می‌توانید صندوقچه را از طریق حسگر اثر انگشت یا تشخیص چهره به طور امن باز کنید.',
           icon: Icons.fingerprint_outlined,
         );
     }

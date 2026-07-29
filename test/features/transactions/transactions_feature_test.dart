@@ -421,7 +421,7 @@ void main() {
         await tester.pump();
 
         // Inspect summary elements
-        expect(find.text('-۴۵,۰۰۰ تومان'), findsOneWidget);
+        expect(find.text('۴۵,۰۰۰ تومان'), findsOneWidget);
         expect(find.text('هزینه / خروجی'), findsOneWidget);
 
         // Inspect metadata grid

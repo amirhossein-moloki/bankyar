@@ -109,9 +109,9 @@ void main() {
       () => mockRepository.assignTags(any(), any()),
     ).thenAnswer((_) async => const Result.success(null));
 
-    when(
-      () => mockRepository.watchTransactions(),
-    ).thenAnswer((_) => Stream.value(const Result.success(<ParsedTransaction>[])));
+    when(() => mockRepository.watchTransactions()).thenAnswer(
+      (_) => Stream.value(const Result.success(<ParsedTransaction>[])),
+    );
   });
 
   Widget buildTestableWidget(Widget child) {
@@ -155,7 +155,8 @@ void main() {
                   onPressed: () {
                     showModalBottomSheet<void>(
                       context: context,
-                      builder: (_) => EditTransactionBottomSheet(details: testDetails),
+                      builder: (_) =>
+                          EditTransactionBottomSheet(details: testDetails),
                     );
                   },
                   child: const Text('باز کردن ویرایش'),
@@ -185,7 +186,9 @@ void main() {
       final bankField = tester.widget<TextFormField>(
         find.descendant(
           of: find.byWidgetPredicate(
-            (widget) => widget is TextInputField && widget.label == 'نام بانک یا شماره کارت',
+            (widget) =>
+                widget is TextInputField &&
+                widget.label == 'نام بانک یا شماره کارت',
           ),
           matching: find.byType(TextFormField),
         ),
@@ -195,7 +198,9 @@ void main() {
       final merchantField = tester.widget<TextFormField>(
         find.descendant(
           of: find.byWidgetPredicate(
-            (widget) => widget is TextInputField && widget.label == 'پذیرنده / مبدأ تراکنش',
+            (widget) =>
+                widget is TextInputField &&
+                widget.label == 'پذیرنده / مبدأ تراکنش',
           ),
           matching: find.byType(TextFormField),
         ),
@@ -205,7 +210,8 @@ void main() {
       final noteField = tester.widget<TextFormField>(
         find.descendant(
           of: find.byWidgetPredicate(
-            (widget) => widget is TextInputField && widget.label == 'یادداشت (اختیاری)',
+            (widget) =>
+                widget is TextInputField && widget.label == 'یادداشت (اختیاری)',
           ),
           matching: find.byType(TextFormField),
         ),
@@ -224,37 +230,42 @@ void main() {
 
       // Verify save calls on repository
       verify(() => mockRepository.saveTransaction(any())).called(1);
-      verify(() => mockRepository.saveNote('tx-test-id', 'خرید پیتزا')).called(1);
-      verify(() => mockRepository.assignTags('tx-test-id', ['غذا', 'خوشمزه'])).called(1);
+      verify(
+        () => mockRepository.saveNote('tx-test-id', 'خرید پیتزا'),
+      ).called(1);
+      verify(
+        () => mockRepository.assignTags('tx-test-id', ['غذا', 'خوشمزه']),
+      ).called(1);
     },
   );
 
-  testWidgets(
-    'HomeScreen renders settings button in actions',
-    (tester) async {
-      when(() => mockPrefs.getBool('by_onboarding_completed')).thenAnswer((_) async => true);
-      when(() => mockPrefs.getString('by_username')).thenAnswer((_) async => 'سهراب');
+  testWidgets('HomeScreen renders settings button in actions', (tester) async {
+    when(
+      () => mockPrefs.getBool('by_onboarding_completed'),
+    ).thenAnswer((_) async => true);
+    when(
+      () => mockPrefs.getString('by_username'),
+    ).thenAnswer((_) async => 'سهراب');
 
-      await tester.pumpWidget(
-        ProviderScope(
-          overrides: [
-            preferencesStorageProvider.overrideWithValue(mockPrefs),
-            loggerProvider.overrideWithValue(mockLogger),
-            smsHistoryImporterProvider.overrideWithValue(mockImporter),
-            transactionRepositoryProvider.overrideWithValue(mockRepository),
-          ],
-          child: buildTestableWidget(const HomeScreen()),
-        ),
-      );
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          preferencesStorageProvider.overrideWithValue(mockPrefs),
+          loggerProvider.overrideWithValue(mockLogger),
+          smsHistoryImporterProvider.overrideWithValue(mockImporter),
+          transactionRepositoryProvider.overrideWithValue(mockRepository),
+        ],
+        child: buildTestableWidget(const HomeScreen()),
+      ),
+    );
 
-      await tester.pumpAndSettle();
+    await tester.pumpAndSettle();
 
-      // Verify home title
-      expect(find.text('بانک‌یار'), findsOneWidget);
+    // Verify home title
+    expect(find.text('بانک‌یار'), findsOneWidget);
 
-      // Verify settings button is rendered
-      final settingsBtn = find.byIcon(Icons.settings_outlined);
-      expect(settingsBtn, findsOneWidget);
-    },
-  );
+    // Verify settings button is rendered
+    final settingsBtn = find.byIcon(Icons.settings_outlined);
+    expect(settingsBtn, findsOneWidget);
+  });
 }

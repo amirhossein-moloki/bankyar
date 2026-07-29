@@ -32,8 +32,10 @@ class UndoDeleteState {
     Map<String, String>? pendingDeletedNotes,
   }) {
     return UndoDeleteState(
-      pendingTransactionIds: pendingTransactionIds ?? this.pendingTransactionIds,
-      pendingNoteTransactionIds: pendingNoteTransactionIds ?? this.pendingNoteTransactionIds,
+      pendingTransactionIds:
+          pendingTransactionIds ?? this.pendingTransactionIds,
+      pendingNoteTransactionIds:
+          pendingNoteTransactionIds ?? this.pendingNoteTransactionIds,
       pendingDeletedNotes: pendingDeletedNotes ?? this.pendingDeletedNotes,
     );
   }
@@ -45,9 +47,9 @@ class UndoDeleteNotifier extends StateNotifier<UndoDeleteState> {
   UndoDeleteNotifier({
     required TransactionRepository transactionRepository,
     required AppLogger logger,
-  })  : _transactionRepository = transactionRepository,
-        _logger = logger,
-        super(const UndoDeleteState());
+  }) : _transactionRepository = transactionRepository,
+       _logger = logger,
+       super(const UndoDeleteState());
 
   final TransactionRepository _transactionRepository;
   final AppLogger _logger;
@@ -118,14 +120,23 @@ class UndoDeleteNotifier extends StateNotifier<UndoDeleteState> {
 
     // Safely remove the committed IDs from pending state
     state = state.copyWith(
-      pendingTransactionIds: state.pendingTransactionIds.difference(ids.toSet()),
-      pendingNoteTransactionIds: state.pendingNoteTransactionIds.difference(ids.toSet()),
-      pendingDeletedNotes: Map<String, String>.from(state.pendingDeletedNotes)..removeWhere((k, v) => ids.contains(k)),
+      pendingTransactionIds: state.pendingTransactionIds.difference(
+        ids.toSet(),
+      ),
+      pendingNoteTransactionIds: state.pendingNoteTransactionIds.difference(
+        ids.toSet(),
+      ),
+      pendingDeletedNotes: Map<String, String>.from(state.pendingDeletedNotes)
+        ..removeWhere((k, v) => ids.contains(k)),
     );
   }
 
   /// Registers a transaction deletion, hides it immediately, and schedules the 5s timer.
-  void deleteTransaction(BuildContext context, ParsedTransaction tx, VoidCallback onRefreshes) {
+  void deleteTransaction(
+    BuildContext context,
+    ParsedTransaction tx,
+    VoidCallback onRefreshes,
+  ) {
     cancelActiveUndoAndCommit();
 
     final txId = tx.id;
@@ -140,37 +151,44 @@ class UndoDeleteNotifier extends StateNotifier<UndoDeleteState> {
     onRefreshes();
 
     ScaffoldMessenger.of(context).clearSnackBars();
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: const Text(
-          'تراکنش حذف شد.',
-          textDirection: TextDirection.rtl,
-          style: TextStyle(fontFamily: 'Vazirmatn'),
-        ),
-        action: SnackBarAction(
-          label: 'بازگردانی',
-          textColor: Colors.amber,
-          onPressed: () {
-            // Cancel timer & restore!
-            _activeTimer?.cancel();
-            _activeTimer = null;
-            _activeUndoType = null;
-            _activeIds.clear();
+    ScaffoldMessenger.of(context)
+        .showSnackBar(
+          SnackBar(
+            content: const Text(
+              'تراکنش حذف شد.',
+              textDirection: TextDirection.rtl,
+              style: TextStyle(fontFamily: 'Vazirmatn'),
+            ),
+            action: SnackBarAction(
+              label: 'بازگردانی',
+              textColor: Colors.amber,
+              onPressed: () {
+                // Cancel timer & restore!
+                _activeTimer?.cancel();
+                _activeTimer = null;
+                _activeUndoType = null;
+                _activeIds.clear();
 
-            state = state.copyWith(
-              pendingTransactionIds: state.pendingTransactionIds.difference({txId}),
-            );
+                state = state.copyWith(
+                  pendingTransactionIds: state.pendingTransactionIds.difference(
+                    {txId},
+                  ),
+                );
 
-            onRefreshes();
-          },
-        ),
-        duration: const Duration(seconds: 5),
-      ),
-    ).closed.then((reason) {
-      if (reason != SnackBarClosedReason.action && _activeUndoType == 'transaction' && _activeIds.contains(txId)) {
-        _commitDeletion();
-      }
-    });
+                onRefreshes();
+              },
+            ),
+            duration: const Duration(seconds: 5),
+          ),
+        )
+        .closed
+        .then((reason) {
+          if (reason != SnackBarClosedReason.action &&
+              _activeUndoType == 'transaction' &&
+              _activeIds.contains(txId)) {
+            _commitDeletion();
+          }
+        });
 
     _activeTimer = Timer(const Duration(seconds: 5), () {
       _commitDeletion();
@@ -178,7 +196,11 @@ class UndoDeleteNotifier extends StateNotifier<UndoDeleteState> {
   }
 
   /// Registers multiple transaction deletions (batch delete), hides them immediately, and schedules the 5s timer.
-  void deleteTransactions(BuildContext context, List<String> txIds, VoidCallback onRefreshes) {
+  void deleteTransactions(
+    BuildContext context,
+    List<String> txIds,
+    VoidCallback onRefreshes,
+  ) {
     cancelActiveUndoAndCommit();
 
     _activeUndoType = 'transaction';
@@ -191,36 +213,43 @@ class UndoDeleteNotifier extends StateNotifier<UndoDeleteState> {
     onRefreshes();
 
     ScaffoldMessenger.of(context).clearSnackBars();
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: const Text(
-          'تراکنش‌ها حذف شدند.',
-          textDirection: TextDirection.rtl,
-          style: TextStyle(fontFamily: 'Vazirmatn'),
-        ),
-        action: SnackBarAction(
-          label: 'بازگردانی',
-          textColor: Colors.amber,
-          onPressed: () {
-            _activeTimer?.cancel();
-            _activeTimer = null;
-            _activeUndoType = null;
-            _activeIds.clear();
+    ScaffoldMessenger.of(context)
+        .showSnackBar(
+          SnackBar(
+            content: const Text(
+              'تراکنش‌ها حذف شدند.',
+              textDirection: TextDirection.rtl,
+              style: TextStyle(fontFamily: 'Vazirmatn'),
+            ),
+            action: SnackBarAction(
+              label: 'بازگردانی',
+              textColor: Colors.amber,
+              onPressed: () {
+                _activeTimer?.cancel();
+                _activeTimer = null;
+                _activeUndoType = null;
+                _activeIds.clear();
 
-            state = state.copyWith(
-              pendingTransactionIds: state.pendingTransactionIds.difference(txIds.toSet()),
-            );
+                state = state.copyWith(
+                  pendingTransactionIds: state.pendingTransactionIds.difference(
+                    txIds.toSet(),
+                  ),
+                );
 
-            onRefreshes();
-          },
-        ),
-        duration: const Duration(seconds: 5),
-      ),
-    ).closed.then((reason) {
-      if (reason != SnackBarClosedReason.action && _activeUndoType == 'transaction' && _activeIds.isNotEmpty) {
-        _commitDeletion();
-      }
-    });
+                onRefreshes();
+              },
+            ),
+            duration: const Duration(seconds: 5),
+          ),
+        )
+        .closed
+        .then((reason) {
+          if (reason != SnackBarClosedReason.action &&
+              _activeUndoType == 'transaction' &&
+              _activeIds.isNotEmpty) {
+            _commitDeletion();
+          }
+        });
 
     _activeTimer = Timer(const Duration(seconds: 5), () {
       _commitDeletion();
@@ -228,51 +257,70 @@ class UndoDeleteNotifier extends StateNotifier<UndoDeleteState> {
   }
 
   /// Registers a note deletion, hides it immediately, and schedules the 5s timer.
-  void deleteNote(BuildContext context, String transactionId, String currentNoteText, VoidCallback onRefreshes) {
+  void deleteNote(
+    BuildContext context,
+    String transactionId,
+    String currentNoteText,
+    VoidCallback onRefreshes,
+  ) {
     cancelActiveUndoAndCommit();
 
     _activeUndoType = 'note';
     _activeIds = [transactionId];
 
     state = state.copyWith(
-      pendingNoteTransactionIds: {...state.pendingNoteTransactionIds, transactionId},
-      pendingDeletedNotes: {...state.pendingDeletedNotes, transactionId: currentNoteText},
+      pendingNoteTransactionIds: {
+        ...state.pendingNoteTransactionIds,
+        transactionId,
+      },
+      pendingDeletedNotes: {
+        ...state.pendingDeletedNotes,
+        transactionId: currentNoteText,
+      },
     );
 
     onRefreshes();
 
     ScaffoldMessenger.of(context).clearSnackBars();
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: const Text(
-          'یادداشت حذف شد.',
-          textDirection: TextDirection.rtl,
-          style: TextStyle(fontFamily: 'Vazirmatn'),
-        ),
-        action: SnackBarAction(
-          label: 'بازگردانی',
-          textColor: Colors.amber,
-          onPressed: () {
-            _activeTimer?.cancel();
-            _activeTimer = null;
-            _activeUndoType = null;
-            _activeIds.clear();
+    ScaffoldMessenger.of(context)
+        .showSnackBar(
+          SnackBar(
+            content: const Text(
+              'یادداشت حذف شد.',
+              textDirection: TextDirection.rtl,
+              style: TextStyle(fontFamily: 'Vazirmatn'),
+            ),
+            action: SnackBarAction(
+              label: 'بازگردانی',
+              textColor: Colors.amber,
+              onPressed: () {
+                _activeTimer?.cancel();
+                _activeTimer = null;
+                _activeUndoType = null;
+                _activeIds.clear();
 
-            state = state.copyWith(
-              pendingNoteTransactionIds: state.pendingNoteTransactionIds.difference({transactionId}),
-              pendingDeletedNotes: Map<String, String>.from(state.pendingDeletedNotes)..remove(transactionId),
-            );
+                state = state.copyWith(
+                  pendingNoteTransactionIds: state.pendingNoteTransactionIds
+                      .difference({transactionId}),
+                  pendingDeletedNotes: Map<String, String>.from(
+                    state.pendingDeletedNotes,
+                  )..remove(transactionId),
+                );
 
-            onRefreshes();
-          },
-        ),
-        duration: const Duration(seconds: 5),
-      ),
-    ).closed.then((reason) {
-      if (reason != SnackBarClosedReason.action && _activeUndoType == 'note' && _activeIds.contains(transactionId)) {
-        _commitDeletion();
-      }
-    });
+                onRefreshes();
+              },
+            ),
+            duration: const Duration(seconds: 5),
+          ),
+        )
+        .closed
+        .then((reason) {
+          if (reason != SnackBarClosedReason.action &&
+              _activeUndoType == 'note' &&
+              _activeIds.contains(transactionId)) {
+            _commitDeletion();
+          }
+        });
 
     _activeTimer = Timer(const Duration(seconds: 5), () {
       _commitDeletion();
@@ -287,11 +335,9 @@ class UndoDeleteNotifier extends StateNotifier<UndoDeleteState> {
 }
 
 /// Provider exposing the central `UndoDeleteNotifier` state.
-final undoDeleteProvider = StateNotifierProvider<UndoDeleteNotifier, UndoDeleteState>((ref) {
-  final repo = ref.watch(transactionRepositoryProvider);
-  final logger = ref.watch(loggerProvider);
-  return UndoDeleteNotifier(
-    transactionRepository: repo,
-    logger: logger,
-  );
-});
+final undoDeleteProvider =
+    StateNotifierProvider<UndoDeleteNotifier, UndoDeleteState>((ref) {
+      final repo = ref.watch(transactionRepositoryProvider);
+      final logger = ref.watch(loggerProvider);
+      return UndoDeleteNotifier(transactionRepository: repo, logger: logger);
+    });

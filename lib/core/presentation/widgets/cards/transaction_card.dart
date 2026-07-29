@@ -45,11 +45,7 @@ class TransactionCard extends StatelessWidget {
     final spacing = theme.extension<SpacingExtension>()!;
     final semanticColor = theme.extension<SemanticColorExtension>()!;
 
-    final amountColor = isCredit
-        ? semanticColor.success
-        : theme.colorScheme.onSurface;
-
-    final amountPrefix = isCredit ? '+' : '-';
+    final amountColor = isCredit ? semanticColor.success : semanticColor.error;
 
     return BaseCard(
       onTap: onTap,
@@ -116,7 +112,7 @@ class TransactionCard extends StatelessWidget {
             ),
             // Amount and direction indicator (Left side in Persian RTL)
             Text(
-              '$amountPrefix$amount',
+              amount,
               style: theme.textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.bold,
                 color: amountColor,

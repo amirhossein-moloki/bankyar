@@ -47,7 +47,8 @@ class TransactionDetailsScreen extends ConsumerWidget {
             IconButton(
               icon: const Icon(Icons.edit_outlined),
               tooltip: 'ویرایش تراکنش',
-              onPressed: () => _showEditTransactionBottomSheet(context, ref, data),
+              onPressed: () =>
+                  _showEditTransactionBottomSheet(context, ref, data),
             ),
             IconButton(
               icon: const Icon(Icons.share_outlined),
@@ -93,7 +94,8 @@ class TransactionDetailsScreen extends ConsumerWidget {
               DetailsActionFooter(
                 isVerified: data.transaction.confidenceScore >= 1.0,
                 onVerify: notifier.verifyTransaction,
-                onDelete: () => _showDeleteConfirmation(context, ref, data.transaction),
+                onDelete: () =>
+                    _showDeleteConfirmation(context, ref, data.transaction),
               ),
             ],
           ),

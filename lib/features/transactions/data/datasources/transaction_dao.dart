@@ -30,13 +30,11 @@ class TransactionDao extends SqliteBaseDao<ParsedTransaction> {
   Future<Result<List<ParsedTransaction>>> getChronologicalList() async {
     try {
       final db = dbService.database;
-      final results = await db.rawQuery(
-        '''
+      final results = await db.rawQuery('''
         SELECT t.*, n.note_text FROM transactions t
         LEFT JOIN notes n ON t.id = n.transaction_id
         ORDER BY t.$chronologicalColumn DESC
-        '''
-      );
+        ''');
 
       final list = results.map(fromMap).toList();
       return Result.success(list);

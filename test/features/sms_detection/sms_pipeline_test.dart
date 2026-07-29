@@ -145,7 +145,8 @@ void main() {
 
     test('ignores OTP / dynamic password / verification messages cleanly', () {
       // 1. The exact user-provided Blu Bank OTP message
-      const bluOtpSms = 'بلو\nبفرمایید رمز پویا\nخرید\nاسنپ\nمبلغ: 740,000 ریال\nرمز: 354954';
+      const bluOtpSms =
+          'بلو\nبفرمایید رمز پویا\nخرید\nاسنپ\nمبلغ: 740,000 ریال\nرمز: 354954';
       final result1 = engine.process(
         rawText: bluOtpSms,
         senderId: 'blubank',
