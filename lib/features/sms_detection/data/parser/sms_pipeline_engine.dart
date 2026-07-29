@@ -72,6 +72,23 @@ class SmsPipelineEngine {
       senderId: senderId,
     );
 
+    // Check if the message is an OTP / dynamic password / verification code
+    if (RegexPatterns.otpPattern.hasMatch(rawText)) {
+      final msg = BankMessageEntity(
+        id: messageId,
+        rawText: rawText,
+        senderId: senderId,
+        receivedAt: receivedAt,
+        deduplicationHash: deduplicationHash,
+        ingestionStatus: IngestionStatus.ignored,
+      );
+      return SmsPipelineResult(
+        message: msg,
+        status: IngestionStatus.ignored,
+        reason: 'Filtered: OTP/dynamic password message ignored.',
+      );
+    }
+
     // 2. Message Filtering & Bank Identification
     final bank = BankRegistry.instance.detectBank(senderId, rawText);
 

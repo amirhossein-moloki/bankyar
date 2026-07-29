@@ -97,6 +97,13 @@ class RegexPatterns {
     unicode: true,
   );
 
+  /// Matches OTP/dynamic passwords, verification codes, or activation codes.
+  static final RegExp otpPattern = RegExp(
+    r'رمز\s*پویا|رمز\s*یکبار\s*مصرف|رمز\s*یکبارمصرف|کد\s*تایید|کد\s*فعالسازی|کد\s*فعال\s*سازی|رمز\s*موقت|کد\s*موقت|رمز\s*دوم\s*پویا',
+    caseSensitive: false,
+    unicode: true,
+  );
+
   /// Normalizes eastern (Persian/Arabic) numerals to standard western ASCII string.
   static String normalizeNumerals(String input) {
     if (input.isEmpty) return '';

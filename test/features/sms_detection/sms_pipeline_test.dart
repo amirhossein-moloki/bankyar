@@ -142,6 +142,48 @@ void main() {
       expect(result.status, IngestionStatus.failure);
       expect(result.transaction, isNull);
     });
+
+    test('ignores OTP / dynamic password / verification messages cleanly', () {
+      // 1. The exact user-provided Blu Bank OTP message
+      const bluOtpSms = 'بلو\nبفرمایید رمز پویا\nخرید\nاسنپ\nمبلغ: 740,000 ریال\nرمز: 354954';
+      final result1 = engine.process(
+        rawText: bluOtpSms,
+        senderId: 'blubank',
+        receivedAt: 1697360400000,
+        isDuplicate: false,
+        messageId: 'msg-otp-1',
+        transactionId: 'tx-otp-1',
+      );
+      expect(result1.status, IngestionStatus.ignored);
+      expect(result1.transaction, isNull);
+      expect(result1.reason, contains('OTP/dynamic password message ignored'));
+
+      // 2. Melli OTP message
+      const melliOtpSms = 'بانک ملی\nرمز یکبار مصرف شما: 983172';
+      final result2 = engine.process(
+        rawText: melliOtpSms,
+        senderId: 'Melli',
+        receivedAt: 1697360400000,
+        isDuplicate: false,
+        messageId: 'msg-otp-2',
+        transactionId: 'tx-otp-2',
+      );
+      expect(result2.status, IngestionStatus.ignored);
+      expect(result2.transaction, isNull);
+
+      // 3. Generic activation code
+      const activationSms = 'کد فعالسازی نرم افزار بانک شما: 55432';
+      final result3 = engine.process(
+        rawText: activationSms,
+        senderId: 'Saman',
+        receivedAt: 1697360400000,
+        isDuplicate: false,
+        messageId: 'msg-otp-3',
+        transactionId: 'tx-otp-3',
+      );
+      expect(result3.status, IngestionStatus.ignored);
+      expect(result3.transaction, isNull);
+    });
   });
 
   group('SmsParserRepository Database Integration Tests', () {
