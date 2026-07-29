@@ -198,7 +198,7 @@ class _SecurityDashboardScreenState
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
-        appBar: const CustomAppBar(title: 'مرکز امنیت و حریم خصوصی'),
+        appBar: const CustomAppBar(title: 'تنظیمات و امنیت'),
         body: secState.isLoading
             ? const Center(child: CircularProgressIndicator())
             : SingleChildScrollView(
@@ -265,15 +265,6 @@ class _SecurityDashboardScreenState
     SpacingExtension spacing,
     RadiusExtension radius,
   ) {
-    final dataState = ref.watch(dataManagementNotifierProvider);
-
-    // Background Safety Active Progress Restore
-    if (dataState.isImporting && !_isProgressDialogShowing) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        _startScanningFlow(ImportRange.all);
-      });
-    }
-
     return Card(
       elevation: 0,
       shape: RoundedRectangleBorder(
@@ -295,24 +286,6 @@ class _SecurityDashboardScreenState
               ),
             ),
             SizedBox(height: spacing.s),
-            ListTile(
-              leading: Icon(
-                Icons.import_export_outlined,
-                color: theme.colorScheme.primary,
-              ),
-              title: const Text('وارد کردن پیامک‌های قبلی', style: TextStyle(fontFamily: 'Vazirmatn')),
-              subtitle: Text(
-                dataState.lastImportDate != null
-                    ? 'آخرین واردسازی موفق: ${_formatDateTime(dataState.lastImportDate!)}'
-                    : 'اسکن تاریخچه کامل صندوق ورودی گوشی شما',
-                style: const TextStyle(fontFamily: 'Vazirmatn', fontSize: 11),
-              ),
-              trailing: const Icon(Icons.play_arrow_outlined),
-              onTap: () {
-                _showImportDialog();
-              },
-            ),
-            const Divider(),
             ListTile(
               leading: Icon(
                 Icons.sms_failed_outlined,
@@ -812,6 +785,15 @@ class _SecurityDashboardScreenState
     SpacingExtension spacing,
     RadiusExtension radius,
   ) {
+    final dataState = ref.watch(dataManagementNotifierProvider);
+
+    // Background Safety Active Progress Restore
+    if (dataState.isImporting && !_isProgressDialogShowing) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _startScanningFlow(ImportRange.all);
+      });
+    }
+
     return Card(
       elevation: 0,
       shape: RoundedRectangleBorder(
@@ -1017,6 +999,15 @@ class _SecurityDashboardScreenState
     SpacingExtension spacing,
     RadiusExtension radius,
   ) {
+    final dataState = ref.watch(dataManagementNotifierProvider);
+
+    // Background Safety Active Progress Restore
+    if (dataState.isImporting && !_isProgressDialogShowing) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _startScanningFlow(ImportRange.all);
+      });
+    }
+
     return Card(
       elevation: 0,
       shape: RoundedRectangleBorder(
@@ -1059,6 +1050,25 @@ class _SecurityDashboardScreenState
               AppPermission.batteryExclusion,
               theme,
               spacing,
+            ),
+            const Divider(),
+            ListTile(
+              contentPadding: EdgeInsets.zero,
+              leading: Icon(
+                Icons.import_export_outlined,
+                color: theme.colorScheme.primary,
+              ),
+              title: const Text('وارد کردن پیامک‌های قبلی (اسکن تاریخچه)', style: TextStyle(fontFamily: 'Vazirmatn')),
+              subtitle: Text(
+                dataState.lastImportDate != null
+                    ? 'آخرین واردسازی موفق: ${_formatDateTime(dataState.lastImportDate!)}'
+                    : 'اسکن تاریخچه کامل صندوق ورودی گوشی شما',
+                style: const TextStyle(fontFamily: 'Vazirmatn', fontSize: 11),
+              ),
+              trailing: const Icon(Icons.play_arrow_outlined),
+              onTap: () {
+                _showImportDialog();
+              },
             ),
           ],
         ),
