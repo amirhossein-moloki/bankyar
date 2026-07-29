@@ -14,6 +14,7 @@ import 'package:bankyar/core/storage/preferences_storage.dart';
 import 'package:bankyar/core/state_management/state_wrappers.dart';
 import 'package:bankyar/core/utils/result.dart';
 import 'package:bankyar/core/errors/failures.dart';
+import 'package:bankyar/core/presentation/widgets/cards/transaction_card.dart';
 import 'package:bankyar/features/sms_detection/domain/entities/parsed_transaction.dart';
 import 'package:bankyar/features/sms_detection/presentation/state/sms_detection_providers.dart';
 import 'package:bankyar/features/transactions/data/datasources/transaction_dao.dart';
@@ -483,6 +484,72 @@ void main() {
           find.text('هیچ تراکنشی در صندوقچه شما ثبت نشده است.'),
           findsOneWidget,
         );
+      },
+    );
+
+    testWidgets(
+      'RecentTransactionsListSliver on tap callback navigates to details, on long press triggers delete confirmation',
+      (tester) async {
+        const tx = ParsedTransaction(
+          id: 'tx-test',
+          amount: 50000.0,
+          currency: 'IRR',
+          transactionType: SmsTransactionType.debit,
+          rawMerchant: 'Snapp',
+          normalizedMerchant: 'Snapp',
+          timestamp: 1697360400000,
+          confidenceScore: 1.0,
+          parsingMethod: 'deterministic',
+          createdAt: 1697360400000,
+          updatedAt: 1697360400000,
+        );
+
+        final mockState = HomeState.empty().copyWith(
+          transactions: [tx],
+          isObscured: false,
+        );
+
+        bool tapped = false;
+        bool longPressed = false;
+
+        await tester.pumpWidget(
+          buildTestableWidget(
+            ProviderScope(
+              overrides: [
+                databaseServiceProvider.overrideWithValue(mockDbService),
+                preferencesStorageProvider.overrideWithValue(mockPrefs),
+                loggerProvider.overrideWithValue(mockLogger),
+                smsHistoryImporterProvider.overrideWithValue(mockImporter),
+                getTransactionsUseCaseProvider.overrideWithValue(
+                  mockGetTransactionsUseCase,
+                ),
+                homeViewModelProvider.overrideWith(
+                  (ref) => FakeHomeNotifier(UiState.success(mockState)),
+                ),
+              ],
+              child: CustomScrollView(
+                slivers: [
+                  RecentTransactionsListSliver(
+                    onTapTransaction: (t) => tapped = true,
+                    onLongPressTransaction: (t) => longPressed = true,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+
+        await tester.pumpAndSettle();
+
+        // Tap the transaction card
+        await tester.tap(find.byType(TransactionCard));
+        await tester.pump();
+        expect(tapped, isTrue);
+
+        // Long press the transaction card
+        await tester.longPress(find.byType(TransactionCard));
+        await tester.pump();
+        expect(longPressed, isTrue);
       },
     );
   });

@@ -47,10 +47,17 @@ class RecentTransactionsHeaderSliver extends ConsumerWidget {
 /// Sliver component rendering lazy lists of parsed transactions chronologically.
 class RecentTransactionsListSliver extends ConsumerWidget {
   /// Constructor.
-  const RecentTransactionsListSliver({this.onTapTransaction, super.key});
+  const RecentTransactionsListSliver({
+    this.onTapTransaction,
+    this.onLongPressTransaction,
+    super.key,
+  });
 
   /// Optional tap callback on transaction card.
   final ValueChanged<ParsedTransaction>? onTapTransaction;
+
+  /// Optional long press callback on transaction card.
+  final ValueChanged<ParsedTransaction>? onLongPressTransaction;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -96,6 +103,9 @@ class RecentTransactionsListSliver extends ConsumerWidget {
               onTap: onTapTransaction != null
                   ? () => onTapTransaction!(tx)
                   : null,
+              onLongPress: onLongPressTransaction != null
+                  ? () => onLongPressTransaction!(tx)
+                  : null,
             ),
           );
         }, childCount: transactions.length),
@@ -109,11 +119,13 @@ class _TransactionItemWidget extends StatelessWidget {
     required this.transaction,
     required this.isObscured,
     this.onTap,
+    this.onLongPress,
   });
 
   final ParsedTransaction transaction;
   final bool isObscured;
   final VoidCallback? onTap;
+  final VoidCallback? onLongPress;
 
   @override
   Widget build(BuildContext context) {
@@ -131,7 +143,7 @@ class _TransactionItemWidget extends StatelessWidget {
         ? 'کارت *${DateFormatter.toPersianDigits(transaction.cardIdentifier!)}'
         : 'بانک‌یار';
 
-    return TransactionCard(
+    final Widget card = TransactionCard(
       amount: '$amountText تومان',
       timestamp: formattedDate,
       category: transaction.normalizedMerchant,
@@ -140,5 +152,14 @@ class _TransactionItemWidget extends StatelessWidget {
       note: transaction.note,
       onTap: onTap,
     );
+
+    if (onLongPress != null) {
+      return GestureDetector(
+        onLongPress: onLongPress,
+        child: card,
+      );
+    }
+
+    return card;
   }
 }
