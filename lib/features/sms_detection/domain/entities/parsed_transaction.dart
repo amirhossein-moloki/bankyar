@@ -33,7 +33,11 @@ class ParsedTransaction extends Entity<String> {
     required this.updatedAt,
     this.balance,
     this.referenceNumber,
+    this.note,
   }) : super(id);
+
+  /// User-specified note text.
+  final String? note;
 
   /// The processed decimal transaction amount.
   final double amount;
@@ -102,6 +106,7 @@ class ParsedTransaction extends Entity<String> {
     int? updatedAt,
     double? balance,
     String? referenceNumber,
+    String? note,
   }) {
     return ParsedTransaction(
       id: id ?? this.id,
@@ -121,6 +126,7 @@ class ParsedTransaction extends Entity<String> {
       updatedAt: updatedAt ?? this.updatedAt,
       balance: balance ?? this.balance,
       referenceNumber: referenceNumber ?? this.referenceNumber,
+      note: note ?? this.note,
     );
   }
 }

@@ -6,6 +6,7 @@ import '../../../../core/presentation/widgets/widgets.dart';
 import '../../../../core/theme/spacing_tokens.dart';
 import '../../../../core/utils/currency_formatter.dart';
 import '../../../sms_detection/domain/entities/parsed_transaction.dart';
+import '../../domain/entities/transaction_details.dart';
 import '../state/home_notifier.dart';
 import '../state/transaction_details_notifier.dart';
 import '../state/transactions_notifier.dart';
@@ -15,6 +16,7 @@ import '../../../../core/state_management/undo_delete_notifier.dart';
 import '../widgets/details_notes_tags_section.dart';
 import '../widgets/details_security_shield.dart';
 import '../widgets/details_summary_card.dart';
+import '../widgets/edit_transaction_bottom_sheet.dart';
 
 /// Screen path for GoRouter.
 class TransactionDetailsScreen extends ConsumerWidget {
@@ -42,6 +44,11 @@ class TransactionDetailsScreen extends ConsumerWidget {
           loading: (_) => null,
           error: (_) => null,
           success: (data) => [
+            IconButton(
+              icon: const Icon(Icons.edit_outlined),
+              tooltip: 'ویرایش تراکنش',
+              onPressed: () => _showEditTransactionBottomSheet(context, ref, data),
+            ),
             IconButton(
               icon: const Icon(Icons.share_outlined),
               onPressed: () => _shareTransaction(context, data.transaction),
@@ -92,6 +99,18 @@ class TransactionDetailsScreen extends ConsumerWidget {
           ),
         ),
       ),
+    );
+  }
+
+  void _showEditTransactionBottomSheet(
+    BuildContext context,
+    WidgetRef ref,
+    TransactionDetails details,
+  ) {
+    showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      builder: (context) => EditTransactionBottomSheet(details: details),
     );
   }
 

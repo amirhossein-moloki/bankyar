@@ -13,9 +13,13 @@ class TransactionCard extends StatelessWidget {
     required this.category,
     required this.accountLabel,
     required this.isCredit,
+    this.note,
     super.key,
     this.onTap,
   });
+
+  /// Optional note for the transaction.
+  final String? note;
 
   /// The formatted transaction amount.
   final String amount;
@@ -83,6 +87,30 @@ class TransactionCard extends StatelessWidget {
                       ),
                     ],
                   ),
+                  if (note != null && note!.trim().isNotEmpty) ...[
+                    SizedBox(height: spacing.xxs),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.edit_note_outlined,
+                          size: 16,
+                          color: theme.colorScheme.primary,
+                        ),
+                        SizedBox(width: spacing.xxs),
+                        Expanded(
+                          child: Text(
+                            note!,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: theme.colorScheme.onSurfaceVariant,
+                              fontStyle: FontStyle.italic,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ],
               ),
             ),
