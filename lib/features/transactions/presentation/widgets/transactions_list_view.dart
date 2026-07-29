@@ -190,6 +190,7 @@ class _TransactionsListViewState extends ConsumerState<TransactionsListView> {
                 category: tx.normalizedMerchant,
                 accountLabel: cardLabel,
                 isCredit: isCredit,
+                note: tx.note,
                 onTap: () {
                   if (isSelectedMode) {
                     ref

@@ -160,9 +160,10 @@ class TransactionRepositoryImpl extends BaseRepository
 
       final queryStr =
           '''
-        SELECT * FROM transactions
+        SELECT t.*, n.note_text FROM transactions t
+        LEFT JOIN notes n ON t.id = n.transaction_id
         $whereSection
-        ORDER BY $orderByColumn $direction
+        ORDER BY t.$orderByColumn $direction
         LIMIT ? OFFSET ?
       ''';
 

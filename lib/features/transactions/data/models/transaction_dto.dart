@@ -46,6 +46,7 @@ class TransactionDto {
       parsingMethod: map['parsing_method'] as String,
       createdAt: map['created_at'] as int,
       updatedAt: map['updated_at'] as int,
+      note: map['note_text'] as String?,
     );
   }
 }

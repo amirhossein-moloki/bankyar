@@ -409,6 +409,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             tooltip: 'مرکز اعلان‌ها',
             onPressed: () => context.push('/notifications'),
           ),
+          IconButton(
+            icon: const Icon(Icons.settings_outlined),
+            tooltip: 'تنظیمات و امنیت',
+            onPressed: () => context.push('/security'),
+          ),
         ],
       ),
       body: AnimatedSwitcher(

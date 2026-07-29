@@ -137,6 +137,7 @@ class _TransactionItemWidget extends StatelessWidget {
       category: transaction.normalizedMerchant,
       accountLabel: cardLabel,
       isCredit: isCredit,
+      note: transaction.note,
       onTap: onTap,
     );
   }

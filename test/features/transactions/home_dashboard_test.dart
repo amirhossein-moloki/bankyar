@@ -154,7 +154,7 @@ void main() {
         ];
 
         when(
-          () => mockDb.query('transactions', orderBy: any(named: 'orderBy')),
+          () => mockDb.rawQuery(any(), any()),
         ).thenAnswer((_) async => mockMapList);
 
         final result = await repository.getTransactions();
