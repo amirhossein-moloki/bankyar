@@ -527,7 +527,8 @@ class _DashboardContentWidget extends ConsumerWidget {
           SliverToBoxAdapter(child: SizedBox(height: spacing.m)),
           const RecentTransactionsHeaderSliver(),
           RecentTransactionsListSliver(
-            onTapTransaction: (tx) => _showDeleteConfirmation(context, ref, tx),
+            onTapTransaction: (tx) => context.push('/transactions/${tx.id}'),
+            onLongPressTransaction: (tx) => _showDeleteConfirmation(context, ref, tx),
           ),
           SliverToBoxAdapter(child: SizedBox(height: spacing.xl)),
         ],
