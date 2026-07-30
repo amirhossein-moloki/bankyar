@@ -1,10 +1,11 @@
+import '../../../../core/sms_detection/sms_classification.dart';
+import '../../../../core/sms_detection/bank_parser.dart';
+import '../../../../core/sms_detection/parser_registry.dart';
+import '../../../../core/sms_detection/false_positive_protection.dart';
 import '../../domain/entities/bank_message_entity.dart';
 import '../../domain/entities/parsed_transaction.dart';
-import 'bank_registry.dart';
 import 'regex_patterns.dart';
-import 'modular_parsers.dart';
 import 'duplicate_detector.dart';
-import 'confidence_scorer.dart';
 
 /// Container class holding the final output of the SMS processing pipeline.
 class SmsPipelineResult {
@@ -13,6 +14,7 @@ class SmsPipelineResult {
     this.transaction,
     required this.status,
     required this.reason,
+    this.classification = SmsClassification.non_bank,
   });
 
   /// The processed bank message entity to be logged.
@@ -26,9 +28,13 @@ class SmsPipelineResult {
 
   /// Human-readable reasoning explaining why this pipeline outcome occurred.
   final String reason;
+
+  /// Detailed SMS classification.
+  final SmsClassification classification;
 }
 
-/// Core pipeline orchestrator coordinating the sequential decoding of incoming banking texts.
+/// Core pipeline orchestrator coordinating the sequential decoding of incoming banking texts
+/// using the Offline SMS Detection Engine.
 class SmsPipelineEngine {
   /// Constructor defining standard pipeline components.
   const SmsPipelineEngine();
@@ -62,6 +68,7 @@ class SmsPipelineEngine {
         message: msg,
         status: IngestionStatus.failure,
         reason: 'Empty message text or sender identifier.',
+        classification: SmsClassification.non_bank,
       );
     }
 
@@ -72,31 +79,20 @@ class SmsPipelineEngine {
       senderId: senderId,
     );
 
-    // Check if the message is an OTP / dynamic password / verification code
-    if (RegexPatterns.otpPattern.hasMatch(rawText)) {
-      final msg = BankMessageEntity(
-        id: messageId,
-        rawText: rawText,
-        senderId: senderId,
-        receivedAt: receivedAt,
-        deduplicationHash: deduplicationHash,
-        ingestionStatus: IngestionStatus.ignored,
-      );
-      return SmsPipelineResult(
-        message: msg,
-        status: IngestionStatus.ignored,
-        reason: 'Filtered: OTP/dynamic password message ignored.',
-      );
-    }
-
     // 2. Message Filtering & Bank Identification
-    final bank = BankRegistry.instance.detectBank(senderId, rawText);
+    final parser = ParserRegistry.instance.detectParser(senderId, rawText);
 
-    // Check if the message contains financial keyword triggers to filter out spam
-    final isFinancial = _isFinancialMessage(rawText, senderId);
+    // Verify if the sender ID is explicitly registered as a valid sender for this bank
+    final isVerifiedBankSender = parser != null &&
+        parser.senderIds.any((id) =>
+            id.trim().toLowerCase().replaceAll(RegExp(r'[\s\.\-_]'), '') ==
+            senderId.trim().toLowerCase().replaceAll(RegExp(r'[\s\.\-_]'), ''));
 
-    if (bank == null && !isFinancial) {
-      // Ignored: Not a banking SMS
+    // Check false positive criteria
+    final isFP = FalsePositiveProtection.isFalsePositive(senderId, rawText);
+
+    if (isFP && !isVerifiedBankSender) {
+      // Ignored: Non-bank message or advertising/billing false positive
       final msg = BankMessageEntity(
         id: messageId,
         rawText: rawText,
@@ -108,12 +104,33 @@ class SmsPipelineEngine {
       return SmsPipelineResult(
         message: msg,
         status: IngestionStatus.ignored,
-        reason:
-            'Filtered: message does not match known bank profile or transactional keywords.',
+        reason: 'Filtered: False positive protection matched.',
+        classification: SmsClassification.non_bank,
       );
     }
 
-    // 3. Duplicate Detection Check
+    if (parser == null) {
+      // Ignored: Not a recognized bank
+      final msg = BankMessageEntity(
+        id: messageId,
+        rawText: rawText,
+        senderId: senderId,
+        receivedAt: receivedAt,
+        deduplicationHash: deduplicationHash,
+        ingestionStatus: IngestionStatus.ignored,
+      );
+      return SmsPipelineResult(
+        message: msg,
+        status: IngestionStatus.ignored,
+        reason: 'Filtered: sender does not match any registered bank profile.',
+        classification: SmsClassification.non_bank,
+      );
+    }
+
+    // 3. Classification
+    final classification = parser.classify(rawText);
+
+    // 4. Duplicate Detection Check
     if (isDuplicate) {
       final msg = BankMessageEntity(
         id: messageId,
@@ -127,67 +144,84 @@ class SmsPipelineEngine {
         message: msg,
         status: IngestionStatus.duplicate,
         reason: 'Duplicate SMS signature already ingested.',
+        classification: classification,
       );
     }
 
-    // 4. Message Normalization
+    // Only bank_transaction is allowed to enter the ledger and create transactions!
+    if (classification != SmsClassification.bank_transaction) {
+      final msg = BankMessageEntity(
+        id: messageId,
+        rawText: rawText,
+        senderId: senderId,
+        receivedAt: receivedAt,
+        deduplicationHash: deduplicationHash,
+        ingestionStatus: IngestionStatus.ignored,
+      );
+
+      var reason = 'Filtered: Message classification is $classification. Only bank_transaction creates ledger entries.';
+      if (classification == SmsClassification.bank_otp) {
+        reason = 'Filtered: OTP/dynamic password message ignored.';
+      }
+
+      return SmsPipelineResult(
+        message: msg,
+        status: IngestionStatus.ignored,
+        reason: reason,
+        classification: classification,
+      );
+    }
+
+    // 5. Message Normalization and Extraction using the specialized bank parser
     final normalizedText = RegexPatterns.normalizeNumerals(rawText).trim();
 
-    // 5. Transaction Type Detection
-    final isCredit = RegexPatterns.creditVerbs.hasMatch(normalizedText);
-    final isDebit = RegexPatterns.debitVerbs.hasMatch(normalizedText);
+    final txType = parser.parseTransactionType(rawText);
+    final amount = parser.parseAmount(rawText);
+    final cardIdentifier = parser.parseCardIdentifier(rawText);
+    final balance = parser.parseBalance(rawText);
+    final referenceNumber = parser.parseReferenceNumber(rawText);
+    final rawMerchant = parser.parseMerchant(rawText);
+    final normalizedMerchant = rawMerchant.isNotEmpty ? rawMerchant : parser.bankName;
 
-    var txType = SmsTransactionType.unknown;
-    if (isCredit && !isDebit) {
-      txType = SmsTransactionType.credit;
-    } else if (isDebit && !isCredit) {
-      txType = SmsTransactionType.debit;
-    } else if (isCredit && isDebit) {
-      // Ambiguous, check ordering or default to debit for safety
-      txType = SmsTransactionType.debit;
+    // 6. Deterministic Scoring
+    final hasValidSender = isVerifiedBankSender;
+    final hasTransactionKeywords = RegexPatterns.creditVerbs.hasMatch(normalizedText) ||
+        RegexPatterns.debitVerbs.hasMatch(normalizedText);
+    final hasAmount = amount != null && amount > 0;
+    final hasCard = cardIdentifier != null && cardIdentifier.isNotEmpty;
+    final hasBalance = balance != null && balance > 0;
+    final hasReference = referenceNumber != null && referenceNumber.isNotEmpty;
+
+    var score = 0;
+    if (hasValidSender) score += 50;
+    if (hasTransactionKeywords) score += 20;
+    if (hasAmount) score += 10;
+    if (hasCard) score += 10;
+    if (hasBalance) score += 10;
+    if (hasReference) score += 5;
+
+    final normalizedScore = score / 100.0;
+
+    // 7. Score rejection threshold check
+    if (score < 60) {
+      final msg = BankMessageEntity(
+        id: messageId,
+        rawText: rawText,
+        senderId: senderId,
+        receivedAt: receivedAt,
+        deduplicationHash: deduplicationHash,
+        ingestionStatus: IngestionStatus.ignored,
+      );
+      return SmsPipelineResult(
+        message: msg,
+        status: IngestionStatus.ignored,
+        reason: 'Rejected: Deterministic confidence score is too low ($score < 60).',
+        classification: classification,
+      );
     }
 
-    // 6. Amount Extraction
-    final amount = AmountParser.parse(rawText);
-
-    // 7. Card/Account Extraction
-    final cardIdentifier = CardParser.parse(rawText);
-
-    // 8. Date & Time Extraction
-    final txTimestamp = DateTimeParser.parse(rawText, receivedAt);
-
-    // 9. Balance Extraction
-    final balance = BalanceParser.parse(rawText);
-
-    // 10. Merchant Extraction
-    final rawMerchant = MerchantParser.parse(rawText);
-    final normalizedMerchant = rawMerchant.isNotEmpty
-        ? rawMerchant
-        : (bank?.name ?? 'Unknown Bank');
-
-    // 11. Reference Number Extraction
-    final referenceNumber = ReferenceParser.parse(rawText);
-
-    // 12. Confidence Scoring
-    final confidence = ConfidenceScorer.calculate(
-      amount: amount,
-      hasBank: bank != null,
-      transactionType: txType,
-      cardIdentifier: cardIdentifier,
-    );
-
-    // Determine currency default based on bank profiles / language
-    // Typically IRR (Rials) or Toman. Default to Rials in standard Iranian contexts.
-    var currency = 'IRR';
-    if (RegexPatterns.tomanPattern.hasMatch(rawText)) {
-      currency = 'Toman';
-    } else if (RegexPatterns.rialPattern.hasMatch(rawText)) {
-      currency = 'IRR';
-    }
-
-    // 13. Validation
+    // 8. In-depth Validation: ledger transactions must contain a valid amount
     if (amount == null || amount <= 0) {
-      // Failed to parse primary financial indicator
       final msg = BankMessageEntity(
         id: messageId,
         rawText: rawText,
@@ -199,9 +233,20 @@ class SmsPipelineEngine {
       return SmsPipelineResult(
         message: msg,
         status: IngestionStatus.failure,
-        reason: 'Partial parsing failed: unable to isolate transaction amount.',
+        reason: 'Parsing failed: Transaction matched but unable to parse positive amount.',
+        classification: classification,
       );
     }
+
+    // Determine currency default based on bank profiles / language
+    var currency = 'IRR';
+    if (RegexPatterns.tomanPattern.hasMatch(rawText)) {
+      currency = 'Toman';
+    } else if (RegexPatterns.rialPattern.hasMatch(rawText)) {
+      currency = 'IRR';
+    }
+
+    final txTimestamp = receivedAt; // fallback / extracted time
 
     // Success transaction extraction!
     final transaction = ParsedTransaction(
@@ -214,9 +259,9 @@ class SmsPipelineEngine {
       cardIdentifier: cardIdentifier,
       timestamp: txTimestamp,
       sourceSmsId: messageId,
-      accountId: bank?.id,
-      confidenceScore: confidence,
-      parsingMethod: confidence >= 0.7 ? 'deterministic' : 'heuristic',
+      accountId: parser.bankId,
+      confidenceScore: normalizedScore,
+      parsingMethod: 'deterministic',
       createdAt: DateTime.now().millisecondsSinceEpoch,
       updatedAt: DateTime.now().millisecondsSinceEpoch,
       balance: balance,
@@ -236,25 +281,8 @@ class SmsPipelineEngine {
       message: msg,
       transaction: transaction,
       status: IngestionStatus.success,
-      reason:
-          'SMS parsed successfully. Confidence: $confidence (${transaction.parsingMethod}).',
+      reason: 'SMS parsed successfully. Classification: $classification. Score: $score.',
+      classification: classification,
     );
-  }
-
-  bool _isFinancialMessage(String rawText, String senderId) {
-    // Basic verification check: does the message contain credit/debit verbs
-    // or does the sender ID appear in standard bank sender formats?
-    final text = rawText.toLowerCase();
-    final hasVerbs =
-        RegexPatterns.creditVerbs.hasMatch(text) ||
-        RegexPatterns.debitVerbs.hasMatch(text);
-    final hasIdentifiers =
-        text.contains('ریال') ||
-        text.contains('تومان') ||
-        text.contains('rial') ||
-        text.contains('toman') ||
-        text.contains('کارت') ||
-        text.contains('حساب');
-    return hasVerbs && hasIdentifiers;
   }
 }
