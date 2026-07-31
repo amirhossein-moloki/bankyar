@@ -92,7 +92,7 @@ class RegexPatterns {
   );
 
   static final RegExp debitVerbs = RegExp(
-    r'برداشت|بدهکار|کاهش|خرید|انتقال|کسر|withdrawal|debited|paid|spent|purchase|debit',
+    r'برداشت|بدهکار|کاهش|خرید|انتقال|کسر|پرداخت|قبض|withdrawal|debited|paid|spent|purchase|debit',
     caseSensitive: false,
     unicode: true,
   );

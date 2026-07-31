@@ -309,4 +309,93 @@ void main() {
       },
     );
   });
+
+  group('Direction Detection Voting Heuristics Tests', () {
+    const engine = SmsPipelineEngine();
+
+    test('Correctly identifies Credit when credit indicators are present and amount is extracted', () {
+      final samples = [
+        'بانک ملی\nمبلغ:500,000+\nواریز شد',
+        'بانک ملی\nبابت: انتقال از کارت\nمبلغ ۵۰۰,۰۰۰',
+        'بانک ملی\nسود سپرده واریز شد مبلغ: ۲۰۰,۰۰۰',
+        'بانک ملی\nحقوق ماهیانه مبلغ ۳۰,۰۰۰,۰۰۰ ریال به حساب شما واریز گردید.',
+      ];
+
+      for (final rawText in samples) {
+        final result = engine.process(
+          rawText: rawText,
+          senderId: 'Melli',
+          receivedAt: DateTime.now().millisecondsSinceEpoch,
+          isDuplicate: false,
+          messageId: 'test-credit',
+          transactionId: 'test-credit-tx',
+        );
+
+        expect(result.status, equals(IngestionStatus.success));
+        expect(result.transaction!.transactionType, equals(SmsTransactionType.credit),
+            reason: 'Message: "$rawText" should be Credit');
+      }
+    });
+
+    test('Correctly identifies Debit when debit indicators dominate', () {
+      final samples = [
+        'بانک ملی\nمبلغ:500,000-\nخرید انجام شد',
+        'بانک ملی\nکارت به کارت کسر شد مبلغ ۳۰۰,۰۰۰',
+        'بانک ملی\nپرداخت قبض تلفن مبلغ ۱۰۰,۰۰۰ ریال از کارت شما انجام شد.',
+      ];
+
+      for (final rawText in samples) {
+        final result = engine.process(
+          rawText: rawText,
+          senderId: 'Melli',
+          receivedAt: DateTime.now().millisecondsSinceEpoch,
+          isDuplicate: false,
+          messageId: 'test-debit',
+          transactionId: 'test-debit-tx',
+        );
+
+        expect(result.status, equals(IngestionStatus.success));
+        expect(result.transaction!.transactionType, equals(SmsTransactionType.debit),
+            reason: 'Message: "$rawText" should be Debit');
+      }
+    });
+  });
+
+  group('Debug Export JSON Generation Tests', () {
+    const engine = SmsPipelineEngine();
+
+    test('Produces correct 14-key JSON debug schema', () {
+      const rawText = 'بانک ملی\nواریز مبلغ ۱۰,۰۰۰ ریال\nبه حساب *۱۲۳۴';
+      final result = engine.process(
+        rawText: rawText,
+        senderId: 'Melli',
+        receivedAt: 1697360400000,
+        isDuplicate: false,
+        messageId: 'msg-1',
+        transactionId: 'tx-1',
+      );
+
+      final debugMap = result.toDebugMap();
+      expect(debugMap.length, equals(14));
+      expect(debugMap.containsKey('Sender'), isTrue);
+      expect(debugMap.containsKey('Normalized Sender'), isTrue);
+      expect(debugMap.containsKey('Matched Bank'), isTrue);
+      expect(debugMap.containsKey('Matched Template'), isTrue);
+      expect(debugMap.containsKey('Message Category'), isTrue);
+      expect(debugMap.containsKey('Transaction Direction'), isTrue);
+      expect(debugMap.containsKey('Confidence'), isTrue);
+      expect(debugMap.containsKey('Extracted Amount'), isTrue);
+      expect(debugMap.containsKey('Extracted Balance'), isTrue);
+      expect(debugMap.containsKey('Merchant'), isTrue);
+      expect(debugMap.containsKey('Parser Used'), isTrue);
+      expect(debugMap.containsKey('Validation Result'), isTrue);
+      expect(debugMap.containsKey('Create Transaction'), isTrue);
+      expect(debugMap.containsKey('Failure Reason'), isTrue);
+
+      expect(debugMap['Sender'], equals('Melli'));
+      expect(debugMap['Matched Bank'], equals('Bank Melli Iran'));
+      expect(debugMap['Extracted Amount'], equals(10000.0));
+      expect(debugMap['Create Transaction'], isTrue);
+    });
+  });
 }

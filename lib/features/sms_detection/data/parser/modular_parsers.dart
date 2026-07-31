@@ -166,49 +166,69 @@ class BalanceParser {
 class MerchantParser {
   const MerchantParser._();
 
-  /// Extracts merchant name from raw SMS text.
+  /// Extracts merchant name from raw SMS text using a multi-stage clean-up sequence (PART 8).
   static String parse(String rawText) {
     if (rawText.isEmpty) return '';
 
-    // Flexible Iranian bank merchant markers supporting optional colons
+    // Stage 1: Extract description block candidate from various verbs/indicators
     final merchantIndicators = [
-      RegExp(r'خرید\s+از\s*[:\-]?\s*([^:\-\n\r]+)', caseSensitive: false),
-      RegExp(r'فروشگاه\s*[:\-]?\s*([^:\-\n\r]+)', caseSensitive: false),
-      RegExp(r'پذیرنده\s*[:\-]?\s*([^:\-\n\r]+)', caseSensitive: false),
-      RegExp(r'انتقال\s+به\s*[:\-]?\s*([^:\-\n\r]+)', caseSensitive: false),
-      RegExp(r'بابت\s*[:\-]?\s*([^:\-\n\r]+)', caseSensitive: false),
-      RegExp(r'at\s*[:\-]?\s*([^:\-\n\r]+)', caseSensitive: false),
-      RegExp(r'to\s*[:\-]?\s*([^:\-\n\r]+)', caseSensitive: false),
+      RegExp(r'(?:خرید\s+از|فروشگاه|پذیرنده|انتقال\s+به|بابت|at|to)\s*[:\-]?\s*([^:\-\n\r]+)', caseSensitive: false),
     ];
 
+    String descriptionBlock = '';
     for (final regex in merchantIndicators) {
       final match = regex.firstMatch(rawText);
       if (match != null && match.groupCount >= 1) {
-        final merchant = match.group(1)?.trim();
-        if (merchant != null && merchant.isNotEmpty) {
-          return _cleanMerchantName(merchant);
+        final candidate = match.group(1)?.trim();
+        if (candidate != null && candidate.isNotEmpty) {
+          descriptionBlock = candidate;
+          break;
         }
       }
     }
 
-    return '';
-  }
+    if (descriptionBlock.isEmpty) {
+      return '';
+    }
 
-  static String _cleanMerchantName(String rawMerchant) {
-    var cleaned = rawMerchant;
+    var cleaned = descriptionBlock;
 
-    final separators = ['،', ',', ';', '|', '\t', ' - '];
+    // Split at early separators like commas, semicolons, dashes, or newlines to isolate the core merchant segment
+    final separators = ['،', ',', ';', '|', '\t', '\n', '\r', ' - '];
     for (final sep in separators) {
       if (cleaned.contains(sep)) {
         cleaned = cleaned.split(sep).first;
       }
     }
 
+    // Stage 2: Remove tracking numbers (e.g. standalone numeric strings of length 5+)
     cleaned = cleaned.replaceAll(RegExp(r'\b[0-9۰-۹]{5,}\b'), '');
+
+    // Stage 3: Remove IBAN references (e.g. Farsi "شبا" + digits or standard IR...)
+    cleaned = cleaned.replaceAll(RegExp(r'\bIR[0-9]{22,24}\b', caseSensitive: false), '');
+    cleaned = cleaned.replaceAll(RegExp(r'شبا\s*[0-9۰-۹]+', caseSensitive: false), '');
+
+    // Stage 4: Remove Card Numbers (e.g. 16-digit sequences, or masks like ****, xxxx)
+    cleaned = cleaned.replaceAll(RegExp(r'\b[0-9۰-۹]{16}\b'), '');
+    cleaned = cleaned.replaceAll(RegExp(r'(?:\*+|[xX]+)[0-9۰-۹]{4}'), '');
+    cleaned = cleaned.replaceAll(RegExp(r'\b[0-9۰-۹]{4,6}\*+[0-9۰-۹]{4,6}\b'), '');
+
+    // Stage 5: Remove Reference Numbers / Dates / Times (e.g. hours like 14:35 or dates 1402/12/29)
+    cleaned = cleaned.replaceAll(RegExp(r'[0-9۰-۹]{2,4}[/\-][0-9۰-۹]{1,2}[/\-][0-9۰-۹]{1,2}'), '');
+    cleaned = cleaned.replaceAll(RegExp(r'\b[0-9۰-۹]{2}:[0-9۰-۹]{2}(?::[0-9۰-۹]{2})?\b'), '');
+    cleaned = cleaned.replaceAll(RegExp(r'(?:پیگیری|ارجاع|مرجع|کد)\s*[:\-]?\s*[0-9۰-۹]+', caseSensitive: false), '');
+
+    // Stage 6: Normalize whitespace (replace multiple spaces with a single space)
     cleaned = cleaned.replaceAll(RegExp(r'\s+'), ' ').trim();
 
+    // Stage 7: Extract final validated Merchant name (and truncate if excessively long)
     if (cleaned.length > 50) {
       cleaned = cleaned.substring(0, 50).trim();
+    }
+
+    // Guard: If we completely emptied the block or extracted keywords only, fall back
+    if (cleaned.isEmpty || cleaned == ':' || cleaned == '-') {
+      return '';
     }
 
     return cleaned;
