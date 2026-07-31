@@ -65,6 +65,17 @@ class RegexPatterns {
     unicode: true,
   );
 
+  /// Explicit transaction direction signs (+ for credit, - for debit).
+  static final RegExp creditSignPattern = RegExp(
+    r'\+\s*[0-9۰-۹٠-٩]|[0-9۰-۹٠-٩]\s*\+',
+    unicode: true,
+  );
+
+  static final RegExp debitSignPattern = RegExp(
+    r'-\s*[0-9۰-۹٠-٩]|[0-9۰-۹٠-٩]\s*-',
+    unicode: true,
+  );
+
   /// Explicit 4-digit card or account suffix patterns.
   static final RegExp cardSuffixPattern = RegExp(r'[0-9۰-۹]{4}', unicode: true);
 
@@ -77,9 +88,9 @@ class RegexPatterns {
   );
 
   /// Reference/Tracking code extraction patterns.
-  /// Matches "پیگیری", "ارجاع", "مرجع", "ref", "rrn", "trace", "کدرهگیری".
+  /// Matches "پیگیری", "رهگیری", "ارجاع", "مرجع", "ref", "rrn", "trace", "کدرهگیری".
   static final RegExp referencePattern = RegExp(
-    r'(?:پیگیری|ارجاع|مرجع|ref|rrn|trace|کدرهگیری|شناسه|ش\.پ)\s*[:\-\s]*\s*([a-zA-Z0-9۰-۹٠-٩]+)',
+    r'(?:پیگیری|رهگیری|ارجاع|مرجع|ref|rrn|trace|کدرهگیری|شناسه|ش\.پ)\s*[:\-\s]*\s*([a-zA-Z0-9۰-۹٠-٩]+)',
     caseSensitive: false,
     unicode: true,
   );
@@ -104,12 +115,14 @@ class RegexPatterns {
     unicode: true,
   );
 
-  /// Normalizes eastern (Persian/Arabic) numerals to standard western ASCII string.
+  /// Normalizes eastern (Persian/Arabic) numerals to standard western ASCII string,
+  /// while also stripping optional Arabic/Persian diacritic marks (harakat) and kashida.
   static String normalizeNumerals(String input) {
     if (input.isEmpty) return '';
+    final cleanInput = input.replaceAll(RegExp(r'[\u064B-\u0652\u0656\u065F\u0640]'), '');
     var buffer = StringBuffer();
-    for (var i = 0; i < input.length; i++) {
-      final char = input[i];
+    for (var i = 0; i < cleanInput.length; i++) {
+      final char = cleanInput[i];
       final mapped = persianArabicDigitsMap[char];
       if (mapped != null) {
         buffer.write(mapped);

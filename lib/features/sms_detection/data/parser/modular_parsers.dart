@@ -232,7 +232,7 @@ class ReferenceParser {
       }
     }
 
-    final standaloneRefPattern = RegExp(r'\b[0-9]{6,12}\b');
+    final standaloneRefPattern = RegExp(r'\b[0-9]{6,35}\b');
     final matches = standaloneRefPattern.allMatches(normalized);
     for (final m in matches) {
       final matchStr = m.group(0);
