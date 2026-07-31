@@ -114,15 +114,45 @@ abstract class BaseBankParser implements BankParser {
     }
 
     // 9. Standard Transaction
-    final isCredit = RegexPatterns.creditVerbs.hasMatch(normalized);
-    final isDebit = RegexPatterns.debitVerbs.hasMatch(normalized);
+    final isCredit = RegexPatterns.creditVerbs.hasMatch(normalized) ||
+        RegexPatterns.creditSignPattern.hasMatch(normalized) ||
+        normalized.contains('انتقال از') ||
+        normalized.contains('انتقال وجه دریافتی') ||
+        normalized.contains('برگشت وجه') ||
+        normalized.contains('سود حساب') ||
+        normalized.contains('سود سپرده') ||
+        normalized.contains('واریز حقوق') ||
+        normalized.contains('واریز شناسه‌دار') ||
+        normalized.contains('افزایش موجودی') ||
+        normalized.contains('دریافت وجه') ||
+        normalized.contains('incoming transfer') ||
+        normalized.contains('credited') ||
+        normalized.contains('received') ||
+        normalized.contains('refund') ||
+        normalized.contains('deposit');
+
+    final isDebit = RegexPatterns.debitVerbs.hasMatch(normalized) ||
+        RegexPatterns.debitSignPattern.hasMatch(normalized) ||
+        normalized.contains('انتقال به') ||
+        normalized.contains('خرید از') ||
+        normalized.contains('پذیرنده');
+
     final hasCurrency = normalized.contains('ریال') ||
         normalized.contains('تومان') ||
         normalized.contains('rial') ||
         normalized.contains('toman') ||
         normalized.contains('rls');
 
-    if ((isCredit || isDebit) && (hasCurrency || normalized.contains('کارت') || normalized.contains('حساب'))) {
+    final hasCardOrAccount = normalized.contains('کارت') ||
+        normalized.contains('حساب') ||
+        normalized.contains('card') ||
+        normalized.contains('acc') ||
+        normalized.contains('account');
+
+    final hasSign = RegexPatterns.creditSignPattern.hasMatch(normalized) ||
+        RegexPatterns.debitSignPattern.hasMatch(normalized);
+
+    if ((isCredit || isDebit) && (hasCurrency || hasCardOrAccount || hasSign)) {
       return SmsClassification.bank_transaction;
     }
 
@@ -151,17 +181,68 @@ abstract class BaseBankParser implements BankParser {
 
   @override
   SmsTransactionType parseTransactionType(String rawText) {
-    final normalized = RegexPatterns.normalizeNumerals(rawText).trim();
+    final normalized = RegexPatterns.normalizeNumerals(rawText).toLowerCase().trim();
+
+    // 1. Explicit Credit Sign-based detection (most precise for modern formatted credit SMS transactions)
+    final hasCreditSign = RegexPatterns.creditSignPattern.hasMatch(normalized);
+    if (hasCreditSign) {
+      return SmsTransactionType.credit;
+    }
+
+    // 2. Explicit multi-word credit/debit keywords
+    final isExplicitCredit = normalized.contains('انتقال از') ||
+        normalized.contains('انتقال وجه دریافتی') ||
+        normalized.contains('برگشت وجه') ||
+        normalized.contains('سود حساب') ||
+        normalized.contains('سود سپرده') ||
+        normalized.contains('واریز حقوق') ||
+        normalized.contains('واریز شناسه‌دار') ||
+        normalized.contains('افزایش موجودی') ||
+        normalized.contains('دریافت وجه') ||
+        normalized.contains('incoming transfer') ||
+        normalized.contains('credited') ||
+        normalized.contains('received') ||
+        normalized.contains('refund') ||
+        normalized.contains('deposit');
+
+    final isExplicitDebit = normalized.contains('انتقال به') ||
+        normalized.contains('خرید از') ||
+        normalized.contains('پذیرنده');
+
+    if (isExplicitCredit && !isExplicitDebit) {
+      return SmsTransactionType.credit;
+    } else if (isExplicitDebit && !isExplicitCredit) {
+      return SmsTransactionType.debit;
+    }
+
+    // 3. Explicit Debit Sign-based detection (checked after credit keywords to avoid hyphen-punctuation false positives)
+    final hasDebitSign = RegexPatterns.debitSignPattern.hasMatch(normalized);
+    if (hasDebitSign) {
+      return SmsTransactionType.debit;
+    }
+
+    // 4. Fallback to standard credit/debit verbs with context adjustments
     final isCredit = RegexPatterns.creditVerbs.hasMatch(normalized);
-    final isDebit = RegexPatterns.debitVerbs.hasMatch(normalized);
+    var isDebit = RegexPatterns.debitVerbs.hasMatch(normalized);
+
+    // If "انتقال از" is present but "انتقال به" or "خرید" is not, do not treat "انتقال" as debit verb
+    if (normalized.contains('انتقال از') &&
+        !normalized.contains('انتقال به') &&
+        !normalized.contains('خرید')) {
+      isDebit = false;
+    }
 
     if (isCredit && !isDebit) {
       return SmsTransactionType.credit;
     } else if (isDebit && !isCredit) {
       return SmsTransactionType.debit;
     } else if (isCredit && isDebit) {
+      if (normalized.contains('انتقال از')) {
+        return SmsTransactionType.credit;
+      }
       return SmsTransactionType.debit; // safe fallback
     }
+
     return SmsTransactionType.unknown;
   }
 
