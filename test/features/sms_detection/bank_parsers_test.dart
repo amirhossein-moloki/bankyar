@@ -4,7 +4,6 @@ import 'package:bankyar/core/sms_detection/parser_registry.dart';
 import 'package:bankyar/core/sms_detection/false_positive_protection.dart';
 import 'package:bankyar/features/sms_detection/data/parser/sms_pipeline_engine.dart';
 import 'package:bankyar/features/sms_detection/domain/entities/bank_message_entity.dart';
-import 'package:bankyar/features/sms_detection/domain/entities/parsed_transaction.dart';
 
 void main() {
   group('32 Bank Parsers Positive Unit Tests', () {

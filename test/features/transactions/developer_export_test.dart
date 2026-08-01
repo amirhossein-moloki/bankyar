@@ -195,7 +195,7 @@ void main() {
       // Verify pretty printed spacing
       expect(jsonStr, contains('  "export_version": 1,'));
 
-      final Map<String, dynamic> decoded = jsonDecode(jsonStr);
+      final Map<String, dynamic> decoded = jsonDecode(jsonStr) as Map<String, dynamic>;
       expect(decoded['export_version'], 1);
       expect(decoded['app_version'], '1.0.0');
       expect(decoded['device_android_version'], '13');
