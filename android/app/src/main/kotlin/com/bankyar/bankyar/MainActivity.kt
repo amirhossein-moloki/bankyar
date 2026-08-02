@@ -25,14 +25,21 @@ import android.provider.DocumentsContract
 import android.net.Uri
 import java.io.OutputStream
 import java.io.IOException
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
+import androidx.core.app.NotificationCompat
+import android.util.Log
 
 class MainActivity : FlutterActivity() {
     private val PLATFORM_CHANNEL = "com.bankyar.app/platform"
     private val SMS_EVENT_CHANNEL = "com.bankyar.app/sms_events"
+    private val TRANSACTION_CHANNEL_ID = "bankyar_transaction_channel"
     private var pendingResult: MethodChannel.Result? = null
     private var pendingFileName: String? = null
     private var pendingContent: String? = null
     private val REQUEST_CODE_PICK_DIRECTORY = 1003
+    private var pendingNotificationClick: Map<String, String>? = null
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -86,12 +93,117 @@ class MainActivity : FlutterActivity() {
         }
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        createTransactionNotificationChannel()
+        intent?.let { handleNotificationIntent(it) }
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        handleNotificationIntent(intent)
+    }
+
+    private fun createTransactionNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val name = "تراکنش‌های بانک‌یار"
+            val descriptionText = "اعلان تراکنش‌های بانکی شناسایی شده"
+            val importance = NotificationManager.IMPORTANCE_HIGH
+            val channel = NotificationChannel(TRANSACTION_CHANNEL_ID, name, importance).apply {
+                description = descriptionText
+                enableVibration(true)
+            }
+            val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
+        }
+    }
+
+    private fun handleNotificationIntent(intent: Intent) {
+        val txId = intent.getStringExtra("transactionId") ?: return
+        val editNote = intent.getStringExtra("editNote") ?: "false"
+
+        val clickData = mapOf(
+            "transactionId" to txId,
+            "editNote" to editNote
+        )
+
+        pendingNotificationClick = clickData
+
+        flutterEngine?.dartExecutor?.binaryMessenger?.let { messenger ->
+            MethodChannel(messenger, PLATFORM_CHANNEL).invokeMethod("onNotificationClick", clickData)
+        }
+    }
+
+    private fun showLocalNotification(id: String, title: String, body: String, transactionId: String) {
+        val intent = Intent(this, MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP
+            putExtra("transactionId", transactionId)
+            putExtra("editNote", "false")
+        }
+
+        val pendingIntentFlags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        } else {
+            PendingIntent.FLAG_UPDATE_CURRENT
+        }
+
+        val contentPendingIntent = PendingIntent.getActivity(
+            this,
+            transactionId.hashCode(),
+            intent,
+            pendingIntentFlags
+        )
+
+        val addNoteIntent = Intent(this, MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP
+            putExtra("transactionId", transactionId)
+            putExtra("editNote", "true")
+        }
+
+        val addNotePendingIntent = PendingIntent.getActivity(
+            this,
+            transactionId.hashCode() + 1,
+            addNoteIntent,
+            pendingIntentFlags
+        )
+
+        val builder = NotificationCompat.Builder(this, TRANSACTION_CHANNEL_ID)
+            .setSmallIcon(android.R.drawable.ic_dialog_info)
+            .setContentTitle(title)
+            .setContentText(body)
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setContentIntent(contentPendingIntent)
+            .setAutoCancel(true)
+            .addAction(
+                android.R.drawable.ic_menu_edit,
+                "افزودن یادداشت",
+                addNotePendingIntent
+            )
+
+        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.notify(transactionId.hashCode(), builder.build())
+    }
+
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
 
         // Set up MethodChannel for core platform integrations
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, PLATFORM_CHANNEL).setMethodCallHandler { call, result ->
             when (call.method) {
+                "getPendingNotificationClick" -> {
+                    val click = pendingNotificationClick
+                    pendingNotificationClick = null
+                    result.success(click)
+                }
+                "showLocalNotification" -> {
+                    val id = call.argument<String>("id") ?: ""
+                    val title = call.argument<String>("title") ?: ""
+                    val body = call.argument<String>("body") ?: ""
+                    val transactionId = call.argument<String>("transactionId") ?: ""
+                    showLocalNotification(id, title, body, transactionId)
+                    result.success(true)
+                }
                 "getDeviceInfo" -> {
                     val info = mapOf(
                         "manufacturer" to Build.MANUFACTURER,

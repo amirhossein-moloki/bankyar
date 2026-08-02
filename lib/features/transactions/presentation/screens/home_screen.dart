@@ -50,11 +50,45 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   void initState() {
     super.initState();
     _checkOnboarding();
+    _setupNotificationHandling();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
         ref.invalidate(developerModeEnabledProvider);
       }
     });
+  }
+
+  void _setupNotificationHandling() {
+    const platform = MethodChannel('com.bankyar.app/platform');
+
+    // Handle cold-start intent
+    platform.invokeMethod<Map<dynamic, dynamic>>('getPendingNotificationClick').then((clickData) {
+      if (clickData != null && mounted) {
+        _handleNotificationRouting(clickData);
+      }
+    });
+
+    // Handle warm-start intent
+    platform.setMethodCallHandler((call) async {
+      if (call.method == 'onNotificationClick') {
+        final clickData = call.arguments as Map<dynamic, dynamic>?;
+        if (clickData != null && mounted) {
+          _handleNotificationRouting(clickData);
+        }
+      }
+    });
+  }
+
+  void _handleNotificationRouting(Map<dynamic, dynamic> clickData) {
+    final transactionId = clickData['transactionId'] as String?;
+    final editNote = clickData['editNote'] == 'true' || clickData['editNote'] == true;
+    if (transactionId != null && transactionId.isNotEmpty) {
+      if (editNote) {
+        context.push('/transactions/$transactionId?editNote=true');
+      } else {
+        context.push('/transactions/$transactionId');
+      }
+    }
   }
 
   Future<void> _handleJsonExport(BuildContext context) async {
