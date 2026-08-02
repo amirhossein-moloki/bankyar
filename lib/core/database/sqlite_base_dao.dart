@@ -41,6 +41,9 @@ abstract class SqliteBaseDao<T> implements BaseDao<T> {
   static final StreamController<String> _tableMutationController =
       StreamController<String>.broadcast();
 
+  /// Stream broadcasting database table names when they are mutated.
+  static Stream<String> get tableMutations => _tableMutationController.stream;
+
   void _registerNotificationStream() {
     _tableMutationController.stream.listen((mutatedTable) {
       if (mutatedTable == tableName) {

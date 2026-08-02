@@ -115,7 +115,11 @@ abstract class AppRouter {
               body: Center(child: Text('شناسه تراکنش نامعتبر است.')),
             );
           }
-          return TransactionDetailsScreen(transactionId: id);
+          final editNote = state.uri.queryParameters['editNote'] == 'true';
+          return TransactionDetailsScreen(
+            transactionId: id,
+            editNote: editNote,
+          );
         },
       ),
     ],

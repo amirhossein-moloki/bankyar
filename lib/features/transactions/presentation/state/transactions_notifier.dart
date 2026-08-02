@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../core/database/sqlite_base_dao.dart';
 import '../../../../core/di/dependency_injection.dart';
 import '../../../../core/logging/logger.dart';
 import '../../../../core/platform/sms_history_importer.dart';
@@ -50,11 +51,37 @@ class TransactionsNotifier extends BaseUiNotifier<TransactionsState> {
     required SmsHistoryImporter importer,
   }) : _repository = repository,
        _logger = logger,
-       _importer = importer;
+       _importer = importer {
+    _subscribeToTableMutations();
+  }
 
   final TransactionRepository _repository;
   final AppLogger _logger;
   final SmsHistoryImporter _importer;
+  StreamSubscription<String>? _mutationSubscription;
+
+  void _subscribeToTableMutations() {
+    _mutationSubscription = SqliteBaseDao.tableMutations.listen((mutatedTable) {
+      if (mutatedTable == 'transactions' ||
+          mutatedTable == 'notes' ||
+          mutatedTable == 'categories' ||
+          mutatedTable == 'tags') {
+        _logger.log(
+          LogLevel.debug,
+          LogCategories.database,
+          'BY_TX_NOTIFIER_AUTO_REFRESH',
+          'Table $mutatedTable mutated. Reloading transactions reactively.',
+        );
+        loadInitial();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _mutationSubscription?.cancel();
+    super.dispose();
+  }
 
   /// Resets and loads the first page of transactions.
   Future<void> loadInitial({bool isRefreshing = false}) async {

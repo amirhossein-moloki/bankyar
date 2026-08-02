@@ -6,6 +6,7 @@ import 'core/utils/result.dart';
 import 'core/utils/result_extensions.dart';
 import 'core/navigation/router.dart';
 import 'core/theme/app_theme.dart';
+import 'features/sms_detection/presentation/state/sms_detection_providers.dart';
 import 'features/secure_auth/domain/entities/session_status.dart';
 import 'features/secure_auth/presentation/screens/unlock_screen.dart';
 import 'features/secure_auth/presentation/state/app_lock_coordinator.dart';
@@ -18,6 +19,9 @@ class BankYarApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // Globally instantiates and triggers real-time SMS pipeline interception
+    ref.watch(smsPipelineCoordinatorProvider);
+
     return MaterialApp.router(
       onGenerateTitle: (context) => AppLocalizations.of(context).appTitle,
       routerConfig: AppRouter.router,

@@ -19,20 +19,102 @@ import '../widgets/details_summary_card.dart';
 import '../widgets/edit_transaction_bottom_sheet.dart';
 
 /// Screen path for GoRouter.
-class TransactionDetailsScreen extends ConsumerWidget {
+class TransactionDetailsScreen extends ConsumerStatefulWidget {
   /// Constructor.
-  const TransactionDetailsScreen({required this.transactionId, super.key});
+  const TransactionDetailsScreen({
+    required this.transactionId,
+    this.editNote = false,
+    super.key,
+  });
 
   /// Transaction unique ID.
   final String transactionId;
 
+  /// Whether to auto-prompt note editor on load.
+  final bool editNote;
+
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(transactionDetailsViewModelProvider(transactionId));
+  ConsumerState<TransactionDetailsScreen> createState() =>
+      _TransactionDetailsScreenState();
+}
+
+class _TransactionDetailsScreenState
+    extends ConsumerState<TransactionDetailsScreen> {
+  bool _noteDialogShown = false;
+
+  void _showEditNoteDialog(
+    BuildContext context,
+    WidgetRef ref,
+    TransactionDetails details,
+  ) {
+    final currentNote = details.note ?? '';
+    final controller = TextEditingController(text: currentNote);
+    final notifier = ref.read(
+      transactionDetailsViewModelProvider(widget.transactionId).notifier,
+    );
+
+    showDialog<void>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('ویرایش یادداشت', textDirection: TextDirection.rtl),
+        content: TextFormField(
+          controller: controller,
+          maxLines: 3,
+          textDirection: TextDirection.rtl,
+          decoration: const InputDecoration(
+            hintText: 'یادداشت خود را اینجا بنویسید...',
+            border: OutlineInputBorder(),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('انصراف'),
+          ),
+          TextButton(
+            onPressed: () {
+              final newText = controller.text.trim();
+              Navigator.pop(context);
+              if (newText.isEmpty && currentNote.isNotEmpty) {
+                showDialog<void>(
+                  context: context,
+                  builder: (context) => DeleteConfirmationDialog(
+                    onConfirm: () {
+                      ref.read(undoDeleteProvider.notifier).deleteNote(
+                        context,
+                        details.transaction.id,
+                        currentNote,
+                        () {
+                          ref.invalidate(
+                            transactionDetailsViewModelProvider(
+                              details.transaction.id,
+                            ),
+                          );
+                        },
+                      );
+                    },
+                  ),
+                );
+              } else {
+                notifier.saveNote(controller.text);
+              }
+            },
+            child: const Text('ذخیره'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final state = ref.watch(
+      transactionDetailsViewModelProvider(widget.transactionId),
+    );
     final theme = Theme.of(context);
     final spacing = theme.extension<SpacingExtension>()!;
     final notifier = ref.read(
-      transactionDetailsViewModelProvider(transactionId).notifier,
+      transactionDetailsViewModelProvider(widget.transactionId).notifier,
     );
 
     return Scaffold(
@@ -64,41 +146,53 @@ class TransactionDetailsScreen extends ConsumerWidget {
           loading: (_) => const Center(child: CircularProgressIndicator()),
           error: (f) =>
               ErrorState(message: f.message, onRetry: notifier.loadDetails),
-          success: (data) => Column(
-            children: [
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      SizedBox(height: spacing.s),
-                      DetailsSummaryCard(
-                        amount: data.transaction.amount,
-                        transactionType: data.transaction.transactionType,
-                        cardIdentifier: data.transaction.cardIdentifier,
-                        confidenceScore: data.transaction.confidenceScore,
-                      ),
-                      SizedBox(height: spacing.s),
-                      DetailsMetadataGrid(transaction: data.transaction),
-                      const Divider(height: 32),
-                      DetailsNotesTagsSection(
-                        details: data,
-                        onSaveNote: notifier.saveNote,
-                        onAssignCategory: notifier.assignCategory,
-                        onAssignTags: notifier.assignTags,
-                      ),
-                      const DetailsSecurityShield(),
-                    ],
+          success: (data) {
+            // Auto prompt note dialog on load if editNote parameter is active
+            if (widget.editNote && !_noteDialogShown) {
+              _noteDialogShown = true;
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                if (mounted) {
+                  _showEditNoteDialog(context, ref, data);
+                }
+              });
+            }
+
+            return Column(
+              children: [
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        SizedBox(height: spacing.s),
+                        DetailsSummaryCard(
+                          amount: data.transaction.amount,
+                          transactionType: data.transaction.transactionType,
+                          cardIdentifier: data.transaction.cardIdentifier,
+                          confidenceScore: data.transaction.confidenceScore,
+                        ),
+                        SizedBox(height: spacing.s),
+                        DetailsMetadataGrid(transaction: data.transaction),
+                        const Divider(height: 32),
+                        DetailsNotesTagsSection(
+                          details: data,
+                          onSaveNote: notifier.saveNote,
+                          onAssignCategory: notifier.assignCategory,
+                          onAssignTags: notifier.assignTags,
+                        ),
+                        const DetailsSecurityShield(),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              DetailsActionFooter(
-                isVerified: data.transaction.confidenceScore >= 1.0,
-                onVerify: notifier.verifyTransaction,
-                onDelete: () =>
-                    _showDeleteConfirmation(context, ref, data.transaction),
-              ),
-            ],
-          ),
+                DetailsActionFooter(
+                  isVerified: data.transaction.confidenceScore >= 1.0,
+                  onVerify: notifier.verifyTransaction,
+                  onDelete: () =>
+                      _showDeleteConfirmation(context, ref, data.transaction),
+                ),
+              ],
+            );
+          },
         ),
       ),
     );
