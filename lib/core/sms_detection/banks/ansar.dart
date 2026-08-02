@@ -11,13 +11,13 @@ class AnsarParser extends BaseBankParser {
 
   @override
   List<String> get senderIds => const [
-        'Ansar',
-        'ansar',
-        'AnsarBank',
-        'ansarbank',
-        'B.Ansar',
-        'b.ansar'
-      ];
+    'Ansar',
+    'ansar',
+    'AnsarBank',
+    'ansarbank',
+    'B.Ansar',
+    'b.ansar',
+  ];
 
   @override
   List<String> get keywords => const ['انصار', 'بانک انصار', 'ansar'];

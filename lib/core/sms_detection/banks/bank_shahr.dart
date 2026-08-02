@@ -11,15 +11,15 @@ class ShahrParser extends BaseBankParser {
 
   @override
   List<String> get senderIds => const [
-        'Shahr',
-        'B.Shahr',
-        'B-Shahr',
-        'shahr',
-        'b.shahr',
-        'b-shahr',
-        'ShahrBank',
-        'shahrbank'
-      ];
+    'Shahr',
+    'B.Shahr',
+    'B-Shahr',
+    'shahr',
+    'b.shahr',
+    'b-shahr',
+    'ShahrBank',
+    'shahrbank',
+  ];
 
   @override
   List<String> get keywords => const ['شهر', 'بانک شهر', 'shahr'];

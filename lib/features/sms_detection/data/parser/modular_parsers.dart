@@ -172,7 +172,10 @@ class MerchantParser {
 
     // Stage 1: Extract description block candidate from various verbs/indicators
     final merchantIndicators = [
-      RegExp(r'(?:خرید\s+از|فروشگاه|پذیرنده|انتقال\s+به|بابت|at|to)\s*[:\-]?\s*([^:\-\n\r]+)', caseSensitive: false),
+      RegExp(
+        r'(?:خرید\s+از|فروشگاه|پذیرنده|انتقال\s+به|بابت|at|to)\s*[:\-]?\s*([^:\-\n\r]+)',
+        caseSensitive: false,
+      ),
     ];
 
     String descriptionBlock = '';
@@ -205,18 +208,39 @@ class MerchantParser {
     cleaned = cleaned.replaceAll(RegExp(r'\b[0-9۰-۹]{5,}\b'), '');
 
     // Stage 3: Remove IBAN references (e.g. Farsi "شبا" + digits or standard IR...)
-    cleaned = cleaned.replaceAll(RegExp(r'\bIR[0-9]{22,24}\b', caseSensitive: false), '');
-    cleaned = cleaned.replaceAll(RegExp(r'شبا\s*[0-9۰-۹]+', caseSensitive: false), '');
+    cleaned = cleaned.replaceAll(
+      RegExp(r'\bIR[0-9]{22,24}\b', caseSensitive: false),
+      '',
+    );
+    cleaned = cleaned.replaceAll(
+      RegExp(r'شبا\s*[0-9۰-۹]+', caseSensitive: false),
+      '',
+    );
 
     // Stage 4: Remove Card Numbers (e.g. 16-digit sequences, or masks like ****, xxxx)
     cleaned = cleaned.replaceAll(RegExp(r'\b[0-9۰-۹]{16}\b'), '');
     cleaned = cleaned.replaceAll(RegExp(r'(?:\*+|[xX]+)[0-9۰-۹]{4}'), '');
-    cleaned = cleaned.replaceAll(RegExp(r'\b[0-9۰-۹]{4,6}\*+[0-9۰-۹]{4,6}\b'), '');
+    cleaned = cleaned.replaceAll(
+      RegExp(r'\b[0-9۰-۹]{4,6}\*+[0-9۰-۹]{4,6}\b'),
+      '',
+    );
 
     // Stage 5: Remove Reference Numbers / Dates / Times (e.g. hours like 14:35 or dates 1402/12/29)
-    cleaned = cleaned.replaceAll(RegExp(r'[0-9۰-۹]{2,4}[/\-][0-9۰-۹]{1,2}[/\-][0-9۰-۹]{1,2}'), '');
-    cleaned = cleaned.replaceAll(RegExp(r'\b[0-9۰-۹]{2}:[0-9۰-۹]{2}(?::[0-9۰-۹]{2})?\b'), '');
-    cleaned = cleaned.replaceAll(RegExp(r'(?:پیگیری|ارجاع|مرجع|کد)\s*[:\-]?\s*[0-9۰-۹]+', caseSensitive: false), '');
+    cleaned = cleaned.replaceAll(
+      RegExp(r'[0-9۰-۹]{2,4}[/\-][0-9۰-۹]{1,2}[/\-][0-9۰-۹]{1,2}'),
+      '',
+    );
+    cleaned = cleaned.replaceAll(
+      RegExp(r'\b[0-9۰-۹]{2}:[0-9۰-۹]{2}(?::[0-9۰-۹]{2})?\b'),
+      '',
+    );
+    cleaned = cleaned.replaceAll(
+      RegExp(
+        r'(?:پیگیری|ارجاع|مرجع|کد)\s*[:\-]?\s*[0-9۰-۹]+',
+        caseSensitive: false,
+      ),
+      '',
+    );
 
     // Stage 6: Normalize whitespace (replace multiple spaces with a single space)
     cleaned = cleaned.replaceAll(RegExp(r'\s+'), ' ').trim();

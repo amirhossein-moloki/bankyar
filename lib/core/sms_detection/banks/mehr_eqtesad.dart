@@ -11,14 +11,18 @@ class MehrEqtesadParser extends BaseBankParser {
 
   @override
   List<String> get senderIds => const [
-        'MehrEqtesad',
-        'mehreqtesad',
-        'Mehr_Eqtesad',
-        'mehr_eqtesad',
-        'B.MehrEqtesad',
-        'b.mehreqtesad'
-      ];
+    'MehrEqtesad',
+    'mehreqtesad',
+    'Mehr_Eqtesad',
+    'mehr_eqtesad',
+    'B.MehrEqtesad',
+    'b.mehreqtesad',
+  ];
 
   @override
-  List<String> get keywords => const ['مهر اقتصاد', 'بانک مهر اقتصاد', 'mehreqtesad'];
+  List<String> get keywords => const [
+    'مهر اقتصاد',
+    'بانک مهر اقتصاد',
+    'mehreqtesad',
+  ];
 }

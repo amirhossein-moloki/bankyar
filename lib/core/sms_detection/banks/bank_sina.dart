@@ -11,15 +11,15 @@ class SinaParser extends BaseBankParser {
 
   @override
   List<String> get senderIds => const [
-        'Sina',
-        'B.Sina',
-        'B-Sina',
-        'sina',
-        'b.sina',
-        'b-sina',
-        'SinaBank',
-        'sinabank'
-      ];
+    'Sina',
+    'B.Sina',
+    'B-Sina',
+    'sina',
+    'b.sina',
+    'b-sina',
+    'SinaBank',
+    'sinabank',
+  ];
 
   @override
   List<String> get keywords => const ['سینا', 'بانک سینا', 'sina'];

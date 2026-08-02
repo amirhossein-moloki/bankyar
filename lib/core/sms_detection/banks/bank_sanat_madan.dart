@@ -11,15 +11,15 @@ class SanatMadanParser extends BaseBankParser {
 
   @override
   List<String> get senderIds => const [
-        'SanatMadan',
-        'sanatmadan',
-        'Sanat_Madan',
-        'sanat_madan',
-        'BIM',
-        'bim',
-        'B.SanatMadan',
-        'b.sanatmadan'
-      ];
+    'SanatMadan',
+    'sanatmadan',
+    'Sanat_Madan',
+    'sanat_madan',
+    'BIM',
+    'bim',
+    'B.SanatMadan',
+    'b.sanatmadan',
+  ];
 
   @override
   List<String> get keywords => const ['صنعت و معدن', 'بانک صنعت و معدن', 'bim'];

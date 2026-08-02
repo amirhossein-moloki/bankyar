@@ -11,13 +11,13 @@ class KarafarinParser extends BaseBankParser {
 
   @override
   List<String> get senderIds => const [
-        'Karafarin',
-        'karafarin',
-        'B.Karafarin',
-        'b.karafarin',
-        'KarafarinBank',
-        'karafarinbank'
-      ];
+    'Karafarin',
+    'karafarin',
+    'B.Karafarin',
+    'b.karafarin',
+    'KarafarinBank',
+    'karafarinbank',
+  ];
 
   @override
   List<String> get keywords => const ['کارآفرین', 'بانک کارآفرین', 'karafarin'];

@@ -11,15 +11,15 @@ class KeshavarziParser extends BaseBankParser {
 
   @override
   List<String> get senderIds => const [
-        'Keshavarzi',
-        'B.Keshavarzi',
-        'B-Keshavarzi',
-        'keshavarzi',
-        'b.keshavarzi',
-        'b-keshavarzi',
-        'KeshavarziBank',
-        'keshavarzibank'
-      ];
+    'Keshavarzi',
+    'B.Keshavarzi',
+    'B-Keshavarzi',
+    'keshavarzi',
+    'b.keshavarzi',
+    'b-keshavarzi',
+    'KeshavarziBank',
+    'keshavarzibank',
+  ];
 
   @override
   List<String> get keywords => const ['کشاورزی', 'بانک کشاورزی', 'keshavarzi'];

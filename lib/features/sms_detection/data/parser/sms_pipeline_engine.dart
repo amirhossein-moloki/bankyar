@@ -118,7 +118,9 @@ class SmsPipelineResult {
       'Extracted Amount': context?.extractedAmount ?? 0.0,
       'Extracted Balance': context?.extractedBalance ?? 0.0,
       'Merchant': context?.extractedMerchant ?? 'none',
-      'Parser Used': context?.matchedTemplate != null ? 'template' : 'heuristic',
+      'Parser Used': context?.matchedTemplate != null
+          ? 'template'
+          : 'heuristic',
       'Validation Result': status == IngestionStatus.success ? 'pass' : 'fail',
       'Create Transaction': transaction != null,
       'Failure Reason': reason,
@@ -181,7 +183,10 @@ class SmsPipelineEngine {
     );
 
     // Stage 2: Sender Normalization
-    context.normalizedSender = senderId.trim().toLowerCase().replaceAll(RegExp(r'[\s\.\-_]'), '');
+    context.normalizedSender = senderId.trim().toLowerCase().replaceAll(
+      RegExp(r'[\s\.\-_]'),
+      '',
+    );
 
     // Check false positive early to eliminate non-bank platforms
     final isFP = FalsePositiveProtection.isFalsePositive(senderId, rawText);
@@ -208,7 +213,9 @@ class SmsPipelineEngine {
       );
     }
 
-    if (isFP && (context.matchedBank == null || !_isVerifiedSender(context.matchedBank!, senderId))) {
+    if (isFP &&
+        (context.matchedBank == null ||
+            !_isVerifiedSender(context.matchedBank!, senderId))) {
       final msg = BankMessageEntity(
         id: messageId,
         rawText: rawText,
@@ -263,7 +270,9 @@ class SmsPipelineEngine {
       senderId: senderId,
       receivedAt: receivedAt,
       deduplicationHash: dedupeHash,
-      ingestionStatus: context.validationResult ? IngestionStatus.success : IngestionStatus.failure,
+      ingestionStatus: context.validationResult
+          ? IngestionStatus.success
+          : IngestionStatus.failure,
     );
 
     if (!context.validationResult) {
@@ -287,11 +296,13 @@ class SmsPipelineEngine {
           ? 'Filtered: OTP/dynamic password message ignored.'
           : 'Filtered: Message classification is ${context.classification}. Only financial_transaction creates ledger entries.';
 
-      if (context.classification.isFinancialTransaction && (context.extractedAmount == null || context.extractedAmount! <= 0)) {
+      if (context.classification.isFinancialTransaction &&
+          (context.extractedAmount == null || context.extractedAmount! <= 0)) {
         return SmsPipelineResult(
           message: msg.copyWith(ingestionStatus: IngestionStatus.failure),
           status: IngestionStatus.failure,
-          reason: 'Parsing failed: Transaction matched but unable to parse positive amount.',
+          reason:
+              'Parsing failed: Transaction matched but unable to parse positive amount.',
           classification: context.classification,
           context: context,
         );
@@ -301,7 +312,8 @@ class SmsPipelineEngine {
         return SmsPipelineResult(
           message: msg.copyWith(ingestionStatus: IngestionStatus.ignored),
           status: IngestionStatus.ignored,
-          reason: 'Rejected: Deterministic confidence score is too low (${context.confidenceScore.toInt()} < 60).',
+          reason:
+              'Rejected: Deterministic confidence score is too low (${context.confidenceScore.toInt()} < 60).',
           classification: context.classification,
           context: context,
         );
@@ -330,7 +342,9 @@ class SmsPipelineEngine {
       currency: currency,
       transactionType: context.direction,
       rawMerchant: context.extractedMerchant,
-      normalizedMerchant: context.extractedMerchant.isNotEmpty ? context.extractedMerchant : context.matchedBank!.bankName,
+      normalizedMerchant: context.extractedMerchant.isNotEmpty
+          ? context.extractedMerchant
+          : context.matchedBank!.bankName,
       cardIdentifier: context.extractedCard,
       timestamp: DateTimeParser.parse(rawText, receivedAt),
       sourceSmsId: messageId,
@@ -347,16 +361,23 @@ class SmsPipelineEngine {
       message: msg,
       transaction: tx,
       status: IngestionStatus.success,
-      reason: 'SMS parsed successfully. Classification: ${context.classification}. Score: ${context.confidenceScore.toInt()}.',
+      reason:
+          'SMS parsed successfully. Classification: ${context.classification}. Score: ${context.confidenceScore.toInt()}.',
       classification: context.classification,
       context: context,
     );
   }
 
   bool _isVerifiedSender(BankParser parser, String senderId) {
-    final incomingNormalized = senderId.trim().toLowerCase().replaceAll(RegExp(r'[\s\.\-_]'), '');
-    return parser.senderIds.any((id) =>
-        id.trim().toLowerCase().replaceAll(RegExp(r'[\s\.\-_]'), '') == incomingNormalized);
+    final incomingNormalized = senderId.trim().toLowerCase().replaceAll(
+      RegExp(r'[\s\.\-_]'),
+      '',
+    );
+    return parser.senderIds.any(
+      (id) =>
+          id.trim().toLowerCase().replaceAll(RegExp(r'[\s\.\-_]'), '') ==
+          incomingNormalized,
+    );
   }
 
   /// Stage 3: Bank Detection with comprehensive confidence-scoring factors (PART 3).
@@ -386,49 +407,73 @@ class SmsPipelineEngine {
 
       // 3. Bank-specific Keywords match inside text body (+20 points)
       final textLower = rawText.toLowerCase();
-      final hasBankKeyword = parser.keywords.any((kw) => textLower.contains(kw.toLowerCase()));
+      final hasBankKeyword = parser.keywords.any(
+        (kw) => textLower.contains(kw.toLowerCase()),
+      );
       if (hasBankKeyword) {
         score += 20.0;
       }
 
       // 4. Financial Keywords: Credit/Debit verbs (+10 points)
-      final hasFinKeywords = RegexPatterns.creditVerbs.hasMatch(textLower) || RegexPatterns.debitVerbs.hasMatch(textLower);
+      final hasFinKeywords =
+          RegexPatterns.creditVerbs.hasMatch(textLower) ||
+          RegexPatterns.debitVerbs.hasMatch(textLower);
       if (hasFinKeywords) {
         score += 10.0;
       }
 
       // 5. Message Structure: Multi-line or Key-Value delimiters (+5 points)
-      final hasStructure = rawText.contains('\n') || rawText.contains(':') || rawText.contains('：');
+      final hasStructure =
+          rawText.contains('\n') ||
+          rawText.contains(':') ||
+          rawText.contains('：');
       if (hasStructure) {
         score += 5.0;
       }
 
       // 6. Card or Account Numbers present (+10 points)
-      final hasCard = RegexPatterns.cardPattern.hasMatch(rawText) || rawText.contains('کارت') || rawText.contains('حساب');
+      final hasCard =
+          RegexPatterns.cardPattern.hasMatch(rawText) ||
+          rawText.contains('کارت') ||
+          rawText.contains('حساب');
       if (hasCard) {
         score += 10.0;
       }
 
       // 7. IBAN presence like "شبا" or standard IR check (+5 points)
-      final hasIban = rawText.contains('شبا') || RegExp(r'\bIR\d{24}\b', caseSensitive: false).hasMatch(textNormalized);
+      final hasIban =
+          rawText.contains('شبا') ||
+          RegExp(
+            r'\bIR\d{24}\b',
+            caseSensitive: false,
+          ).hasMatch(textNormalized);
       if (hasIban) {
         score += 5.0;
       }
 
       // 8. Balance indicators present (+5 points)
-      final hasBalance = RegexPatterns.balancePattern.hasMatch(rawText) || rawText.contains('مانده') || rawText.contains('موجودی');
+      final hasBalance =
+          RegexPatterns.balancePattern.hasMatch(rawText) ||
+          rawText.contains('مانده') ||
+          rawText.contains('موجودی');
       if (hasBalance) {
         score += 5.0;
       }
 
       // 9. Tracking/Reference Numbers present (+5 points)
-      final hasRef = RegexPatterns.referencePattern.hasMatch(rawText) || rawText.contains('پیگیری') || rawText.contains('کدرهگیری');
+      final hasRef =
+          RegexPatterns.referencePattern.hasMatch(rawText) ||
+          rawText.contains('پیگیری') ||
+          rawText.contains('کدرهگیری');
       if (hasRef) {
         score += 5.0;
       }
 
       // 10. Merchant indicator present (+5 points)
-      final hasMerchant = rawText.contains('خرید از') || rawText.contains('پذیرنده') || rawText.contains('فروشگاه');
+      final hasMerchant =
+          rawText.contains('خرید از') ||
+          rawText.contains('پذیرنده') ||
+          rawText.contains('فروشگاه');
       if (hasMerchant) {
         score += 5.0;
       }
@@ -440,7 +485,9 @@ class SmsPipelineEngine {
       }
 
       // 12. Currency indicators present (+5 points)
-      final hasCurrency = RegexPatterns.rialPattern.hasMatch(rawText) || RegexPatterns.tomanPattern.hasMatch(rawText);
+      final hasCurrency =
+          RegexPatterns.rialPattern.hasMatch(rawText) ||
+          RegexPatterns.tomanPattern.hasMatch(rawText);
       if (hasCurrency) {
         score += 5.0;
       }
@@ -451,7 +498,8 @@ class SmsPipelineEngine {
       if (finalScore > maxBankScore) {
         maxBankScore = finalScore;
         bestBank = parser;
-        bestReason = 'Detected ${parser.bankName} via score evaluation ($finalScore points).';
+        bestReason =
+            'Detected ${parser.bankName} via score evaluation ($finalScore points).';
       }
     }
 
@@ -544,7 +592,9 @@ class SmsPipelineEngine {
 
   double? _parseAmountString(String? text) {
     if (text == null) return null;
-    final cleaned = RegexPatterns.normalizeNumerals(text).replaceAll(',', '').replaceAll(' ', '');
+    final cleaned = RegexPatterns.normalizeNumerals(
+      text,
+    ).replaceAll(',', '').replaceAll(' ', '');
     return double.tryParse(cleaned);
   }
 
@@ -585,7 +635,15 @@ class SmsPipelineEngine {
 
     // Rule 4: Verb-based Farsi/English indicator matching (Credit indicators)
     final strongCreditIndicators = [
-      'واریز', 'بستانکار', 'افزایش موجودی', 'انتقال وجه دریافتی', 'انتقال از کارت', 'برگشت وجه', 'Incoming Transfer', 'credited', 'deposit'
+      'واریز',
+      'بستانکار',
+      'افزایش موجودی',
+      'انتقال وجه دریافتی',
+      'انتقال از کارت',
+      'برگشت وجه',
+      'Incoming Transfer',
+      'credited',
+      'deposit',
     ];
     for (final indicator in strongCreditIndicators) {
       if (textNormalized.contains(indicator)) {
@@ -594,7 +652,12 @@ class SmsPipelineEngine {
     }
 
     final generalCreditIndicators = [
-      'حواله', 'پایا', 'پل', 'ساتنا', 'حقوق', 'سود'
+      'حواله',
+      'پایا',
+      'پل',
+      'ساتنا',
+      'حقوق',
+      'سود',
     ];
     for (final indicator in generalCreditIndicators) {
       if (textNormalized.contains(indicator)) {
@@ -604,7 +667,18 @@ class SmsPipelineEngine {
 
     // Rule 5: Debit indicators
     final strongDebitIndicators = [
-      'برداشت', 'خرید', 'پرداخت', 'کارت به کارت', 'قبض', 'کاهش موجودی', 'بدهکار', 'کسر', 'POS', 'ATM', 'withdrawal', 'spent'
+      'برداشت',
+      'خرید',
+      'پرداخت',
+      'کارت به کارت',
+      'قبض',
+      'کاهش موجودی',
+      'بدهکار',
+      'کسر',
+      'POS',
+      'ATM',
+      'withdrawal',
+      'spent',
     ];
     for (final indicator in strongDebitIndicators) {
       if (textNormalized.contains(indicator)) {
@@ -613,13 +687,12 @@ class SmsPipelineEngine {
     }
 
     // Special substring exclusion to avoid matching 'انتقال' when it is actually 'انتقال از...'
-    if (textNormalized.contains('انتقال') && !textNormalized.contains('انتقال از')) {
+    if (textNormalized.contains('انتقال') &&
+        !textNormalized.contains('انتقال از')) {
       debitVotes += 10;
     }
 
-    final generalDebitIndicators = [
-      'Internet Purchase', 'Mobile Banking'
-    ];
+    final generalDebitIndicators = ['Internet Purchase', 'Mobile Banking'];
     for (final indicator in generalDebitIndicators) {
       if (textNormalized.contains(indicator)) {
         debitVotes += 3;
@@ -642,13 +715,21 @@ class SmsPipelineEngine {
 
     // Recalculate Confidence points
     var score = 0.0;
-    final isVerified = context.matchedBank != null && _isVerifiedSender(context.matchedBank!, context.senderId);
+    final isVerified =
+        context.matchedBank != null &&
+        _isVerifiedSender(context.matchedBank!, context.senderId);
     if (isVerified) score += 50.0;
-    if (context.classification != SmsClassification.bank_unknown && context.classification != SmsClassification.non_bank) score += 20.0;
-    if (context.extractedAmount != null && context.extractedAmount! > 0) score += 10.0;
-    if (context.extractedCard != null && context.extractedCard!.isNotEmpty) score += 10.0;
-    if (context.extractedBalance != null && context.extractedBalance! > 0) score += 10.0;
-    if (context.extractedRef != null && context.extractedRef!.isNotEmpty) score += 5.0;
+    if (context.classification != SmsClassification.bank_unknown &&
+        context.classification != SmsClassification.non_bank)
+      score += 20.0;
+    if (context.extractedAmount != null && context.extractedAmount! > 0)
+      score += 10.0;
+    if (context.extractedCard != null && context.extractedCard!.isNotEmpty)
+      score += 10.0;
+    if (context.extractedBalance != null && context.extractedBalance! > 0)
+      score += 10.0;
+    if (context.extractedRef != null && context.extractedRef!.isNotEmpty)
+      score += 5.0;
 
     context.confidenceScore = score;
 
@@ -660,25 +741,29 @@ class SmsPipelineEngine {
 
     if (context.classification == SmsClassification.bank_otp) {
       context.validationResult = false;
-      context.failureReason = 'Early Ignored: OTP/dynamic code is not a financial transaction.';
+      context.failureReason =
+          'Early Ignored: OTP/dynamic code is not a financial transaction.';
       return;
     }
 
     if (!isFinancial) {
       context.validationResult = false;
-      context.failureReason = 'Early Ignored: Classification is ${context.classification.name}.';
+      context.failureReason =
+          'Early Ignored: Classification is ${context.classification.name}.';
       return;
     }
 
     if (context.extractedAmount == null || context.extractedAmount! <= 0) {
       context.validationResult = false;
-      context.failureReason = 'Validation failed: Extracted amount is missing or invalid.';
+      context.failureReason =
+          'Validation failed: Extracted amount is missing or invalid.';
       return;
     }
 
     if (score < 60) {
       context.validationResult = false;
-      context.failureReason = 'Validation failed: Match score ($score) is below threshold 60.';
+      context.failureReason =
+          'Validation failed: Match score ($score) is below threshold 60.';
       return;
     }
 

@@ -41,7 +41,8 @@ class UnknownQueueItem {
 class UnknownTransactionQueue {
   UnknownTransactionQueue._internal();
 
-  static final UnknownTransactionQueue instance = UnknownTransactionQueue._internal();
+  static final UnknownTransactionQueue instance =
+      UnknownTransactionQueue._internal();
 
   final List<UnknownQueueItem> _items = [];
 

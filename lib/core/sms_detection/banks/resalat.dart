@@ -11,13 +11,13 @@ class ResalatParser extends BaseBankParser {
 
   @override
   List<String> get senderIds => const [
-        'Resalat',
-        'resalat',
-        'B.Resalat',
-        'b.resalat',
-        'ResalatBank',
-        'resalatbank'
-      ];
+    'Resalat',
+    'resalat',
+    'B.Resalat',
+    'b.resalat',
+    'ResalatBank',
+    'resalatbank',
+  ];
 
   @override
   List<String> get keywords => const ['رسالت', 'بانک رسالت', 'resalat'];

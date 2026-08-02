@@ -13,7 +13,8 @@ class DeveloperExportService {
   DeveloperExportService({
     required DatabaseService databaseService,
     required ProviderRef<DeveloperExportService> ref,
-  }) : _databaseService = databaseService, _ref = ref;
+  }) : _databaseService = databaseService,
+       _ref = ref;
 
   final DatabaseService _databaseService;
   final ProviderRef<DeveloperExportService> _ref;
@@ -66,16 +67,20 @@ class DeveloperExportService {
 
       // 3. Fetch categories cache
       print('[EXPORT_SERVICE] fetching categoriesRaw');
-      final List<Map<String, dynamic>> categoriesRaw = await db.query('categories');
+      final List<Map<String, dynamic>> categoriesRaw = await db.query(
+        'categories',
+      );
       final Map<String, String> categoryNamesMap = {
-        for (final row in categoriesRaw) row['id'] as String: row['name'] as String
+        for (final row in categoriesRaw)
+          row['id'] as String: row['name'] as String,
       };
 
       // 4. Fetch accounts cache
       print('[EXPORT_SERVICE] fetching accountsRaw');
       final List<Map<String, dynamic>> accountsRaw = await db.query('accounts');
       final Map<String, String> bankNamesMap = {
-        for (final row in accountsRaw) row['id'] as String: row['name'] as String
+        for (final row in accountsRaw)
+          row['id'] as String: row['name'] as String,
       };
 
       // 5. Query and build transaction objects exactly as specified
@@ -99,7 +104,8 @@ class DeveloperExportService {
           'transaction_type': row['transaction_type'] as String,
           'merchant_name': row['raw_merchant'] as String,
           'normalized_merchant': row['normalized_merchant'] as String,
-          'bank_name': bankNamesMap[accId] ?? row['card_identifier'] ?? 'Unknown',
+          'bank_name':
+              bankNamesMap[accId] ?? row['card_identifier'] ?? 'Unknown',
           'timestamp': row['timestamp'] as int,
           'category': catId != null ? categoryNamesMap[catId] : null,
           'tags': transactionTagsMap[txId] ?? <String>[],
@@ -112,7 +118,9 @@ class DeveloperExportService {
 
       // 6. Query and build bank message objects exactly as specified
       print('[EXPORT_SERVICE] fetching smsRows');
-      final List<Map<String, dynamic>> smsRows = await db.query('bank_messages');
+      final List<Map<String, dynamic>> smsRows = await db.query(
+        'bank_messages',
+      );
       final List<Map<String, dynamic>> bankMessages = smsRows.map((row) {
         final status = row['ingestion_status'] as String;
         return {
@@ -131,7 +139,9 @@ class DeveloperExportService {
 
       // 8. Categories
       print('[EXPORT_SERVICE] fetching categories');
-      final List<Map<String, dynamic>> categories = await db.query('categories');
+      final List<Map<String, dynamic>> categories = await db.query(
+        'categories',
+      );
 
       // 9. Tags
       print('[EXPORT_SERVICE] fetching tags');
@@ -139,7 +149,9 @@ class DeveloperExportService {
 
       // 10. Notifications
       print('[EXPORT_SERVICE] fetching notifications');
-      final List<Map<String, dynamic>> notifications = await db.query('notifications');
+      final List<Map<String, dynamic>> notifications = await db.query(
+        'notifications',
+      );
 
       print('[EXPORT_SERVICE] build exportMap');
       // Construct overall JSON
@@ -157,7 +169,9 @@ class DeveloperExportService {
         'notifications': notifications,
       };
 
-      final prettyPrintedJson = const JsonEncoder.withIndent('  ').convert(exportMap);
+      final prettyPrintedJson = const JsonEncoder.withIndent(
+        '  ',
+      ).convert(exportMap);
       print('[EXPORT_SERVICE] generateJsonExport SUCCESS');
       return Result.success(prettyPrintedJson);
     } catch (e, stack) {
@@ -175,8 +189,5 @@ class DeveloperExportService {
 /// Provider exposing the DeveloperExportService.
 final developerExportServiceProvider = Provider<DeveloperExportService>((ref) {
   final dbService = ref.watch(databaseServiceProvider);
-  return DeveloperExportService(
-    databaseService: dbService,
-    ref: ref,
-  );
+  return DeveloperExportService(databaseService: dbService, ref: ref);
 });

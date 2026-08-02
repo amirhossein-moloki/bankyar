@@ -11,16 +11,20 @@ class MehrIranParser extends BaseBankParser {
 
   @override
   List<String> get senderIds => const [
-        'MehrIran',
-        'mehriran',
-        'Mehr_Iran',
-        'mehr_iran',
-        'B.MehrIran',
-        'b.mehriran',
-        'QZMehr',
-        'qzmehr'
-      ];
+    'MehrIran',
+    'mehriran',
+    'Mehr_Iran',
+    'mehr_iran',
+    'B.MehrIran',
+    'b.mehriran',
+    'QZMehr',
+    'qzmehr',
+  ];
 
   @override
-  List<String> get keywords => const ['مهر ایران', 'بانک مهر ایران', 'mehriran'];
+  List<String> get keywords => const [
+    'مهر ایران',
+    'بانک مهر ایران',
+    'mehriran',
+  ];
 }

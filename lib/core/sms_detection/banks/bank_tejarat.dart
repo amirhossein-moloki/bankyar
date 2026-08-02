@@ -11,17 +11,17 @@ class TejaratParser extends BaseBankParser {
 
   @override
   List<String> get senderIds => const [
-        'Tejarat',
-        'B.Tejarat',
-        'B-Tejarat',
-        'BTI',
-        'tejarat',
-        'b.tejarat',
-        'b-tejarat',
-        'bti',
-        'TejaratBank',
-        'tejaratbank'
-      ];
+    'Tejarat',
+    'B.Tejarat',
+    'B-Tejarat',
+    'BTI',
+    'tejarat',
+    'b.tejarat',
+    'b-tejarat',
+    'bti',
+    'TejaratBank',
+    'tejaratbank',
+  ];
 
   @override
   List<String> get keywords => const ['تجارت', 'بانک تجارت', 'tejarat'];

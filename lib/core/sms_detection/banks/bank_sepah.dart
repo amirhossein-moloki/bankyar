@@ -11,15 +11,15 @@ class SepahParser extends BaseBankParser {
 
   @override
   List<String> get senderIds => const [
-        'Sepah',
-        'B.Sepah',
-        'B-Sepah',
-        'sepah',
-        'b.sepah',
-        'b-sepah',
-        'SepahBank',
-        'sepahbank'
-      ];
+    'Sepah',
+    'B.Sepah',
+    'B-Sepah',
+    'sepah',
+    'b.sepah',
+    'b-sepah',
+    'SepahBank',
+    'sepahbank',
+  ];
 
   @override
   List<String> get keywords => const ['سپه', 'بانک سپه', 'sepah'];

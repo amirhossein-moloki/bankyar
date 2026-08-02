@@ -11,16 +11,20 @@ class EghtesadNovinParser extends BaseBankParser {
 
   @override
   List<String> get senderIds => const [
-        'ENBank',
-        'enbank',
-        'EghtesadNovin',
-        'eghtesadnovin',
-        'Eghtesad_Novin',
-        'eghtesad_novin',
-        'B.EghtesadNovin',
-        'b.eghtesadnovin'
-      ];
+    'ENBank',
+    'enbank',
+    'EghtesadNovin',
+    'eghtesadnovin',
+    'Eghtesad_Novin',
+    'eghtesad_novin',
+    'B.EghtesadNovin',
+    'b.eghtesadnovin',
+  ];
 
   @override
-  List<String> get keywords => const ['اقتصاد نوین', 'بانک اقتصاد نوین', 'enbank'];
+  List<String> get keywords => const [
+    'اقتصاد نوین',
+    'بانک اقتصاد نوین',
+    'enbank',
+  ];
 }

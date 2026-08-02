@@ -102,10 +102,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       const platform = MethodChannel('com.bankyar.app/platform');
       final String? savedPath = await platform.invokeMethod<String>(
         'exportJsonViaSAF',
-        {
-          'filename': filename,
-          'content': jsonContent,
-        },
+        {'filename': filename, 'content': jsonContent},
       );
       if (!mounted) return;
 

@@ -11,13 +11,13 @@ class KosarParser extends BaseBankParser {
 
   @override
   List<String> get senderIds => const [
-        'Kosar',
-        'kosar',
-        'KosarBank',
-        'kosarbank',
-        'B.Kosar',
-        'b.kosar'
-      ];
+    'Kosar',
+    'kosar',
+    'KosarBank',
+    'kosarbank',
+    'B.Kosar',
+    'b.kosar',
+  ];
 
   @override
   List<String> get keywords => const ['کوثر', 'موسسه کوثر', 'kosar'];

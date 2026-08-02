@@ -11,13 +11,13 @@ class HekmatParser extends BaseBankParser {
 
   @override
   List<String> get senderIds => const [
-        'Hekmat',
-        'hekmat',
-        'HekmatBank',
-        'hekmatbank',
-        'B.Hekmat',
-        'b.hekmat'
-      ];
+    'Hekmat',
+    'hekmat',
+    'HekmatBank',
+    'hekmatbank',
+    'B.Hekmat',
+    'b.hekmat',
+  ];
 
   @override
   List<String> get keywords => const ['حکمت', 'بانک حکمت', 'hekmat'];
