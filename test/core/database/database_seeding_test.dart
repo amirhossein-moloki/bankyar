@@ -95,8 +95,8 @@ void main() {
 
       expect(
         captured,
-        hasLength(14),
-      ); // 7 calls * 2 captured arguments per call
+        hasLength(64),
+      ); // 32 calls * 2 captured arguments per call
       final capturedTables = <String>[];
       final capturedMaps = <Map<String, dynamic>>[];
       for (int i = 0; i < captured.length; i += 2) {
@@ -104,7 +104,7 @@ void main() {
         capturedMaps.add(captured[i + 1] as Map<String, dynamic>);
       }
 
-      expect(capturedTables, hasLength(7));
+      expect(capturedTables, hasLength(32));
       expect(capturedTables.every((t) => t == 'accounts'), isTrue);
 
       final bankIds = capturedMaps.map((m) => m['id'] as String).toList();
@@ -118,6 +118,31 @@ void main() {
           'pasargad',
           'saderat',
           'parsian',
+          'sepah',
+          'maskan',
+          'keshavarzi',
+          'refah',
+          'shahr',
+          'ayandeh',
+          'eghtesad_novin',
+          'sina',
+          'day',
+          'iran_zamin',
+          'tosee_taavon',
+          'tosee_saderat',
+          'sanat_madan',
+          'post_bank',
+          'mehr_iran',
+          'resalat',
+          'karafarin',
+          'khavarmianeh',
+          'gardeshgari',
+          'blu_bank',
+          'bankino',
+          'ansar',
+          'mehr_eqtesad',
+          'kosar',
+          'hekmat',
         ]),
       );
 
@@ -126,12 +151,12 @@ void main() {
     });
 
     test('does not seed accounts when accounts table is not empty', () async {
-      // 1. Mock count query returning 7
+      // 1. Mock count query returning 32
       when(
         () => mockDb.rawQuery('SELECT COUNT(*) as cnt FROM accounts'),
       ).thenAnswer(
         (_) async => [
-          {'cnt': 7},
+          {'cnt': 32},
         ],
       );
 
