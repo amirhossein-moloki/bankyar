@@ -14,17 +14,17 @@ class ParsianParser extends BaseBankParser {
 
   @override
   List<String> get senderIds => const [
-        'Parsian',
-        'B.Parsian',
-        'B-Parsian',
-        'BPA',
-        'parsian',
-        'b.parsian',
-        'b-parsian',
-        'bpa',
-        'ParsianBank',
-        'parsianbank'
-      ];
+    'Parsian',
+    'B.Parsian',
+    'B-Parsian',
+    'BPA',
+    'parsian',
+    'b.parsian',
+    'b-parsian',
+    'bpa',
+    'ParsianBank',
+    'parsianbank',
+  ];
 
   @override
   List<String> get keywords => const ['پارسیان', 'بانک پارسیان', 'parsian'];
@@ -51,7 +51,11 @@ class ParsianParser extends BaseBankParser {
     ),
     BankSmsTemplate(
       id: 'parsian_atm',
-      pattern: RegExp(r'خودپرداز|ATM|برداشت\s+وجه', caseSensitive: false, unicode: true),
+      pattern: RegExp(
+        r'خودپرداز|ATM|برداشت\s+وجه',
+        caseSensitive: false,
+        unicode: true,
+      ),
       classification: SmsClassification.bank_transaction,
       direction: SmsTransactionType.debit,
     ),

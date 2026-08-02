@@ -102,7 +102,11 @@ abstract class BaseBankParser implements BankParser {
 
     // 7. Card/Account Status Change
     if (normalized.contains('صدور کارت') ||
-        (normalized.contains('کارت') && (normalized.contains('صادر شد') || normalized.contains('صادر و') || normalized.contains('صادر گردید') || normalized.contains('صدور'))) ||
+        (normalized.contains('کارت') &&
+            (normalized.contains('صادر شد') ||
+                normalized.contains('صادر و') ||
+                normalized.contains('صادر گردید') ||
+                normalized.contains('صدور'))) ||
         normalized.contains('انقضای کارت') ||
         normalized.contains('غیرفعال شدن کارت') ||
         normalized.contains('فعال سازی کارت') ||
@@ -128,16 +132,26 @@ abstract class BaseBankParser implements BankParser {
     }
 
     // 10. Standard Transaction with specialized categories
-    final isCredit = RegexPatterns.creditVerbs.hasMatch(normalized) || normalized.contains('+');
-    final isDebit = RegexPatterns.debitVerbs.hasMatch(normalized) || normalized.contains('-');
-    final hasCurrency = normalized.contains('ریال') ||
+    final isCredit =
+        RegexPatterns.creditVerbs.hasMatch(normalized) ||
+        normalized.contains('+');
+    final isDebit =
+        RegexPatterns.debitVerbs.hasMatch(normalized) ||
+        normalized.contains('-');
+    final hasCurrency =
+        normalized.contains('ریال') ||
         normalized.contains('تومان') ||
         normalized.contains('rial') ||
         normalized.contains('toman') ||
         normalized.contains('rls');
-    final hasAmountMarker = normalized.contains('مبلغ') || AmountParser.parse(rawText) != null;
+    final hasAmountMarker =
+        normalized.contains('مبلغ') || AmountParser.parse(rawText) != null;
 
-    if ((isCredit || isDebit) && (hasCurrency || normalized.contains('کارت') || normalized.contains('حساب') || hasAmountMarker)) {
+    if ((isCredit || isDebit) &&
+        (hasCurrency ||
+            normalized.contains('کارت') ||
+            normalized.contains('حساب') ||
+            hasAmountMarker)) {
       if (normalized.contains('پایا')) {
         return SmsClassification.bank_paya;
       }
@@ -169,7 +183,8 @@ abstract class BaseBankParser implements BankParser {
   double? parseAmount(String rawText) {
     // 1. Try template-specific amount extraction first
     for (final template in templates) {
-      if (template.pattern.hasMatch(rawText) && template.amountPattern != null) {
+      if (template.pattern.hasMatch(rawText) &&
+          template.amountPattern != null) {
         final match = template.amountPattern!.firstMatch(rawText);
         if (match != null && match.groupCount >= 1) {
           final amtStr = match.group(1);
@@ -200,7 +215,8 @@ abstract class BaseBankParser implements BankParser {
   @override
   double? parseBalance(String rawText) {
     for (final template in templates) {
-      if (template.pattern.hasMatch(rawText) && template.balancePattern != null) {
+      if (template.pattern.hasMatch(rawText) &&
+          template.balancePattern != null) {
         final match = template.balancePattern!.firstMatch(rawText);
         if (match != null && match.groupCount >= 1) {
           final balStr = match.group(1);
@@ -231,7 +247,8 @@ abstract class BaseBankParser implements BankParser {
   @override
   SmsTransactionType parseTransactionType(String rawText) {
     for (final template in templates) {
-      if (template.pattern.hasMatch(rawText) && template.direction != SmsTransactionType.unknown) {
+      if (template.pattern.hasMatch(rawText) &&
+          template.direction != SmsTransactionType.unknown) {
         return template.direction;
       }
     }
@@ -253,7 +270,8 @@ abstract class BaseBankParser implements BankParser {
   @override
   String parseMerchant(String rawText) {
     for (final template in templates) {
-      if (template.pattern.hasMatch(rawText) && template.merchantPattern != null) {
+      if (template.pattern.hasMatch(rawText) &&
+          template.merchantPattern != null) {
         final match = template.merchantPattern!.firstMatch(rawText);
         if (match != null && match.groupCount >= 1) {
           final merch = match.group(1);

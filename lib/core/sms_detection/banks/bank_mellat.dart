@@ -11,19 +11,19 @@ class MellatParser extends BaseBankParser {
 
   @override
   List<String> get senderIds => const [
-        'Mellat',
-        'B.Mellat',
-        'B-Mellat',
-        'BML',
-        'mellat',
-        'b.mellat',
-        'b-mellat',
-        'bml',
-        'MellatBank',
-        'mellatbank',
-        '9820002011',
-        '20002011'
-      ];
+    'Mellat',
+    'B.Mellat',
+    'B-Mellat',
+    'BML',
+    'mellat',
+    'b.mellat',
+    'b-mellat',
+    'bml',
+    'MellatBank',
+    'mellatbank',
+    '9820002011',
+    '20002011',
+  ];
 
   @override
   List<String> get keywords => const ['ملت', 'بانک ملت', 'mellat'];

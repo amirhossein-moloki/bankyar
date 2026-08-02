@@ -313,29 +313,35 @@ void main() {
   group('Direction Detection Voting Heuristics Tests', () {
     const engine = SmsPipelineEngine();
 
-    test('Correctly identifies Credit when credit indicators are present and amount is extracted', () {
-      final samples = [
-        'بانک ملی\nمبلغ:500,000+\nواریز شد',
-        'بانک ملی\nبابت: انتقال از کارت\nمبلغ ۵۰۰,۰۰۰',
-        'بانک ملی\nسود سپرده واریز شد مبلغ: ۲۰۰,۰۰۰',
-        'بانک ملی\nحقوق ماهیانه مبلغ ۳۰,۰۰۰,۰۰۰ ریال به حساب شما واریز گردید.',
-      ];
+    test(
+      'Correctly identifies Credit when credit indicators are present and amount is extracted',
+      () {
+        final samples = [
+          'بانک ملی\nمبلغ:500,000+\nواریز شد',
+          'بانک ملی\nبابت: انتقال از کارت\nمبلغ ۵۰۰,۰۰۰',
+          'بانک ملی\nسود سپرده واریز شد مبلغ: ۲۰۰,۰۰۰',
+          'بانک ملی\nحقوق ماهیانه مبلغ ۳۰,۰۰۰,۰۰۰ ریال به حساب شما واریز گردید.',
+        ];
 
-      for (final rawText in samples) {
-        final result = engine.process(
-          rawText: rawText,
-          senderId: 'Melli',
-          receivedAt: DateTime.now().millisecondsSinceEpoch,
-          isDuplicate: false,
-          messageId: 'test-credit',
-          transactionId: 'test-credit-tx',
-        );
+        for (final rawText in samples) {
+          final result = engine.process(
+            rawText: rawText,
+            senderId: 'Melli',
+            receivedAt: DateTime.now().millisecondsSinceEpoch,
+            isDuplicate: false,
+            messageId: 'test-credit',
+            transactionId: 'test-credit-tx',
+          );
 
-        expect(result.status, equals(IngestionStatus.success));
-        expect(result.transaction!.transactionType, equals(SmsTransactionType.credit),
-            reason: 'Message: "$rawText" should be Credit');
-      }
-    });
+          expect(result.status, equals(IngestionStatus.success));
+          expect(
+            result.transaction!.transactionType,
+            equals(SmsTransactionType.credit),
+            reason: 'Message: "$rawText" should be Credit',
+          );
+        }
+      },
+    );
 
     test('Correctly identifies Debit when debit indicators dominate', () {
       final samples = [
@@ -355,8 +361,11 @@ void main() {
         );
 
         expect(result.status, equals(IngestionStatus.success));
-        expect(result.transaction!.transactionType, equals(SmsTransactionType.debit),
-            reason: 'Message: "$rawText" should be Debit');
+        expect(
+          result.transaction!.transactionType,
+          equals(SmsTransactionType.debit),
+          reason: 'Message: "$rawText" should be Debit',
+        );
       }
     });
   });

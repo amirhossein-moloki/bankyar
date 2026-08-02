@@ -11,14 +11,18 @@ class IranZaminParser extends BaseBankParser {
 
   @override
   List<String> get senderIds => const [
-        'IranZamin',
-        'iranzamin',
-        'Iran_Zamin',
-        'iran_zamin',
-        'B.IranZamin',
-        'b.iranzamin'
-      ];
+    'IranZamin',
+    'iranzamin',
+    'Iran_Zamin',
+    'iran_zamin',
+    'B.IranZamin',
+    'b.iranzamin',
+  ];
 
   @override
-  List<String> get keywords => const ['ایران زمین', 'بانک ایران زمین', 'iranzamin'];
+  List<String> get keywords => const [
+    'ایران زمین',
+    'بانک ایران زمین',
+    'iranzamin',
+  ];
 }

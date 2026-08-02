@@ -11,16 +11,20 @@ class ToseeSaderatParser extends BaseBankParser {
 
   @override
   List<String> get senderIds => const [
-        'ToseeSaderat',
-        'toseesaderat',
-        'Tosee_Saderat',
-        'tosee_saderat',
-        'B.ToseeSaderat',
-        'b.toseesaderat',
-        'EDBI',
-        'edbi'
-      ];
+    'ToseeSaderat',
+    'toseesaderat',
+    'Tosee_Saderat',
+    'tosee_saderat',
+    'B.ToseeSaderat',
+    'b.toseesaderat',
+    'EDBI',
+    'edbi',
+  ];
 
   @override
-  List<String> get keywords => const ['توسعه صادرات', 'بانک توسعه صادرات', 'edbi'];
+  List<String> get keywords => const [
+    'توسعه صادرات',
+    'بانک توسعه صادرات',
+    'edbi',
+  ];
 }

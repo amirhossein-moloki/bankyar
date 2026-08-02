@@ -11,17 +11,17 @@ class PasargadParser extends BaseBankParser {
 
   @override
   List<String> get senderIds => const [
-        'Pasargad',
-        'B.Pasargad',
-        'B-Pasargad',
-        'BPI',
-        'pasargad',
-        'b.pasargad',
-        'b-pasargad',
-        'bpi',
-        'PasargadBank',
-        'pasargadbank'
-      ];
+    'Pasargad',
+    'B.Pasargad',
+    'B-Pasargad',
+    'BPI',
+    'pasargad',
+    'b.pasargad',
+    'b-pasargad',
+    'bpi',
+    'PasargadBank',
+    'pasargadbank',
+  ];
 
   @override
   List<String> get keywords => const ['پاسارگاد', 'بانک پاسارگاد', 'pasargad'];

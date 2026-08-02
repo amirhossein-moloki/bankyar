@@ -10,12 +10,7 @@ class BankinoParser extends BaseBankParser {
   String get bankName => 'Bankino';
 
   @override
-  List<String> get senderIds => const [
-        'Bankino',
-        'bankino',
-        'Kino',
-        'kino'
-      ];
+  List<String> get senderIds => const ['Bankino', 'bankino', 'Kino', 'kino'];
 
   @override
   List<String> get keywords => const ['بانکینو', 'bankino'];

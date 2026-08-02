@@ -11,15 +11,15 @@ class AyandehParser extends BaseBankParser {
 
   @override
   List<String> get senderIds => const [
-        'Ayandeh',
-        'B.Ayandeh',
-        'B-Ayandeh',
-        'ayandeh',
-        'b.ayandeh',
-        'b-ayandeh',
-        'AyandehBank',
-        'ayandehbank'
-      ];
+    'Ayandeh',
+    'B.Ayandeh',
+    'B-Ayandeh',
+    'ayandeh',
+    'b.ayandeh',
+    'b-ayandeh',
+    'AyandehBank',
+    'ayandehbank',
+  ];
 
   @override
   List<String> get keywords => const ['آینده', 'بانک آینده', 'ayandeh'];

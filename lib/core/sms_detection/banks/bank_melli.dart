@@ -11,19 +11,19 @@ class MelliParser extends BaseBankParser {
 
   @override
   List<String> get senderIds => const [
-        'Melli',
-        'B.Melli',
-        'B-Melli',
-        'BMI',
-        'melli',
-        'b.melli',
-        'b-melli',
-        'bmi',
-        '9820004007',
-        '20004007',
-        'MelliBank',
-        'mellibank'
-      ];
+    'Melli',
+    'B.Melli',
+    'B-Melli',
+    'BMI',
+    'melli',
+    'b.melli',
+    'b-melli',
+    'bmi',
+    '9820004007',
+    '20004007',
+    'MelliBank',
+    'mellibank',
+  ];
 
   @override
   List<String> get keywords => const ['ملی', 'بانک ملی', 'melli'];

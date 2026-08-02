@@ -11,15 +11,15 @@ class DayParser extends BaseBankParser {
 
   @override
   List<String> get senderIds => const [
-        'Day',
-        'B.Day',
-        'B-Day',
-        'day',
-        'b.day',
-        'b-day',
-        'DayBank',
-        'daybank'
-      ];
+    'Day',
+    'B.Day',
+    'B-Day',
+    'day',
+    'b.day',
+    'b-day',
+    'DayBank',
+    'daybank',
+  ];
 
   @override
   List<String> get keywords => const ['دی', 'بانک دی', 'day'];

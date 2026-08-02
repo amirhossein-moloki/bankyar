@@ -11,15 +11,15 @@ class MaskanParser extends BaseBankParser {
 
   @override
   List<String> get senderIds => const [
-        'Maskan',
-        'B.Maskan',
-        'B-Maskan',
-        'maskan',
-        'b.maskan',
-        'b-maskan',
-        'MaskanBank',
-        'maskanbank'
-      ];
+    'Maskan',
+    'B.Maskan',
+    'B-Maskan',
+    'maskan',
+    'b.maskan',
+    'b-maskan',
+    'MaskanBank',
+    'maskanbank',
+  ];
 
   @override
   List<String> get keywords => const ['مسکن', 'بانک مسکن', 'maskan'];

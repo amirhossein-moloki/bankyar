@@ -128,7 +128,9 @@ class ParserRegistry {
 
   bool _matchesSender(BankParser parser, String incomingSenderId) {
     final incomingNormalized = _normalizeSenderId(incomingSenderId);
-    return parser.senderIds.any((id) => _normalizeSenderId(id) == incomingNormalized);
+    return parser.senderIds.any(
+      (id) => _normalizeSenderId(id) == incomingNormalized,
+    );
   }
 
   String _normalizeSenderId(String senderId) {

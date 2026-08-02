@@ -11,15 +11,15 @@ class KhavarmianehParser extends BaseBankParser {
 
   @override
   List<String> get senderIds => const [
-        'Khavarmianeh',
-        'khavarmianeh',
-        'MiddleEastBank',
-        'middleeastbank',
-        'MEB',
-        'meb',
-        'B.Khavarmianeh',
-        'b.khavarmianeh'
-      ];
+    'Khavarmianeh',
+    'khavarmianeh',
+    'MiddleEastBank',
+    'middleeastbank',
+    'MEB',
+    'meb',
+    'B.Khavarmianeh',
+    'b.khavarmianeh',
+  ];
 
   @override
   List<String> get keywords => const ['خاورمیانه', 'بانک خاورمیانه', 'meb'];

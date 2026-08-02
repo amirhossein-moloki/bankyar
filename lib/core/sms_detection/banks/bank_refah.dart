@@ -11,15 +11,15 @@ class RefahParser extends BaseBankParser {
 
   @override
   List<String> get senderIds => const [
-        'Refah',
-        'B.Refah',
-        'B-Refah',
-        'refah',
-        'b.refah',
-        'b-refah',
-        'RefahBank',
-        'refahbank'
-      ];
+    'Refah',
+    'B.Refah',
+    'B-Refah',
+    'refah',
+    'b.refah',
+    'b-refah',
+    'RefahBank',
+    'refahbank',
+  ];
 
   @override
   List<String> get keywords => const ['رفاه', 'بانک رفاه', 'refah'];

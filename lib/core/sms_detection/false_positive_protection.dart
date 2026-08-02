@@ -61,7 +61,10 @@ class FalsePositiveProtection {
   /// Returns true if the sender identifier or message body matches non-bank criteria.
   /// This is used to filter out false positives.
   static bool isFalsePositive(String senderId, String rawText) {
-    final normalizedSender = senderId.trim().toLowerCase().replaceAll(RegExp(r'[\s\.\-_]'), '');
+    final normalizedSender = senderId.trim().toLowerCase().replaceAll(
+      RegExp(r'[\s\.\-_]'),
+      '',
+    );
     final normalizedText = rawText.toLowerCase();
 
     // 1. Check if sender is explicitly in the blocked list

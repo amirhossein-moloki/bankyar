@@ -11,14 +11,18 @@ class ToseeTaavonParser extends BaseBankParser {
 
   @override
   List<String> get senderIds => const [
-        'ToseeTaavon',
-        'toseetaavon',
-        'Tosee_Taavon',
-        'tosee_taavon',
-        'B.ToseeTaavon',
-        'b.toseetaavon'
-      ];
+    'ToseeTaavon',
+    'toseetaavon',
+    'Tosee_Taavon',
+    'tosee_taavon',
+    'B.ToseeTaavon',
+    'b.toseetaavon',
+  ];
 
   @override
-  List<String> get keywords => const ['توسعه تعاون', 'بانک توسعه تعاون', 'ttbank'];
+  List<String> get keywords => const [
+    'توسعه تعاون',
+    'بانک توسعه تعاون',
+    'ttbank',
+  ];
 }

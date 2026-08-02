@@ -11,13 +11,13 @@ class PostBankParser extends BaseBankParser {
 
   @override
   List<String> get senderIds => const [
-        'PostBank',
-        'postbank',
-        'Post_Bank',
-        'post_bank',
-        'B.PostBank',
-        'b.postbank'
-      ];
+    'PostBank',
+    'postbank',
+    'Post_Bank',
+    'post_bank',
+    'B.PostBank',
+    'b.postbank',
+  ];
 
   @override
   List<String> get keywords => const ['پست بانک', 'پست‌بانک', 'postbank'];

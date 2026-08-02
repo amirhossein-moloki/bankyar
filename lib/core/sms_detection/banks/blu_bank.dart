@@ -11,13 +11,13 @@ class BluBankParser extends BaseBankParser {
 
   @override
   List<String> get senderIds => const [
-        'BluBank',
-        'blubank',
-        'Blu',
-        'blu',
-        'Vandar',
-        'vandar'
-      ];
+    'BluBank',
+    'blubank',
+    'Blu',
+    'blu',
+    'Vandar',
+    'vandar',
+  ];
 
   @override
   List<String> get keywords => const ['بلو', 'بلوبانک', 'blubank'];

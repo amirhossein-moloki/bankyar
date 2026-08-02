@@ -11,13 +11,13 @@ class GardeshgariParser extends BaseBankParser {
 
   @override
   List<String> get senderIds => const [
-        'Gardeshgari',
-        'gardeshgari',
-        'TourismBank',
-        'tourismbank',
-        'B.Gardeshgari',
-        'b.gardeshgari'
-      ];
+    'Gardeshgari',
+    'gardeshgari',
+    'TourismBank',
+    'tourismbank',
+    'B.Gardeshgari',
+    'b.gardeshgari',
+  ];
 
   @override
   List<String> get keywords => const ['گردشگری', 'بانک گردشگری', 'tourismbank'];
