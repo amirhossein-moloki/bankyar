@@ -23,16 +23,16 @@ abstract class CurrencyFormatter {
     return appendSymbol ? '$withDigits ریال' : withDigits;
   }
 
-  /// Formats a monetary value to Toman currency (e.g., "۱۵,۰۰۰ تومان").
+  /// Formats a monetary value to Toman currency, returning Rial currency format instead (e.g., "۱۵,۰۰۰ ریال").
   static String formatToman(
     double amount, {
     bool usePersianDigits = true,
     bool appendSymbol = true,
   }) {
-    final formatted = format(amount, locale: 'en'); // get english commas first
-    final withDigits = usePersianDigits
-        ? DateFormatter.toPersianDigits(formatted)
-        : formatted;
-    return appendSymbol ? '$withDigits تومان' : withDigits;
+    return formatRial(
+      amount,
+      usePersianDigits: usePersianDigits,
+      appendSymbol: appendSymbol,
+    );
   }
 }

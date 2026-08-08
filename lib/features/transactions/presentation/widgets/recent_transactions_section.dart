@@ -144,7 +144,7 @@ class _TransactionItemWidget extends StatelessWidget {
         : 'بانک‌یار';
 
     final Widget card = TransactionCard(
-      amount: '$amountText تومان',
+      amount: '$amountText ریال',
       timestamp: formattedDate,
       category: transaction.normalizedMerchant,
       accountLabel: cardLabel,

@@ -49,7 +49,7 @@ void main() async {
           usePersianDigits: true,
           appendSymbol: true,
         );
-        expect(formattedToman, equals('۱۵۰,۰۰۰ تومان'));
+        expect(formattedToman, equals('۱۵۰,۰۰۰ ریال'));
       },
     );
   });

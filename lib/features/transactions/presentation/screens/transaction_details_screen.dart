@@ -220,7 +220,7 @@ class _TransactionDetailsScreenState
         'نوع: $typeStr\n'
         'مبلغ: $amountStr\n'
         'پذیرنده: ${tx.normalizedMerchant}\n'
-        'امن شده به صورت کاملاً آفلاین توسط بانک‌یار.';
+        'امن شده توسط بانک‌یار.';
 
     Clipboard.setData(ClipboardData(text: text));
 

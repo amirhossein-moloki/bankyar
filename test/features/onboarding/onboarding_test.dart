@@ -89,7 +89,7 @@ void main() {
     );
 
     // 1. Initial State should be Step 0 (Splash)
-    expect(find.text('صندوقچه شخصی مالی کاملاً آفلاین'), findsOneWidget);
+    expect(find.text('صندوقچه شخصی مالی'), findsOneWidget);
 
     // Jump straight to Step 1 (Welcome Screen) using jumpToPage helper
     final state = tester.state<OnboardingScreenState>(
