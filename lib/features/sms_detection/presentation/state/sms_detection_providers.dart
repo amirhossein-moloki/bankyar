@@ -199,9 +199,7 @@ class SmsPipelineCoordinator {
           LogCategories.parser,
           'BY_PIPELINE_SMS_FAILED',
           'Pipeline failed parsing incoming SMS.',
-          metadata: {
-            'Failure Reason': failure.message,
-          },
+          metadata: {'Failure Reason': failure.message},
         );
       },
       loading: (_) {},
@@ -219,7 +217,9 @@ class SmsPipelineCoordinator {
 final smsPipelineCoordinatorProvider = Provider<SmsPipelineCoordinator>((ref) {
   final receiverService = ref.watch(smsReceiverServiceProvider);
   final processUseCase = ref.watch(processIncomingSmsUseCaseProvider);
-  final insertNotificationUseCase = ref.watch(insertNotificationUseCaseProvider);
+  final insertNotificationUseCase = ref.watch(
+    insertNotificationUseCaseProvider,
+  );
   final permissionService = ref.watch(permissionServiceProvider);
   final logger = ref.watch(loggerProvider);
 

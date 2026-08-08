@@ -62,11 +62,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     const platform = MethodChannel('com.bankyar.app/platform');
 
     // Handle cold-start intent
-    platform.invokeMethod<Map<dynamic, dynamic>>('getPendingNotificationClick').then((clickData) {
-      if (clickData != null && mounted) {
-        _handleNotificationRouting(clickData);
-      }
-    });
+    platform
+        .invokeMethod<Map<dynamic, dynamic>>('getPendingNotificationClick')
+        .then((clickData) {
+          if (clickData != null && mounted) {
+            _handleNotificationRouting(clickData);
+          }
+        });
 
     // Handle warm-start intent
     platform.setMethodCallHandler((call) async {
@@ -81,7 +83,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   void _handleNotificationRouting(Map<dynamic, dynamic> clickData) {
     final transactionId = clickData['transactionId'] as String?;
-    final editNote = clickData['editNote'] == 'true' || clickData['editNote'] == true;
+    final editNote =
+        clickData['editNote'] == 'true' || clickData['editNote'] == true;
     if (transactionId != null && transactionId.isNotEmpty) {
       if (editNote) {
         context.push('/transactions/$transactionId?editNote=true');

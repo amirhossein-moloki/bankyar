@@ -616,6 +616,17 @@ class SmsPipelineEngine {
       }
     }
 
+    // Rule 1b: Bank Parser dynamic direction detection (specifically optimized for Parsian first-class implementation)
+    if (context.matchedBank != null &&
+        context.matchedBank!.bankId == 'parsian') {
+      final dynDir = context.matchedBank!.parseTransactionType(rawText);
+      if (dynDir == SmsTransactionType.credit) {
+        creditVotes += 20;
+      } else if (dynDir == SmsTransactionType.debit) {
+        debitVotes += 20;
+      }
+    }
+
     // Rule 2: Message Classification matching
     final classification = context.classification;
     if (classification == SmsClassification.bank_salary ||
