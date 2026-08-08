@@ -346,40 +346,7 @@ class OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   }
 
   Widget _buildPrivacyTrustSeal(ThemeData theme, SpacingExtension spacing) {
-    final semanticColors = theme.extension<SemanticColorExtension>()!;
-    return Padding(
-      padding: EdgeInsets.all(spacing.m),
-      child: Container(
-        padding: EdgeInsets.symmetric(
-          horizontal: spacing.m,
-          vertical: spacing.xs,
-        ),
-        decoration: BoxDecoration(
-          color: semanticColors.success.withOpacity(0.08),
-          borderRadius: BorderRadius.circular(100),
-          border: Border.all(color: semanticColors.success.withOpacity(0.2)),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              Icons.shield_outlined,
-              size: 14,
-              color: semanticColors.success,
-            ),
-            SizedBox(width: spacing.xs),
-            Text(
-              'کاملاً آفلاین و رمزگذاری‌شده',
-              style: theme.textTheme.labelSmall?.copyWith(
-                color: semanticColors.success,
-                fontWeight: FontWeight.bold,
-                fontFamily: 'Vazirmatn',
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
+    return const SizedBox.shrink();
   }
 
   // --- SLIDE BUILDERS ---
@@ -405,7 +372,7 @@ class OnboardingScreenState extends ConsumerState<OnboardingScreen> {
           ),
           SizedBox(height: spacing.s),
           Text(
-            'صندوقچه شخصی مالی کاملاً آفلاین',
+            'صندوقچه شخصی مالی',
             style: theme.textTheme.bodyMedium?.copyWith(
               color: theme.colorScheme.onSurfaceVariant,
               fontFamily: 'Vazirmatn',
@@ -773,7 +740,7 @@ class OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                           ),
                           SizedBox(height: 4),
                           Text(
-                            'مبلغ ۵۰,۰۰۰ تومان از حساب شما برداشت شد. ثبت شد.',
+                            'مبلغ ۵۰,۰۰۰ ریال از حساب شما برداشت شد. ثبت شد.',
                             style: TextStyle(
                               fontSize: 12,
                               fontFamily: 'Vazirmatn',

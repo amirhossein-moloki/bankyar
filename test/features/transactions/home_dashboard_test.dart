@@ -387,7 +387,6 @@ void main() {
 
         expect(find.text('سلام، سهراب عزیز'), findsOneWidget);
         expect(find.text('صندوقچه مالی شما امن و به‌روز است'), findsOneWidget);
-        expect(find.text('کاملاً آفلاین'), findsOneWidget);
       },
     );
 
@@ -413,7 +412,6 @@ void main() {
 
         expect(find.text('سلام، کاربر عزیز'), findsOneWidget);
         expect(find.text('صندوقچه مالی شما امن و به‌روز است'), findsOneWidget);
-        expect(find.text('کاملاً آفلاین'), findsOneWidget);
       },
     );
 
@@ -445,13 +443,13 @@ void main() {
         ),
       );
 
-      expect(find.text('۱۲,۴۰۰,۰۰۰ تومان'), findsOneWidget);
+      expect(find.text('۱۲,۴۰۰,۰۰۰ ریال'), findsOneWidget);
 
       await tester.tap(find.byType(InkWell));
       await tester.pumpAndSettle();
 
       expect(find.text('••••••'), findsOneWidget);
-      expect(find.text('۱۲,۴۰۰,۰۰۰ تومان'), findsNothing);
+      expect(find.text('۱۲,۴۰۰,۰۰۰ ریال'), findsNothing);
     });
 
     testWidgets(
