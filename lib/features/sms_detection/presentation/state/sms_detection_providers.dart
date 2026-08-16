@@ -7,6 +7,7 @@ import '../../../../core/logging/logger.dart';
 import '../../../../core/platform/sms_history_importer.dart';
 import '../../../../core/platform/sms_receiver_service.dart';
 import '../../../../core/utils/result.dart';
+import '../../../../core/utils/result_extensions.dart';
 import '../../../../core/platform/permission.dart';
 import '../../../notifications/domain/entities/notification_item.dart';
 import '../../../notifications/domain/usecases/insert_notification_use_case.dart';
@@ -17,6 +18,9 @@ import '../../data/repositories/sms_parser_repository_impl.dart';
 import '../../domain/entities/parsed_transaction.dart';
 import '../../domain/repository/sms_parser_repository.dart';
 import '../../domain/usecases/process_incoming_sms_use_case.dart';
+import '../../../payment_monitor/data/di/payment_monitor_providers.dart';
+import '../../../payment_monitor/domain/entities/payment_request_log.dart';
+import '../../../payment_monitor/domain/repository/payment_monitor_repository.dart';
 
 /// Provider exposing the localized Relational [BankMessageDao].
 final bankMessageDaoProvider = Provider<BankMessageDao>((ref) {
@@ -117,6 +121,15 @@ class SmsPipelineCoordinator {
       },
     );
 
+    // Log system event for Payment Monitor
+    try {
+      final paymentRepo = _ref.read(paymentMonitorRepositoryProvider);
+      await paymentRepo.addSystemLog(
+        'Bank SMS detected',
+        details: 'From: ${message.sender}',
+      );
+    } catch (_) {}
+
     final params = ProcessIncomingSmsParams(
       rawText: message.body,
       senderId: message.sender,
@@ -184,6 +197,74 @@ class SmsPipelineCoordinator {
             'BY_PIPELINE_UI_UPDATED',
             'UI Updated: true',
           );
+
+          // Payment Monitor integration
+          try {
+            final paymentRepo = _ref.read(paymentMonitorRepositoryProvider);
+            await paymentRepo.addSystemLog(
+              'Payment data extracted',
+              details: '${tx.normalizedMerchant} - ${tx.amount.toInt()} Rials',
+            );
+
+            final refNum = tx.referenceNumber ?? tx.id;
+            final existingRes = await paymentRepo.findRequestByReferenceNumber(refNum);
+            final existing = existingRes.isSuccess ? existingRes.successOrCrash : null;
+
+            if (existing != null &&
+                (existing.status == PaymentRequestStatus.success ||
+                    existing.status == PaymentRequestStatus.duplicate)) {
+              final dupLog = PaymentRequestLog(
+                id: 'pay_req_${DateTime.now().millisecondsSinceEpoch}',
+                bankName: tx.normalizedMerchant,
+                amount: tx.amount,
+                cardLastFour: tx.cardIdentifier ?? '',
+                referenceNumber: refNum,
+                smsRaw: message.body,
+                detectedAt: DateTime.fromMillisecondsSinceEpoch(message.timestamp),
+                status: PaymentRequestStatus.duplicate,
+                errorMessage: 'Already processed',
+              );
+              await paymentRepo.insertPaymentRequest(dupLog);
+              await paymentRepo.addSystemLog(
+                'Duplicate SMS payment detected',
+                details: 'Ref: $refNum',
+              );
+            } else {
+              final reqLog = PaymentRequestLog(
+                id: 'pay_req_${tx.id}',
+                bankName: tx.normalizedMerchant,
+                amount: tx.amount,
+                cardLastFour: tx.cardIdentifier ?? '',
+                referenceNumber: refNum,
+                smsRaw: message.body,
+                detectedAt: DateTime.fromMillisecondsSinceEpoch(message.timestamp),
+                status: PaymentRequestStatus.waitingUpload,
+              );
+              await paymentRepo.insertPaymentRequest(reqLog);
+
+              final configRes = await paymentRepo.getConfig();
+              final config = configRes.isSuccess
+                  ? configRes.successOrCrash
+                  : null;
+
+              if (config != null && config.isAutoUploadEnabled) {
+                await paymentRepo.sendPaymentRequest(reqLog);
+              } else {
+                await paymentRepo.addSystemLog(
+                  'Payment stored locally',
+                  details: 'Auto upload OFF or disabled',
+                );
+              }
+            }
+          } catch (e) {
+            _logger.log(
+              LogLevel.error,
+              LogCategories.parser,
+              'BY_PIPELINE_PAY_MON_ERR',
+              'Error in Payment Monitor integration',
+              error: e,
+            );
+          }
         } else {
           _logger.log(
             LogLevel.info,

@@ -607,6 +607,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               onPressed: () => _handleJsonExport(context),
             ),
           IconButton(
+            icon: const Icon(Icons.point_of_sale_outlined),
+            tooltip: 'پایش پرداخت',
+            onPressed: () => context.push('/payment-monitor'),
+          ),
+          IconButton(
             icon: const Icon(Icons.analytics_outlined),
             tooltip: 'آموزش و آمار مالی',
             onPressed: () => context.push('/analytics'),

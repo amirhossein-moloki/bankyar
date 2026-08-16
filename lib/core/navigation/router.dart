@@ -14,6 +14,7 @@ import '../../features/secure_auth/presentation/screens/create_pin_screen.dart';
 import '../../features/secure_auth/presentation/screens/change_pin_screen.dart';
 import '../../features/secure_auth/presentation/screens/confirm_pin_screen.dart';
 import '../../features/secure_auth/presentation/screens/permission_status_screen.dart';
+import '../../features/payment_monitor/presentation/screens/payment_monitor_screen.dart';
 
 /// Central declarative router mapping paths to lightweight route screens.
 /// Conforms to BankYar NAVIGATION_ARCHITECTURE.md specifications.
@@ -47,6 +48,9 @@ abstract class AppRouter {
 
   /// Unique route path for the interactive onboarding experience flow.
   static const String onboardingRoute = '/onboarding';
+
+  /// Unique route path for the payment verification monitor page.
+  static const String paymentMonitorRoute = '/payment-monitor';
 
   /// Declares the central routing graph.
   static final GoRouter router = GoRouter(
@@ -105,6 +109,10 @@ abstract class AppRouter {
       GoRoute(
         path: onboardingRoute,
         builder: (context, state) => const OnboardingScreen(),
+      ),
+      GoRoute(
+        path: paymentMonitorRoute,
+        builder: (context, state) => const PaymentMonitorScreen(),
       ),
       GoRoute(
         path: transactionDetailsRoute,
