@@ -17,7 +17,7 @@ class DatabaseServiceImpl implements DatabaseService {
   List<int>? _activeKeyBytes;
 
   static const String _dbFileName = 'bankyar_secure.db';
-  static const int _dbVersion = 1;
+  static const int _dbVersion = 2;
 
   /// Expose the active database instance for DAO internal lookups.
   Database get database {
@@ -253,6 +253,8 @@ class DatabaseServiceImpl implements DatabaseService {
         await txn.delete('categories');
         await txn.delete('accounts');
         await txn.delete('bank_messages');
+        await txn.delete('payment_request_logs');
+        await txn.delete('payment_system_logs');
         await txn.delete('fts_transactions_search');
       });
 
@@ -517,9 +519,43 @@ class DatabaseServiceImpl implements DatabaseService {
         END;
       ''');
 
+      // 13. payment_request_logs
+      await txn.execute('''
+        CREATE TABLE IF NOT EXISTS payment_request_logs (
+          id TEXT PRIMARY KEY,
+          bank_name TEXT NOT NULL,
+          amount REAL NOT NULL,
+          card_last_four TEXT NOT NULL,
+          reference_number TEXT NOT NULL,
+          sms_raw TEXT NOT NULL,
+          detected_at INTEGER NOT NULL,
+          sent_at INTEGER,
+          status TEXT NOT NULL,
+          retry_count INTEGER NOT NULL DEFAULT 0,
+          api_response TEXT,
+          error_message TEXT
+        );
+      ''');
+
+      // 14. payment_system_logs
+      await txn.execute('''
+        CREATE TABLE IF NOT EXISTS payment_system_logs (
+          id TEXT PRIMARY KEY,
+          timestamp INTEGER NOT NULL,
+          event TEXT NOT NULL,
+          details TEXT
+        );
+      ''');
+
       // Indexes for performance optimization according to DATABASE_ARCHITECTURE.md
       await txn.execute(
         'CREATE INDEX idx_sms_dedup ON bank_messages (deduplication_hash);',
+      );
+      await txn.execute(
+        'CREATE INDEX idx_pay_req_status ON payment_request_logs (status);',
+      );
+      await txn.execute(
+        'CREATE INDEX idx_pay_req_ref ON payment_request_logs (reference_number);',
       );
       await txn.execute(
         'CREATE INDEX idx_sms_received ON bank_messages (received_at);',
@@ -811,7 +847,6 @@ class DatabaseServiceImpl implements DatabaseService {
     int oldVersion,
     int newVersion,
   ) async {
-    // Migration system hook for future updates
     for (int i = oldVersion + 1; i <= newVersion; i++) {
       _logger.log(
         LogLevel.info,
@@ -819,7 +854,38 @@ class DatabaseServiceImpl implements DatabaseService {
         'BY_DB_MIGRATION_STEP',
         'Executing database migration script step: v${i - 1} -> v$i.',
       );
-      // Future incremental scripts added here
+      if (i == 2) {
+        await db.execute('''
+          CREATE TABLE IF NOT EXISTS payment_request_logs (
+            id TEXT PRIMARY KEY,
+            bank_name TEXT NOT NULL,
+            amount REAL NOT NULL,
+            card_last_four TEXT NOT NULL,
+            reference_number TEXT NOT NULL,
+            sms_raw TEXT NOT NULL,
+            detected_at INTEGER NOT NULL,
+            sent_at INTEGER,
+            status TEXT NOT NULL,
+            retry_count INTEGER NOT NULL DEFAULT 0,
+            api_response TEXT,
+            error_message TEXT
+          );
+        ''');
+        await db.execute('''
+          CREATE TABLE IF NOT EXISTS payment_system_logs (
+            id TEXT PRIMARY KEY,
+            timestamp INTEGER NOT NULL,
+            event TEXT NOT NULL,
+            details TEXT
+          );
+        ''');
+        await db.execute(
+          'CREATE INDEX IF NOT EXISTS idx_pay_req_status ON payment_request_logs (status);',
+        );
+        await db.execute(
+          'CREATE INDEX IF NOT EXISTS idx_pay_req_ref ON payment_request_logs (reference_number);',
+        );
+      }
     }
   }
 }
